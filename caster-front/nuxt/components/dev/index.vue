@@ -74,10 +74,7 @@
           <p>Source</p>
           <div class="select">
             <select id="gpsSelectDropdown" name="gps">
-              <option value="own">Own</option>
-              <!-- <option value="saab">Saab</option>
-              <option value="mercedes">Mercedes</option>
-              <option value="audi">Audi</option> -->
+              <option value="own">Device</option>
             </select>
           </div>
         </div>
