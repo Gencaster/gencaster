@@ -44,7 +44,7 @@
             <input
               id="username"
               type="text"
-              value="Vinzenz"
+              value="User"
               placeholder="Your Name"
               @change="usernameUpdate"
               @keyup="usernameUpdate"
@@ -232,7 +232,7 @@ export default {
       dropdowns: {
         personalData: true,
         gps: true,
-        gpsdata: true,
+        gpsdata: false,
         mapbox: true,
       },
     }
