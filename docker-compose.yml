@@ -7,7 +7,7 @@ services:
       - DJANGO_SU_USER=admin
       - DJANGO_SU_PASS=admin
     ports:
-      - 8090:8080
+      - 8090:8000
     volumes:
       - ./caster-back/gencaster:/home/gencaster
     command: /bin/bash /home/gencaster/start_server.sh

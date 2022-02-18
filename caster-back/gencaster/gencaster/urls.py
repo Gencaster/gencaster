@@ -18,9 +18,12 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from stories import views
+
 admin.site.site_header = "GenCaster admin"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.index, name='hello'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

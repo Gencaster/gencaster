@@ -15,4 +15,6 @@ else
 fi;
 
 echo "Start development server";
-python manage.py runserver 0.0.0.0:8080;
+# python manage.py runserver 0.0.0.0:8080;
+
+gunicorn gencaster.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000;
