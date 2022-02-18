@@ -1,0 +1,14 @@
+# https://github.com/meetecho/janus-gateway/blob/master/conf/janus.plugin.streaming.jcfg.sample.in
+test-stream: {
+	# secret = "adminpwd"
+	id = 1
+	description = "Opus/VP8 live stream coming from external source"
+	metadata = "You can use this metadata section to put any info you want!"
+	type = "rtp"
+	audioport = 5002
+	audiopt = 111 # <audio RTP payload type> (e.g., 111)
+	audiortpmap = "opus/48000/2"
+	audio = true
+	video = false
+	data = false
+}
