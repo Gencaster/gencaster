@@ -56,7 +56,7 @@ export default {
     SOCKETURL:
       process.env.NODE_ENV === 'production'
         ? 'https://backend.gencast.augmented.audio/'
-        : 'http://localhost:3001/',
+        : 'http://localhost:1337/',
   }, // public to the frontend
 
   privateRuntimeConfig: {}, // private to the frontend
