@@ -1,3 +1,4 @@
+s.options.sampleRate_(24000).blockSize_(1024).hardwareBufferSize_(8192*4).memoryLocking_(true).memSize_(8192*4);
 s.boot;
 
 s.waitForBoot({

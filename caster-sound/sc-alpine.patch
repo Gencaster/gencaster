@@ -1,0 +1,12 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -3,6 +3,8 @@
+ # CMake versions can only consist of digits and periods, so don't use _TWEAK
+ project(SuperCollider VERSION ${SC_VERSION_MAJOR}.${SC_VERSION_MINOR}.${SC_VERSION_PATCH})
+
++add_link_options(-Wl,-z,stack-size=2000000)
++
+ if (CMAKE_SYSTEM_NAME MATCHES "Linux")
+ 	set(LINUX 1)
+ endif()
+ 

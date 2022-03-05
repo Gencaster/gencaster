@@ -14,13 +14,7 @@ If you do not want to use the `docker-compose.yml` file you can build and start 
 
 The container is called `caster-sound`.
 
-To test the functionality of the container you can use a provided webpage which you can spawn via
-
-```shell
-python3 -m http.server 9000
-```
-
-and go to [http://localhost:9000/test](http://localhost:9000/test).
+One can listen to the stream on and go to [http://localhost:8090](http://localhost:8090).
 
 ## Services
 
@@ -28,24 +22,23 @@ The container consitst of
 
 Service | Comment
 --- | ---
+Supervisor | As we need multiple services in this container we use this for service management - something like systemd
 SuperCollider | Audio engine
-Jack | Virtual soundcard on linux
-ffmpeg | Swiss army knife for converting media
+pipewire | Acts as a virtual soundcard. Used to be jack but pipewire seems more reliable within a container environment.
+gstreamer | Swiss army knife for converting media - converts the output of SuperCollider to a opus RTP stream which is send to *Janus*
 Janus | Server which distributes media via WebRTC
+Python HTTP Server | Server on port `8090` in which one can listen to the generated stream - this is only for debug purposes.
 
 The services are chained like this
 
 ```text
-SUPERCOLLIDER --> JACK --> FFMPEG --RTC--> JANUS
+SUPERCOLLIDER --> PIPEWIRE --> GSTREAMER --RTC--> JANUS
 ```
 
 ## Remarks
 
-Except for ffmpeg we use custom builds for every service because
-
-* SuperCollider is build with qt and therefore needs a display
-* Janus needs a special version of `libsrtp` which is not provided by `apt-get` (see [here](https://github.com/meetecho/janus-gateway/issues/2024))
-
-Some resources that came in handy
-
-* [ffmpeg and jack](http://underpop.online.fr/f/ffmpeg/help/jack.htm.gz)
+Used to be a `ubuntu:21.04` container but this needed much
+custom compilation.
+With *Alpine* we can use newer binaries which fix bugs of old versions
+so we only need to compile *SuperCollider* and *janus*.
+Check the `Dockerfile` for remarks.

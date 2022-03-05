@@ -2,8 +2,8 @@
 test-stream: {
 	# secret = "adminpwd"
 	id = 1
-	description = "Opus/VP8 live stream coming from external source"
-	metadata = "You can use this metadata section to put any info you want!"
+	# description = "Opus/VP8 live stream coming from external source"
+	# metadata = "You can use this metadata section to put any info you want!"
 	type = "rtp"
 	audioport = 5002
 	audiopt = 111 # <audio RTP payload type> (e.g., 111)

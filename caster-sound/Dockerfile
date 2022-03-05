@@ -1,131 +1,151 @@
-FROM ubuntu:21.04
+FROM alpine:latest
 
-ENV DEBIAN_FRONTEND noninteractive
+WORKDIR /root
 
-RUN adduser sc
+# needed for pipewire
+ENV XDG_RUNTIME_DIR='/root'
 
-RUN mkdir -p /home/sc/tmp
+# although we will use pipewire instead of jack we need the
+# header bindings which are not available for pipewire-jack
+# so we will instead compile against native jack but replace it
+# later
 
-WORKDIR /home/sc/tmp
+RUN apk add \
+    jack \
+    jack-dev \
+    git \
+    vim
 
-RUN apt-get update && \
-	apt-get install -y \
-		git \
-		wget \
-		build-essential
+# ------------------  SUPERCOLLIDER
 
-# --- JANUS ----------------------------------
+RUN apk add \
+    alsa-lib-dev \
+    boost-dev  \
+    boost-static  \
+    cmake  \
+    eudev-dev  \
+    fftw-dev  \
+    libsndfile-dev  \
+    libxt-dev  \
+    linux-headers  \
+    ncurses-dev  \
+    portaudio-dev  \
+    readline-dev  \
+    samurai  \
+    yaml-cpp-dev \
+    g++ \
+    make
 
-RUN apt-get install -y \
-	libmicrohttpd-dev \
-	libjansson-dev \
-	libssl-dev \
-	libsrtp2-dev \
-	libsofia-sip-ua-dev \
-	libglib2.0-dev \
-	libopus-dev \
-	libogg-dev \
-	libcurl4-openssl-dev \
-	liblua5.3-dev \
-	libconfig-dev \
-	pkg-config \
-	gengetopt \
-	libtool \
-	automake
+RUN git clone \
+    --recurse-submodules \
+    --depth 1 \
+    --branch 3.12 \
+    https://github.com/SuperCollider/SuperCollider.git && \
+    mkdir -p /root/SuperCollider/build
 
-# libsrtp
-WORKDIR /home/sc/tmp
-RUN apt remove -y libsrtp2-1 libsrtp2-dev
-RUN wget https://github.com/cisco/libsrtp/archive/v2.2.0.tar.gz && \
-	tar xfv v2.2.0.tar.gz
-WORKDIR /home/sc/tmp/libsrtp-2.2.0
-RUN ./configure --prefix=/usr --enable-openssl && \
-	make shared_library && \
-	make install && \
-    rm -rf /home/sc/tmp/*
+WORKDIR /root/SuperCollider
 
-# libnice
-WORKDIR /home/sc/tmp
-RUN wget https://libnice.freedesktop.org/releases/libnice-0.1.18.tar.gz && \
-	tar xzf libnice-0.1.18.tar.gz
-WORKDIR /home/sc/tmp/libnice-0.1.18
-RUN apt-get remove libnice-dev && \
-	apt-get install -y meson ninja-build
-RUN meson --prefix=/usr build && \
-	/usr/bin/ninja -C build && \
-	/usr/bin/ninja -C build install && \
-    rm -rf /home/sc/tmp/* 
+# apply patch for alpine, see
+# https://github.com/supercollider/supercollider/issues/5197#issuecomment-1047188442
+COPY sc-alpine.patch .
+RUN apk add patch && patch < sc-alpine.patch
 
-WORKDIR /home/sc/tmp
-RUN git clone --depth 1 --branch v0.11.6 \
-	https://github.com/meetecho/janus-gateway.git
-WORKDIR /home/sc/tmp/janus-gateway
-RUN ./autogen.sh && \
-	./configure --prefix=/opt/janus \
-		--disable-rabbitmq \
-		--disable-mqtt && \
-	make -j4 && \
-	make install && \
-	make configs && \
-    rm -rf /home/sc/tmp/*
+WORKDIR /root/SuperCollider/build
+RUN cmake \
+	-DCMAKE_BUILD_TYPE=Debug \
+	-DSUPERNOVA=OFF \
+	-DSC_ED=OFF \
+	-DSC_EL=OFF \
+	-DSC_VIM=ON \
+	-DNATIVE=ON \
+	-DSC_IDE=OFF \
+	-DNO_X11=ON \
+	-DSC_ABLETON_LINK=OFF \
+	-DSC_QT=OFF .. && \
+	cmake --build . --config Debug --target all
+RUN	cmake --build . --config Debug --target install
 
-# --- FFMPEG ---------------------------------
+# now we reploce jack with pipewire which is more stable
+# in a virtualized environment than jack which resulted
+# in an unstable clock and dropouts
 
-RUN apt-get install --yes ffmpeg
+RUN apk del \
+    jack \
+    jack-dev
 
-# --- JACK -----------------------------------
+# ------------------  PIPEWIRE
 
-WORKDIR /home/sc/tmp
-RUN git clone --depth 1 --branch v1.9.19 \
-	git://github.com/jackaudio/jack2.git
-WORKDIR /home/sc/tmp/jack2
-RUN ./waf configure && \
-	./waf && \
-	./waf install && \
-	ldconfig && \
-    rm -rf /home/sc/tmp/*
+RUN apk add \
+    pipewire \
+    pipewire-media-session \
+    pipewire-jack \
+    pipewire-tools
 
-# --- SUPERCOLLIDER --------------------------
+# ------------------  GSTREAMER
 
-# https://github.com/supercollider/supercollider/blob/develop/README_RASPBERRY_PI.md
-# For GUI-less builds:
-RUN apt-get install -y \
-	libsamplerate0-dev \
-	libsndfile1-dev \
-	libasound2-dev \
-	libavahi-client-dev \
-    libreadline-dev \
-	libfftw3-dev \
-	libudev-dev \
-	libncurses5-dev \
-	cmake
-WORKDIR /home/sc/tmp
-RUN git clone --depth 1 --branch 3.11 --recurse-submodules https://github.com/supercollider/supercollider.git
-WORKDIR /home/sc/tmp/supercollider
-RUN mkdir build && cd build && \
-	cmake \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DSUPERNOVA=OFF \
-		-DSC_ED=OFF \
-		-DSC_EL=OFF \
-		-DSC_VIM=ON \
-		-DNATIVE=ON \
-		-DSC_IDE=OFF \
-		-DNO_X11=ON \
-		-DSC_QT=OFF .. && \
-	cmake --build . --config Release --target all && \
-	cmake --build . --config Release --target install && \
-	ldconfig && \
-    rm -rf /home/sc/tmp/*
+RUN apk add \
+    gstreamer \
+    gstreamer-dev \
+    gst-plugins-good \
+    gst-plugin-pipewire \
+    gstreamer-tools
 
-# --------------------------------------------
+# ------------------  SUPERVISOR
 
+RUN apk add supervisor
 
-WORKDIR /home/sc
+# ------------------  JANUS
 
-COPY start_services.sh .
-# RUN chmod +x /home/sc/start_services.sh
+RUN apk add \
+    autoconf \
+    automake \
+    libtool \
+    gengetopt \
+    lua5.3-dev \
+    cmake \
+    libsrtp-dev \
+	libnice-dev \
+    jansson-dev \
+    libconfig-dev \
+    libusrsctp-dev \
+    libmicrohttpd-dev \
+	libwebsockets-dev \
+    rabbitmq-c-dev \
+    curl-dev \
+    libogg-dev \
+    libopusenc-dev \
+	lua \
+    duktape-dev \
+    npm \
+    ffmpeg-dev \
+    zlib-dev \
+    libogg-dev \
+	libuv-dev \
+    sofia-sip-dev
 
-COPY sc.scd .
+WORKDIR /root
 
-CMD ["/bin/sh", "./start_services.sh"]
+RUN git clone --depth 1 https://github.com/meetecho/janus-gateway.git && \
+    cd janus-gateway && \
+    ./autogen.sh && \
+    ./configure \
+    --prefix=/opt/janus \
+    --disable-rabbitmq \
+	--disable-mqtt && \
+    make && \
+    make install && \
+    make configs
+
+# ------------------  STATIC HTML FILES
+# are serverd via a python http server - only for debugging
+COPY html_test /root/html_test/
+
+# apply config files
+
+COPY janus.plugin.streaming.jcfg /opt/janus/etc/janus/janus.plugin.streaming.jcfg
+
+COPY caster-sound.conf /root/caster-sound.conf
+
+COPY sc.scd /root/sc.scd
+
+CMD ["/usr/bin/supervisord", "-c", "/root/caster-sound.conf"]
