@@ -1,8 +1,9 @@
 import os
+import random
 
 from django.http import HttpResponse
 
-from gencaster.asgi import sio
+from gencaster.asgi import sio, osc_client
 
 
 def index(request):
@@ -17,6 +18,10 @@ async def my_event(sid, message):
 
 @sio.event
 async def my_broadcast_event(sid, message):
+    try:
+        osc_client.send_message("/foo", int(message["data"]))
+    except ValueError:
+        print(f"Can not transfer {message['data']} to a number")
     await sio.emit("my_response", {"data": message["data"]})
 
 
