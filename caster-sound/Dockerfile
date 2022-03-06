@@ -65,7 +65,7 @@ RUN cmake \
 	cmake --build . --config Debug --target all
 RUN	cmake --build . --config Debug --target install
 
-# now we reploce jack with pipewire which is more stable
+# now we replace jack with pipewire which is more stable
 # in a virtualized environment than jack which resulted
 # in an unstable clock and dropouts
 
@@ -137,7 +137,7 @@ RUN git clone --depth 1 https://github.com/meetecho/janus-gateway.git && \
     make configs
 
 # ------------------  STATIC HTML FILES
-# are serverd via a python http server - only for debugging
+# are served via a python http server - only for debugging
 COPY html_test /root/html_test/
 
 # apply config files
