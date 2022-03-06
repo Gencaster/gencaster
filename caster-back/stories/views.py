@@ -1,14 +1,11 @@
-import os
-import random
-
 from django.http import HttpResponse
+from django.shortcuts import render
 
 from gencaster.asgi import sio, osc_client
 
 
 def index(request):
-    basedir = os.path.dirname(os.path.realpath(__file__))
-    return HttpResponse(open(os.path.join(basedir, "static/index.html")))
+    return render(request, "stories/index.html")
 
 
 @sio.event
