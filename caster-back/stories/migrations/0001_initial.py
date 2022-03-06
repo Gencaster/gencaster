@@ -9,52 +9,99 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Story',
+            name="Story",
             fields=[
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('active', models.BooleanField(default=True)),
-                ('name', models.CharField(max_length=256)),
-                ('slug', models.SlugField()),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("active", models.BooleanField(default=True)),
+                ("name", models.CharField(max_length=256)),
+                ("slug", models.SlugField()),
             ],
             options={
-                'verbose_name': 'Story',
-                'verbose_name_plural': 'Stories',
+                "verbose_name": "Story",
+                "verbose_name_plural": "Stories",
             },
         ),
         migrations.CreateModel(
-            name='Chapter',
+            name="Chapter",
             fields=[
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('active', models.BooleanField(default=True)),
-                ('name', models.CharField(max_length=256)),
-                ('slug', models.SlugField()),
-                ('story', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='stories.story')),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("active", models.BooleanField(default=True)),
+                ("name", models.CharField(max_length=256)),
+                ("slug", models.SlugField()),
+                (
+                    "story",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="stories.story"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Chapter',
-                'verbose_name_plural': 'Chapters',
+                "verbose_name": "Chapter",
+                "verbose_name_plural": "Chapters",
             },
         ),
         migrations.CreateModel(
-            name='Block',
+            name="Block",
             fields=[
-                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
-                ('active', models.BooleanField(default=True)),
-                ('name', models.CharField(max_length=256)),
-                ('slug', models.SlugField()),
-                ('block_type', models.CharField(choices=[('preproduced', 'Pre-Produced'), ('dynamic', 'Dynamic'), ('special', 'Special')], max_length=64)),
-                ('text', models.TextField()),
-                ('audio_file', models.FileField(upload_to='audio/blocks/')),
-                ('chapter', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='stories.chapter')),
+                (
+                    "uuid",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                        unique=True,
+                    ),
+                ),
+                ("active", models.BooleanField(default=True)),
+                ("name", models.CharField(max_length=256)),
+                ("slug", models.SlugField()),
+                (
+                    "block_type",
+                    models.CharField(
+                        choices=[
+                            ("preproduced", "Pre-Produced"),
+                            ("dynamic", "Dynamic"),
+                            ("special", "Special"),
+                        ],
+                        max_length=64,
+                    ),
+                ),
+                ("text", models.TextField()),
+                ("audio_file", models.FileField(upload_to="audio/blocks/")),
+                (
+                    "chapter",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="stories.chapter",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Block',
-                'verbose_name_plural': 'Blocks',
+                "verbose_name": "Block",
+                "verbose_name_plural": "Blocks",
             },
         ),
     ]

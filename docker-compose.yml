@@ -11,7 +11,7 @@ services:
       - 5432:5432
     volumes:
       - db:/var/lib/postgresql/data
-    
+
   backend:
     build: caster-back
     env_file:
@@ -21,7 +21,7 @@ services:
     volumes:
       - ./caster-back/:/home/gencaster
       - ./data:/data
-  
+
   frontend:
     build: caster-front
     ports:

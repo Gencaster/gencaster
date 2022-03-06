@@ -19,7 +19,7 @@ class Story(models.Model):
     class Meta:
         verbose_name = _("Story")
         verbose_name_plural = _("Stories")
-    
+
     def __str__(self) -> str:
         return f"{self.name}"
 
@@ -37,7 +37,7 @@ class Chapter(models.Model):
     slug = models.SlugField()
 
     story = models.ForeignKey(
-        'stories.Story',
+        "stories.Story",
         on_delete=models.CASCADE,
         null=False,
         blank=False,
@@ -74,7 +74,7 @@ class Block(models.Model):
     )
 
     chapter = models.ForeignKey(
-        'stories.Chapter',
+        "stories.Chapter",
         on_delete=models.CASCADE,
         null=False,
         blank=False,
@@ -82,9 +82,7 @@ class Block(models.Model):
 
     text = models.TextField()
 
-    audio_file = models.FileField(
-        upload_to="audio/blocks/"
-    )
+    audio_file = models.FileField(upload_to="audio/blocks/")
 
     class Meta:
         verbose_name = _("Block")

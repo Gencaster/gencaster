@@ -12,15 +12,15 @@ import socketio
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gencaster.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gencaster.settings")
 
 sio = socketio.AsyncServer(
-    async_mode='asgi',
-    cors_allowed_origins='*',
+    async_mode="asgi",
+    cors_allowed_origins="*",
 )
 
 application = socketio.ASGIApp(
     sio,
     get_asgi_application(),
-    socketio_path='socket.io',
+    socketio_path="socket.io",
 )
