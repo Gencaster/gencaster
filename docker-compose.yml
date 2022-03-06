@@ -1,11 +1,21 @@
 version: '3.9'
 
+volumes:
+  db:
 services:
+  database:
+    image: postgres:14.2-alpine
+    env_file:
+      - vars.env
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+    
   backend:
     build: caster-back
-    environment:
-      - DJANGO_SU_USER=admin
-      - DJANGO_SU_PASS=admin
+    env_file:
+      - vars.env
     ports:
       - 8090:8000
     volumes:
