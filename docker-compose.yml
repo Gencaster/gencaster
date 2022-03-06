@@ -1,12 +1,26 @@
 version: '3.9'
 
+volumes:
+  db:
 services:
+  database:
+    image: postgres:14.2-alpine
+    env_file:
+      - vars.env
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+    
   backend:
     build: caster-back
+    env_file:
+      - vars.env
     ports:
-      - 8090:8080
+      - 8090:8000
     volumes:
-      - ./data:data
+      - ./caster-back/:/home/gencaster
+      - ./data:/data
   
   frontend:
     build: caster-front
