@@ -26,15 +26,6 @@ services:
     build: caster-front
     ports:
       - 8080:8080
-  
-  voice:
-    build: caster-voice
-    env_file:
-      - .secrets.env
-    ports:
-      - 8091:8080
-    volumes:
-      - ./data:/data
 
   sound:
     build: caster-sound
