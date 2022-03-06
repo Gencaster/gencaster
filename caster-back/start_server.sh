@@ -14,7 +14,14 @@ else
     python manage.py shell --command "$python_script";
 fi;
 
-echo "Start development server";
-# python manage.py runserver 0.0.0.0:8080;
+echo "Collect static files"
 
-gunicorn gencaster.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000;
+python manage.py collectstatic --noinput > /dev/null
+
+if ! [ -z "$DEVELOPMENT" ]; then
+    echo "Start development server";
+    python manage.py runserver 0.0.0.0:8080;
+else
+    echo "Starting gunicorn server";
+    gunicorn gencaster.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000;
+fi

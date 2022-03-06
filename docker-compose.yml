@@ -9,8 +9,8 @@ services:
     ports:
       - 8090:8000
     volumes:
-      - ./caster-back/gencaster:/home/gencaster
-    command: /bin/bash /home/gencaster/start_server.sh
+      - ./caster-back/:/home/gencaster
+      - ./data:/data
   
   frontend:
     build: caster-front

@@ -6,8 +6,8 @@ COPY requirements.txt .
 
 RUN pip3 install -r requirements.txt
 
-COPY gencaster/ .
+COPY . .
 
 RUN chmod +x start_server.sh
 
-CMD [ "/bin/sh", "/gencaster/start_server.sh" ]
+CMD [ "/bin/sh", "/home/gencaster/start_server.sh" ]
