@@ -1,102 +1,151 @@
-FROM ubuntu:20.04
+FROM alpine:3.15
 
-ENV DEBIAN_FRONTEND noninteractive
+WORKDIR /root
 
-RUN adduser sc && \
-    usermod -a -G audio sc
+# needed for pipewire
+ENV XDG_RUNTIME_DIR='/root'
 
-RUN apt update
+# although we will use pipewire instead of jack we need the
+# header bindings which are not available for pipewire-jack
+# so we will instead compile against native jack but replace it
+# later
 
-RUN apt-get install --yes \
+RUN apk add \
+    jack \
+    jack-dev \
     git \
+    vim
+
+# ------------------  SUPERCOLLIDER
+
+RUN apk add \
+    alsa-lib-dev \
+    boost-dev  \
+    boost-static  \
+    cmake  \
+    eudev-dev  \
+    fftw-dev  \
+    libsndfile-dev  \
+    libxt-dev  \
+    linux-headers  \
+    ncurses-dev  \
+    portaudio-dev  \
+    readline-dev  \
+    samurai  \
+    yaml-cpp-dev \
     g++ \
-    python3
+    make
 
-RUN mkdir -p /home/sc/tmp
-WORKDIR /home/sc/tmp
+RUN git clone \
+    --recurse-submodules \
+    --depth 1 \
+    --branch 3.12 \
+    https://github.com/SuperCollider/SuperCollider.git && \
+    mkdir -p /root/SuperCollider/build
 
-## jack
+WORKDIR /root/SuperCollider
 
-# RUN apt-get install --yes \
-#     pkg-config \
-#     alsa-base \
-#     alsa-utils 
+# apply patch for alpine, see
+# https://github.com/supercollider/supercollider/issues/5197#issuecomment-1047188442
+COPY sc-alpine.patch .
+RUN apk add patch && patch < sc-alpine.patch
 
-RUN git clone https://github.com/jackaudio/jack2.git && \
-    cd /home/sc/tmp/jack2 && \
-    ./waf configure && \
-    ./waf && \
-    ./waf install && \
-    ldconfig && \
-    cd /home/sc/tmp && \
-    rm -rf jack2
-
-# supercollider
-# from https://github.com/supercollider/supercollider/blob/develop/README_RASPBERRY_PI.md
-
-RUN apt-get install --yes \
-    libsamplerate0-dev \
-    libsndfile1-dev \
-    libasound2-dev \
-    libavahi-client-dev \
-    libreadline-dev \
-    libfftw3-dev \
-    libudev-dev \
-    libncurses5-dev \
-    cmake
-
-RUN git clone --recurse-submodules --branch 3.11 https://github.com/supercollider/supercollider.git && \
-    cd supercollider && \
-    mkdir build
-
-WORKDIR /home/sc/tmp/supercollider/build
-
+WORKDIR /root/SuperCollider/build
 RUN cmake \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DSUPERNOVA=OFF \
-    -DSC_ED=OFF \
-    -DSC_EL=OFF \
-    -DSC_VIM=ON \
-    -DNATIVE=ON \
-    -DSC_IDE=OFF \
-    -DNO_X11=ON \
-    -DSC_QT=OFF \
-    ..
+	-DCMAKE_BUILD_TYPE=Debug \
+	-DSUPERNOVA=OFF \
+	-DSC_ED=OFF \
+	-DSC_EL=OFF \
+	-DSC_VIM=ON \
+	-DNATIVE=ON \
+	-DSC_IDE=OFF \
+	-DNO_X11=ON \
+	-DSC_ABLETON_LINK=OFF \
+	-DSC_QT=OFF .. && \
+	cmake --build . --config Debug --target all
+RUN	cmake --build . --config Debug --target install
 
-RUN cmake \
-    --build . \
-    --config Release \
-    --target all
+# now we replace jack with pipewire which is more stable
+# in a virtualized environment than jack which resulted
+# in an unstable clock and dropouts
 
-RUN cmake \
-    --build . \
-    --config Release \
-    --target install && \
-    ldconfig
+RUN apk del \
+    jack \
+    jack-dev
 
-# FIX in sc 3.11
-RUN rm -rf /usr/local/share/SuperCollider/SCClassLibrary/deprecated/3.13
+# ------------------  PIPEWIRE
 
-# RUN usermod -a -G audio root
+RUN apk add \
+    pipewire \
+    pipewire-media-session \
+    pipewire-jack \
+    pipewire-tools
 
-# USER sc
-# USER root
+# ------------------  GSTREAMER
 
-WORKDIR /home/sc
+RUN apk add \
+    gstreamer \
+    gstreamer-dev \
+    gst-plugins-good \
+    gst-plugin-pipewire \
+    gstreamer-tools
 
-COPY start.sh /home/sc/start.sh
-RUN chmod +x /home/sc/start.sh
+# ------------------  SUPERVISOR
 
-COPY test.scd .
+RUN apk add supervisor
 
-# CM" ]
+# ------------------  JANUS
 
-# change memory limits of docker
-# see https://askubuntu.com/questions/166126/unable-to-start-jack-cannot-allocate-memory
-# and
-# https://github.com/osetinsky/pulse-streamer/blob/jack-sc/examples/supercollider/99-realtime.conf
-#RUN echo "@audio hard    memlock 999999999" >> /etc/security/limits.conf
-#RUN echo "@audio hard    rtprio  99" >> /etc/security/limits.conf
-# USER sc
+RUN apk add \
+    autoconf \
+    automake \
+    libtool \
+    gengetopt \
+    lua5.3-dev \
+    cmake \
+    libsrtp-dev \
+	libnice-dev \
+    jansson-dev \
+    libconfig-dev \
+    libusrsctp-dev \
+    libmicrohttpd-dev \
+	libwebsockets-dev \
+    rabbitmq-c-dev \
+    curl-dev \
+    libogg-dev \
+    libopusenc-dev \
+	lua \
+    duktape-dev \
+    npm \
+    ffmpeg-dev \
+    zlib-dev \
+    libogg-dev \
+	libuv-dev \
+    sofia-sip-dev
 
-# CMD [ "xvfb-run", "sclang" ]
+WORKDIR /root
+
+RUN git clone --depth 1 https://github.com/meetecho/janus-gateway.git && \
+    cd janus-gateway && \
+    ./autogen.sh && \
+    ./configure \
+    --prefix=/opt/janus \
+    --disable-rabbitmq \
+	--disable-mqtt && \
+    make && \
+    make install && \
+    make configs
+
+# ------------------  STATIC HTML FILES
+# are served via a python http server - only for debugging
+COPY html_test /root/html_test/
+
+# apply config files
+
+COPY janus.plugin.streaming.jcfg /opt/janus/etc/janus/janus.plugin.streaming.jcfg
+
+COPY caster-sound.conf /root/caster-sound.conf
+
+COPY sc.scd /root/sc.scd
+
+CMD ["/usr/bin/supervisord", "-c", "/root/caster-sound.conf"]
