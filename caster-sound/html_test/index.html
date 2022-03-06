@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>janus rtp test</title>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/8.1.0/adapter.min.js"></script>
+		<script type="text/javascript" src="janus.js"></script>
+	</head>
+	<body>
+		<audio id="player" controls></audio>
+		<script>
+			const { hostname, protocol } = window.location;
+			// let server = (protocol === 'http:')
+			// 	? `http://${hostname}:8088/janus`
+			// 	: `https://${hostname}:8089/janus`;
+			let server = (protocol === 'http:')
+				? `http://${hostname}:8088/janus`
+				: `https://${hostname}:8089/janus`;
+
+			var opaqueId = 'streamingtest-' + Janus.randomString(12);
+			const audioElem = document.querySelector('#player');
+
+			Janus.init({
+				debug: "all",
+
+				callback: function() {
+					// Make sure the browser supports WebRTC
+					if (!Janus.isWebrtcSupported()) {
+						alert("No WebRTC support... ");
+						return;
+					}
+
+					// Create session
+					janus = new Janus({
+						server: server,
+						// TODO: needed?
+						iceServers: [
+							{ urls: 'stun:stun.l.google.com:19302' }
+						],
+
+						success: function() {
+							// Attach to Streaming plugin
+							janus.attach({
+								plugin: "janus.plugin.streaming",
+								opaqueId: opaqueId,
+
+								success: function(pluginHandle) {
+									streaming = pluginHandle;
+									console.log("Plugin attached! (" + streaming.getPlugin() + ", id=" + streaming.getId() + ")");
+									// Setup streaming session
+									updateStreamsList();
+								},
+
+								error: function(error) {
+									console.error("  -- Error attaching plugin... ", error);
+									alert("Error attaching plugin... " + error);
+								},
+
+								iceState: function(state) {
+									console.log("ICE state changed to " + state);
+								},
+
+								webrtcState: function(on) {
+									console.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
+								},
+
+								onmessage: function(msg, jsep) {
+									console.log(" ::: Got a message :::", msg);
+
+									if (jsep) {
+										console.log("Handling SDP as well...", jsep);
+										var stereo = (jsep.sdp.indexOf("stereo=1") !== -1);
+										// Offer from the plugin, let's answer
+										streaming.createAnswer(
+											{
+												jsep: jsep,
+												// We want recvonly audio/video and, if negotiated, datachannels
+												media: { audioSend: false, videoSend: false, data: true },
+												customizeSdp: function(jsep) {
+													if(stereo && jsep.sdp.indexOf("stereo=1") == -1) {
+														// Make sure that our offer contains stereo too
+														jsep.sdp = jsep.sdp.replace("useinbandfec=1", "useinbandfec=1;stereo=1");
+													}
+												},
+												success: function(jsep) {
+													console.log("Got SDP!", jsep);
+													var body = { request: "start" };
+													streaming.send({ message: body, jsep: jsep });
+												},
+												error: function(error) {
+													console.error("WebRTC error:", error);
+													alert("WebRTC error... " + error.message);
+												}
+											}
+										);
+									}
+								},
+
+								onremotestream: function(stream) {
+									console.log(" ::: Got a remote stream :::", stream);
+
+									Janus.attachMediaStream(audioElem, stream);
+									audioElem.volume = 1;
+								},
+
+								oncleanup: function() {
+									console.log(" ::: Got a cleanup notification :::");
+								}
+							});
+						},
+
+						error: function(error) {
+							console.error(error);
+						},
+
+						destroyed: function() {
+							// window.location.reload();
+						},
+					});
+				},
+			});
+
+
+			function updateStreamsList() {
+				var body = { request: "list" };
+				console.log("Sending message:", body);
+				streaming.send({ message: body, success: function(result) {
+					if (!result) {
+						alert("Got no response to our query for available streams");
+						return;
+					}
+
+					if (result["list"]) {
+						var list = result["list"];
+						console.log("Got a list of available streams");
+						console.log(list);
+						for(var mp in list) {
+							console.log("  >> [" + list[mp]["id"] + "] " + list[mp]["description"] + " (" + list[mp]["type"] + ")");
+						}
+
+						// start first one
+						if (list && list[0]) {
+							var body = {
+								request: "watch",
+								id: list[0].id,
+							};
+							console.log(body);
+							streaming.send({ message: body });
+						}
+					}
+				}});
+			}
+		</script>
+	</body>
+</html>
