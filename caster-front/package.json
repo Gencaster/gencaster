@@ -1,5 +1,5 @@
 {
-  "name": "yarn-template",
+  "name": "caster-front",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -8,35 +8,28 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
-    "lint": "yarn lint:js",
-    "prod": "nuxt build && pm2 restart ./ecosystem.config.js"
+    "lint:prettier": "prettier --check .",
+    "lint": "yarn lint:js && yarn lint:prettier",
+    "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.12.5",
-    "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/pwa": "^3.3.5",
-    "@nuxtjs/style-resources": "^1.0.0",
-    "core-js": "^3.8.3",
-    "eslint-config-prettier": "^8.0.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "fibers": "^5.0.0",
-    "mapbox-gl": "^2.4.1",
-    "nuxt": "^2.14.12",
-    "prettier": "^2.2.1",
-    "prettier-eslint": "^12.0.0",
-    "sails.io.js": "^1.2.1",
-    "sass": "^1.32.8",
-    "sass-loader": "10",
-    "socket.io-client": "2.4.0",
-    "vue-mapbox": "^0.4.1",
-    "vue-slide-up-down": "^2.0.1"
+    "core-js": "^3.19.3",
+    "nuxt": "^2.15.8",
+    "vue": "^2.6.14",
+    "vue-server-renderer": "^2.6.14",
+    "vue-template-compiler": "^2.6.14",
+    "webpack": "^4.46.0"
   },
   "devDependencies": {
-    "@nuxtjs/eslint-config": "^5.0.0",
+    "@babel/eslint-parser": "^7.16.3",
+    "@nuxtjs/eslint-config": "^8.0.0",
     "@nuxtjs/eslint-module": "^3.0.2",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^7.20.0",
-    "eslint-plugin-nuxt": "^2.0.0",
-    "eslint-plugin-vue": "^7.5.0"
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-nuxt": "^3.1.0",
+    "eslint-plugin-vue": "^8.2.0",
+    "prettier": "^2.5.1"
   }
 }
