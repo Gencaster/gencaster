@@ -1,13 +1,11 @@
-import os
-
 from django.http import HttpResponse
+from django.shortcuts import render
 
-from gencaster.asgi import sio
+from gencaster.asgi import sio, osc_client
 
 
 def index(request):
-    basedir = os.path.dirname(os.path.realpath(__file__))
-    return HttpResponse(open(os.path.join(basedir, "static/index.html")))
+    return render(request, "stories/index.html")
 
 
 @sio.event
@@ -17,6 +15,10 @@ async def my_event(sid, message):
 
 @sio.event
 async def my_broadcast_event(sid, message):
+    try:
+        osc_client.send_message("/foo", int(message["data"]))
+    except ValueError:
+        print(f"Can not transfer {message['data']} to a number")
     await sio.emit("my_response", {"data": message["data"]})
 
 

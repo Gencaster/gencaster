@@ -17,7 +17,7 @@ services:
     env_file:
       - vars.env
     ports:
-      - 8090:8000
+      - 8081:8000
     volumes:
       - ./caster-back/:/home/gencaster
       - ./data:/data
@@ -30,6 +30,9 @@ services:
   sound:
     build: caster-sound
     ports:
-      - 8060:8080
+      - 8090:8090  # debug frontend
+      - 8088:8088  # janus server
+      - 10000-10200:10000-10200
     volumes:
       - ./data:/data
+      - ./caster-sound/sc.scd:/root/sc.scd
