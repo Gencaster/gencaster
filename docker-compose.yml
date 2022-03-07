@@ -24,8 +24,11 @@ services:
 
   frontend:
     build: caster-front
+    volumes:
+      # allows for hot reload on development server
+      - ./caster-front/:/root/caster-front/
     ports:
-      - 8080:8080
+      - 3000:3000
 
   sound:
     build: caster-sound
