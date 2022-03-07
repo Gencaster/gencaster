@@ -16,6 +16,7 @@ services:
     build: caster-back
     env_file:
       - vars.env
+      - .secrets.env
     ports:
       - 8081:8000
     volumes:
