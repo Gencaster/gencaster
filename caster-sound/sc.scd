@@ -1,7 +1,5 @@
-s.options.sampleRate_(24000).blockSize_(1024).hardwareBufferSize_(8192*4).memoryLocking_(true).memSize_(8192*4);
+s.options.sampleRate_(48000).memoryLocking_(true).memSize_(8192*4);
 s.boot;
-
-OSCFunc.trace(true);
 
 s.waitForBoot({
 	Ndef(\foo, {|out|
