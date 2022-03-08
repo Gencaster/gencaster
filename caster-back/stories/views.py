@@ -1,7 +1,15 @@
-from django.http import HttpResponse
 from django.shortcuts import render
+from asgiref.sync import sync_to_async
 
 from gencaster.asgi import sio, osc_client
+from voice.models import TextToSpeech
+
+
+def speak_on_stream(text: str) -> TextToSpeech:
+    text_to_speech = TextToSpeech(text=f"<speak>{text}</speak>")
+    text_to_speech.generate_sound_file()
+    osc_client.send_message("/speak", text_to_speech.audio_file.name)
+    return text_to_speech
 
 
 def index(request):
@@ -15,10 +23,7 @@ async def my_event(sid, message):
 
 @sio.event
 async def my_broadcast_event(sid, message):
-    try:
-        osc_client.send_message("/foo", int(message["data"]))
-    except ValueError:
-        print(f"Can not transfer {message['data']} to a number")
+    await sync_to_async(speak_on_stream, thread_sensitive=True)(text=message["data"])
     await sio.emit("my_response", {"data": message["data"]})
 
 

@@ -2,6 +2,7 @@ version: '3.9'
 
 volumes:
   db:
+
 services:
   database:
     image: postgres:14.2-alpine
@@ -22,6 +23,7 @@ services:
     volumes:
       - ./caster-back/:/home/gencaster
       - ./data:/data
+      - ./data:/home/gencaster/media
 
   frontend:
     build: caster-front

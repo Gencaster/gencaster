@@ -2,6 +2,8 @@ s.options.sampleRate_(48000).memoryLocking_(true).memSize_(8192*4);
 s.boot;
 
 s.waitForBoot({
+	OSCFunc.trace(true, true);
+
 	Ndef(\foo, {|out|
 		var sig;
 		sig = SinOsc.ar([LFNoise0.kr(3.0).range(100, 1000), \freq.kr(200.0)])*0.2;
@@ -13,3 +15,13 @@ OSCdef(\foo, {|msg|
 	["received", msg].postln;
 	Ndef(\foo).set(\freq, msg[1]);
 }, path: "foo");
+
+OSCdef(\speak, {|msg|
+	["speak", msg].postln;
+	Tdef(\speak, {
+		var buffer;
+		buffer = Buffer.read(s, "/data" +/+ msg[1]);
+		0.1.wait; //takes some time on the server to load the buffer?
+		buffer.play;
+	}).play;
+}, path: "/speak");
