@@ -11,51 +11,37 @@
       <input v-model="formData.broadcast" type="text" placeholder="Message" />
       <input type="submit" value="Broadcast" />
     </form>
-    <form id="join" method="POST" action="#">
-      <input
-        id="join_room"
-        type="text"
-        name="join_room"
-        placeholder="Room Name"
-      />
+    <form @submit.prevent="emitJoin">
+      <input v-model="formData.joinRoom" type="text" placeholder="Room Name" />
       <input type="submit" value="Join Room" />
     </form>
-    <form id="leave" method="POST" action="#">
-      <input
-        id="leave_room"
-        type="text"
-        name="leave_room"
-        placeholder="Room Name"
-      />
+
+    <form @submit.prevent="emitLeave">
+      <input v-model="formData.leaveRoom" type="text" placeholder="Room Name" />
       <input type="submit" value="Leave Room" />
     </form>
-    <form id="send_room" method="POST" action="#">
+
+    <form @submit.prevent="emitSendRoom">
       <input
-        id="room_name"
+        v-model="formData.sendRoomName"
         type="text"
-        name="room_name"
         placeholder="Room Name"
       />
       <input
-        id="room_data"
+        v-model="formData.sendRoomMessage"
         type="text"
-        name="room_data"
         placeholder="Message"
       />
       <input type="submit" value="Send to Room" />
     </form>
-    <form id="close" method="POST" action="#">
-      <input
-        id="close_room"
-        type="text"
-        name="close_room"
-        placeholder="Room Name"
-      />
+    <form @submit.prevent="emitClose">
+      <input v-model="formData.closeRoom" type="text" placeholder="Room Name" />
       <input type="submit" value="Close Room" />
     </form>
-    <form id="disconnect" method="POST" action="#">
+    <form @submit.prevent="emitDisconnect">
       <input type="submit" value="Disconnect" />
     </form>
+    <br />
     <h2>Receive:</h2>
     <div><p ref="log"></p></div>
   </div>
@@ -72,6 +58,11 @@ export default {
       formData: {
         emit: '',
         broadcast: '',
+        joinRoom: '',
+        leaveRoom: '',
+        sendRoomName: '',
+        sendRoomMessage: '',
+        closeRoom: '',
       },
     }
   },
@@ -111,42 +102,6 @@ export default {
       this.socket.on('my_response', function (msg) {
         that.$refs.log.append('Received: ' + msg.data)
       })
-
-      // event handler for server sent data
-      // the data is displayed in the "Received" section of the page
-      // handlers for the different forms in the page
-      // these send data to the server in a variety of ways
-      // $('form#emit').submit(function (event) {
-      //   socket.emit('my_event', { data: $('#emit_data').val() })
-      //   return false
-      // })
-      // $('form#broadcast').submit(function (event) {
-      //   socket.emit('my_broadcast_event', { data: $('#broadcast_data').val() })
-      //   return false
-      // })
-      // $('form#join').submit(function (event) {
-      //   socket.emit('join', { room: $('#join_room').val() })
-      //   return false
-      // })
-      // $('form#leave').submit(function (event) {
-      //   socket.emit('leave', { room: $('#leave_room').val() })
-      //   return false
-      // })
-      // $('form#send_room').submit(function (event) {
-      //   socket.emit('my_room_event', {
-      //     room: $('#room_name').val(),
-      //     data: $('#room_data').val(),
-      //   })
-      //   return false
-      // })
-      // $('form#close').submit(function (event) {
-      //   socket.emit('close_room', { room: $('#close_room').val() })
-      //   return false
-      // })
-      // $('form#disconnect').submit(function (event) {
-      //   socket.emit('disconnect_request')
-      //   return false
-      // })
     },
 
     initJanus() {
@@ -305,17 +260,47 @@ export default {
       })
     },
 
-    // Form
+    //  =============================== FORM ===============================
+    // event handler for server sent data
+    // the data is displayed in the "Received" section of the page
+    // handlers for the different forms in the page
+    // these send data to the server in a variety of ways
+
     emitData() {
-      console.log(this.formData.emit)
+      // console.log(this.formData.emit)
       this.socket.emit('my_event', { data: this.formData.emit })
     },
 
     emitBroadcast() {
-      console.log(this.formData.broadcast)
-      this.socket.emit('my_broadcast_event', {
-        data: this.formData.broadcast,
+      // console.log(this.formData.broadcast)
+      this.socket.emit('my_broadcast_event', { data: this.formData.broadcast })
+    },
+
+    emitJoin() {
+      // console.log(this.formData.joinRoom)
+      this.socket.emit('join', { data: this.formData.joinRoom })
+    },
+    emitLeave() {
+      // console.log(this.formData.leaveRoom)
+      this.socket.emit('leave', { data: this.formData.leaveRoom })
+    },
+
+    emitSendRoom() {
+      // console.log(this.formData.sendRoomName, this.formData.sendRoomMessage)
+      this.socket.emit('my_room_event', {
+        room: this.formData.sendRoomName,
+        data: this.formData.sendRoomMessage,
       })
+    },
+
+    emitClose() {
+      // console.log(this.formData.closeRoom)
+      this.socket.emit('close_room', { room: this.formData.closeRoom })
+    },
+
+    emitDisconnect() {
+      console.log('Sending disconnect_request')
+      this.socket.emit('disconnect_request')
     },
   },
 }
