@@ -1,7 +1,7 @@
 <template>
   <div>
     <audio ref="player" controls></audio>
-    <h1>Nuxt - Django + SocketIO Test</h1>
+    <h1>Nuxt - Django + SocketIO</h1>
     <h2>Send:</h2>
     <form @submit.prevent="emitData">
       <input v-model="formData.emit" type="text" placeholder="Message" />
@@ -55,6 +55,10 @@ export default {
   components: {},
   data() {
     return {
+      params: {
+        opaqueIdAppendix: 'streamingtest-',
+        iceServers: 'stun:stun.l.google.com:19302',
+      },
       formData: {
         emit: '',
         broadcast: '',
@@ -114,16 +118,17 @@ export default {
           : `https://${hostname}:8089/janus`
 
       // eslint-disable-next-line no-undef
-      const opaqueId = 'streamingtest-' + Janus.randomString(12)
+      const opaqueId = this.params.opaqueIdAppendix + Janus.randomString(12)
       this.audioElem = this.$refs.player
       // eslint-disable-next-line no-undef
       Janus.init({
         debug: 'all',
         callback: () => {
           // Make sure the browser supports WebRTC
+          // [] To do: Send to page explaining webrtc support needed
           // eslint-disable-next-line no-undef
           if (!Janus.isWebrtcSupported()) {
-            alert('No WebRTC support... ')
+            alert("Unfortunately, your devices doesn't seem to support WebRTC.")
             return
           }
           // Create session
@@ -131,7 +136,7 @@ export default {
           that.janus = new Janus({
             server,
             // TODO: needed?
-            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+            iceServers: [{ urls: this.params.iceServers }],
             success: () => {
               // Attach to Streaming plugin
               that.janus.attach({
