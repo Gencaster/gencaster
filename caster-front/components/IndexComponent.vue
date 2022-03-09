@@ -8,5 +8,15 @@
 <script>
 export default {
   name: 'IndexComponent',
+  components: {},
+  data() {
+    return {}
+  },
+  computed: {},
+  mounted() {},
+  created() {},
+  methods: {},
 }
 </script>
+
+<style scoped lang="scss"></style>
