@@ -1,4 +1,3 @@
-<!-- Please remove this file from your project -->
 <template>
   <div>
     <p>Index</p>
@@ -11,6 +10,16 @@ export default {
   components: {},
   data() {
     return {}
+  },
+  head() {
+    return {
+      script: [
+        {
+          src: 'js/janus.js',
+          body: true,
+        },
+      ],
+    }
   },
   computed: {},
   mounted() {},
