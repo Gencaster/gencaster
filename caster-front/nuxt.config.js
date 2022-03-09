@@ -1,7 +1,4 @@
 export default {
-  server: {
-    host: "0.0.0.0"
-  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'caster-front',
@@ -15,10 +12,10 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  css: ['@/assets/styles/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [{ src: '@/plugins/plugins.js' }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -52,4 +49,9 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  server: {
+    port: process.env.PORT || 3000, // default: 3000
+    host: process.env.HOST || '0.0.0.0', // default: localhost 0.0.0.0 for sharing // 127.0.0.1 for online
+  },
 }

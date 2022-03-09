@@ -15,19 +15,26 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/pwa": "^3.3.5",
+    "@nuxtjs/style-resources": "^1.2.1",
     "core-js": "^3.19.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "fibers": "^5.0.1",
     "nuxt": "^2.15.8",
+    "sass": "^1.49.9",
+    "sass-loader": "10",
+    "socket.io-client": "4.4.0",
     "vue": "^2.6.14",
     "vue-server-renderer": "^2.6.14",
     "vue-template-compiler": "^2.6.14",
-    "webpack": "^4.46.0"
+    "webpack": "^4.46.0",
+    "webrtc-adapter": "8.1.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.3",
     "@nuxtjs/eslint-config": "^8.0.0",
     "@nuxtjs/eslint-module": "^3.0.2",
     "eslint": "^8.4.1",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-nuxt": "^3.1.0",
     "eslint-plugin-vue": "^8.2.0",
     "prettier": "^2.5.1"
