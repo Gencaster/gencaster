@@ -1,238 +1,310 @@
 {% load static %}
 
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Django + SocketIO Test</title>
-    <script type="text/javascript" src="//code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/8.1.0/adapter.min.js"></script>
+    <script
+      type="text/javascript"
+      src="//code.jquery.com/jquery-3.2.1.slim.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/8.1.0/adapter.min.js"
+    ></script>
     <script type="text/javascript" src="{% static 'janus.js' %}"></script>
     <script type="text/javascript" charset="utf-8">
-        $(document).ready(function(){
-            var socket = io.connect();
+      $(document).ready(function () {
+        var socket = io.connect();
 
-            socket.on('connect', function() {
-                socket.emit('my_event', {data: 'I\'m connected!'});
-            });
-            socket.on('disconnect', function() {
-                $('#log').append('<br>Disconnected');
-            });
-            socket.on('my_response', function(msg) {
-                $('#log').append('<br>Received: ' + msg.data);
-            });
+        // console.log('XYZABC');
+        // console.log(socket);
 
-            // event handler for server sent data
-            // the data is displayed in the "Received" section of the page
-            // handlers for the different forms in the page
-            // these send data to the server in a variety of ways
-            $('form#emit').submit(function(event) {
-                socket.emit('my_event', {data: $('#emit_data').val()});
-                return false;
-            });
-            $('form#broadcast').submit(function(event) {
-                socket.emit('my_broadcast_event', {data: $('#broadcast_data').val()});
-                return false;
-            });
-            $('form#join').submit(function(event) {
-                socket.emit('join', {room: $('#join_room').val()});
-                return false;
-            });
-            $('form#leave').submit(function(event) {
-                socket.emit('leave', {room: $('#leave_room').val()});
-                return false;
-            });
-            $('form#send_room').submit(function(event) {
-                socket.emit('my_room_event', {room: $('#room_name').val(), data: $('#room_data').val()});
-                return false;
-            });
-            $('form#close').submit(function(event) {
-                socket.emit('close_room', {room: $('#close_room').val()});
-                return false;
-            });
-            $('form#disconnect').submit(function(event) {
-                socket.emit('disconnect_request');
-                return false;
-            });
+        socket.on('connect', function () {
+          socket.emit('my_event', { data: "I'm connected!" });
         });
+        socket.on('disconnect', function () {
+          $('#log').append('<br>Disconnected');
+        });
+        socket.on('my_response', function (msg) {
+          $('#log').append('<br>Received: ' + msg.data);
+        });
+
+        // event handler for server sent data
+        // the data is displayed in the "Received" section of the page
+        // handlers for the different forms in the page
+        // these send data to the server in a variety of ways
+        $('form#emit').submit(function (event) {
+          socket.emit('my_event', { data: $('#emit_data').val() });
+          return false;
+        });
+        $('form#broadcast').submit(function (event) {
+          socket.emit('my_broadcast_event', {
+            data: $('#broadcast_data').val(),
+          });
+          return false;
+        });
+        $('form#join').submit(function (event) {
+          socket.emit('join', { room: $('#join_room').val() });
+          return false;
+        });
+        $('form#leave').submit(function (event) {
+          socket.emit('leave', { room: $('#leave_room').val() });
+          return false;
+        });
+        $('form#send_room').submit(function (event) {
+          socket.emit('my_room_event', {
+            room: $('#room_name').val(),
+            data: $('#room_data').val(),
+          });
+          return false;
+        });
+        $('form#close').submit(function (event) {
+          socket.emit('close_room', { room: $('#close_room').val() });
+          return false;
+        });
+        $('form#disconnect').submit(function (event) {
+          socket.emit('disconnect_request');
+          return false;
+        });
+      });
     </script>
-</head>
-<body>
+  </head>
+  <body>
     <audio id="player" controls></audio>
     <script>
-        const { hostname, protocol } = window.location;
-        // let server = (protocol === 'http:')
-        // 	? `http://${hostname}:8088/janus`
-        // 	: `https://${hostname}:8089/janus`;
-        let server = (protocol === 'http:')
-            ? `http://${hostname}:8088/janus`
-            : `https://${hostname}:8089/janus`;
+      const { hostname, protocol } = window.location;
+      // let server = (protocol === 'http:')
+      // 	? `http://${hostname}:8088/janus`
+      // 	: `https://${hostname}:8089/janus`;
+      let server =
+        protocol === 'http:'
+          ? `http://${hostname}:8088/janus`
+          : `https://${hostname}:8089/janus`;
 
-        var opaqueId = 'streamingtest-' + Janus.randomString(12);
-        const audioElem = document.querySelector('#player');
+      var opaqueId = 'streamingtest-' + Janus.randomString(12);
+      const audioElem = document.querySelector('#player');
 
-        Janus.init({
-            debug: "all",
+      Janus.init({
+        debug: 'all',
 
-            callback: function() {
-                // Make sure the browser supports WebRTC
-                if (!Janus.isWebrtcSupported()) {
-                    alert("No WebRTC support... ");
-                    return;
-                }
+        callback: function () {
+          // Make sure the browser supports WebRTC
+          if (!Janus.isWebrtcSupported()) {
+            alert('No WebRTC support... ');
+            return;
+          }
 
-                // Create session
-                janus = new Janus({
-                    server: server,
-                    // TODO: needed?
-                    iceServers: [
-                        { urls: 'stun:stun.l.google.com:19302' }
-                    ],
+          // Create session
+          janus = new Janus({
+            server: server,
+            // TODO: needed?
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
 
-                    success: function() {
-                        // Attach to Streaming plugin
-                        janus.attach({
-                            plugin: "janus.plugin.streaming",
-                            opaqueId: opaqueId,
+            success: function () {
+              // Attach to Streaming plugin
+              janus.attach({
+                plugin: 'janus.plugin.streaming',
+                opaqueId: opaqueId,
 
-                            success: function(pluginHandle) {
-                                streaming = pluginHandle;
-                                console.log("Plugin attached! (" + streaming.getPlugin() + ", id=" + streaming.getId() + ")");
-                                // Setup streaming session
-                                updateStreamsList();
-                            },
+                success: function (pluginHandle) {
+                  streaming = pluginHandle;
+                  console.log(
+                    'Plugin attached! (' +
+                      streaming.getPlugin() +
+                      ', id=' +
+                      streaming.getId() +
+                      ')'
+                  );
+                  // Setup streaming session
+                  updateStreamsList();
+                },
 
-                            error: function(error) {
-                                console.error("  -- Error attaching plugin... ", error);
-                                alert("Error attaching plugin... " + error);
-                            },
+                error: function (error) {
+                  console.error('  -- Error attaching plugin... ', error);
+                  alert('Error attaching plugin... ' + error);
+                },
 
-                            iceState: function(state) {
-                                console.log("ICE state changed to " + state);
-                            },
+                iceState: function (state) {
+                  console.log('ICE state changed to ' + state);
+                },
 
-                            webrtcState: function(on) {
-                                console.log("Janus says our WebRTC PeerConnection is " + (on ? "up" : "down") + " now");
-                            },
+                webrtcState: function (on) {
+                  console.log(
+                    'Janus says our WebRTC PeerConnection is ' +
+                      (on ? 'up' : 'down') +
+                      ' now'
+                  );
+                },
 
-                            onmessage: function(msg, jsep) {
-                                console.log(" ::: Got a message :::", msg);
+                onmessage: function (msg, jsep) {
+                  console.log(' ::: Got a message :::', msg);
 
-                                if (jsep) {
-                                    console.log("Handling SDP as well...", jsep);
-                                    var stereo = (jsep.sdp.indexOf("stereo=1") !== -1);
-                                    // Offer from the plugin, let's answer
-                                    streaming.createAnswer(
-                                        {
-                                            jsep: jsep,
-                                            // We want recvonly audio/video and, if negotiated, datachannels
-                                            media: { audioSend: false, videoSend: false, data: true },
-                                            customizeSdp: function(jsep) {
-                                                if(stereo && jsep.sdp.indexOf("stereo=1") == -1) {
-                                                    // Make sure that our offer contains stereo too
-                                                    jsep.sdp = jsep.sdp.replace("useinbandfec=1", "useinbandfec=1;stereo=1");
-                                                }
-                                            },
-                                            success: function(jsep) {
-                                                console.log("Got SDP!", jsep);
-                                                var body = { request: "start" };
-                                                streaming.send({ message: body, jsep: jsep });
-                                            },
-                                            error: function(error) {
-                                                console.error("WebRTC error:", error);
-                                                alert("WebRTC error... " + error.message);
-                                            }
-                                        }
-                                    );
-                                }
-                            },
+                  if (jsep) {
+                    console.log('Handling SDP as well...', jsep);
+                    var stereo = jsep.sdp.indexOf('stereo=1') !== -1;
+                    // Offer from the plugin, let's answer
+                    streaming.createAnswer({
+                      jsep: jsep,
+                      // We want recvonly audio/video and, if negotiated, datachannels
+                      media: { audioSend: false, videoSend: false, data: true },
+                      customizeSdp: function (jsep) {
+                        if (stereo && jsep.sdp.indexOf('stereo=1') == -1) {
+                          // Make sure that our offer contains stereo too
+                          jsep.sdp = jsep.sdp.replace(
+                            'useinbandfec=1',
+                            'useinbandfec=1;stereo=1'
+                          );
+                        }
+                      },
+                      success: function (jsep) {
+                        console.log('Got SDP!', jsep);
+                        var body = { request: 'start' };
+                        streaming.send({ message: body, jsep: jsep });
+                      },
+                      error: function (error) {
+                        console.error('WebRTC error:', error);
+                        alert('WebRTC error... ' + error.message);
+                      },
+                    });
+                  }
+                },
 
-                            onremotestream: function(stream) {
-                                console.log(" ::: Got a remote stream :::", stream);
+                onremotestream: function (stream) {
+                  console.log(' ::: Got a remote stream :::', stream);
 
-                                Janus.attachMediaStream(audioElem, stream);
-                                audioElem.volume = 1;
-                            },
+                  Janus.attachMediaStream(audioElem, stream);
+                  audioElem.volume = 1;
+                },
 
-                            oncleanup: function() {
-                                console.log(" ::: Got a cleanup notification :::");
-                            }
-                        });
-                    },
-
-                    error: function(error) {
-                        console.error(error);
-                    },
-
-                    destroyed: function() {
-                        // window.location.reload();
-                    },
-                });
+                oncleanup: function () {
+                  console.log(' ::: Got a cleanup notification :::');
+                },
+              });
             },
+
+            error: function (error) {
+              console.error(error);
+            },
+
+            destroyed: function () {
+              // window.location.reload();
+            },
+          });
+        },
+      });
+
+      function updateStreamsList() {
+        var body = { request: 'list' };
+        console.log('Sending message:', body);
+        streaming.send({
+          message: body,
+          success: function (result) {
+            if (!result) {
+              alert('Got no response to our query for available streams');
+              return;
+            }
+
+            if (result['list']) {
+              var list = result['list'];
+              console.log('Got a list of available streams');
+              console.log(list);
+              for (var mp in list) {
+                console.log(
+                  '  >> [' +
+                    list[mp]['id'] +
+                    '] ' +
+                    list[mp]['description'] +
+                    ' (' +
+                    list[mp]['type'] +
+                    ')'
+                );
+              }
+
+              // start first one
+              if (list && list[0]) {
+                var body = {
+                  request: 'watch',
+                  id: list[0].id,
+                };
+                console.log(body);
+                streaming.send({ message: body });
+              }
+            }
+          },
         });
-
-
-        function updateStreamsList() {
-            var body = { request: "list" };
-            console.log("Sending message:", body);
-            streaming.send({ message: body, success: function(result) {
-                if (!result) {
-                    alert("Got no response to our query for available streams");
-                    return;
-                }
-
-                if (result["list"]) {
-                    var list = result["list"];
-                    console.log("Got a list of available streams");
-                    console.log(list);
-                    for(var mp in list) {
-                        console.log("  >> [" + list[mp]["id"] + "] " + list[mp]["description"] + " (" + list[mp]["type"] + ")");
-                    }
-
-                    // start first one
-                    if (list && list[0]) {
-                        var body = {
-                            request: "watch",
-                            id: list[0].id,
-                        };
-                        console.log(body);
-                        streaming.send({ message: body });
-                    }
-                }
-            }});
-        }
+      }
     </script>
     <h1>Django + SocketIO Test</h1>
     <h2>Send:</h2>
-    <form id="emit" method="POST" action='#'>
-        <input type="text" name="emit_data" id="emit_data" placeholder="Message">
-        <input type="submit" value="Echo">
+    <form id="emit" method="POST" action="#">
+      <input
+        type="text"
+        name="emit_data"
+        id="emit_data"
+        placeholder="Message"
+      />
+      <input type="submit" value="Echo" />
     </form>
-    <form id="broadcast" method="POST" action='#'>
-        <input type="text" name="broadcast_data" id="broadcast_data" placeholder="Message">
-        <input type="submit" value="Broadcast">
+    <form id="broadcast" method="POST" action="#">
+      <input
+        type="text"
+        name="broadcast_data"
+        id="broadcast_data"
+        placeholder="Message"
+      />
+      <input type="submit" value="Broadcast" />
     </form>
-    <form id="join" method="POST" action='#'>
-        <input type="text" name="join_room" id="join_room" placeholder="Room Name">
-        <input type="submit" value="Join Room">
+    <form id="join" method="POST" action="#">
+      <input
+        type="text"
+        name="join_room"
+        id="join_room"
+        placeholder="Room Name"
+      />
+      <input type="submit" value="Join Room" />
     </form>
-    <form id="leave" method="POST" action='#'>
-        <input type="text" name="leave_room" id="leave_room" placeholder="Room Name">
-        <input type="submit" value="Leave Room">
+    <form id="leave" method="POST" action="#">
+      <input
+        type="text"
+        name="leave_room"
+        id="leave_room"
+        placeholder="Room Name"
+      />
+      <input type="submit" value="Leave Room" />
     </form>
-    <form id="send_room" method="POST" action='#'>
-        <input type="text" name="room_name" id="room_name" placeholder="Room Name">
-        <input type="text" name="room_data" id="room_data" placeholder="Message">
-        <input type="submit" value="Send to Room">
+    <form id="send_room" method="POST" action="#">
+      <input
+        type="text"
+        name="room_name"
+        id="room_name"
+        placeholder="Room Name"
+      />
+      <input
+        type="text"
+        name="room_data"
+        id="room_data"
+        placeholder="Message"
+      />
+      <input type="submit" value="Send to Room" />
     </form>
     <form id="close" method="POST" action="#">
-        <input type="text" name="close_room" id="close_room" placeholder="Room Name">
-        <input type="submit" value="Close Room">
+      <input
+        type="text"
+        name="close_room"
+        id="close_room"
+        placeholder="Room Name"
+      />
+      <input type="submit" value="Close Room" />
     </form>
     <form id="disconnect" method="POST" action="#">
-        <input type="submit" value="Disconnect">
+      <input type="submit" value="Disconnect" />
     </form>
     <h2>Receive:</h2>
     <div><p id="log"></p></div>
-</body>
+  </body>
 </html>

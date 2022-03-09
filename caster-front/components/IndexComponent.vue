@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { io } from 'socket.io-client'
+// import { io } from 'socket.io-client'
 
 export default {
   name: 'IndexComponent',
@@ -83,6 +83,10 @@ export default {
   head() {
     return {
       script: [
+        {
+          src: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.min.js',
+          body: true,
+        },
         {
           src: 'https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/8.1.0/adapter.min.js',
           body: true,
@@ -102,16 +106,19 @@ export default {
   created() {},
   methods: {
     initSocket() {
-      this.socket = io.connect()
+      const that = this
+      // eslint-disable-next-line no-undef
+      this.socket = io.connect('ws://localhost:8081')
+      // this.socket = io.connect({ port: 8081 })
 
       this.socket.on('connect', function () {
-        this.socket.emit('my_event', { data: "I'm connected!" })
+        that.socket.emit('my_event', { data: "I'm connected!" })
       })
       this.socket.on('disconnect', function () {
-        this.$refs.log.append('<br>Disconnected')
+        that.$refs.log.append('<br>Disconnected')
       })
       this.socket.on('my_response', function (msg) {
-        this.$refs.log.append('<br>Received: ' + msg.data)
+        that.$refs.log.append('<br>Received: ' + msg.data)
       })
 
       // event handler for server sent data
@@ -159,9 +166,10 @@ export default {
         protocol === 'http:'
           ? `http://${hostname}:8088/janus`
           : `https://${hostname}:8089/janus`
+
       // eslint-disable-next-line no-undef
       const opaqueId = 'streamingtest-' + Janus.randomString(12)
-      const audioElem = this.$refs.player
+      this.audioElem = this.$refs.player
       // eslint-disable-next-line no-undef
       Janus.init({
         debug: 'all',
@@ -245,8 +253,8 @@ export default {
                 onremotestream(stream) {
                   console.log(' ::: Got a remote stream :::', stream)
                   // eslint-disable-next-line no-undef
-                  Janus.attachMediaStream(audioElem, stream)
-                  audioElem.volume = 1
+                  Janus.attachMediaStream(that.audioElem, stream)
+                  that.audioElem.volume = 1
                 },
                 oncleanup() {
                   console.log(' ::: Got a cleanup notification :::')
@@ -264,6 +272,7 @@ export default {
       })
     },
     updateStreamsList() {
+      const that = this
       const body = { request: 'list' }
       console.log('Sending message:', body)
 
@@ -298,7 +307,7 @@ export default {
                 id: list[0].id,
               }
               console.log(body)
-              this.streaming.send({ message: body })
+              that.streaming.send({ message: body })
             }
           }
         },
