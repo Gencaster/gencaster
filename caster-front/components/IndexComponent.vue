@@ -1,52 +1,68 @@
 <template>
-  <div>
-    <audio ref="player" controls></audio>
+  <div class="index-page">
     <h1>Nuxt - Django + SocketIO</h1>
-    <h2>Send:</h2>
-    <form @submit.prevent="emitData">
-      <input v-model="formData.emit" type="text" placeholder="Message" />
-      <input type="submit" value="Echo" />
-    </form>
-    <form @submit.prevent="emitBroadcast">
-      <input v-model="formData.broadcast" type="text" placeholder="Message" />
-      <input type="submit" value="Broadcast" />
-    </form>
-    <form @submit.prevent="emitJoin">
-      <input v-model="formData.joinRoom" type="text" placeholder="Room Name" />
-      <input type="submit" value="Join Room" />
-    </form>
+    <audio ref="player" controls></audio>
+    <div class="forms">
+      <h2>Send</h2>
+      <form @submit.prevent="emitData">
+        <input v-model="formData.emit" type="text" placeholder="Message" />
+        <input type="submit" value="Echo" />
+      </form>
+      <form @submit.prevent="emitBroadcast">
+        <input v-model="formData.broadcast" type="text" placeholder="Message" />
+        <input type="submit" value="Broadcast" />
+      </form>
+      <form @submit.prevent="emitJoin">
+        <input
+          v-model="formData.joinRoom"
+          type="text"
+          placeholder="Room Name"
+        />
+        <input type="submit" value="Join Room" />
+      </form>
 
-    <form @submit.prevent="emitLeave">
-      <input v-model="formData.leaveRoom" type="text" placeholder="Room Name" />
-      <input type="submit" value="Leave Room" />
-    </form>
+      <form @submit.prevent="emitLeave">
+        <input
+          v-model="formData.leaveRoom"
+          type="text"
+          placeholder="Room Name"
+        />
+        <input type="submit" value="Leave Room" />
+      </form>
 
-    <form @submit.prevent="emitSendRoom">
-      <input
-        v-model="formData.sendRoomName"
-        type="text"
-        placeholder="Room Name"
-      />
-      <input
-        v-model="formData.sendRoomMessage"
-        type="text"
-        placeholder="Message"
-      />
-      <input type="submit" value="Send to Room" />
-    </form>
-    <form @submit.prevent="emitClose">
-      <input v-model="formData.closeRoom" type="text" placeholder="Room Name" />
-      <input type="submit" value="Close Room" />
-    </form>
-    <form @submit.prevent="emitDisconnect">
-      <input type="submit" value="Disconnect" />
-    </form>
+      <form @submit.prevent="emitSendRoom">
+        <input
+          v-model="formData.sendRoomName"
+          type="text"
+          placeholder="Room Name"
+        />
+        <input
+          v-model="formData.sendRoomMessage"
+          type="text"
+          placeholder="Message"
+        />
+        <input type="submit" value="Send to Room" />
+      </form>
+      <form @submit.prevent="emitClose">
+        <input
+          v-model="formData.closeRoom"
+          type="text"
+          placeholder="Room Name"
+        />
+        <input type="submit" value="Close Room" />
+      </form>
+      <form @submit.prevent="emitDisconnect">
+        <input type="submit" value="Disconnect" />
+      </form>
+    </div>
     <br />
-    <h2>Receive:</h2>
-    <div class="logs">
-      <p v-for="item in logs" :key="item.message">
-        {{ item.message }}
-      </p>
+    <div class="receive">
+      <h2>Receive</h2>
+      <div class="logs">
+        <p v-for="item in logs" :key="item.message">
+          {{ item.message }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -73,6 +89,11 @@ export default {
         sendRoomMessage: '',
         closeRoom: '',
       },
+
+      // internal
+      Janus: null,
+      janusInstance: null,
+      streaming: null,
     }
   },
   head() {
@@ -98,9 +119,7 @@ export default {
   methods: {
     initSocket() {
       const that = this
-      // eslint-disable-next-line no-undef
       this.socket = io.connect('ws://localhost:8081')
-      // this.socket = io.connect({ port: 8081 })
 
       this.socket.on('connect', function () {
         that.socket.emit('my_event', { data: "I'm connected!" })
@@ -115,36 +134,36 @@ export default {
 
     initJanus() {
       // eslint-disable-next-line no-undef
+      this.Janus = Janus
+
       const that = this
       const { hostname, protocol } = window.location
+
       const server =
         protocol === 'http:'
           ? `http://${hostname}:8088/janus`
           : `https://${hostname}:8089/janus`
 
-      // eslint-disable-next-line no-undef
-      const opaqueId = this.params.opaqueIdAppendix + Janus.randomString(12)
+      const opaqueId =
+        this.params.opaqueIdAppendix + this.Janus.randomString(12)
       this.audioElem = this.$refs.player
-      // eslint-disable-next-line no-undef
-      Janus.init({
+      this.Janus.init({
         debug: 'all',
         callback: () => {
           // Make sure the browser supports WebRTC
           // [] To do: Send to page explaining webrtc support needed
-          // eslint-disable-next-line no-undef
-          if (!Janus.isWebrtcSupported()) {
+          if (!this.Janus.isWebrtcSupported()) {
             alert("Unfortunately, your devices doesn't seem to support WebRTC.")
             return
           }
           // Create session
-          // eslint-disable-next-line no-undef
-          that.janus = new Janus({
+          that.janusInstance = new this.Janus({
             server,
             // TODO: needed?
             iceServers: [{ urls: this.params.iceServers }],
             success: () => {
               // Attach to Streaming plugin
-              that.janus.attach({
+              that.janusInstance.attach({
                 plugin: 'janus.plugin.streaming',
                 opaqueId,
                 success: (pluginHandle) => {
@@ -208,8 +227,7 @@ export default {
                 },
                 onremotestream(stream) {
                   console.log(' ::: Got a remote stream :::', stream)
-                  // eslint-disable-next-line no-undef
-                  Janus.attachMediaStream(that.audioElem, stream)
+                  that.Janus.attachMediaStream(that.audioElem, stream)
                   that.audioElem.volume = 1
                 },
                 oncleanup() {
