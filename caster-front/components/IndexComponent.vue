@@ -43,7 +43,11 @@
     </form>
     <br />
     <h2>Receive:</h2>
-    <div><p ref="log"></p></div>
+    <div class="logs">
+      <p v-for="item in logs" :key="item.message">
+        {{ item.message }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -59,6 +63,7 @@ export default {
         opaqueIdAppendix: 'streamingtest-',
         iceServers: 'stun:stun.l.google.com:19302',
       },
+      logs: [],
       formData: {
         emit: '',
         broadcast: '',
@@ -101,10 +106,10 @@ export default {
         that.socket.emit('my_event', { data: "I'm connected!" })
       })
       this.socket.on('disconnect', function () {
-        that.$refs.log.append('Disconnected')
+        that.logs.push({ message: 'Disconnected' })
       })
       this.socket.on('my_response', function (msg) {
-        that.$refs.log.append('Received: ' + msg.data)
+        that.logs.push({ message: `Received: ${msg.data}` })
       })
     },
 
@@ -216,6 +221,7 @@ export default {
               console.error(error)
             },
             destroyed() {
+              console.log('destroyed')
               // window.location.reload();
             },
           })
