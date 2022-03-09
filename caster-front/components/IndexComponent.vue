@@ -3,22 +3,12 @@
     <audio ref="player" controls></audio>
     <h1>Nuxt - Django + SocketIO Test</h1>
     <h2>Send:</h2>
-    <form id="emit" method="POST" action="#">
-      <input
-        id="emit_data"
-        type="text"
-        name="emit_data"
-        placeholder="Message"
-      />
+    <form @submit.prevent="emitData">
+      <input v-model="formData.emit" type="text" placeholder="Message" />
       <input type="submit" value="Echo" />
     </form>
-    <form id="broadcast" method="POST" action="#">
-      <input
-        id="broadcast_data"
-        type="text"
-        name="broadcast_data"
-        placeholder="Message"
-      />
+    <form @submit.prevent="emitBroadcast">
+      <input v-model="formData.broadcast" type="text" placeholder="Message" />
       <input type="submit" value="Broadcast" />
     </form>
     <form id="join" method="POST" action="#">
@@ -78,15 +68,16 @@ export default {
   name: 'IndexComponent',
   components: {},
   data() {
-    return {}
+    return {
+      formData: {
+        emit: '',
+        broadcast: '',
+      },
+    }
   },
   head() {
     return {
       script: [
-        // {
-        //   src: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.min.js',
-        //   body: true,
-        // },
         {
           src: 'https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/8.1.0/adapter.min.js',
           body: true,
@@ -311,6 +302,19 @@ export default {
             }
           }
         },
+      })
+    },
+
+    // Form
+    emitData() {
+      console.log(this.formData.emit)
+      this.socket.emit('my_event', { data: this.formData.emit })
+    },
+
+    emitBroadcast() {
+      console.log(this.formData.broadcast)
+      this.socket.emit('my_broadcast_event', {
+        data: this.formData.broadcast,
       })
     },
   },
