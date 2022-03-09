@@ -67,12 +67,12 @@
       <input type="submit" value="Disconnect" />
     </form>
     <h2>Receive:</h2>
-    <div><p id="log" ref="log"></p></div>
+    <div><p ref="log"></p></div>
   </div>
 </template>
 
 <script>
-// import { io } from 'socket.io-client'
+import { io } from 'socket.io-client'
 
 export default {
   name: 'IndexComponent',
@@ -83,10 +83,10 @@ export default {
   head() {
     return {
       script: [
-        {
-          src: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.min.js',
-          body: true,
-        },
+        // {
+        //   src: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.min.js',
+        //   body: true,
+        // },
         {
           src: 'https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/8.1.0/adapter.min.js',
           body: true,
@@ -115,10 +115,10 @@ export default {
         that.socket.emit('my_event', { data: "I'm connected!" })
       })
       this.socket.on('disconnect', function () {
-        that.$refs.log.append('<br>Disconnected')
+        that.$refs.log.append('Disconnected')
       })
       this.socket.on('my_response', function (msg) {
-        that.$refs.log.append('<br>Received: ' + msg.data)
+        that.$refs.log.append('Received: ' + msg.data)
       })
 
       // event handler for server sent data
