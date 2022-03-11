@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  backend:
+    env_file:
+      - vars.env
+      - vars.deploy.env
+      - .secrets.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  sound:
+    network_mode: host
