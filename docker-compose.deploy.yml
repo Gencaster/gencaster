@@ -1,6 +1,9 @@
 version: '3.9'
 
 services:
+  frontend:
+      ports:
+      - 3010:3000
   backend:
     env_file:
       - vars.env
