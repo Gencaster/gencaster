@@ -20,6 +20,9 @@ services:
       - .secrets.env
     ports:
       - 8081:8000
+    depends_on:
+      - database
+      - sound
     volumes:
       - ./caster-back/:/home/gencaster
       - ./data:/data
@@ -30,6 +33,8 @@ services:
     volumes:
       # allows for hot reload on development server
       - ./caster-front/:/root/caster-front/
+    depends_on:
+      - backend
     ports:
       - 3000:3000
 
@@ -42,3 +47,4 @@ services:
     volumes:
       - ./data:/data
       - ./caster-sound/sc.scd:/root/sc.scd
+      - ./caster-sound/janus.jcfg:/opt/janus/etc/janus/janus.jcfg
