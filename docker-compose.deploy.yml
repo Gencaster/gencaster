@@ -12,5 +12,9 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  osc_backend:
+    ports:
+      - 57130:57130
+
   sound:
     network_mode: host
