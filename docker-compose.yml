@@ -28,6 +28,19 @@ services:
       - ./data:/data
       - ./data:/home/gencaster/media
 
+  osc_backend:
+    build: caster-back
+    env_file:
+      - vars.env
+      - .secrets.env
+    # environment:
+    #   - DJANGO_SETTINGS_MODULE
+    volumes:
+      - ./caster-back/:/home/gencaster
+      - ./data:/data
+      - ./data:/home/gencaster/media
+    command: ["python", "osc_server.py"]
+
   frontend:
     build: caster-front
     volumes:
@@ -44,6 +57,10 @@ services:
       - 8090:8090  # debug frontend
       - 8088:8088  # janus server
       - 10000-10200:10000-10200
+    depends_on:
+      - osc_backend
+    env_file:
+      - vars.env
     volumes:
       - ./data:/data
       - ./caster-sound/sc.scd:/root/sc.scd

@@ -25,3 +25,14 @@ OSCdef(\speak, {|msg|
 		buffer.play;
 	}).play;
 }, path: "/speak");
+
+
+Tdef(\live, {
+	var oscBackendHost = "BACKEND_OSC_HOST".getenv;
+	var oscBackendPort = "BACKEND_OSC_PORT".getenv.asInteger;
+
+	inf.do({
+		NetAddr(oscBackendHost, oscBackendPort).sendMsg("/live", 1);
+		5.0.wait;
+	});
+}).play;
