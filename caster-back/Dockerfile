@@ -4,7 +4,7 @@ WORKDIR /home/gencaster
 
 COPY requirements.txt .
 
-RUN pip3 install -r requirements.txt
+RUN pip3 install --no-cache -r requirements.txt
 
 COPY . .
 
