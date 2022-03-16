@@ -4,11 +4,16 @@ An web environment for generative audio streams with low latency and device agno
 
 ## Services
 
-Service | Comment
---- | ---
-CasterBack | Django backend for management of streams
-CasterFront | Vue Frontend for user interaction
-CasterSound | Janus server for WebRTC streams of SuperCollider audio
+To give an overview of the project we will state the function of the different services described in the `docker-compose.yaml` file.
+For service specific details check the `README.md` within each folder.
+
+Service | Folder | Port | Comment
+--- | --- | --- | ---
+`backend` | `caster-back` | `8081` | Django backend with database management for streams
+`osc_backend` | `caster-back` | `57130` | OSC server to receive OSC messages from SuperCollider and insert them into the database
+`frontend` | `caster-front` | `3000` | Nuxt frontend for user interaction
+`sound` | `caster-sound` | `57120`, `8088` | SuperCollider server which can be listened to via WebRTC.
+`database` | | `5432` | A postgres database.
 
 ## Development
 
