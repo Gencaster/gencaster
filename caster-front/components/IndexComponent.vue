@@ -104,7 +104,7 @@ export default {
           body: true,
         },
         {
-          src: 'js/janus.js',
+          src: 'https://cdn.jsdelivr.net/npm/janus-gateway@0.2.3/html/janus.nojquery.js',
           body: true,
         },
       ],
