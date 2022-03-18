@@ -1,4 +1,17 @@
+q = q ? ();
+
+q[\scName] = "SC_NAME".getenv;
+q[\scPort] = "SC_PORT".getenv.asInteger;
+
+s = Server(q[\scName], NetAddr("127.0.0.1", q[\scPort]));
+Server.default = s;
+
 s.options.sampleRate_(48000).memoryLocking_(true).memSize_(8192*4);
+s.options.numOutputBusChannels =2;
+s.options.device = "default:%".format(q[\scName]);
+
+"Booting server % on port %".format(q[\scName], q[\scPort]).postln;
+
 s.boot;
 
 s.waitForBoot({
@@ -6,7 +19,7 @@ s.waitForBoot({
 
 	Ndef(\foo, {|out|
 		var sig;
-		sig = SinOsc.ar([LFNoise0.kr(3.0).range(100, 1000), \freq.kr(200.0)])*0.2;
+		sig = SinOsc.ar([LFNoise0.kr(3.0).range(100, 1000), \freq.kr(rrand(100, 400))])*0.2;
 		Out.ar(out, sig);
 	}).play;
 });

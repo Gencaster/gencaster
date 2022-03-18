@@ -36,11 +36,15 @@ RUN apk add \
     g++ \
     make
 
+# apply submodule fix
+# see https://github.com/supercollider/supercollider/issues/5695#issuecomment-1072263846
 RUN git clone \
-    --recurse-submodules \
     --depth 1 \
     --branch 3.12 \
     https://github.com/SuperCollider/SuperCollider.git && \
+    cd SuperCollider && \
+    sed -i "s|git://|https://|g" .gitmodules && \
+    git submodule update --init --recursive && \
     mkdir -p /root/SuperCollider/build
 
 WORKDIR /root/SuperCollider
@@ -62,8 +66,9 @@ RUN cmake \
 	-DNO_X11=ON \
 	-DSC_ABLETON_LINK=OFF \
 	-DSC_QT=OFF .. && \
-	cmake --build . --config Debug --target all
-RUN	cmake --build . --config Debug --target install
+	cmake --build . --config Debug --target all && \
+    cmake --build . --config Debug --target install && \
+    rm -rf /root/SuperCollider
 
 # now we replace jack with pipewire which is more stable
 # in a virtualized environment than jack which resulted
@@ -134,7 +139,8 @@ RUN git clone --depth 1 https://github.com/meetecho/janus-gateway.git && \
 	--disable-mqtt && \
     make && \
     make install && \
-    make configs
+    make configs && \
+    rm -rf /root/janus-gateway
 
 # ------------------  STATIC HTML FILES
 # are served via a python http server - only for debugging
