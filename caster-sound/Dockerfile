@@ -36,11 +36,15 @@ RUN apk add \
     g++ \
     make
 
+# apply submodule fix
+# see https://github.com/supercollider/supercollider/issues/5695#issuecomment-1072263846
 RUN git clone \
-    --recurse-submodules \
     --depth 1 \
     --branch 3.12 \
     https://github.com/SuperCollider/SuperCollider.git && \
+    cd SuperCollider && \
+    sed -i "s|git://|https://|g" .gitmodules && \
+    git submodule update --init --recursive && \
     mkdir -p /root/SuperCollider/build
 
 WORKDIR /root/SuperCollider
