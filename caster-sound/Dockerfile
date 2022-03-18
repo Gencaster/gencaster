@@ -66,8 +66,9 @@ RUN cmake \
 	-DNO_X11=ON \
 	-DSC_ABLETON_LINK=OFF \
 	-DSC_QT=OFF .. && \
-	cmake --build . --config Debug --target all
-RUN	cmake --build . --config Debug --target install
+	cmake --build . --config Debug --target all && \
+    cmake --build . --config Debug --target install && \
+    rm -rf /root/SuperCollider
 
 # now we replace jack with pipewire which is more stable
 # in a virtualized environment than jack which resulted
@@ -138,7 +139,8 @@ RUN git clone --depth 1 https://github.com/meetecho/janus-gateway.git && \
 	--disable-mqtt && \
     make && \
     make install && \
-    make configs
+    make configs && \
+    rm -rf /root/janus-gateway
 
 # ------------------  STATIC HTML FILES
 # are served via a python http server - only for debugging
