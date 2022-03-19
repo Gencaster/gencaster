@@ -15,8 +15,6 @@ s.options.device = "default:%".format(q[\scName]);
 s.boot;
 
 s.waitForBoot({
-	OSCFunc.trace(true, true);
-
 	Ndef(\foo, {|out|
 		var sig;
 		sig = SinOsc.ar([LFNoise0.kr(3.0).range(100, 1000), \freq.kr(rrand(100, 400))])*0.2;
