@@ -142,6 +142,8 @@ RUN git clone --depth 1 https://github.com/meetecho/janus-gateway.git && \
     make configs && \
     rm -rf /root/janus-gateway
 
+RUN apk add parallel
+
 # ------------------  STATIC HTML FILES
 # are served via a python http server - only for debugging
 COPY html_test /root/html_test/
