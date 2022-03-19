@@ -17,7 +17,16 @@ s.boot;
 s.waitForBoot({
 	Ndef(\foo, {|out|
 		var sig;
-		sig = SinOsc.ar([LFNoise0.kr(3.0).range(100, 1000), \freq.kr(rrand(100, 400))])*0.2;
+		sig = SinOsc.ar([LFNoise0.kr(3.0).range(100, 1000), \freq.kr(rrand(100, 400))])*0.05;
+		Out.ar(out, sig);
+	}).play;
+
+	Ndef(\bar, {|out|
+		var sig;
+		sig = SoundIn.ar(0);
+		sig = DelayL.ar(sig, maxdelaytime: 2.0, delaytime: 1.2*[1.0, 1.1]);
+		sig = (sig*4) * SinOsc.ar(LFDNoise1.kr(2!2).exprange(100, 4000))*0.4;
+		sig = (sig*4).tanh;
 		Out.ar(out, sig);
 	}).play;
 });
