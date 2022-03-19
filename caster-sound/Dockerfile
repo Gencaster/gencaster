@@ -151,6 +151,7 @@ COPY html_test /root/html_test/
 # apply config files
 
 COPY janus.plugin.streaming.jcfg /opt/janus/etc/janus/janus.plugin.streaming.jcfg
+COPY janus.plugin.audiobridge.jcfg /opt/janus/etc/janus/janus.plugin.audiobridge.jcfg
 
 COPY caster-sound.conf /root/caster-sound.conf
 
