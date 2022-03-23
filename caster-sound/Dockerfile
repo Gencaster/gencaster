@@ -142,6 +142,8 @@ RUN git clone --depth 1 https://github.com/meetecho/janus-gateway.git && \
     make configs && \
     rm -rf /root/janus-gateway
 
+RUN apk add parallel
+
 # ------------------  STATIC HTML FILES
 # are served via a python http server - only for debugging
 COPY html_test /root/html_test/
@@ -149,6 +151,7 @@ COPY html_test /root/html_test/
 # apply config files
 
 COPY janus.plugin.streaming.jcfg /opt/janus/etc/janus/janus.plugin.streaming.jcfg
+COPY janus.plugin.audiobridge.jcfg /opt/janus/etc/janus/janus.plugin.audiobridge.jcfg
 
 COPY caster-sound.conf /root/caster-sound.conf
 
