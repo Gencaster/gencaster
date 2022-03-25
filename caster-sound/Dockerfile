@@ -153,6 +153,8 @@ COPY html_test /root/html_test/
 COPY janus.plugin.streaming.jcfg /opt/janus/etc/janus/janus.plugin.streaming.jcfg
 COPY janus.plugin.audiobridge.jcfg /opt/janus/etc/janus/janus.plugin.audiobridge.jcfg
 
+COPY start_streams.sh /root/start_streams.sh
+
 COPY caster-sound.conf /root/caster-sound.conf
 
 COPY sc.scd /root/sc.scd
