@@ -17,8 +17,29 @@ s.boot;
 s.waitForBoot({
 	Ndef(\foo, {|out|
 		var sig;
-		sig = SinOsc.ar([LFNoise0.kr(3.0).range(100, 1000), \freq.kr(rrand(100, 400))])*0.05;
-		Out.ar(out, sig);
+		var n = 16;
+
+		sig = SinOsc.ar(
+			freq: LFDNoise3.kr(0.02!n).exprange(10, LFDNoise1.kr(0.01).exprange(1000, 10000)) * ([0.0, 0.01].midiratio),
+			phase: LocalIn.ar(n) * LFDNoise1.kr(0.1!n);
+		) * LFDNoise3.kr(0.1!n).exprange(0.1, 1.0);
+		sig = CombC.ar(
+			sig,
+			maxdelaytime: 0.2,
+			delaytime: LFDNoise1.kr(0.05!n).range(0.01, 0.2),
+			decaytime: (LFDNoise1.kr(0.1!n)),
+		);
+		LocalOut.ar(
+			CombC.ar(
+				in: sig,
+				maxdelaytime: 0.2,
+				delaytime: LFDNoise1.kr(0.1!n).range(0.01, 0.2),
+				decaytime: LFDNoise0.kr(1.0!n)*10
+			) * 0.5;
+		);
+		sig = Splay.ar(sig, LFDNoise1.kr(LFDNoise1.kr(1.0)*5));
+		sig = sig * \amp.kr(0.9);
+		Out.ar(out, sig.tanh);
 	}).play;
 
 	Ndef(\bar, {|out|
