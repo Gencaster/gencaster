@@ -15,6 +15,18 @@ Service | Folder | Port | Comment
 `sound` | `caster-sound` | `57120`, `8088` | SuperCollider server which can be listened to via WebRTC.
 `database` | | `5432` | A postgres database.
 
+## Documentation
+
+This project is documented via Sphinx.
+The documentation sources are in the folder `docs` and the documentation
+can be build by executing
+
+```shell
+make docs
+```
+
+Be sure to run this in the proper Python environment (e.g. virtualenv).
+
 ## Development
 
 Please use [`pre-commit`](https://pre-commit.com/) before committing to the repository.
