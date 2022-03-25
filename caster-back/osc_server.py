@@ -28,13 +28,22 @@ def acknowledge_handler(client_address: Tuple[str, int], address: str, ack_uuid:
 
 
 def live_handler(client_address: Tuple[str, int], address: str, *osc_args: List[Any]):
-    point: StreamPoint
+    # transforms [k1, v1, k2, v2, ...] to {k1: v1, k2:v2, ...}
+    message = dict(zip(osc_args[0::2], osc_args[1::2]))
 
+    point: StreamPoint
     point, created = StreamPoint.objects.get_or_create(
         host=client_address[0],
         port=client_address[1],
     )
     point.last_live = timezone.now()
+    point.use_input = bool(message.get("useInput"))
+    point.janus_in_port = message.get("janusInPort")
+    point.janus_out_port = message.get("janusOutPort")
+    point.janus_in_room = message.get("janusInRoom")
+    point.janus_out_room = message.get("janusOutRoom")
+    point.janus_public_ip = message.get("janusPublicIp")
+    point.sc_name = message.get("scName")
     point.save()
 
     if created:

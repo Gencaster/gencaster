@@ -1,16 +1,26 @@
-q = q ? ();
+e = ();
 
-q[\scName] = "SC_NAME".getenv;
-q[\scPort] = "SC_PORT".getenv.asInteger;
+// read env variables
+e[\scName] = "SC_NAME".getenv;
+e[\scPort] = "SC_PORT".getenv.asInteger;
+e[\scPubilcIp] = "SUPERCOLLIDER_PUBLIC_IP".getenv;
+e[\janusOutPort] = "JANUS_OUT_PORT".getenv.asInteger;
+e[\janusInPort] = "JANUS_IN_PORT".getenv.asInteger;
+e[\janusOutRoom] = "JANUS_OUT_ROOM".getenv.asInteger;
+e[\janusInRoom] = "JANUS_IN_ROOM".getenv;
+e[\janusPublicIp] = "JANUS_PUBLIC_IP".getenv;
+e[\useInput] = ("SUPERCOLLIDER_USE_INPUT".getenv ? 0).asInteger;
+e[\oscBackendHost] = "BACKEND_OSC_HOST".getenv;
+e[\oscBackendPort] = "BACKEND_OSC_PORT".getenv.asInteger;
 
-s = Server(q[\scName], NetAddr("127.0.0.1", q[\scPort]));
+s = Server(e[\scName], NetAddr("127.0.0.1", e[\scPort]));
 Server.default = s;
 
 s.options.sampleRate_(48000).memoryLocking_(true).memSize_(8192*4);
 s.options.numOutputBusChannels =2;
-s.options.device = "default:%".format(q[\scName]);
+s.options.device = "default:%".format(e[\scName]);
 
-"Booting server % on port %".format(q[\scName], q[\scPort]).postln;
+"Booting server % on port %".format(e[\scName], e[\scPort]).postln;
 
 s.boot;
 
@@ -69,11 +79,12 @@ OSCdef(\speak, {|msg|
 
 
 Tdef(\live, {
-	var oscBackendHost = "BACKEND_OSC_HOST".getenv;
-	var oscBackendPort = "BACKEND_OSC_PORT".getenv.asInteger;
-
 	inf.do({
-		NetAddr(oscBackendHost, oscBackendPort).sendMsg("/live", 1);
+		// as SC does not have a nice way to create a JSON we simply send an
+		// array in [key, value, key, value] format
+		var message = e.keys.collect({|k| [k, e[k]]}).asArray.flatten;
+
+		NetAddr(e[\oscBackendHost], e[\oscBackendPort]).sendMsg("/live", *message);
 		5.0.wait;
 	});
 }).play;
