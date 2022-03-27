@@ -15,3 +15,6 @@ services:
 
   sound:
     network_mode: host
+    env_file:
+      - vars.env
+      - vars.deploy.env
