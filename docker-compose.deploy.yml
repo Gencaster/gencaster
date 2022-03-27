@@ -15,7 +15,7 @@ services:
       - vars.deploy.env
       - .secrets.env
     ports:
-      - 57130:57130
+      - 57130:57130/udp
 
   sound:
     network_mode: host
