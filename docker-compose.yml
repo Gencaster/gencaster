@@ -33,8 +33,6 @@ services:
     env_file:
       - vars.env
       - .secrets.env
-    # environment:
-    #   - DJANGO_SETTINGS_MODULE
     volumes:
       - ./caster-back/:/home/gencaster
       - ./data:/data

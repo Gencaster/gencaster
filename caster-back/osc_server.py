@@ -8,8 +8,6 @@ import django
 from django.utils import timezone
 
 
-os.environ["DJANGO_SETTINGS_MODULE"] = "gencaster.settings"
-
 django.setup()
 
 from stream.models import StreamInstruction, StreamPoint

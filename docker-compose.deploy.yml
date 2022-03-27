@@ -10,6 +10,10 @@ services:
       - "host.docker.internal:host-gateway"
 
   osc_backend:
+    env_file:
+      - vars.env
+      - vars.deploy.env
+      - .secrets.env
     ports:
       - 57130:57130
 
