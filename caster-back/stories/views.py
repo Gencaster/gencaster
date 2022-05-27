@@ -1,11 +1,12 @@
 import logging
+from typing import Dict
 
 from django.shortcuts import render
 from asgiref.sync import sync_to_async
 
 from gencaster.asgi import sio, osc_client
 from voice.models import TextToSpeech
-from stream.models import Stream
+from stream.models import Stream, OSCMessage
 from stream.exceptions import NoStreamAvailable
 
 log = logging.getLogger(__name__)
@@ -97,6 +98,26 @@ async def get_stream(sid):
             },
         },
     )
+
+
+@sio.on("gps")
+async def receive_gps(sid, data: Dict) -> None:
+    sio_session = await sio.get_session(sid)
+    if "streamUUID" not in sio_session:
+        log.error("Can not find stream for GPS data")
+        return
+    stream: Stream = await sync_to_async(
+        Stream.objects.select_related("stream_point").get
+    )(uuid=sio_session["streamUUID"])
+    assert stream.active
+    log.debug(f"Received GPS location ({data}) for stream {sio_session['streamUUID']}")
+    stream.stream_point.send_osc_message(
+        OSCMessage.from_dict(
+            "/gps",
+            data=data,
+        )
+    )
+    return
 
 
 @sio.event
