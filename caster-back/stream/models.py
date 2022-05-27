@@ -133,6 +133,11 @@ class Stream(models.Model):
         default=True,
     )
 
+    def disconnect(self):
+        log.info(f"Disconnect stream {self.uuid}")
+        self.active = False
+        self.save()
+
     class Meta:
         ordering = ["-created_date", "stream_point"]
         verbose_name = _("Stream")
