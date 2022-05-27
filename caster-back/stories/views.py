@@ -1,8 +1,12 @@
+import logging
+
 from django.shortcuts import render
 from asgiref.sync import sync_to_async
 
 from gencaster.asgi import sio, osc_client
 from voice.models import TextToSpeech
+
+log = logging.getLogger(__name__)
 
 
 def speak_on_stream(text: str) -> TextToSpeech:
@@ -23,6 +27,7 @@ async def my_event(sid, message):
 
 @sio.event
 async def my_broadcast_event(sid, message):
+    log.info(f"We received a broadcast message: {message}")
     await sync_to_async(speak_on_stream, thread_sensitive=True)(text=message["data"])
     await sio.emit("my_response", {"data": message["data"]})
 

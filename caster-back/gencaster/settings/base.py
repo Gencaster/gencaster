@@ -100,7 +100,7 @@ LOGGING = {
             "style": "{",
         },
         "simple": {
-            "format": "{asctime} - {module} - {levelname} - {message}",
+            "format": "{asctime} - {levelname} - {module}:{funcName} - {message}",
             "style": "{",
         },
     },
@@ -116,6 +116,10 @@ LOGGING = {
             "handlers": ["console"],
             "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
             "propagate": False,
+        },
+        "stories": {
+            "handlers": ["console"],
+            "level": "DEBUG",
         },
     },
 }

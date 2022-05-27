@@ -23,5 +23,5 @@ if ! [ -z "$DEVELOPMENT" ]; then
     python manage.py runserver 0.0.0.0:8000;
 else
     echo "Starting gunicorn server";
-    gunicorn gencaster.asgi:application -k uvicorn.workers.UvicornWorker -c gencaster/gunicorn.conf.py --reload;
+    gunicorn gencaster.asgi:application -k uvicorn.workers.UvicornWorker -c gencaster/gunicorn.conf.py --reload --capture-output;
 fi
