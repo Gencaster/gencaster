@@ -130,7 +130,7 @@ RUN apk add \
 
 WORKDIR /root
 
-RUN git clone --depth 1 https://github.com/meetecho/janus-gateway.git && \
+RUN git clone --depth 1 --branch "v0.11.8" https://github.com/meetecho/janus-gateway.git && \
     cd janus-gateway && \
     ./autogen.sh && \
     ./configure \
