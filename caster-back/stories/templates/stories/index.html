@@ -21,6 +21,15 @@
       socket.on('my_response', function (msg) {
         $('#log').append('<br>Received: ' + msg.data);
       });
+      socket.on('setStream', function (msg) {
+        document.querySelector('#player').play();
+        var body = {
+          "request" : "watch",
+          "id" : msg["streamPoint"]["janus_out_room"],
+        };
+        console.log(`Set stream to ${msg.streamPoint.janus_out_room}`);
+        streaming.send({ message: body });
+      });
 
       // event handler for server sent data
       // the data is displayed in the "Received" section of the page
@@ -38,6 +47,10 @@
       });
       $('form#disconnect').submit(function (event) {
         socket.emit('disconnect_request');
+        return false;
+      });
+      $('form#getStream').submit(function (event) {
+        socket.emit('getStream');
         return false;
       });
     });
@@ -63,7 +76,7 @@
     var audioBridgeWebRtcUp = false;
 
     Janus.init({
-      debug: 'all',
+      debug: ["warn", "error"],
 
       callback: function () {
         // Make sure the browser supports WebRTC
@@ -97,7 +110,7 @@
               },
 
               iceState: function (state) {
-                console.log('ICE state changed to ' + state);
+                // console.log('ICE state changed to ' + state);
               },
 
               webrtcState: function (on) {
@@ -112,7 +125,7 @@
                 console.log(' ::: Got a message :::', msg);
 
                 if (jsep) {
-                  console.log('Handling SDP as well...', jsep);
+                  // console.log('Handling SDP as well...', jsep);
                   var stereo = jsep.sdp.indexOf('stereo=1') !== -1;
                   // Offer from the plugin, let's answer
                   streaming.createAnswer({
@@ -129,7 +142,7 @@
                       }
                     },
                     success: function (jsep) {
-                      console.log('Got SDP!', jsep);
+                      // console.log('Got SDP!', jsep);
                       var body = { request: 'start' };
                       streaming.send({ message: body, jsep: jsep });
                     },
@@ -255,7 +268,7 @@
           id: parseInt($("#streamselect").val()),
         };
         console.log("Switch stream");
-        console.log(body);
+        // console.log(body);
         streaming.send({ message: body });
 
         streaming.send({})
@@ -360,6 +373,11 @@
     <select id="streamselect" name="streams">
     </select>
     <input type="submit" value="Change stream" />
+  </form>
+
+  <h2>Get Stream</h2>
+  <form id="getStream" method="POST" action="#">
+    <input type="submit" value="Get stream" />
   </form>
 
   <h2>Send test</h2>
