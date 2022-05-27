@@ -1,7 +1,8 @@
-from tabnanny import verbose
+from dataclasses import dataclass
 import uuid
 import logging
 
+from pythonosc.udp_client import SimpleUDPClient
 from django.db import models
 from django.utils.translation import gettext as _
 from django.utils import timezone
@@ -9,6 +10,12 @@ from django.contrib import admin
 
 
 log = logging.getLogger(__name__)
+
+
+@dataclass
+class OSCMessage:
+    address: str
+    data: any
 
 
 class StreamPoint(models.Model):
@@ -87,6 +94,11 @@ class StreamPoint(models.Model):
         if not self.last_live:
             return False
         return (timezone.now() - self.last_live).seconds < 60
+
+    def send_osc_message(self, osc_message: OSCMessage):
+        SimpleUDPClient(self.host, self.port).send_message(
+            address=osc_message.address, value=osc_message.data
+        )
 
     class Meta:
         unique_together = ["host", "port"]
