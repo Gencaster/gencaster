@@ -8,6 +8,7 @@ from django.utils.translation import gettext as _
 from django.utils import timezone
 from django.contrib import admin
 
+from .exceptions import NoStreamAvailable
 
 log = logging.getLogger(__name__)
 
@@ -110,7 +111,25 @@ class StreamPoint(models.Model):
         return f"Stream Endpoint {self.host}:{self.port}"
 
 
+class StreamManager(models.Manager):
+    def get_free_stream(self) -> "Stream":
+        available_stream_points = StreamPoint.objects.exclude(streams__active=True)
+        if available_stream_points:
+            return self.create(
+                stream_point=available_stream_points.first(),
+            )
+        else:
+            raise NoStreamAvailable()
+
+    def disconnect_all_streams(self):
+        stream: Stream
+        for stream in Stream.objects.filter(active=True):
+            stream.disconnect()
+
+
 class Stream(models.Model):
+    objects = StreamManager()
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
