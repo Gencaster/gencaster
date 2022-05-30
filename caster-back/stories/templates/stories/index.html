@@ -29,6 +29,7 @@
         };
         console.log(`Set stream to ${msg.streamPoint.janus_out_room}`);
         streaming.send({ message: body });
+        startGPSstreaming();
       });
 
       // event handler for server sent data
@@ -53,6 +54,32 @@
         socket.emit('getStream');
         return false;
       });
+
+      function startGPSstreaming() {
+        if ('geolocation' in navigator) {
+          function success(position) {
+            socket.emit("gps", {
+              "lat": position.coords.latitude,
+              "lon": position.coords.longitude,
+            });
+          }
+
+          function error() {
+            alert('Sorry, no position available.');
+          }
+
+          const options = {
+            enableHighAccuracy: true,
+            maximumAge: 30000,
+            timeout: 27000,
+          };
+
+          const watchID = navigator.geolocation.watchPosition(success, error, options);
+
+        } else {
+          console.log("Please activate geolocation services");
+        }
+      }
     });
   </script>
 </head>

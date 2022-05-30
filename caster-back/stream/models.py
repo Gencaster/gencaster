@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Dict
 import uuid
 import logging
 
@@ -17,6 +18,16 @@ log = logging.getLogger(__name__)
 class OSCMessage:
     address: str
     data: any
+
+    @classmethod
+    def from_dict(cls, address: str, data: Dict):
+        # todo: assert depth = 1
+        # transform {k1: v1, k2: v2, ...} to [(k1, v1), (k2, v2), ...]
+        tuples = [(k, v) for k, v in data.items()]
+        # and now to [k1, v1, k2, v2, ...]
+        data_list = [item for sublist in tuples for item in sublist]
+
+        return cls(address=address, data=data_list)
 
 
 class StreamPoint(models.Model):

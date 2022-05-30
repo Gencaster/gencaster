@@ -88,3 +88,5 @@ Tdef(\live, {
 		5.0.wait;
 	});
 }).play;
+
+OSCFunc.trace(true, true);
