@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import timedelta
 from typing import Dict
 import uuid
 import logging
@@ -30,7 +31,15 @@ class OSCMessage:
         return cls(address=address, data=data_list)
 
 
+class StreamPointManager(models.Manager):
+    def free_stream_points(self) -> models.QuerySet["StreamPoint"]:
+        last_online_time = timezone.now() - timedelta(seconds=60)
+        return self.exclude(streams__active=True).filter(last_live__gt=last_online_time)
+
+
 class StreamPoint(models.Model):
+    objects = StreamPointManager()
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -124,10 +133,10 @@ class StreamPoint(models.Model):
 
 class StreamManager(models.Manager):
     def get_free_stream(self) -> "Stream":
-        available_stream_points = StreamPoint.objects.exclude(streams__active=True)
-        if available_stream_points:
+        free_stream_points = StreamPoint.objects.free_stream_points()
+        if free_stream_points:
             return self.create(
-                stream_point=available_stream_points.first(),
+                stream_point=free_stream_points.first(),
             )
         else:
             raise NoStreamAvailable()
