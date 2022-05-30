@@ -1,0 +1,2 @@
+class NoStreamAvailable(Exception):
+    pass

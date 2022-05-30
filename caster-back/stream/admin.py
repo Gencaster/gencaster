@@ -5,7 +5,17 @@ from .models import Stream, StreamInstruction, StreamPoint
 
 @admin.register(Stream)
 class StreamAdmin(admin.ModelAdmin):
-    pass
+    list_display = [
+        "stream_point",
+        "uuid",
+        "created_date",
+        "active",
+    ]
+
+    list_filter = [
+        "stream_point",
+        "active",
+    ]
 
 
 @admin.register(StreamPoint)

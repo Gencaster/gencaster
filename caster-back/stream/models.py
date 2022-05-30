@@ -1,14 +1,22 @@
-from tabnanny import verbose
+from dataclasses import dataclass
 import uuid
 import logging
 
+from pythonosc.udp_client import SimpleUDPClient
 from django.db import models
 from django.utils.translation import gettext as _
 from django.utils import timezone
 from django.contrib import admin
 
+from .exceptions import NoStreamAvailable
 
 log = logging.getLogger(__name__)
+
+
+@dataclass
+class OSCMessage:
+    address: str
+    data: any
 
 
 class StreamPoint(models.Model):
@@ -88,6 +96,11 @@ class StreamPoint(models.Model):
             return False
         return (timezone.now() - self.last_live).seconds < 60
 
+    def send_osc_message(self, osc_message: OSCMessage):
+        SimpleUDPClient(self.host, self.port).send_message(
+            address=osc_message.address, value=osc_message.data
+        )
+
     class Meta:
         unique_together = ["host", "port"]
         ordering = ["-last_live", "host", "port"]
@@ -98,7 +111,25 @@ class StreamPoint(models.Model):
         return f"Stream Endpoint {self.host}:{self.port}"
 
 
+class StreamManager(models.Manager):
+    def get_free_stream(self) -> "Stream":
+        available_stream_points = StreamPoint.objects.exclude(streams__active=True)
+        if available_stream_points:
+            return self.create(
+                stream_point=available_stream_points.first(),
+            )
+        else:
+            raise NoStreamAvailable()
+
+    def disconnect_all_streams(self):
+        stream: Stream
+        for stream in Stream.objects.filter(active=True):
+            stream.disconnect()
+
+
 class Stream(models.Model):
+    objects = StreamManager()
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -120,6 +151,11 @@ class Stream(models.Model):
         verbose_name=_("Is stream currently in use"),
         default=True,
     )
+
+    def disconnect(self):
+        log.info(f"Disconnect stream {self.uuid}")
+        self.active = False
+        self.save()
 
     class Meta:
         ordering = ["-created_date", "stream_point"]
