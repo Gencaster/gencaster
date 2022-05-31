@@ -19,7 +19,9 @@ jobs:
         if: success() || failure()
         with:
           name: test-results
-          path: caster-back/tests.xml
+          path: |
+            caster-back/tests.xml
+            caster-back/mypy-tests.xml
       - uses: 5monkeys/cobertura-action@master
         with:
           path: caster-back/coverage.xml

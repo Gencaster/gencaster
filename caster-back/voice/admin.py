@@ -4,7 +4,7 @@ from .models import TextToSpeech
 
 
 @admin.register(TextToSpeech)
-class TextToSpeech(admin.ModelAdmin):
+class TextToSpeechAdmin(admin.ModelAdmin):
     list_display = (
         "uuid",
         "created_date",

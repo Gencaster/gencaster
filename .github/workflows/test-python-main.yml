@@ -12,6 +12,12 @@ jobs:
     - uses: dorny/test-reporter@v1
       with:
         artifact: test-results            # artifact name
-        name: Django tests                  # Name of the check run which will be created
-        path: '*.xml'                     # Path to test results (inside artifact .zip)
+        name: Unit tests                  # Name of the check run which will be created
+        path: 'tests.xml'                     # Path to test results (inside artifact .zip)
         reporter: java-junit              # Format of test results
+    - uses: dorny/test-reporter@v1
+      with:
+        artifact: test-results            # artifact name
+        name: MyPy tests                  # Name of the check run which will be created
+        path: 'mypy-tests.xml'                     # Path to test results (inside artifact .zip)
+        reporter: java-junit              # Format of test

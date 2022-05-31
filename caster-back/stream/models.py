@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import timedelta
-from typing import Dict
+from typing import Dict, Any
 import uuid
 import logging
 
@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 @dataclass
 class OSCMessage:
     address: str
-    data: any
+    data: Any
 
     @classmethod
     def from_dict(cls, address: str, data: Dict):
@@ -135,7 +135,7 @@ class StreamManager(models.Manager):
     def get_free_stream(self) -> "Stream":
         free_stream_points = StreamPoint.objects.free_stream_points()
         if free_stream_points:
-            return self.create(
+            return self.create(  # type: ignore
                 stream_point=free_stream_points.first(),
             )
         else:

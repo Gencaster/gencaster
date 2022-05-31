@@ -1,6 +1,6 @@
 import os
 import logging
-from typing import Tuple, List, Any
+from typing import Tuple, List, Any, Dict
 
 from pythonosc.osc_server import BlockingOSCUDPServer
 from pythonosc.dispatcher import Dispatcher
@@ -27,7 +27,7 @@ def acknowledge_handler(client_address: Tuple[str, int], address: str, ack_uuid:
 
 def live_handler(client_address: Tuple[str, int], address: str, *osc_args: List[Any]):
     # transforms [k1, v1, k2, v2, ...] to {k1: v1, k2:v2, ...}
-    message = dict(zip(osc_args[0::2], osc_args[1::2]))
+    message: Dict[str, Any] = dict(zip(osc_args[0::2], osc_args[1::2]))  # type: ignore
 
     point: StreamPoint
     point, created = StreamPoint.objects.get_or_create(

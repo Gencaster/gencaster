@@ -1,5 +1,6 @@
 coverage/
 tests.xml
+mypy-tests.xml
 db.sqlite3
 media/
 static/
