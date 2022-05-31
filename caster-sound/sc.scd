@@ -26,31 +26,32 @@ s.options.device = "default:%".format(e[\scName]);
 s.boot;
 
 s.waitForBoot({
-	Ndef(\foo, {|out|
-		var sig;
-		var n = 16;
+	Ndef(\gps, {
+		var lon = \lon.kr(47.086395263672, lag: 4.0);
+		var lat = \lat.kr(15.429121017456, lag: 4.0);
+		var freq = \freq.kr(100.0);
 
-		sig = SinOsc.ar(
-			freq: LFDNoise3.kr(0.02!n).exprange(10, LFDNoise1.kr(0.01).exprange(1000, 10000)) * ([0.0, 0.01].midiratio),
-			phase: LocalIn.ar(n) * LFDNoise1.kr(0.1!n);
-		) * LFDNoise3.kr(0.1!n).exprange(0.1, 1.0);
-		sig = CombC.ar(
-			sig,
-			maxdelaytime: 0.2,
-			delaytime: LFDNoise1.kr(0.05!n).range(0.01, 0.2),
-			decaytime: (LFDNoise1.kr(0.1!n)),
-		);
-		LocalOut.ar(
-			CombC.ar(
-				in: sig,
-				maxdelaytime: 0.2,
-				delaytime: LFDNoise1.kr(0.1!n).range(0.01, 0.2),
-				decaytime: LFDNoise0.kr(1.0!n)*10
-			) * 0.5;
-		);
-		sig = Splay.ar(sig, LFDNoise1.kr(LFDNoise1.kr(1.0)*5));
-		sig = sig * \amp.kr(0.9);
-		Out.ar(out, sig.tanh);
+		var extractor = {|i| 12.collect({|j| (i * (10**j)) % 10})};
+
+		var lons = extractor.(lon);
+		var lats = extractor.(lat);
+
+		var sineSig = (1..11).collect({|i|
+			SinOsc.ar(freq*(1+lons.wrapAt(i+3))) * EnvGen.kr(Env.perc(attackTime: lons.wrapAt(i+5)/5, releaseTime: lons.wrapAt(i+7)/5), gate: Impulse.kr(i/(5*lons[i])));
+		});
+
+		var sawSig = (1..11).collect({|i|
+			var cSig = Saw.ar(freq*(1+lats.wrapAt(i+2))) * EnvGen.kr(Env.perc(attackTime: lats.wrapAt(i+5)/5, releaseTime: lats.wrapAt(i)/5), gate: Impulse.kr(i/(5*lats[i])));
+			cSig = BPF.ar(cSig, freq*(1+lons.wrapAt(i+2)), rq: 0.2);
+			cSig;
+		});
+
+		sineSig = Splay.ar(sineSig);
+		sawSig = Splay.ar(sawSig);
+
+		sineSig = sineSig + sawSig;
+
+		sineSig;
 	}).play;
 
 	Ndef(\bar, {|out|
@@ -63,10 +64,13 @@ s.waitForBoot({
 	}).play;
 });
 
-OSCdef(\foo, {|msg|
-	["received", msg].postln;
-	Ndef(\foo).set(\freq, msg[1]);
-}, path: "foo");
+OSCdef(\gps, {|msg|
+	var parsed = ();
+	msg[1..].pairsDo({|key, value| parsed[key.asSymbol] = value});
+	parsed.postln;
+	Ndef(\gps).set(\lon, parsed[\lon]);
+	Ndef(\gps).set(\lat, parsed[\lat]);
+}, path: "/gps");
 
 OSCdef(\speak, {|msg|
 	["speak", msg].postln;
