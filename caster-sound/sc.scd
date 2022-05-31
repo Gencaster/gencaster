@@ -2,7 +2,8 @@ e = ();
 
 // read env variables
 e[\scName] = "SC_NAME".getenv;
-e[\scPort] = "SC_PORT".getenv.asInteger;
+e[\scSynthPort] = "SC_SYNTH_PORT".getenv.asInteger;
+e[\scLangPort] = NetAddr.langPort;
 e[\scPubilcIp] = "SUPERCOLLIDER_PUBLIC_IP".getenv;
 e[\janusOutPort] = "JANUS_OUT_PORT".getenv.asInteger;
 e[\janusInPort] = "JANUS_IN_PORT".getenv.asInteger;
@@ -13,14 +14,14 @@ e[\useInput] = ("SUPERCOLLIDER_USE_INPUT".getenv ? 0).asInteger;
 e[\oscBackendHost] = "BACKEND_OSC_HOST".getenv;
 e[\oscBackendPort] = "BACKEND_OSC_PORT".getenv.asInteger;
 
-s = Server(e[\scName], NetAddr("127.0.0.1", e[\scPort]));
+s = Server(e[\scName], NetAddr("127.0.0.1", e[\scSynthPort]));
 Server.default = s;
 
 s.options.sampleRate_(48000).memoryLocking_(true).memSize_(8192*4);
 s.options.numOutputBusChannels =2;
 s.options.device = "default:%".format(e[\scName]);
 
-"Booting server % on port %".format(e[\scName], e[\scPort]).postln;
+"Booting server % on port %".format(e[\scName], e[\scSynthPort]).postln;
 
 s.boot;
 

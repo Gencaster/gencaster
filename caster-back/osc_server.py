@@ -32,7 +32,7 @@ def live_handler(client_address: Tuple[str, int], address: str, *osc_args: List[
     point: StreamPoint
     point, created = StreamPoint.objects.get_or_create(
         host=client_address[0],
-        port=client_address[1],
+        port=message["scLangPort"],
     )
     point.last_live = timezone.now()
     point.use_input = bool(message.get("useInput"))

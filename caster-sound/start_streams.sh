@@ -31,7 +31,7 @@ COUNT=1
 until [ $COUNT -gt $NUM_STREAMS ]; do
     export SC_NAME="SuperCollider$COUNT"
     # -1 b/c we start iterating at 1
-    export SC_PORT=$(($COUNT + $SC_SYNTH_START_PORT - 1))
+    export SC_SYNTH_PORT=$(($COUNT + $SC_SYNTH_START_PORT - 1))
     export SC_LANG_PORT=$(($COUNT + $SC_LANG_START_PORT - 1))
     export JANUS_OUT_PORT=$(($COUNT + $JANUS_START_PORT_OUT - 1))
     export JANUS_OUT_ROOM=$(($COUNT))
