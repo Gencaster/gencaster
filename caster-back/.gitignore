@@ -1,3 +1,5 @@
+coverage/
+tests.xml
 db.sqlite3
 media/
 static/

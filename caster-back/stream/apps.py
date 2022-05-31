@@ -8,5 +8,8 @@ class StreamConfig(AppConfig):
     def ready(self) -> None:
         from .models import Stream
 
-        Stream.objects.disconnect_all_streams()
+        try:
+            Stream.objects.disconnect_all_streams()
+        except Exception as e:
+            print(f"Could not reset all streams: {e}")
         return super().ready()
