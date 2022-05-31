@@ -17,5 +17,5 @@ echo "Run unit tests with coverage"
 coverage run --source='.' manage.py test --settings=gencaster.settings.test -v 2
 
 echo "Create coverage report"
-coverage html --directory='coverage' --omit=$COVERAGE_OMIT
+coverage html --directory='coverage'
 coverage xml
