@@ -31,6 +31,8 @@ Be sure to run this in the proper Python environment (e.g. virtualenv).
 
 Please use [`pre-commit`](https://pre-commit.com/) before committing to the repository.
 
+After a commit on the `main` branch it will trigger a re-deployment on the development server.
+
 The services can be started with `docker-compose up`.
 
 ## Deployment
