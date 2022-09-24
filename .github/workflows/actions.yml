@@ -1,0 +1,77 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  pre-commit:
+    name: "Run pre-commit"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: pre-commit/action@v2.0.3
+
+  run-tests:
+    needs: ["pre-commit"]
+    name: "Run tests"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.8"
+      - run: ./caster-back/run_tests.sh
+      - uses: actions/upload-artifact@v2
+        if: success() || failure()
+        with:
+          name: test-results
+          path: |
+            caster-back/tests.xml
+            caster-back/mypy-tests.xml
+      - uses: 5monkeys/cobertura-action@master
+        with:
+          path: caster-back/coverage.xml
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          minimum_coverage: 70
+
+  upload-coverage-report:
+    runs-on: ubuntu-20.04
+    name: "Upload coverage report to GitHub"
+    needs: ["run-tests"]
+    steps:
+      - uses: dorny/test-reporter@v1
+        with:
+          artifact: test-results # artifact name
+          name: Unit tests # Name of the check run which will be created
+          path: "tests.xml" # Path to test results (inside artifact .zip)
+          reporter: java-junit # Format of test results
+      - uses: dorny/test-reporter@v1
+        with:
+          artifact: test-results # artifact name
+          name: MyPy tests # Name of the check run which will be created
+          path: "mypy-tests.xml" # Path to test results (inside artifact .zip)
+          reporter: java-junit # Format of test
+
+  deploy:
+    if: success() && github.ref == 'refs/heads/main' # only deploy main
+    needs: ["run-tests"]
+    name: Deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Deploy on machine
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd gencaster
+            docker-compose down
+            git reset --hard
+            git pull origin main
+            docker-compose build
+            docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
