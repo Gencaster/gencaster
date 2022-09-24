@@ -7,12 +7,12 @@ create-venv:
 	)
 
 docs:
-	. caster-back/venv/bin/activate && (\
-		pip3 install --quiet -r requirements-docs.txt; \
-		rm -rf docs/_build; \
-		make -C docs html; \
-		open docs/_build/html/index.html; \
-	)
+	pip3 install --quiet -r requirements-docs.txt
+	rm -rf docs/_build
+	make -C docs html
+ifeq ($(shell uname), Darwin)
+	open docs/_build/html/index.html
+endif
 
 dev-server:
 	. caster-back/venv/bin/activate && (\

@@ -10,7 +10,7 @@ GenCaster documentation
    :maxdepth: 3
    :caption: Contents:
 
-   backend/index.rst
+   caster-back/index.rst
 
 
 

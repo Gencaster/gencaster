@@ -1,5 +1,6 @@
 .secrets.env
 data/
+docs/graphs
 
 # Logs
 logs
