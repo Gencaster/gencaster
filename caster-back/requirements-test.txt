@@ -1,4 +1,5 @@
--r requirements.txt
+-r requirements-dev.txt
+
 mixer==7.2.2
 mypy==0.950
 coverage==6.4
