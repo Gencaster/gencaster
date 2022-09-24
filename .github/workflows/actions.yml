@@ -35,25 +35,7 @@ jobs:
         with:
           path: caster-back/coverage.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          minimum_coverage: 70
-
-  upload-coverage-report:
-    runs-on: ubuntu-20.04
-    name: "Upload coverage report to GitHub"
-    needs: ["run-tests"]
-    steps:
-      - uses: dorny/test-reporter@v1
-        with:
-          artifact: test-results # artifact name
-          name: Unit tests # Name of the check run which will be created
-          path: "tests.xml" # Path to test results (inside artifact .zip)
-          reporter: java-junit # Format of test results
-      - uses: dorny/test-reporter@v1
-        with:
-          artifact: test-results # artifact name
-          name: MyPy tests # Name of the check run which will be created
-          path: "mypy-tests.xml" # Path to test results (inside artifact .zip)
-          reporter: java-junit # Format of test
+          minimum_coverage: 50
 
   deploy:
     if: success() && github.ref == 'refs/heads/main' # only deploy main
