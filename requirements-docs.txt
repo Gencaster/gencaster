@@ -1,4 +1,4 @@
--r "caster-back/requirements.txt"
+-r "caster-back/requirements-test.txt"
 
 sphinx==4.4.0
 sphinx-rtd-theme==1.0.0
