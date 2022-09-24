@@ -14,9 +14,9 @@ help:
 
 .PHONY: help Makefile
 
+build-graphs: export DJANGO_SETTINGS_MODULE=gencaster.settings.test
 build-graphs:
 	echo "Start building model graph images"
-	export DJANGO_SETTINGS_MODULE="gencaster.settings.test"
 	cd ../caster-back && python manage.py graph_models --pydot -g -o ../docs/graphs/stream.png stream
 	cd ../caster-back && python manage.py graph_models --pydot -g -o ../docs/graphs/stories.png stories
 	cd ../caster-back && python manage.py graph_models --pydot -g -o ../docs/graphs/voice.png voice
