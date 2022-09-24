@@ -19,7 +19,7 @@ jobs:
     name: "Build documentation"
     runs-on: ubuntu-20.04
     steps:
-      - run: apt-get install --yes graphviz
+      - run: sudo apt-get install --yes graphviz
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v3
         with:
