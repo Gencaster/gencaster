@@ -1,5 +1,7 @@
 FROM alpine:3.15
 
+ARG MAKE_JOBS=8
+
 WORKDIR /root
 
 # needed for pipewire
@@ -66,8 +68,8 @@ RUN cmake \
 	-DNO_X11=ON \
 	-DSC_ABLETON_LINK=OFF \
 	-DSC_QT=OFF .. && \
-	cmake --build . --config Debug --target all && \
-    cmake --build . --config Debug --target install && \
+	cmake --build . --config Debug --target all -j${MAKE_JOBS} && \
+    cmake --build . --config Debug --target install -j${MAKE_JOBS} && \
     rm -rf /root/SuperCollider
 
 # now we replace jack with pipewire which is more stable
@@ -137,7 +139,7 @@ RUN git clone --depth 1 --branch "v0.11.8" https://github.com/meetecho/janus-gat
     --prefix=/opt/janus \
     --disable-rabbitmq \
 	--disable-mqtt && \
-    make && \
+    make -j ${MAKE_JOBS} && \
     make install && \
     make configs && \
     rm -rf /root/janus-gateway

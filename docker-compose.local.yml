@@ -2,6 +2,10 @@ version: '3.9'
 
 services:
   sound:
+    build:
+      context: caster-sound
+      args:
+        - MAKE_JOBS=8
     ports:
       - 8090:8090  # debug frontend
       - 8088:8088  # janus server
