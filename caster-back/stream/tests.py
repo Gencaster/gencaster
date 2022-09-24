@@ -1,8 +1,9 @@
 from datetime import timedelta
 from typing import List
+
 from django.test import TestCase
-from mixer.backend.django import mixer
 from django.utils import timezone
+from mixer.backend.django import mixer
 
 from .models import StreamPoint
 

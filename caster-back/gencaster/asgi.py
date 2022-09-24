@@ -10,8 +10,8 @@ https://docs.djangoproject.com/en/3.1/howto/deployment/asgi/
 import os
 
 import socketio
-from pythonosc.udp_client import SimpleUDPClient
 from django.core.asgi import get_asgi_application
+from pythonosc.udp_client import SimpleUDPClient
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gencaster.settings")
 

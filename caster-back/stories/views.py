@@ -1,13 +1,13 @@
 import logging
 from typing import Dict
 
-from django.shortcuts import render
 from asgiref.sync import sync_to_async
+from django.shortcuts import render
 
-from gencaster.asgi import sio, osc_client
-from voice.models import TextToSpeech
-from stream.models import Stream, OSCMessage
+from gencaster.asgi import osc_client, sio
 from stream.exceptions import NoStreamAvailable
+from stream.models import OSCMessage, Stream
+from voice.models import TextToSpeech
 
 log = logging.getLogger(__name__)
 
@@ -84,7 +84,7 @@ async def get_stream(sid):
         return
     try:
         stream: Stream = await sync_to_async(Stream.objects.get_free_stream)()
-    except NoStreamAvailable as e:
+    except NoStreamAvailable:
         log.info("No free stream available")
         # todo give feedback to frontend
         return

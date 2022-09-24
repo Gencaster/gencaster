@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Story, Chapter, Block
+from .models import Block, Chapter, Story
 
 
 @admin.register(Story)

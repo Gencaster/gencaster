@@ -1,12 +1,12 @@
+import logging
 import uuid
 from io import BytesIO
-import logging
 
-from google.cloud import texttospeech
+from django.contrib import admin
+from django.core.files import File
 from django.db import models
 from django.utils.translation import gettext as _
-from django.core.files import File
-from django.contrib import admin
+from google.cloud import texttospeech
 
 log = logging.getLogger(__file__)
 

@@ -1,14 +1,14 @@
+import logging
+import uuid
 from dataclasses import dataclass
 from datetime import timedelta
-from typing import Dict, Any
-import uuid
-import logging
+from typing import Any, Dict
 
-from pythonosc.udp_client import SimpleUDPClient
-from django.db import models
-from django.utils.translation import gettext as _
-from django.utils import timezone
 from django.contrib import admin
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import gettext as _
+from pythonosc.udp_client import SimpleUDPClient
 
 from .exceptions import NoStreamAvailable
 

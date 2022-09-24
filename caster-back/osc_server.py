@@ -1,12 +1,11 @@
-import os
 import logging
-from typing import Tuple, List, Any, Dict
+import os
+from typing import Any, Dict, List, Tuple
 
-from pythonosc.osc_server import BlockingOSCUDPServer
-from pythonosc.dispatcher import Dispatcher
 import django
 from django.utils import timezone
-
+from pythonosc.dispatcher import Dispatcher
+from pythonosc.osc_server import BlockingOSCUDPServer
 
 django.setup()
 
