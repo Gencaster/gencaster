@@ -52,8 +52,8 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd gencaster
-            docker-compose down
+            docker compose down
             git reset --hard
             git pull origin main
-            docker-compose build
-            docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
+            docker compose build
+            docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
