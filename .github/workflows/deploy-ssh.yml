@@ -6,6 +6,7 @@ on:
 
 jobs:
   deploy:
+    needs: ["run-tests"]
     name: Deploy
     runs-on: ubuntu-latest
     steps:
