@@ -1,4 +1,6 @@
 .PHONY: docs
+.PHONY: run-local
+.PHONY: run-prod
 
 docs:
 	pip3 install --quiet -r requirements-docs.txt
@@ -9,9 +11,9 @@ docs:
 run-local:
 	docker-compose stop
 	docker-compose build
-	docker-compose up
+	docker-compose -f docker-compose.yml -f docker-compose.local.yml up	
 
 run-prod:
 	docker-compose stop
 	docker-compose build
-	docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up
+	docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up -d

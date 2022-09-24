@@ -33,9 +33,19 @@ Please use [`pre-commit`](https://pre-commit.com/) before committing to the repo
 
 After a commit on the `main` branch it will trigger a re-deployment on the development server.
 
-The services can be started with `docker-compose up`.
+## Local development
 
-## Deployment
+To start a local instance of GenCaster with all its services simply type the following command into a shell.
+
+```shell
+docker-compose -f docker-compose.yml -f docker-compose.local.yml up
+```
+
+You can instead also use `make` via
+
+```shell
+make run-local
+```
 
 ### Network
 

@@ -51,10 +51,6 @@ services:
 
   sound:
     build: caster-sound
-    ports:
-      - 8090:8090  # debug frontend
-      - 8088:8088  # janus server
-      - 10000-10200:10000-10200
     depends_on:
       - osc_backend
     env_file:
