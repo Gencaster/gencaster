@@ -15,9 +15,14 @@ from django.core.asgi import get_asgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gencaster.settings")
 
+if not os.environ.get("SUPERCOLLIDER_HOST") or os.environ.get("SUPERCOLLIDER_PORT"):
+    print(
+        "Environment variables SUPERCOLLIDER_HOST and SUPERCOLLIDER_PORT are unset - SC communication may not work"
+    )
+
 osc_client = SimpleUDPClient(
-    address=os.environ["SUPERCOLLIDER_HOST"],
-    port=int(os.environ["SUPERCOLLIDER_PORT"]),
+    address=os.environ.get("SUPERCOLLIDER_HOST", "localhost"),
+    port=int(os.environ.get("SUPERCOLLIDER_PORT", 57120)),
 )
 
 osc_client.send_message("/foo", 400.0)
