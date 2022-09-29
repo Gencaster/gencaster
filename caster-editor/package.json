@@ -9,5 +9,8 @@
   },
   "devDependencies": {
     "nuxt": "3.0.0-rc.11"
+  },
+  "dependencies": {
+    "v-network-graph": "^0.6.10"
   }
 }
