@@ -4,9 +4,10 @@
 @import 'mixins';
 @import 'typography';
 @import 'general';
+@import 'layout';
 
 // pages
-// @import 'pages/landingPage';
+@import 'pages/landing';
 
 // components
 // @import 'components/Menu';
