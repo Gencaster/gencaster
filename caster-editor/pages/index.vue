@@ -1,10 +1,3 @@
-<template class="index-page">
-  <div>
-    <h1>Welcome to the Editor</h1>
-  </div>
-  <v-network-graph class="graph" :nodes="nodes" :edges="edges" />
-</template>
-
 <script setup lang="ts">
 const nodes = {
   node1: { name: 'Node 1' },
@@ -20,10 +13,11 @@ const edges = {
 };
 </script>
 
-<style>
-.graph {
-  width: 800px;
-  height: 600px;
-  border: 1px solid #000;
-}
-</style>
+<template>
+  <div class="index-page">
+    <div>
+      <h1>Welcome to the Editor</h1>
+    </div>
+    <v-network-graph class="graph" :nodes="nodes" :edges="edges" />
+  </div>
+</template>
