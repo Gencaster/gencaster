@@ -31,6 +31,10 @@ a {
   touch-action: manipulation;
 }
 
+button {
+  text-decoration: none;
+}
+
 // .page-enter-active,
 // .page-leave-active {
 //   transition: opacity $transitionDefault;
