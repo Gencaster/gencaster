@@ -37,6 +37,10 @@ function removeEdge() {
     delete edges[edgeId];
   }
 }
+
+const loadData = () => {
+  console.log('load needs to be written');
+};
 </script>
 
 <template>
@@ -62,6 +66,9 @@ function removeEdge() {
           remove
         </button>
       </div>
+    </div>
+    <div class="second-panel">
+      <button @click="loadData">Load Data</button>
     </div>
     <br />
 
