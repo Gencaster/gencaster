@@ -7,5 +7,5 @@ export default defineNuxtConfig({
   //       primary: '#ff0000',
   //     },
   //   },
-  css: ['v-network-graph/lib/style.css'],
+  css: ['~/assets/scss/main.scss', 'v-network-graph/lib/style.css'],
 });

@@ -1,4 +1,4 @@
-<template>
+<template class="index-page">
   <div>
     <h1>Welcome to the Editor</h1>
   </div>
