@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 import * as Urql from '@urql/vue';
-import * as Urql from 'urql';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };

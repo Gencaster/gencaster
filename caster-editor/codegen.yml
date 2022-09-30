@@ -9,4 +9,3 @@ generates:
       - typescript
       - typescript-operations
       - typescript-vue-urql
-      - typescript-urql
