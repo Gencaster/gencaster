@@ -23,12 +23,12 @@ dev-server:
 		python manage.py runserver --settings gencaster.settings.test; \
 	)
 
-run-local:
+docker-local:
 	docker-compose stop
 	docker-compose build
 	docker-compose -f docker-compose.yml -f docker-compose.local.yml up
 
-run-prod:
+docker-prod:
 	docker-compose stop
 	docker-compose build
 	docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
