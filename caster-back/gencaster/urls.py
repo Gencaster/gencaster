@@ -19,8 +19,6 @@ from django.contrib import admin
 from django.urls import path
 from strawberry.django.views import AsyncGraphQLView
 
-from stories import views
-
 from .schema import schema
 
 admin.site.site_header = "GenCaster admin"
@@ -28,7 +26,6 @@ admin.site.site_header = "GenCaster admin"
 urlpatterns = (
     [
         path("admin/", admin.site.urls),
-        path("", views.index, name="hello"),
         path(
             "graphql",
             AsyncGraphQLView.as_view(schema=schema),
