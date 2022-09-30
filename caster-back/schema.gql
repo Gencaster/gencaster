@@ -1,0 +1,95 @@
+"""Date with time (isoformat)"""
+scalar DateTime
+
+type Edge {
+  uuid: UUID!
+  inNode: Node!
+  outNode: Node!
+}
+
+type Graph {
+  uuid: UUID!
+  name: String!
+  nodes: [Node!]!
+}
+
+input IntFilterLookup {
+  exact: Int
+  iExact: Int
+  contains: Int
+  iContains: Int
+  inList: [Int!]
+  gt: Int
+  gte: Int
+  lt: Int
+  lte: Int
+  startsWith: Int
+  iStartsWith: Int
+  endsWith: Int
+  iEndsWith: Int
+  range: [Int!]
+  isNull: Boolean
+  regex: String
+  iRegex: String
+}
+
+type Node {
+  uuid: UUID!
+  name: String!
+  inEdges: [Edge!]!
+  outEdges: [Edge!]!
+  scriptCells: [ScriptCell!]!
+}
+
+type Query {
+  streamPoint(pk: ID): StreamPoint!
+  streamPoints(filters: StreamPointFilter): [StreamPoint!]!
+  graphs: [Graph!]!
+}
+
+type ScriptCell {
+  uuid: UUID!
+  node: Node!
+  cellType: String!
+  cellCode: String!
+  cellOrder: Int!
+}
+
+type StreamPoint {
+  uuid: UUID!
+  createdDate: DateTime!
+  modifiedDate: DateTime!
+  host: String!
+  port: Int!
+  useInput: Boolean!
+  janusInPort: Int
+  janusOutPort: Int
+  lastLive: DateTime
+}
+
+input StreamPointFilter {
+  uuid: UUIDFilterLookup
+  janusInPort: IntFilterLookup
+}
+
+scalar UUID
+
+input UUIDFilterLookup {
+  exact: UUID
+  iExact: UUID
+  contains: UUID
+  iContains: UUID
+  inList: [UUID!]
+  gt: UUID
+  gte: UUID
+  lt: UUID
+  lte: UUID
+  startsWith: UUID
+  iStartsWith: UUID
+  endsWith: UUID
+  iEndsWith: UUID
+  range: [UUID!]
+  isNull: Boolean
+  regex: String
+  iRegex: String
+}
