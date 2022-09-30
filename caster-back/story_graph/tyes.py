@@ -13,6 +13,10 @@ class Graph:
     name: auto
     nodes: List["Node"]
 
+    @strawberry.django.field
+    def edges(self) -> List["Edge"]:
+        return models.Edge.objects.filter(in_node__graph=self)
+
 
 @strawberry.django.type(models.Node)
 class Node:
