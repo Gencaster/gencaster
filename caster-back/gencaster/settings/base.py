@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "voice",
     "stream",
     "socketio",
+    "strawberry.django",
 ]
 
 MIDDLEWARE = [
