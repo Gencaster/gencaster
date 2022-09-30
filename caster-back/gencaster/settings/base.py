@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "stream",
     "socketio",
     "strawberry.django",
+    "strawberry_django_plus",
 ]
 
 MIDDLEWARE = [
@@ -117,10 +118,6 @@ LOGGING = {
             "handlers": ["console"],
             "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
             "propagate": False,
-        },
-        "stories": {
-            "handlers": ["console"],
-            "level": "DEBUG",
         },
     },
 }
