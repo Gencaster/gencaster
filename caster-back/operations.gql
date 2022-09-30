@@ -3,3 +3,15 @@ query MyQuery {
     name
   }
 }
+
+query testQuery {
+    graphs {
+        nodes {
+        name
+        }
+        edges {
+        uuid
+        }
+        name
+    }
+}

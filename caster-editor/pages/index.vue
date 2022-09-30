@@ -2,25 +2,12 @@
 import { Nodes, Edges } from 'v-network-graph';
 import { defineComponent } from 'vue';
 import { useQuery } from '@urql/vue';
+import { useTestQueryQuery } from '../graphql/graphql';
 
 
 export default defineComponent({
   setup() {
-    const result = useQuery({
-      query: `
-      {
-        graphs {
-          nodes {
-            name
-          }
-          edges {
-            uuid
-          }
-          name
-        }
-      }
-      `
-    });
+    const result = useTestQueryQuery();
     return {
       fetching: result.fetching,
       data: result.data,
