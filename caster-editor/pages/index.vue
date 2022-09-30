@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { Nodes, Edges } from 'v-network-graph';
-import data from '~/assets/data/graphData';
+import data from '~~/assets/data/graphData';
+
+import { useQuery } from '@urql/vue';
+import { MyQueryDocument } from '../graphql/graphql';
 
 const nodes: Nodes = reactive({ ...data.nodes });
 const edges: Edges = reactive({ ...data.edges });
@@ -40,6 +43,7 @@ function removeEdge() {
 
 const loadData = () => {
   console.log('load needs to be written');
+  MyQueryDocument;
 };
 </script>
 
