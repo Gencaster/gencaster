@@ -1,21 +1,18 @@
 <script lang="ts">
-import { Nodes as GraphNodes, Node as GraphNode, Edges as GraphEdges, Edge as GraphEdge } from "v-network-graph";
-import { defineComponent, toRefs, transformVNodeArgs } from "vue";
-import { useQuery } from "@urql/vue";
-import { useGetGraphQuery, Edge as StoryEdge, Node as StoryNode } from "../graphql/graphql";
-import { propsToAttrMap } from "@vue/shared";
-import { transformEdges, transformNodes } from "../tools/typeTransformers"
+import { defineComponent, toRefs } from "vue";
+import { useGetGraphQuery } from "../graphql/graphql";
+import { transformEdges, transformNodes } from "../tools/typeTransformers";
 
 export default defineComponent({
   props: {
-    uuid: String
+    uuid: String,
   },
 
   setup(props) {
     const uuid = toRefs(props).uuid;
     const result = useGetGraphQuery({
-        variables: {uuid: uuid},
-        requestPolicy: 'network-only',
+      variables: { uuid: uuid },
+      requestPolicy: "network-only",
     });
     return {
       fetching: result.fetching,
@@ -24,7 +21,7 @@ export default defineComponent({
       transformEdges,
       transformNodes,
     };
-  }
+  },
 });
 </script>
 
@@ -32,7 +29,9 @@ export default defineComponent({
   <div class="index-page">
     <div v-if="fetching">...Loading</div>
     <div v-else>
-      <h1>Welcome to the Editor of <b>{{ data.graph.name }}</b></h1>
+      <h1>
+        Welcome to the Editor of <b>{{ data.graph.name }}</b>
+      </h1>
       <div class="demo-control-panel">
         <div>
           <label>Node:</label>
