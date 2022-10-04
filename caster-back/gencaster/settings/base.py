@@ -43,9 +43,9 @@ INSTALLED_APPS = [
     "story_graph",
     "voice",
     "stream",
-    "socketio",
     "strawberry.django",
     "strawberry_django_plus",
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -163,3 +163,5 @@ STATIC_ROOT = "static/"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "media/"
+
+ASGI_APPLICATION = "gencaster.asgi.application"

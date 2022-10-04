@@ -1,4 +1,5 @@
-from typing import List
+import asyncio
+from typing import AsyncGenerator, List
 
 import strawberry
 
@@ -13,4 +14,13 @@ class Query:
     graphs: List[Graph] = strawberry.django.field()
 
 
-schema = strawberry.Schema(query=Query)
+@strawberry.type
+class Subscription:
+    @strawberry.subscription
+    async def count(self, target: int = 100) -> AsyncGenerator[int, None]:
+        for i in range(target):
+            yield i
+            await asyncio.sleep(0.5)
+
+
+schema = strawberry.Schema(query=Query, subscription=Subscription)

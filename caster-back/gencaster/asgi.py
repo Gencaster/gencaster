@@ -9,11 +9,11 @@ https://docs.djangoproject.com/en/3.1/howto/deployment/asgi/
 
 import os
 
-import socketio
 from django.core.asgi import get_asgi_application
 from pythonosc.udp_client import SimpleUDPClient
+from strawberry.channels import GraphQLProtocolTypeRouter
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gencaster.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gencaster.settings.base")
 
 if not os.environ.get("SUPERCOLLIDER_HOST") or os.environ.get("SUPERCOLLIDER_PORT"):
     print(
@@ -27,13 +27,11 @@ osc_client = SimpleUDPClient(
 
 osc_client.send_message("/foo", 400.0)
 
-sio = socketio.AsyncServer(
-    async_mode="asgi",
-    cors_allowed_origins="*",
-)
+django_asgi_app = get_asgi_application()
 
-application = socketio.ASGIApp(
-    sio,
-    get_asgi_application(),
-    socketio_path="socket.io",
+from .schema import schema  # noqa
+
+application = GraphQLProtocolTypeRouter(
+    schema,
+    django_application=django_asgi_app,
 )

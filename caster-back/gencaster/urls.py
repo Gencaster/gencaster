@@ -28,7 +28,7 @@ urlpatterns = (
         path("admin/", admin.site.urls),
         path(
             "graphql",
-            AsyncGraphQLView.as_view(schema=schema),
+            AsyncGraphQLView.as_view(schema=schema, subscriptions_enabled=True),
         ),
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # type: ignore
