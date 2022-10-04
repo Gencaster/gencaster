@@ -2,9 +2,10 @@ import asyncio
 from typing import AsyncGenerator, List
 
 import strawberry
+import strawberry.django
 
 import story_graph.models as story_graph_models
-from story_graph.types import EdgeInput, Graph, NodeInput
+from story_graph.types import EdgeInput, Graph, Node, NodeInput
 from stream.types import StreamPoint
 
 
@@ -13,6 +14,9 @@ class Query:
     stream_point: StreamPoint = strawberry.django.field()
     stream_points: List[StreamPoint] = strawberry.django.field()
     graphs: List[Graph] = strawberry.django.field()
+    graph: Graph = strawberry.django.field()
+    nodes: List[Node] = strawberry.django.field()
+    node: Node = strawberry.django.field()
 
 
 @strawberry.type

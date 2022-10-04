@@ -15,6 +15,7 @@ export type Scalars = {
   Float: number;
   DateTime: any;
   UUID: any;
+  Void: any;
 };
 
 export type Edge = {
@@ -22,6 +23,12 @@ export type Edge = {
   inNode: Node;
   outNode: Node;
   uuid: Scalars['UUID'];
+};
+
+export type EdgeInput = {
+  name: Scalars['String'];
+  nodeInUuid: Scalars['UUID'];
+  nodeOutUuid: Scalars['UUID'];
 };
 
 export type Graph = {
@@ -52,6 +59,22 @@ export type IntFilterLookup = {
   startsWith?: InputMaybe<Scalars['Int']>;
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  addEdge: Graph;
+  addNode?: Maybe<Scalars['Void']>;
+};
+
+
+export type MutationAddEdgeArgs = {
+  newEdge: EdgeInput;
+};
+
+
+export type MutationAddNodeArgs = {
+  newNode: NodeInput;
+};
+
 export type Node = {
   __typename?: 'Node';
   inEdges: Array<Edge>;
@@ -61,11 +84,29 @@ export type Node = {
   uuid: Scalars['UUID'];
 };
 
+export type NodeInput = {
+  graphUuid: Scalars['UUID'];
+  name: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  graph: Graph;
   graphs: Array<Graph>;
+  node: Node;
+  nodes: Array<Node>;
   streamPoint: StreamPoint;
   streamPoints: Array<StreamPoint>;
+};
+
+
+export type QueryGraphArgs = {
+  pk?: InputMaybe<Scalars['ID']>;
+};
+
+
+export type QueryNodeArgs = {
+  pk?: InputMaybe<Scalars['ID']>;
 };
 
 
@@ -105,6 +146,16 @@ export type StreamPointFilter = {
   uuid?: InputMaybe<UuidFilterLookup>;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  count: Scalars['Int'];
+};
+
+
+export type SubscriptionCountArgs = {
+  target?: Scalars['Int'];
+};
+
 export type UuidFilterLookup = {
   contains?: InputMaybe<Scalars['UUID']>;
   endsWith?: InputMaybe<Scalars['UUID']>;
@@ -135,6 +186,18 @@ export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TestQueryQuery = { __typename?: 'Query', graphs: Array<{ __typename?: 'Graph', name: string, nodes: Array<{ __typename?: 'Node', name: string }>, edges: Array<{ __typename?: 'Edge', uuid: any }> }> };
 
+export type GetGraphsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetGraphsQuery = { __typename?: 'Query', graphs: Array<{ __typename?: 'Graph', uuid: any, name: string }> };
+
+export type GetGraphQueryVariables = Exact<{
+  uuid?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type GetGraphQuery = { __typename?: 'Query', graph: { __typename?: 'Graph', name: string, uuid: any, edges: Array<{ __typename?: 'Edge', uuid: any, outNode: { __typename?: 'Node', uuid: any }, inNode: { __typename?: 'Node', uuid: any } }>, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: string, uuid: any }> }> } };
+
 
 export const MyQueryDocument = gql`
     query MyQuery {
@@ -163,4 +226,47 @@ export const TestQueryDocument = gql`
 
 export function useTestQueryQuery(options: Omit<Urql.UseQueryArgs<never, TestQueryQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<TestQueryQuery>({ query: TestQueryDocument, ...options });
+};
+export const GetGraphsDocument = gql`
+    query GetGraphs {
+  graphs {
+    uuid
+    name
+  }
+}
+    `;
+
+export function useGetGraphsQuery(options: Omit<Urql.UseQueryArgs<never, GetGraphsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetGraphsQuery>({ query: GetGraphsDocument, ...options });
+};
+export const GetGraphDocument = gql`
+    query getGraph($uuid: ID) {
+  graph(pk: $uuid) {
+    name
+    uuid
+    edges {
+      uuid
+      outNode {
+        uuid
+      }
+      inNode {
+        uuid
+      }
+    }
+    nodes {
+      name
+      uuid
+      scriptCells {
+        cellCode
+        cellOrder
+        cellType
+        uuid
+      }
+    }
+  }
+}
+    `;
+
+export function useGetGraphQuery(options: Omit<Urql.UseQueryArgs<never, GetGraphQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetGraphQuery>({ query: GetGraphDocument, ...options });
 };
