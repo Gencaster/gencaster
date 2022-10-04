@@ -205,13 +205,13 @@ export type CreateEdgeMutationVariables = Exact<{
 
 export type CreateEdgeMutation = { __typename?: 'Mutation', addEdge?: any | null };
 
-export type AddNodeMutationVariables = Exact<{
+export type CreateNodeMutationVariables = Exact<{
   name: Scalars['String'];
   graphUuid: Scalars['UUID'];
 }>;
 
 
-export type AddNodeMutation = { __typename?: 'Mutation', addNode?: any | null };
+export type CreateNodeMutation = { __typename?: 'Mutation', addNode?: any | null };
 
 
 export const MyQueryDocument = gql`
@@ -294,12 +294,12 @@ export const CreateEdgeDocument = gql`
 export function useCreateEdgeMutation() {
   return Urql.useMutation<CreateEdgeMutation, CreateEdgeMutationVariables>(CreateEdgeDocument);
 };
-export const AddNodeDocument = gql`
-    mutation addNode($name: String!, $graphUuid: UUID!) {
+export const CreateNodeDocument = gql`
+    mutation createNode($name: String!, $graphUuid: UUID!) {
   addNode(newNode: {name: $name, graphUuid: $graphUuid})
 }
     `;
 
-export function useAddNodeMutation() {
-  return Urql.useMutation<AddNodeMutation, AddNodeMutationVariables>(AddNodeDocument);
+export function useCreateNodeMutation() {
+  return Urql.useMutation<CreateNodeMutation, CreateNodeMutationVariables>(CreateNodeDocument);
 };

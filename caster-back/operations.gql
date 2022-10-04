@@ -53,6 +53,6 @@ mutation createEdge($nodeInUuid:UUID!, $nodeOutUuid:UUID!) {
   addEdge(newEdge: {nodeInUuid: $nodeInUuid, nodeOutUuid: $nodeOutUuid})
 }
 
-mutation addNode($name:String!, $graphUuid:UUID!) {
+mutation createNode($name:String!, $graphUuid:UUID!) {
   addNode(newNode: {name: $name, graphUuid: $graphUuid})
 }
