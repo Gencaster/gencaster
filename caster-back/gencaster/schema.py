@@ -3,7 +3,8 @@ from typing import AsyncGenerator, List
 
 import strawberry
 
-from story_graph.tyes import Graph
+import story_graph.models as story_graph_models
+from story_graph.types import EdgeInput, Graph, NodeInput
 from stream.types import StreamPoint
 
 
@@ -15,6 +16,21 @@ class Query:
 
 
 @strawberry.type
+class Mutation:
+    @strawberry.mutation
+    async def add_node(self, info, new_node: NodeInput) -> None:
+        print(new_node)
+        graph = story_graph_models.Graph.objects.get(uuid=new_node.graph_uuid)
+        story_graph_models.Node.objects.create(name=new_node.name, graph=graph)
+        return None
+
+    @strawberry.mutation
+    async def add_edge(self, new_edge: EdgeInput) -> Graph:
+        print(new_edge)
+        return None
+
+
+@strawberry.type
 class Subscription:
     @strawberry.subscription
     async def count(self, target: int = 100) -> AsyncGenerator[int, None]:
@@ -23,4 +39,8 @@ class Subscription:
             await asyncio.sleep(0.5)
 
 
-schema = strawberry.Schema(query=Query, subscription=Subscription)
+schema = strawberry.Schema(
+    query=Query,
+    mutation=Mutation,
+    subscription=Subscription,
+)

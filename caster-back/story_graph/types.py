@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 
 import strawberry
@@ -5,6 +6,20 @@ import strawberry.django
 from strawberry import auto
 
 from . import models
+
+
+@strawberry.input
+class NodeInput:
+    graph_uuid: uuid.UUID
+    name: str
+    # script_cells: List["ScriptCell"]
+
+
+@strawberry.input
+class EdgeInput:
+    name: str
+    node_in_uuid: uuid.UUID
+    node_out_uuid: uuid.UUID
 
 
 @strawberry.django.type(models.Graph)
