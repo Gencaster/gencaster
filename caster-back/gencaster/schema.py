@@ -3,6 +3,7 @@ from typing import AsyncGenerator, List
 
 import strawberry
 import strawberry.django
+from asgiref.sync import sync_to_async
 
 import story_graph.models as story_graph_models
 from story_graph.types import EdgeInput, Graph, Node, NodeInput
@@ -23,14 +24,30 @@ class Query:
 class Mutation:
     @strawberry.mutation
     async def add_node(self, info, new_node: NodeInput) -> None:
-        print(new_node)
-        graph = story_graph_models.Graph.objects.get(uuid=new_node.graph_uuid)
-        story_graph_models.Node.objects.create(name=new_node.name, graph=graph)
+        graph = await sync_to_async(story_graph_models.Graph.objects.get)(
+            uuid=new_node.graph_uuid
+        )
+        node = await sync_to_async(story_graph_models.Node.objects.create)(
+            name=new_node.name, graph=graph
+        )
+        print("Created new node ", node)
         return None
 
     @strawberry.mutation
-    async def add_edge(self, new_edge: EdgeInput) -> Graph:
-        print(new_edge)
+    async def add_edge(self, info, new_edge: EdgeInput) -> None:
+        in_node: story_graph_models.Node = await sync_to_async(
+            story_graph_models.Node.objects.get
+        )(uuid=new_edge.node_in_uuid)
+        out_node: story_graph_models.Node = await sync_to_async(
+            story_graph_models.Node.objects.get
+        )(uuid=new_edge.node_out_uuid)
+        edge: story_graph_models.Edge = await sync_to_async(
+            story_graph_models.Edge.objects.create
+        )(
+            in_node=in_node,
+            out_node=out_node,
+        )
+        print("Created new edge ", edge)
         return None
 
 

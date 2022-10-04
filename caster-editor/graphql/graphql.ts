@@ -26,7 +26,6 @@ export type Edge = {
 };
 
 export type EdgeInput = {
-  name: Scalars['String'];
   nodeInUuid: Scalars['UUID'];
   nodeOutUuid: Scalars['UUID'];
 };
@@ -61,7 +60,7 @@ export type IntFilterLookup = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addEdge: Graph;
+  addEdge?: Maybe<Scalars['Void']>;
   addNode?: Maybe<Scalars['Void']>;
 };
 
@@ -198,6 +197,22 @@ export type GetGraphQueryVariables = Exact<{
 
 export type GetGraphQuery = { __typename?: 'Query', graph: { __typename?: 'Graph', name: string, uuid: any, edges: Array<{ __typename?: 'Edge', uuid: any, outNode: { __typename?: 'Node', uuid: any }, inNode: { __typename?: 'Node', uuid: any } }>, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: string, uuid: any }> }> } };
 
+export type CreateEdgeMutationVariables = Exact<{
+  nodeInUuid: Scalars['UUID'];
+  nodeOutUuid: Scalars['UUID'];
+}>;
+
+
+export type CreateEdgeMutation = { __typename?: 'Mutation', addEdge?: any | null };
+
+export type AddNodeMutationVariables = Exact<{
+  name: Scalars['String'];
+  graphUuid: Scalars['UUID'];
+}>;
+
+
+export type AddNodeMutation = { __typename?: 'Mutation', addNode?: any | null };
+
 
 export const MyQueryDocument = gql`
     query MyQuery {
@@ -269,4 +284,22 @@ export const GetGraphDocument = gql`
 
 export function useGetGraphQuery(options: Omit<Urql.UseQueryArgs<never, GetGraphQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetGraphQuery>({ query: GetGraphDocument, ...options });
+};
+export const CreateEdgeDocument = gql`
+    mutation createEdge($nodeInUuid: UUID!, $nodeOutUuid: UUID!) {
+  addEdge(newEdge: {nodeInUuid: $nodeInUuid, nodeOutUuid: $nodeOutUuid})
+}
+    `;
+
+export function useCreateEdgeMutation() {
+  return Urql.useMutation<CreateEdgeMutation, CreateEdgeMutationVariables>(CreateEdgeDocument);
+};
+export const AddNodeDocument = gql`
+    mutation addNode($name: String!, $graphUuid: UUID!) {
+  addNode(newNode: {name: $name, graphUuid: $graphUuid})
+}
+    `;
+
+export function useAddNodeMutation() {
+  return Urql.useMutation<AddNodeMutation, AddNodeMutationVariables>(AddNodeDocument);
 };
