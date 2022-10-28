@@ -1,7 +1,9 @@
 django==4.0.2
 uvicorn[standard]==0.17.5
-python-socketio==5.5.2
 gunicorn==20.1.0
 psycopg2-binary==2.9.3
 python-osc==1.8.0
 google-cloud-texttospeech==2.10.2
+strawberry-graphql-django==0.5.1
+strawberry-graphql[channels]<=0.132.0
+strawberry-django-plus==1.27

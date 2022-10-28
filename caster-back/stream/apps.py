@@ -10,6 +10,6 @@ class StreamConfig(AppConfig):
 
         try:
             Stream.objects.disconnect_all_streams()
-        except Exception as e:
-            print(f"Could not reset all streams: {e}")
+        except Exception:
+            pass
         return super().ready()

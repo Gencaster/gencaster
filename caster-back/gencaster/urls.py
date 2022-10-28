@@ -17,15 +17,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
+from strawberry.django.views import AsyncGraphQLView
 
-from stories import views
+from .schema import schema
 
 admin.site.site_header = "GenCaster admin"
 
 urlpatterns = (
     [
         path("admin/", admin.site.urls),
-        path("", views.index, name="hello"),
+        path(
+            "graphql",
+            AsyncGraphQLView.as_view(schema=schema, subscriptions_enabled=True),
+        ),
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # type: ignore
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # type: ignore

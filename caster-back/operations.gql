@@ -1,0 +1,58 @@
+query MyQuery {
+  graphs {
+    name
+  }
+}
+
+query testQuery {
+  graphs {
+    nodes {
+      name
+    }
+    edges {
+      uuid
+    }
+    name
+  }
+}
+
+query GetGraphs {
+  graphs {
+    uuid
+    name
+  }
+}
+
+query getGraph($uuid: ID) {
+  graph(pk: $uuid) {
+    name
+    uuid
+    edges {
+      uuid
+      outNode {
+        uuid
+      }
+      inNode {
+        uuid
+      }
+    }
+    nodes {
+      name
+      uuid
+      scriptCells {
+        cellCode
+        cellOrder
+        cellType
+        uuid
+      }
+    }
+  }
+}
+
+mutation createEdge($nodeInUuid:UUID!, $nodeOutUuid:UUID!) {
+  addEdge(newEdge: {nodeInUuid: $nodeInUuid, nodeOutUuid: $nodeOutUuid})
+}
+
+mutation createNode($name:String!, $graphUuid:UUID!) {
+  addNode(newNode: {name: $name, graphUuid: $graphUuid})
+}

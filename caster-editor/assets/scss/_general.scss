@@ -1,0 +1,50 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  min-height: 100%;
+  max-width: 100% !important;
+}
+
+body {
+  box-sizing: content-box;
+  background-color: $bodyBackground;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+button,
+a {
+  // cursor: pointer;
+  letter-spacing: inherit;
+  touch-action: manipulation;
+}
+
+button {
+  text-decoration: none;
+}
+
+// .page-enter-active,
+// .page-leave-active {
+//   transition: opacity $transitionDefault;
+// }
+// .page-enter,
+// .page-leave-to {
+//   opacity: 0;
+// }
+
+img {
+  width: 100%;
+  vertical-align: bottom;
+}

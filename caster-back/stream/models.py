@@ -54,19 +54,23 @@ class StreamPoint(models.Model):
     port = models.IntegerField(verbose_name=_("SuperCollider port"))
 
     use_input = models.BooleanField(
-        default=False, verbose_name=_("Accepts to send audio input")
+        default=False,
+        verbose_name=_("Use input"),
+        help_text=_("Accepts to send audio input"),
     )
 
     janus_in_port = models.IntegerField(
         blank=True,
         null=True,
-        verbose_name=_("RTP port where Janus streams the audio its received from user"),
+        verbose_name=_("Jauns in port"),
+        help_text=_("RTP port where Janus streams the audio its received from user"),
     )
 
     janus_out_port = models.IntegerField(
         blank=True,
         null=True,
-        verbose_name=_(
+        verbose_name=_("Janus out port"),
+        help_text=_(
             "RTP port where SuperCollider/gstreamer streams its audio to Janus"
         ),
     )
@@ -74,7 +78,8 @@ class StreamPoint(models.Model):
     janus_in_room = models.IntegerField(
         blank=True,
         null=True,
-        verbose_name=_(
+        verbose_name=_("Janus in room"),
+        help_text=_(
             "Audiobridge room ID under which Janus can send audio to SuperCollider"
         ),
     )
@@ -82,7 +87,8 @@ class StreamPoint(models.Model):
     janus_out_room = models.IntegerField(
         null=True,
         blank=True,
-        verbose_name=_(
+        verbose_name=_("Jauns out room"),
+        help_text=_(
             "Streaming room ID under which Janus serves audio from SuperCollider"
         ),
     )
@@ -91,19 +97,22 @@ class StreamPoint(models.Model):
         max_length=128,
         blank=True,
         null=True,
-        verbose_name=_("IP or Hostname under which the janus instance is reachable"),
+        verbose_name=_("Janus public IP"),
+        help_text=_("IP or Hostname under which the janus instance is reachable"),
     )
 
     sc_name = models.CharField(
         max_length=128,
         null=True,
-        verbose_name=_(
+        verbose_name=_("SuperCollider name"),
+        help_text=_(
             "Internal name of the SuperCollider instance on the host, necessary for gstreamer"
         ),
     )
 
     last_live = models.DateTimeField(
-        verbose_name=_("Last live signal from SuperCollider server"),
+        verbose_name=_("Last live signal"),
+        help_text=_("Last live signal from SuperCollider server"),
         null=True,
     )
 
