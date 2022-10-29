@@ -24,7 +24,8 @@ jobs:
       - uses: actions/setup-python@v3
         with:
           python-version: "3.8"
-      - run: make docs
+      - run: pip3 install -r requirements-docs.txt
+      - run: make -C docs html
       - uses: actions/upload-artifact@v2
         if: success() || failure()
         with:
