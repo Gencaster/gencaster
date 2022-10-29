@@ -2,19 +2,23 @@
 
 venv: caster-back/venv/touchfile
 
+.PHONY: virtualenv
+virtualenv:
+	pip3 install virtualenv
+
 caster-back/venv/touchfile: requirements-docs.txt
 	test -d caster-back/venv || virtualenv caster-back/venv
 	. caster-back/venv/bin/activate; pip install -Ur requirements-docs.txt
 	touch caster-back/venv/touchfile
 
-docs: venv
+docs: venv virtualenv
 	rm -rf docs/_build
 	. caster-back/venv/bin/activate; make -C docs html
 ifeq ($(shell uname), Darwin)
 	open docs/_build/html/index.html
 endif
 
-dev-server: venv
+dev-server: venv virtualenv
 	. caster-back/venv/bin/activate && (\
 		pip3 install --quiet -r requirements-docs.txt; \
 		cd caster-back; \
