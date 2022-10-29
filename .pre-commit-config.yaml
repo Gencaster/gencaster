@@ -8,6 +8,7 @@ repos:
     -   id: check-added-large-files
         args: ['--maxkb=1024']
     -   id: check-json
+        exclude: caster-editor/tsconfig.json
     -   id: check-merge-conflict
 -   repo: https://github.com/psf/black
     rev: 22.3.0
