@@ -5,7 +5,7 @@ services:
     env_file:
       - vars.env
       - vars.deploy.env
-      - .secerts.env
+      - .secrets.env
 
   backend:
     env_file:
