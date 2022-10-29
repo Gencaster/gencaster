@@ -12,3 +12,7 @@ services:
       - 10000-10200:10000-10200
     environment:
       - DEVELOPMENT=true
+
+  backend:
+    environment:
+      - DEVELOPMENT=true

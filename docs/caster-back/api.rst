@@ -5,17 +5,17 @@ API
     :depth: 1
 
 Stream
---------
+------
 
 .. automodule:: stream
     :members:
     :undoc-members:
     :show-inheritance:
 
-Stories
--------
+Story graph
+-----------
 
-.. automodule:: stories
+.. automodule:: story_graph
 
 Voice
 -----

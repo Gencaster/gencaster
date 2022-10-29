@@ -1,0 +1,86 @@
+@mixin onScreen($size) {
+  @if $size == hover-device {
+    @media (hover: hover) {
+      @content;
+    }
+  }
+  @if $size == non-hover-device {
+    @media (hover: none) {
+      @content;
+    }
+  } @else if $size == mini-phone-only {
+    @media (max-width: 320px) {
+      @content;
+    }
+  } @else if $size == phone-only {
+    @media (max-width: 599px) {
+      @content;
+    }
+  } @else if $size == phone-and-tablet-landscape-only {
+    @media (max-width: 900px) {
+      @content;
+    }
+  } @else if $size == tablet-portrait-up {
+    @media (min-width: 600px) {
+      @content;
+    }
+  } @else if $size == tablet-and-desktop-only {
+    @media (min-width: 900px) and (max-width: 1200px) {
+      @content;
+    }
+  } @else if $size == tablet-landscape-up {
+    @media (min-width: 900px) {
+      @content;
+    }
+  } @else if $size == desktop-up {
+    @media (min-width: 1024px) {
+      @content;
+    }
+  } @else if $size == macbook-up {
+    @media (min-width: 1200px) {
+      @content;
+    }
+  } @else if $size == big-desktop-up {
+    @media (min-width: 1800px) {
+      @content;
+    }
+  } @else if $size == landscape {
+    @media (orientation: landscape) {
+      @content;
+    }
+  }
+}
+
+@mixin fontStyle($fontStyle) {
+  @if $fontStyle == body {
+    font-size: $baseFontSizeMobile;
+    line-height: 1.3;
+    @include onScreen('tablet-portrait-up') {
+      font-size: $baseFontSize;
+    }
+  }
+
+  @if $fontStyle == headline {
+    font-size: $largeFontSizeMobile;
+    line-height: 1.3;
+    @include onScreen('tablet-portrait-up') {
+      font-size: $largeFontSize;
+    }
+  }
+
+  @if $fontStyle == headlineLarger {
+    font-size: $largerFontSizeMobile;
+    line-height: 1.05;
+    @include onScreen('tablet-portrait-up') {
+      font-size: $largerFontSize;
+    }
+  }
+
+  @if $fontStyle == smallHeadline {
+    font-size: $mediumFontSizeMobile;
+    line-height: 1.3;
+    @include onScreen('tablet-portrait-up') {
+      font-size: $mediumFontSize;
+    }
+  }
+}

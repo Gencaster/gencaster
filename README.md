@@ -44,7 +44,7 @@ docker-compose -f docker-compose.yml -f docker-compose.local.yml up
 You can instead also use `make` via
 
 ```shell
-make run-local
+make docker-local
 ```
 
 ### Network

@@ -40,10 +40,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "stories",
+    "story_graph",
     "voice",
     "stream",
-    "socketio",
+    "strawberry.django",
+    "strawberry_django_plus",
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -117,10 +119,6 @@ LOGGING = {
             "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
             "propagate": False,
         },
-        "stories": {
-            "handlers": ["console"],
-            "level": "DEBUG",
-        },
     },
 }
 
@@ -165,3 +163,5 @@ STATIC_ROOT = "static/"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = "media/"
+
+ASGI_APPLICATION = "gencaster.asgi.application"
