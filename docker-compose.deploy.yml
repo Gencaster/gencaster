@@ -1,6 +1,12 @@
 version: '3.9'
 
 services:
+  database:
+    env_file:
+      - vars.env
+      - vars.deploy.env
+      - .secerts.env
+
   backend:
     env_file:
       - vars.env
