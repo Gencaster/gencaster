@@ -165,3 +165,8 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = "media/"
 
 ASGI_APPLICATION = "gencaster.asgi.application"
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://*.gencaster.org",
+    "https://*.gencaster.org",
+]
