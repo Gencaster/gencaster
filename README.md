@@ -11,6 +11,7 @@ Service | Folder | Port | Comment
 --- | --- | --- | ---
 `backend` | `caster-back` | `8081` | Django backend with database management for streams
 `osc_backend` | `caster-back` | `57130` | OSC server to receive OSC messages from SuperCollider and insert them into the database
+`editor` | `caster-editor` | `3001` | Editor fronted for story graphs
 `frontend` | `caster-front` | `3000` | Nuxt frontend for user interaction
 `sound` | `caster-sound` | `57120`, `8088` | SuperCollider server which can be listened to via WebRTC.
 `database` | | `5432` | A postgres database.
