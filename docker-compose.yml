@@ -61,3 +61,12 @@ services:
       - ./caster-sound/janus.plugin.streaming.jcfg:/opt/janus/etc/janus/janus.plugin.streaming.jcfg
       - ./caster-sound/janus.plugin.audiobridge.jcfg:/opt/janus/etc/janus/janus.plugin.audiobridge.jcfg
       - ./caster-sound/caster-sound.conf:/root/caster-sound.conf
+
+  editor:
+    build: caster-editor
+    depends_on:
+      - backend
+    ports:
+      - 3001:3000
+    volumes:
+      - ./caster-editor:/root/caster-editor/
