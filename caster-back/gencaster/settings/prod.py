@@ -8,3 +8,7 @@ ALLOWED_HOSTS = [
     "*.gencaster.org",
     "gencaster.org",
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://editor.dev.gencaster.org",
+]
