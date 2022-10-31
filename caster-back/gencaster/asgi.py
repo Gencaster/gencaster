@@ -26,13 +26,4 @@ osc_client = SimpleUDPClient(
 
 osc_client.send_message("/foo", 400.0)
 
-django_asgi_app = get_asgi_application()
-
-from .schema import schema  # noqa
-
-# application = GraphQLProtocolTypeRouter(
-#     schema,
-#     django_application=django_asgi_app,
-# )
-
-application = django_asgi_app
+application = get_asgi_application()
