@@ -12,6 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "yarn"
+          cache-dependency-path: caster-editor/yarn.lock
       - uses: pre-commit/action@v2.0.3
 
   build-docs:
@@ -21,11 +26,6 @@ jobs:
     steps:
       - run: sudo apt-get install --yes graphviz
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "18"
-          cache: "yarn"
-          cache-dependency-path: caster-editor/yarn.lock
       - uses: actions/setup-python@v3
         with:
           python-version: "3.8"
