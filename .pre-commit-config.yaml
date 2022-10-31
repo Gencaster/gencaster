@@ -28,5 +28,5 @@ repos:
         name: lint editor
         language: system
         # only works for unix and assumes yarn is setup
-        entry: bash -c 'cd caster-editor && yarn install --dev && yarn format'
+        entry: bash -c 'cd caster-editor && yarn format'
         files: caster-editor/
