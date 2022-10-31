@@ -119,8 +119,8 @@ export default {
       transformEdges,
       transformNodes,
 
-      selectedNodes: ref<string[]>([]),
-      selectedEdges: ref<string[]>([]),
+      selectedNodes: <string[]>[],
+      selectedEdges: <string[]>[],
       configs: vNG.getFullConfigs(),
     };
   },
@@ -143,8 +143,7 @@ export default {
       this.data = result.data;
       this.error = result.error;
       this.fetching = result.fetching;
-
-      console.log(result);
+      console.log(this.selectedNodes);
     },
 
     refresh() {
@@ -158,6 +157,13 @@ export default {
 
     async addNode() {
       console.log('addNode');
+      const variables = { graphUuid: this.uuid, name: 'Some new random name' };
+      useCreateNodeMutation()
+        .executeMutation(variables)
+        .then(() => {
+          console.log('Please refresh');
+          this.refresh();
+        });
     },
   },
 };
