@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 import { defineComponent, toRefs, ref, reactive } from 'vue';
 import { useGetGraphQuery, useCreateNodeMutation } from '../graphql/graphql';
 import * as vNG from 'v-network-graph';
@@ -18,7 +18,6 @@ export default defineComponent({
     configs.node.selectable = true;
 
     const { executeMutation: newMutation } = useCreateNodeMutation();
-    // const foo = useCreateNodeMutation();
 
     function addNode(event) {
       const singleid = Math.round(Math.random() * 1000000);
@@ -31,17 +30,6 @@ export default defineComponent({
         console.log('Hello, we are finished');
       });
     }
-
-    // function addNode(event){
-    //   console.log(event);
-    //   const variables = {graphUuid: uuid, name: "Some new random name"};
-    //     useCreateNodeMutation()
-    //       .executeMutation(variables)
-    //       .then(() => {
-    //         console.log("Please refresh");
-    //         refresh();
-    //       });
-    // }
 
     const result = useGetGraphQuery({
       variables: { uuid: uuid },
@@ -70,7 +58,7 @@ export default defineComponent({
     };
   },
 });
-</script>
+</script> -->
 
 <template>
   <div class="index-page">
@@ -104,3 +92,78 @@ export default defineComponent({
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { useGetGraphQuery, useCreateNodeMutation } from '../graphql/graphql';
+import * as vNG from 'v-network-graph';
+import { transformEdges, transformNodes } from '../tools/typeTransformers';
+
+export default {
+  name: 'graphComponent',
+
+  props: {
+    uuid: {
+      type: String,
+      required: true,
+    },
+  },
+
+  data() {
+    return {
+      fetching: true,
+      result: null,
+      data: null,
+      error: null,
+
+      // graph
+      selectedNodes: <string[]>[],
+      selectedEdges: <string[]>[],
+      transformEdges,
+      transformNodes,
+      configs: vNG.getFullConfigs(),
+    };
+  },
+  mounted() {
+    this.configs.node.selectable = true;
+    const { executeMutation: newMutation } = useCreateNodeMutation();
+    this.newMutation = newMutation;
+
+    this.loadData();
+  },
+  methods: {
+    refresh() {
+      this.result.executeQuery();
+    },
+
+    addNode(event) {
+      const singleid = Math.round(Math.random() * 1000000);
+      console.log('start adding note', event);
+      const variables = {
+        graphUuid: this.uuid,
+        name: `Some new random name ${singleid}`,
+      };
+      this.newMutation(variables).then(() => {
+        console.log('Added node');
+      });
+    },
+
+    removeNode() {
+      console.log('removeNode');
+    },
+
+    async loadData() {
+      const result = await useGetGraphQuery({
+        variables: { uuid: this.uuid },
+        requestPolicy: 'network-only',
+      });
+
+      this.result = result;
+      this.data = result.data;
+      this.error = result.error;
+      this.fetching = result.fetching;
+
+      console.log('loaded graph');
+    },
+  },
+};
+</script>

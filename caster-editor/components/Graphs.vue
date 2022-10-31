@@ -1,25 +1,3 @@
-<!-- <script lang="ts">
-import { defineComponent } from 'vue';
-import { useQuery } from '@urql/vue';
-import { useGetGraphsQuery } from '../graphql/graphql';
-
-export default defineComponent({
-  setup() {
-    const result = useGetGraphsQuery();
-    return {
-      fetching: result.fetching,
-      data: result.data,
-      error: result.error,
-    };
-  },
-  data() {
-    return {
-      selectedUuid: null,
-    };
-  },
-});
-</script> -->
-
 <template>
   <div class="index-page">
     <div v-if="fetching">...Loading</div>
@@ -50,8 +28,6 @@ export default defineComponent({
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { useQuery } from '@urql/vue';
 import { useGetGraphsQuery } from '../graphql/graphql';
 
 export default {
@@ -60,6 +36,7 @@ export default {
   data() {
     return {
       fetching: true,
+      result: null,
       selectedUuid: null,
       graphsData: null,
     };
@@ -71,6 +48,7 @@ export default {
     async initQuery() {
       const result = await useGetGraphsQuery();
 
+      this.result = result;
       this.graphsData = result.data;
       this.fetching = result.fetching;
       this.error = result.error;
