@@ -66,19 +66,21 @@ export default defineComponent({
     <div v-else>
       <h1>
         Welcome to the Editor of <b>{{ data.graph.name }}</b>
+        <br />
+        <br />
       </h1>
       <div class="demo-control-panel">
-        <div>
-          <label>Node:</label>
-          {{ data.graph.nodes.length }}
+        <div class="constol-btns">
+          <p><b>Controls</b></p>
           <button :disabled="selectedNodes.length == 0" @click="removeNode()">
-            remove
+            Remove
           </button>
           <button @click="addNode">Create</button>
         </div>
-        <div>
-          <label>Edge:</label>
-          {{ data.graph.edges.length }}
+        <div class="stats">
+          <p><b>Stats</b></p>
+          <p>Nodes: {{ data.graph.nodes.length }}</p>
+          <p>Edges: {{ data.graph.edges.length }}</p>
         </div>
       </div>
       <br />
@@ -144,6 +146,7 @@ export default {
       };
       this.newMutation(variables).then(() => {
         console.log('Added node');
+        this.refresh();
       });
     },
 

@@ -5,7 +5,7 @@
       <h1>Please select a graph</h1>
       <div class="demo-control-panel">
         <div>
-          <label>Graph:</label>
+          <label><b>Graph</b></label>
           <form>
             <select v-model="selectedUuid">
               <option
