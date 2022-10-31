@@ -18,6 +18,7 @@ jobs:
           cache: "yarn"
           cache-dependency-path: caster-editor/yarn.lock
       - run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: caster-editor
       - uses: pre-commit/action@v2.0.3
 
   build-docs:
