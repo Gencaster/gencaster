@@ -28,31 +28,31 @@
 </template>
 
 <script lang="ts">
-import { useGetGraphsQuery } from '../graphql/graphql';
+import { useGetGraphsQuery } from '../graphql/graphql'
 
 export default {
-  name: 'graphsComponent',
+  name: 'GraphsComponent',
 
   data() {
     return {
       fetching: true,
       result: null,
       selectedUuid: null,
-      graphsData: null,
-    };
+      graphsData: null
+    }
   },
   mounted() {
-    this.initQuery();
+    this.initQuery()
   },
   methods: {
     async initQuery() {
-      const result = await useGetGraphsQuery();
+      const result = await useGetGraphsQuery()
 
-      this.result = result;
-      this.graphsData = result.data;
-      this.fetching = result.fetching;
-      this.error = result.error;
-    },
-  },
-};
+      this.result = result
+      this.graphsData = result.data
+      this.fetching = result.fetching
+      this.error = result.error
+    }
+  }
+}
 </script>

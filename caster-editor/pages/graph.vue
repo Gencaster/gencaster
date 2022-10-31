@@ -1,3 +1,3 @@
 <template>
-    <Graphs/>
+  <Graphs />
 </template>

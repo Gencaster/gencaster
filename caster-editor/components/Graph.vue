@@ -1,65 +1,3 @@
-<!-- <script lang="ts">
-import { defineComponent, toRefs, ref, reactive } from 'vue';
-import { useGetGraphQuery, useCreateNodeMutation } from '../graphql/graphql';
-import * as vNG from 'v-network-graph';
-import { transformEdges, transformNodes } from '../tools/typeTransformers';
-
-export default defineComponent({
-  props: {
-    uuid: String,
-  },
-
-  setup(props) {
-    const uuid = toRefs(props).uuid;
-
-    const selectedNodes = ref<string[]>([]);
-    const selectedEdges = ref<string[]>([]);
-    const configs = reactive(vNG.getFullConfigs());
-    configs.node.selectable = true;
-
-    const { executeMutation: newMutation } = useCreateNodeMutation();
-
-    function addNode(event) {
-      const singleid = Math.round(Math.random() * 1000000);
-      console.log('start adding note', event);
-      const variables = {
-        graphUuid: uuid,
-        name: `Some new random name ${singleid}`,
-      };
-      newMutation(variables).then(() => {
-        console.log('Hello, we are finished');
-      });
-    }
-
-    const result = useGetGraphQuery({
-      variables: { uuid: uuid },
-      requestPolicy: 'network-only',
-    });
-
-    const refresh = () => {
-      console.log('Rerfresh');
-      result.executeQuery();
-    };
-
-    return {
-      fetching: result.fetching,
-      data: result.data,
-      error: result.error,
-      transformEdges,
-      transformNodes,
-      selectedNodes,
-      selectedEdges,
-      configs,
-      refresh,
-      addNode,
-      removeNode() {
-        console.log('removeNode');
-      },
-    };
-  },
-});
-</script> -->
-
 <template>
   <div class="index-page">
     <div v-if="fetching">...Loading</div>
@@ -96,9 +34,9 @@ export default defineComponent({
 </template>
 
 <script lang="ts">
-import { useGetGraphQuery, useCreateNodeMutation } from '../graphql/graphql';
-import * as vNG from 'v-network-graph';
-import { transformEdges, transformNodes } from '../tools/typeTransformers';
+import { useGetGraphQuery, useCreateNodeMutation } from '../graphql/graphql'
+import * as vNG from 'v-network-graph'
+import { transformEdges, transformNodes } from '../tools/typeTransformers'
 
 export default {
   name: 'graphComponent',
@@ -106,8 +44,8 @@ export default {
   props: {
     uuid: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
 
   data() {
@@ -122,51 +60,51 @@ export default {
       selectedEdges: <string[]>[],
       transformEdges,
       transformNodes,
-      configs: vNG.getFullConfigs(),
-    };
+      configs: vNG.getFullConfigs()
+    }
   },
   mounted() {
-    this.configs.node.selectable = true;
-    const { executeMutation: newMutation } = useCreateNodeMutation();
-    this.newMutation = newMutation;
+    this.configs.node.selectable = true
+    const { executeMutation: newMutation } = useCreateNodeMutation()
+    this.newMutation = newMutation
 
-    this.loadData();
+    this.loadData()
   },
   methods: {
     refresh() {
-      this.result.executeQuery();
+      this.result.executeQuery()
     },
 
     addNode(event) {
-      const singleid = Math.round(Math.random() * 1000000);
-      console.log('start adding note', event);
+      const singleid = Math.round(Math.random() * 1000000)
+      console.log('start adding note', event)
       const variables = {
         graphUuid: this.uuid,
-        name: `Some new random name ${singleid}`,
-      };
+        name: `Some new random name ${singleid}`
+      }
       this.newMutation(variables).then(() => {
-        console.log('Added node');
-        this.refresh();
-      });
+        console.log('Added node')
+        this.refresh()
+      })
     },
 
     removeNode() {
-      console.log('removeNode');
+      console.log('removeNode')
     },
 
     async loadData() {
       const result = await useGetGraphQuery({
         variables: { uuid: this.uuid },
-        requestPolicy: 'network-only',
-      });
+        requestPolicy: 'network-only'
+      })
 
-      this.result = result;
-      this.data = result.data;
-      this.error = result.error;
-      this.fetching = result.fetching;
+      this.result = result
+      this.data = result.data
+      this.error = result.error
+      this.fetching = result.fetching
 
-      console.log('loaded graph');
-    },
-  },
-};
+      console.log('loaded graph')
+    }
+  }
+}
 </script>
