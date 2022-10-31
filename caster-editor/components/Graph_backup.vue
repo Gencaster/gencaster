@@ -19,6 +19,17 @@ export default defineComponent({
 
     const { executeMutation: newMutation } = useCreateNodeMutation;
 
+    function addNode(event) {
+      console.log(event);
+      const variables = { graphUuid: uuid, name: 'Some new random name' };
+      useCreateNodeMutation()
+        .executeMutation(variables)
+        .then(() => {
+          console.log('Please refresh');
+          refresh();
+        });
+    }
+
     const result = useGetGraphQuery({
       variables: { uuid: uuid },
       requestPolicy: 'network-only',
@@ -27,21 +38,6 @@ export default defineComponent({
     const refresh = () => {
       console.log('Rerfresh');
       result.executeQuery();
-    };
-
-    const removeNode = async () => {
-      console.log('removeNode');
-    };
-
-    const addNode = async () => {
-      console.log('addNode');
-      const variables = { graphUuid: uuid, name: 'Some new random name' };
-      useCreateNodeMutation()
-        .executeMutation(variables)
-        .then(() => {
-          console.log('Please refresh');
-          refresh();
-        });
     };
 
     return {
@@ -54,8 +50,16 @@ export default defineComponent({
       selectedEdges,
       configs,
       refresh,
-      addNode,
-      removeNode,
+      addNode: async (name: string = 'this is really new?') => {
+        await useCreateNodeMutation()
+          .executeMutation({ graphUuid: uuid, name: name })
+          .then((result) => {
+            console.log('Please refresh', result);
+          });
+      },
+      removeNode() {
+        console.log('removeNode');
+      },
     };
   },
 });
@@ -72,10 +76,10 @@ export default defineComponent({
         <div>
           <label>Node:</label>
           {{ data.graph.nodes.length }}
-          <button :disabled="selectedNodes.length == 0" @click="removeNode">
-            Remove
+          <button :disabled="selectedNodes.length == 0" @click="removeNode()">
+            remove
           </button>
-          <button @click="addNode">Add</button>
+          <button @click="addNode">Create</button>
         </div>
         <div>
           <label>Edge:</label>

@@ -31,7 +31,7 @@ export default defineComponent({
           <form>
             <select v-model="selectedUuid">
               <option
-                v-for="graph in data.graphs"
+                v-for="graph in graphsData.graphs"
                 :key="graph.uuid"
                 :value="graph.uuid"
               >
@@ -49,7 +49,7 @@ export default defineComponent({
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue';
 import { useQuery } from '@urql/vue';
 import { useGetGraphsQuery } from '../graphql/graphql';
@@ -61,6 +61,7 @@ export default {
     return {
       fetching: true,
       selectedUuid: null,
+      graphsData: null,
     };
   },
   mounted() {
@@ -68,8 +69,11 @@ export default {
   },
   methods: {
     async initQuery() {
-      this.result = await useGetGraphsQuery();
-      console.log(this.result);
+      const result = await useGetGraphsQuery();
+
+      this.graphsData = result.data;
+      this.fetching = result.fetching;
+      this.error = result.error;
     },
   },
 };
