@@ -11,9 +11,8 @@ import os
 
 from django.core.asgi import get_asgi_application
 from pythonosc.udp_client import SimpleUDPClient
-from strawberry.channels import GraphQLProtocolTypeRouter
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gencaster.settings.base")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gencaster.settings.dev")
 
 if not os.environ.get("SUPERCOLLIDER_HOST") or os.environ.get("SUPERCOLLIDER_PORT"):
     print(
@@ -27,11 +26,4 @@ osc_client = SimpleUDPClient(
 
 osc_client.send_message("/foo", 400.0)
 
-django_asgi_app = get_asgi_application()
-
-from .schema import schema  # noqa
-
-application = GraphQLProtocolTypeRouter(
-    schema,
-    django_application=django_asgi_app,
-)
+application = get_asgi_application()

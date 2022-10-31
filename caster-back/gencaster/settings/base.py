@@ -23,8 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "b843a%e7ozx%(9z(xgx749#^bpevp0@xd8kvftz1^tni4forng"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "*",
@@ -46,9 +45,11 @@ INSTALLED_APPS = [
     "strawberry.django",
     "strawberry_django_plus",
     "channels",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -165,3 +166,8 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = "media/"
 
 ASGI_APPLICATION = "gencaster.asgi.application"
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://*.gencaster.org",
+    "https://*.gencaster.org",
+]
