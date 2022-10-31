@@ -1,4 +1,6 @@
-from .base import CSRF_TRUSTED_ORIGINS
+from .base import *  # noqa
+
+DEBUG = True
 
 CSRF_TRUSTED_ORIGINS = CSRF_TRUSTED_ORIGINS + [
     "http://localhost:*",

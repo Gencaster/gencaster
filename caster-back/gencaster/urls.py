@@ -32,22 +32,12 @@ class CorsAsyncGraphQLView(AsyncGraphQLView):
 
     def _create_response(self, response_data, sub_response):
         r = super()._create_response(response_data, sub_response)
-        r.headers["Access-Control-Allow-Origin"] = "*"
-        print("set headers for response")
         return r
 
     @method_decorator(csrf_exempt)
     async def dispatch(self, request, *args, **kwargs):
-        print("dispatch? :)")
         if request.method.lower() == "options":
-            r = HttpResponse()
-            r.headers["Access-Control-Allow-Origin"] = "*"
-            r.headers["Access-Control-Allow-Methods"] = "OPTIONS, GET, POST"
-            r.headers[
-                "Access-Control-Allow-Headers"
-            ] = "Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control"
-            r.headers["Access-Control-Allow-Credentials"] = "true"
-            return r
+            return HttpResponse()
         return await super().dispatch(request, *args, **kwargs)
 
 
