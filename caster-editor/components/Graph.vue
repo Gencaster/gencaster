@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 import { defineComponent, toRefs, ref, reactive } from 'vue';
 import { useGetGraphQuery, useCreateNodeMutation } from '../graphql/graphql';
 import * as vNG from 'v-network-graph';
@@ -59,7 +59,7 @@ export default defineComponent({
     };
   },
 });
-</script>
+</script> -->
 
 <template>
   <div class="index-page">
@@ -93,3 +93,72 @@ export default defineComponent({
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent, toRefs, ref, reactive } from 'vue';
+import { useGetGraphQuery, useCreateNodeMutation } from '../graphql/graphql';
+import * as vNG from 'v-network-graph';
+import { transformEdges, transformNodes } from '../tools/typeTransformers';
+
+export default {
+  name: 'graphComponent',
+
+  props: {
+    uuid: {
+      type: String,
+      required: true,
+    },
+  },
+
+  data() {
+    return {
+      fetching: true,
+      data: null,
+      error: null,
+
+      transformEdges,
+      transformNodes,
+
+      selectedNodes: ref<string[]>([]),
+      selectedEdges: ref<string[]>([]),
+      configs: vNG.getFullConfigs(),
+    };
+  },
+  mounted() {
+    console.log(this.uuid);
+
+    this.configs.node.selectable = true;
+    // const { executeMutation: newMutation } = useCreateNodeMutation;
+
+    // get async data
+    this.loadData();
+  },
+  methods: {
+    async loadData() {
+      const result = await useGetGraphQuery({
+        variables: { uuid: this.uuid },
+        requestPolicy: 'network-only',
+      });
+
+      this.data = result.data;
+      this.error = result.error;
+      this.fetching = result.fetching;
+
+      console.log(result);
+    },
+
+    refresh() {
+      console.log('Rerfresh');
+      this.result.executeQuery();
+    },
+
+    async removeNode() {
+      console.log('removeNode');
+    },
+
+    async addNode() {
+      console.log('addNode');
+    },
+  },
+};
+</script>
