@@ -21,26 +21,16 @@ services:
     depends_on:
       - database
       - sound
-    volumes:
-      - ./caster-back/:/home/gencaster
-      - ./data:/data
-      - ./data:/home/gencaster/media
 
   osc_backend:
     build: caster-back
     env_file:
       - vars.env
       - .secrets.env
-    volumes:
-      - ./caster-back/:/home/gencaster
-      - ./data:/data
-      - ./data:/home/gencaster/media
     command: ["python", "osc_server.py"]
 
   frontend:
     build: caster-front
-    volumes:
-      - ./caster-front/:/root/caster-front/
     depends_on:
       - backend
     ports:
@@ -52,14 +42,6 @@ services:
       - osc_backend
     env_file:
       - vars.env
-    volumes:
-      - ./data:/data
-      - ./caster-sound/sc.scd:/root/sc.scd
-      - ./caster-sound/start_streams.sh:/root/start_streams.sh
-      - ./caster-sound/janus.jcfg:/opt/janus/etc/janus/janus.jcfg
-      - ./caster-sound/janus.plugin.streaming.jcfg:/opt/janus/etc/janus/janus.plugin.streaming.jcfg
-      - ./caster-sound/janus.plugin.audiobridge.jcfg:/opt/janus/etc/janus/janus.plugin.audiobridge.jcfg
-      - ./caster-sound/caster-sound.conf:/root/caster-sound.conf
 
   editor:
     build: caster-editor
@@ -67,5 +49,3 @@ services:
       - backend
     ports:
       - 3001:3000
-    volumes:
-      - ./caster-editor:/root/caster-editor/

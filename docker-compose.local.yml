@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 
 services:
   sound:
@@ -7,12 +7,40 @@ services:
       args:
         - MAKE_JOBS=8
     ports:
-      - 8090:8090  # debug frontend
-      - 8088:8088  # janus server
+      - 8090:8090 # debug frontend
+      - 8088:8088 # janus server
       - 10000-10200:10000-10200
     environment:
       - DEVELOPMENT=true
+    volumes:
+      - ./data:/data
+      - ./caster-sound/sc.scd:/root/sc.scd
+      - ./caster-sound/start_streams.sh:/root/start_streams.sh
+      - ./caster-sound/janus.jcfg:/opt/janus/etc/janus/janus.jcfg
+      - ./caster-sound/janus.plugin.streaming.jcfg:/opt/janus/etc/janus/janus.plugin.streaming.jcfg
+      - ./caster-sound/janus.plugin.audiobridge.jcfg:/opt/janus/etc/janus/janus.plugin.audiobridge.jcfg
+      - ./caster-sound/caster-sound.conf:/root/caster-sound.conf
 
   backend:
     environment:
       - DEVELOPMENT=true
+    volumes:
+      - ./caster-back/:/home/gencaster
+      - ./data:/data
+      - ./data:/home/gencaster/media
+
+  osc_backend:
+    volumes:
+      - ./caster-back/:/home/gencaster
+      - ./data:/data
+      - ./data:/home/gencaster/media
+
+  frontend:
+    volumes:
+      - ./caster-front/:/root/caster-front/
+
+  editor:
+    volumes:
+      - ./caster-editor:/root/caster-editor/
+    environment:
+      - NODE_PATH=/root/caster-editor/
