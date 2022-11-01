@@ -24,6 +24,8 @@ osc_client = SimpleUDPClient(
     port=int(os.environ.get("SUPERCOLLIDER_PORT", 57120)),
 )
 
-osc_client.send_message("/foo", 400.0)
+# osc_client.send_message("/foo", 400.0)
+
+print(f"### STARTING SERVER WITH {os.environ['DJANGO_SETTINGS_MODULE']} ###")
 
 application = get_asgi_application()
