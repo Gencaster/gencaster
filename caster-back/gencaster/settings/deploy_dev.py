@@ -15,6 +15,7 @@ ALLOWED_HOSTS = [
     "editor.dev.gencaster.org",
     "backend.dev.gencaster.org",
     "localhost",
+    "127.0.0.1",
 ]
 
 CORS_ALLOWED_ORIGINS = [
