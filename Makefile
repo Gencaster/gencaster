@@ -32,10 +32,10 @@ docker-local:
 	docker compose build
 	docker compose -f docker-compose.yml -f docker-compose.local.yml up
 
-docker-prod:
+docker-deploy-dev:
 	docker compose stop
 	docker compose build
-	docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
+	docker compose -f docker-compose.yml -f docker-compose.deploy.dev.yml up -d
 
 graphql-schema: venv
 	cd caster-back; . venv/bin/activate; python manage.py export_schema "gencaster.schema" > "schema.gql"

@@ -56,13 +56,13 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           minimum_coverage: 50
 
-  deploy:
+  deploy-dev:
     if: success() && github.ref == 'refs/heads/main' # only deploy main
     needs: ["run-tests"]
-    name: Deploy
+    name: Deploy dev
     runs-on: ubuntu-20.04
     steps:
-      - name: Deploy on machine
+      - name: Deploy dev environment
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -74,4 +74,4 @@ jobs:
             docker compose down
             git reset --hard
             git pull origin main
-            make docker-prod
+            make docker-deploy-dev

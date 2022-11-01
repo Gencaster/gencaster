@@ -4,13 +4,13 @@ services:
   database:
     env_file:
       - vars.env
-      - vars.deploy.env
+      - vars.deploy.dev.env
       - .secrets.env
 
   backend:
     env_file:
       - vars.env
-      - vars.deploy.env
+      - vars.deploy.dev.env
       - .secrets.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -18,7 +18,7 @@ services:
   osc_backend:
     env_file:
       - vars.env
-      - vars.deploy.env
+      - vars.deploy.dev.env
       - .secrets.env
     ports:
       - 57130:57130/udp
@@ -30,4 +30,4 @@ services:
     network_mode: host
     env_file:
       - vars.env
-      - vars.deploy.env
+      - vars.deploy.dev.env
