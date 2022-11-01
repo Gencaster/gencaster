@@ -16,8 +16,6 @@ services:
     env_file:
       - vars.env
       - .secrets.env
-    ports:
-      - 8081:8000
     depends_on:
       - database
       - sound

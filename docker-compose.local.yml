@@ -24,6 +24,8 @@ services:
   backend:
     environment:
       - DEVELOPMENT=true
+    ports:
+      - 8081:8000
     volumes:
       - ./caster-back/:/home/gencaster
       - ./data:/data
