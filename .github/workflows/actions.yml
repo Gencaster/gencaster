@@ -74,5 +74,4 @@ jobs:
             docker compose down
             git reset --hard
             git pull origin main
-            docker compose build
-            docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d
+            make docker-prod
