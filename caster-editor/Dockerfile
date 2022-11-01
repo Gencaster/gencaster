@@ -10,9 +10,15 @@ RUN npm install
 
 WORKDIR /root/caster-editor
 
-ENV NODE_PATH=/install/node_modules
+ENV NODE_PATH=/install/
 ENV HOST=0.0.0.0
 
 COPY . .
+
+# make a symbolic link to our /install/node_moduels folder
+# so it can get picked up by yarn
+# the documentation says that setting NODE_PATH should do
+# this as well, but oh well, node...
+RUN ln -s /install/node_modules
 
 CMD [ "npm", "run", "dev" ]
