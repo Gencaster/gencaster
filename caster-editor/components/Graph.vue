@@ -1,8 +1,8 @@
-<script lang="ts">
-import { defineComponent, toRefs, ref, reactive } from "vue";
-import { useGetGraphQuery, useCreateNodeMutation } from "../graphql/graphql";
-import * as vNG from "v-network-graph";
-import { transformEdges, transformNodes } from "../tools/typeTransformers";
+<!-- <script lang="ts">
+import { defineComponent, toRefs, ref, reactive } from 'vue';
+import { useGetGraphQuery, useCreateNodeMutation } from '../graphql/graphql';
+import * as vNG from 'v-network-graph';
+import { transformEdges, transformNodes } from '../tools/typeTransformers';
 
 export default defineComponent({
   props: {
@@ -17,28 +17,28 @@ export default defineComponent({
     const configs = reactive(vNG.getFullConfigs());
     configs.node.selectable = true;
 
-    const {executeMutation: newMutation} = useCreateNodeMutation
+    const { executeMutation: newMutation } = useCreateNodeMutation();
 
-    function addNode(event){
-      console.log(event);
-      const variables = {graphUuid: uuid, name: "Some new random name"};
-        useCreateNodeMutation()
-          .executeMutation(variables)
-          .then(() => {
-            console.log("Please refresh");
-            refresh();
-          });
+    function addNode(event) {
+      const singleid = Math.round(Math.random() * 1000000);
+      console.log('start adding note', event);
+      const variables = {
+        graphUuid: uuid,
+        name: `Some new random name ${singleid}`,
+      };
+      newMutation(variables).then(() => {
+        console.log('Hello, we are finished');
+      });
     }
-
 
     const result = useGetGraphQuery({
       variables: { uuid: uuid },
-      requestPolicy: "network-only",
+      requestPolicy: 'network-only',
     });
 
     const refresh = () => {
-        console.log("Rerfresh");
-        result.executeQuery();
+      console.log('Rerfresh');
+      result.executeQuery();
     };
 
     return {
@@ -51,40 +51,36 @@ export default defineComponent({
       selectedEdges,
       configs,
       refresh,
-      addNode: async(name: string = "this is really new?") => {
-        await useCreateNodeMutation()
-          .executeMutation({graphUuid: uuid, name: name})
-          .then((result) => {
-            console.log("Please refresh", result);
-          });
-      },
+      addNode,
       removeNode() {
-        console.log("removeNode");
+        console.log('removeNode');
       },
     };
   },
 });
-</script>
+</script> -->
 
-    <template>
+<template>
   <div class="index-page">
     <div v-if="fetching">...Loading</div>
     <div v-else>
       <h1>
         Welcome to the Editor of <b>{{ data.graph.name }}</b>
+        <br />
+        <br />
       </h1>
       <div class="demo-control-panel">
-        <div>
-          <label>Node:</label>
-          {{ data.graph.nodes.length }}
+        <div class="constol-btns">
+          <p><b>Controls</b></p>
           <button :disabled="selectedNodes.length == 0" @click="removeNode()">
-            remove
+            Remove
           </button>
           <button @click="addNode">Create</button>
         </div>
-        <div>
-          <label>Edge:</label>
-          {{ data.graph.edges.length }}
+        <div class="stats">
+          <p><b>Stats</b></p>
+          <p>Nodes: {{ data.graph.nodes.length }}</p>
+          <p>Edges: {{ data.graph.edges.length }}</p>
         </div>
       </div>
       <br />
@@ -98,3 +94,79 @@ export default defineComponent({
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { useGetGraphQuery, useCreateNodeMutation } from '../graphql/graphql';
+import * as vNG from 'v-network-graph';
+import { transformEdges, transformNodes } from '../tools/typeTransformers';
+
+export default {
+  name: 'graphComponent',
+
+  props: {
+    uuid: {
+      type: String,
+      required: true,
+    },
+  },
+
+  data() {
+    return {
+      fetching: true,
+      result: null,
+      data: null,
+      error: null,
+
+      // graph
+      selectedNodes: <string[]>[],
+      selectedEdges: <string[]>[],
+      transformEdges,
+      transformNodes,
+      configs: vNG.getFullConfigs(),
+    };
+  },
+  mounted() {
+    this.configs.node.selectable = true;
+    const { executeMutation: newMutation } = useCreateNodeMutation();
+    this.newMutation = newMutation;
+
+    this.loadData();
+  },
+  methods: {
+    refresh() {
+      this.result.executeQuery();
+    },
+
+    addNode(event) {
+      const singleid = Math.round(Math.random() * 1000000);
+      console.log('start adding note', event);
+      const variables = {
+        graphUuid: this.uuid,
+        name: `Some new random name ${singleid}`,
+      };
+      this.newMutation(variables).then(() => {
+        console.log('Added node');
+        this.refresh();
+      });
+    },
+
+    removeNode() {
+      console.log('removeNode');
+    },
+
+    async loadData() {
+      const result = await useGetGraphQuery({
+        variables: { uuid: this.uuid },
+        requestPolicy: 'network-only',
+      });
+
+      this.result = result;
+      this.data = result.data;
+      this.error = result.error;
+      this.fetching = result.fetching;
+
+      console.log('loaded graph');
+    },
+  },
+};
+</script>

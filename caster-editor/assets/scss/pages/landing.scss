@@ -7,10 +7,23 @@
   }
 
   .demo-control-panel {
-    display: flex;
     button {
       margin-right: 10px;
     }
     margin-bottom: 10px;
+  }
+
+  .constol-btns {
+    margin-bottom: 24px;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .stats {
+    p {
+      margin: 0;
+    }
   }
 }
