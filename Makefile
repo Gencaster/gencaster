@@ -34,7 +34,7 @@ docker-local:
 
 docker-deploy-dev:
 	docker compose stop
-	docker compose build
+	docker compose -f docker-compose.yml -f docker-compose.deploy.dev.yml build
 	docker compose -f docker-compose.yml -f docker-compose.deploy.dev.yml up -d
 
 graphql-schema: venv
