@@ -9,6 +9,4 @@ export default defineNuxtConfig({
   //   },
   css: ['~/assets/scss/main.scss', 'v-network-graph/lib/style.css'],
   components: true,
-
-  port: 3001,
 });
