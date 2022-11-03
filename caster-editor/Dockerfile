@@ -4,9 +4,9 @@ FROM node:18-alpine
 WORKDIR /install
 
 ADD package.json .
-ADD package-lock.json .
+ADD yarn.lock .
 
-RUN npm install
+RUN yarn install
 
 WORKDIR /root/caster-editor
 
@@ -21,4 +21,4 @@ COPY . .
 # this as well, but oh well, node...
 RUN ln -s /install/node_modules
 
-CMD [ "npm", "run", "dev" ]
+CMD [ "yarn", "dev" ]
