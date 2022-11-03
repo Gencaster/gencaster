@@ -41,9 +41,6 @@ services:
     env_file:
       - vars.env
 
-  editor:
-    build: caster-editor
-    depends_on:
-      - backend
-    ports:
-      - 3001:3000
+
+# editor depends on different dockerfile for dev/prod
+# so we declare it in its respective environment docker-compose file

@@ -1,0 +1,18 @@
+FROM node:18-alpine AS builder
+
+WORKDIR /root/caster-editor
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn install
+
+RUN
+
+COPY . .
+
+RUN yarn generate
+
+FROM nginx:1.23-alpine
+
+COPY --from=builder /root/caster-editor/.output/public/ /usr/share/nginx/html

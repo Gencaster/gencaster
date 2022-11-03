@@ -42,6 +42,11 @@ services:
       - ./caster-front/:/root/caster-front/
 
   editor:
+    build: caster-editor
+    depends_on:
+      - backend
+    ports:
+      - 3001:3000
     volumes:
       - ./caster-editor:/root/caster-editor/
     environment:

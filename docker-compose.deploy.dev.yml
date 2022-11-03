@@ -45,3 +45,14 @@ services:
       - 8081:80
     depends_on:
       - backend
+
+  editor:
+    build:
+      context: caster-editor
+      dockerfile: Dockerfile.deploy
+    ports:
+      - 3001:80
+    environment:
+      - NGINX_HOST=0.0.0.0
+    depends_on:
+      - backend
