@@ -28,12 +28,13 @@ dev-server: venv virtualenv
 	)
 
 docker-local:
-	docker compose stop
+	docker compose -f docker-compose.yml -f docker-compose.local.yml stop
+	docker compose -f docker-compose.yml -f docker-compose.deploy.dev.yml stop
 	docker compose -f docker-compose.yml -f docker-compose.local.yml build
 	docker compose -f docker-compose.yml -f docker-compose.local.yml up
 
 docker-deploy-dev:
-	docker compose stop
+	docker compose -f docker-compose.yml -f docker-compose.deploy.dev.yml stop
 	docker compose -f docker-compose.yml -f docker-compose.deploy.dev.yml build
 	docker compose -f docker-compose.yml -f docker-compose.deploy.dev.yml up -d
 

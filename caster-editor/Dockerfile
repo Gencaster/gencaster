@@ -15,10 +15,13 @@ ENV HOST=0.0.0.0
 
 COPY . .
 
+ADD container.yarnrc .yarnrc
+
 # make a symbolic link to our /install/node_moduels folder
 # so it can get picked up by yarn
 # the documentation says that setting NODE_PATH should do
 # this as well, but oh well, node...
-RUN ln -s /install/node_modules
+# RUN ln -s /install/node_modules
 
-CMD [ "yarn", "dev" ]
+# CMD [ "/bin/sh", "-c", "ln -s /install/node_modules && yarn dev" ]
+CMD ["yarn", "dev"]
