@@ -21,7 +21,8 @@ import { Edit } from '@element-plus/icons-vue';
           <button :disabled="selectedNodes.length == 0" @click="removeNode()">
             Remove
           </button>
-          <button @click="addNode">Add</button>
+          <button @click="addNode">Add Node</button>
+          <button @click="addEdge">Add Edge</button>
         </div>
       </div>
       <br />
@@ -44,9 +45,15 @@ import { Edit } from '@element-plus/icons-vue';
 </template>
 
 <script lang="ts">
-import { useGetGraphQuery, useCreateNodeMutation } from '../graphql/graphql';
+import {
+  useGetGraphQuery,
+  useCreateNodeMutation,
+  useCreateEdgeMutation,
+} from '../graphql/graphql';
 import * as vNG from 'v-network-graph';
 import { Nodes, Edges } from 'v-network-graph';
+import { GraphSettings } from '~/assets/js/graphSettings';
+
 import { transformEdges, transformNodes } from '../tools/typeTransformers';
 
 export default {
@@ -59,11 +66,7 @@ export default {
     },
   },
 
-  computed: {
-    // nodes() {
-    //   return transformNodes(this.data.graph.nodes);
-    // },
-  },
+  computed: {},
 
   data() {
     return {
@@ -77,18 +80,27 @@ export default {
       edges: {},
       selectedNodes: [],
       selectedEdges: [],
+      nextNodeIndex: 0,
+      nextEdgeIndex: 0,
       transformEdges,
       transformNodes,
       configs: vNG.getFullConfigs(),
     };
   },
+
   mounted() {
     this.configs.node.selectable = true;
-    const { executeMutation: newMutation } = useCreateNodeMutation();
-    this.newMutation = newMutation;
+    const { executeMutation: addNodeMutation } = useCreateNodeMutation();
+    this.addNodeMutation = addNodeMutation;
+
+    const { executeMutation: addEdgeMutation } = useCreateEdgeMutation();
+    this.addEdgeMutation = addEdgeMutation;
+
+    this.configs = GraphSettings.standard;
 
     this.loadData();
   },
+
   methods: {
     async loadData() {
       const result = await useGetGraphQuery({
@@ -109,23 +121,49 @@ export default {
       // set data
       this.nodes = transformNodes(this.data.graph.nodes);
       this.edges = transformNodes(this.data.graph.edges);
+
+      this.nextNodeIndex = Object.keys(this.nodes).length + 1;
+      this.nextEdgeIndex = Object.keys(this.edges).length + 1;
     },
 
     refresh() {
       this.result.executeQuery();
     },
 
-    addNode(event) {
+    addNode() {
       const singleid = Math.round(Math.random() * 1000000);
-      console.log('start adding note', event);
+      console.log('start adding note');
       const variables = {
         graphUuid: this.uuid,
-        name: `Some new random name ${singleid}`,
+        name: `${singleid}`,
       };
-      this.newMutation(variables).then(() => {
+      this.addNodeMutation(variables).then(() => {
         this.refresh();
         console.log('Added node');
       });
+    },
+
+    addEdge() {
+      if (this.selectedNodes.length !== 2) {
+        alert('requires exactly 2 nodes selected');
+        return;
+      }
+      const [source, target] = this.selectedNodes;
+
+      console.log(source, target);
+
+      const variables = {
+        nodeInUuid: source,
+        nodeOutUuid: target,
+      };
+
+      this.addEdgeMutation(variables).then(() => {
+        this.refresh();
+        console.log('Added edge');
+      });
+
+      // const edgeId = `edge${this.nextEdgeIndex}`;
+      // this.nextEdgeIndex++;
     },
 
     removeNode() {
@@ -136,10 +174,10 @@ export default {
           uuid: this.selectedNodes[0],
         };
 
-        this.newMutation(variables).then(() => {
-          this.refresh();
-          console.log('Removed node');
-        });
+        // this.removeNodeMutation(variables).then(() => {
+        //   this.refresh();
+        //   console.log('Removed node');
+        // });
       }
     },
   },
