@@ -2,12 +2,14 @@ services:
   editor-local:
     build:
       context: caster-editor
-      dockerfile: Dockerfile.deploy
-      args:
-        - BACKEND_GRAPHQL_URL=https://127.0.0.1:8081/graphql
+      dockerfile: Dockerfile
+      # args:
+      #   - BACKEND_GRAPHQL_URL=https://127.0.0.1:8081/graphql
     ports:
-      - 3001:80
-    environment:
-      - NGINX_HOST=0.0.0.0
+      - 3001:3001
+    volumes:
+      - ./caster-editor/src/:/root/caster-editor/src/
+    # environment:
+      # - NGINX_HOST=0.0.0.0
     depends_on:
       - backend
