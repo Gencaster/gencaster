@@ -1,14 +1,14 @@
-<script lang="ts" setup>
+<!-- <script lang="ts" setup>
 import { Edit } from '@element-plus/icons-vue';
-</script>
+</script> -->
+<!-- <el-switch v-model="value1" /> -->
+<!-- <el-config-provider size="small">
+      <el-button type="primary" :icon="Edit" />
+    </el-config-provider> -->
 
 <template>
   <div class="index-page">
-    <!-- <el-switch v-model="value1" /> -->
-    <!-- <el-config-provider size="small">
-      <el-button type="primary" :icon="Edit" />
-    </el-config-provider> -->
-    <div v-if="fetching">...Loading</div>
+    <div class="fetching-screen" v-if="fetching"><elementsLoading /></div>
     <div v-else>
       <h1>Please select a graph</h1>
       <div class="demo-control-panel">
