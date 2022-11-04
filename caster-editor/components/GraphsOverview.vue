@@ -7,14 +7,39 @@ import { Edit } from '@element-plus/icons-vue';
     </el-config-provider> -->
 
 <template>
-  <div class="index-page">
-    <div class="fetching-screen" v-if="fetching"><elementsLoading /></div>
+  <div>
+    <div class="fetching-screen" v-if="fetching">
+      <elementsLoading />
+    </div>
     <div v-else>
-      <h1>Please select a graph</h1>
+      <h1>Select one of your Graphs</h1>
       <div class="demo-control-panel">
         <div>
-          <label><b>Graph</b></label>
-          <form>
+          <br />
+          <div
+            class="graph-selection"
+            v-for="graph in graphsData.graphs"
+            :key="graph.uuid"
+            :value="graph.uuid"
+          >
+            <NuxtLink class="graph" :to="'graph/' + graph.uuid">
+              <div>
+                <p>{{ graph.name }}</p>
+              </div>
+              <div>
+                <p>{{ graph.uuid }}</p>
+              </div>
+            </NuxtLink>
+          </div>
+          <div class="graph-selection">
+            <div class="graph new-one">
+              <div>
+                <p>+</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- <form>
             <select v-model="selectedUuid">
               <option
                 v-for="graph in graphsData.graphs"
@@ -24,7 +49,7 @@ import { Edit } from '@element-plus/icons-vue';
                 {{ graph.name }}
               </option>
             </select>
-          </form>
+          </form> -->
         </div>
       </div>
       <br />
