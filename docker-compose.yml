@@ -35,7 +35,10 @@ services:
       - 3000:3000
 
   sound:
-    build: caster-sound
+    build:
+      context: caster-sound
+      args:
+        - MAKE_JOBS=8
     depends_on:
       - osc_backend
     env_file:
