@@ -31,7 +31,7 @@
 import { useGetGraphsQuery } from '../graphql/graphql';
 
 export default {
-  name: 'graphsComponent',
+  name: 'graphsOverviewComponent',
 
   data() {
     return {
