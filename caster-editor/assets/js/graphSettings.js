@@ -5,7 +5,7 @@ const GraphSettings = {
     node: {
       selectable: true,
       normal: {
-        color: 'black',
+        color: 'lightgrey',
       },
       hover: {
         color: 'black',
