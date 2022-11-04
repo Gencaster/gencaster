@@ -1,5 +1,5 @@
 services:
-  editor:
+  editor-local:
     build:
       context: caster-editor
       dockerfile: Dockerfile.deploy
