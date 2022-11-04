@@ -1,3 +1,6 @@
+# this is currently unused, as it seems impossible to provide a nice docker workflow for nodejs, see
+# https://stackoverflow.com/questions/59556554/clean-and-practical-way-to-handle-node-modules-in-a-dockerized-node-js-dev-envir
+
 FROM node:18-alpine
 
 # from https://stackoverflow.com/a/35317425/3475778
