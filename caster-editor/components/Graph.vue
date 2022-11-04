@@ -19,8 +19,9 @@ import { Edit } from '@element-plus/icons-vue';
         <div class="constol-btns">
           <p><b>Controls</b></p>
           <button :disabled="selectedNodes.length == 0" @click="removeNode()">
-            Remove
+            Remove Node
           </button>
+          <button disabled="true" @click="removeEdge">Remove Edge</button>
           <button @click="addNode">Add Node</button>
           <button @click="addEdge">Add Edge</button>
         </div>
@@ -161,9 +162,6 @@ export default {
         this.refresh();
         console.log('Added edge');
       });
-
-      // const edgeId = `edge${this.nextEdgeIndex}`;
-      // this.nextEdgeIndex++;
     },
 
     removeNode() {
@@ -174,11 +172,17 @@ export default {
           uuid: this.selectedNodes[0],
         };
 
+        // [] needs correct function from graphql
         // this.removeNodeMutation(variables).then(() => {
         //   this.refresh();
         //   console.log('Removed node');
         // });
       }
+    },
+
+    removeEdge() {
+      alert('tbd');
+      // [] needs correct function from graphql
     },
   },
 };
