@@ -1,6 +1,14 @@
+<!-- <script lang="ts" setup>
+import { Edit } from '@element-plus/icons-vue';
+</script> -->
+<!-- <el-switch v-model="value1" /> -->
+<!-- <el-config-provider size="small">
+      <el-button type="primary" :icon="Edit" />
+    </el-config-provider> -->
+
 <template>
   <div class="index-page">
-    <div v-if="fetching">...Loading</div>
+    <div v-if="fetching"><elementsLoading /></div>
     <div v-else>
       <h1>
         Welcome to the Editor of <b>{{ data.graph.name }}</b>

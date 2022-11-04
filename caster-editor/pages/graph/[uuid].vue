@@ -1,15 +1,18 @@
 <template>
-  <!-- <Graph class="gen-template graph-page" /> -->
-  <p>Graph</p>
-  <p>{{ $route.params.uuid }}</p>
+  <Graph :uuid="uuid" />
 </template>
 
 <script lang="ts">
 export default {
-  name: 'graphsOverviewComponent',
+  name: 'uuidWrapper',
 
   data() {
     return {};
+  },
+  computed: {
+    uuid() {
+      return this.$route.params.uuid;
+    },
   },
   mounted() {},
   methods: {},
