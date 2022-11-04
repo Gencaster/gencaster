@@ -1,5 +1,7 @@
 <template>
-  <Graph :uuid="uuid" />
+  <div class="edit-page">
+    <Graph :uuid="uuid" />
+  </div>
 </template>
 
 <script lang="ts">
