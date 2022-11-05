@@ -79,8 +79,8 @@ export default {
       // graph
       nodes: {},
       edges: {},
-      selectedNodes: [],
-      selectedEdges: [],
+      selectedNodes: new Array<string>(),
+      selectedEdges: new Array<string>(),
       nextNodeIndex: 0,
       nextEdgeIndex: 0,
       transformEdges,
