@@ -1,4 +1,5 @@
 import asyncio
+import uuid
 from typing import AsyncGenerator, List
 
 import strawberry
@@ -51,7 +52,7 @@ class Mutation:
         return None
 
     @strawberry.mutation
-    async def delete_edge(self, info, edge_uuid: str) -> None:
+    async def delete_edge(self, info, edge_uuid: uuid.UUID) -> None:
         try:
             edge = await sync_to_async(story_graph_models.Edge.objects.get)(
                 uuid=edge_uuid
@@ -62,7 +63,7 @@ class Mutation:
         return None
 
     @strawberry.mutation
-    async def delete_node(self, info, node_uuid: str) -> None:
+    async def delete_node(self, info, node_uuid: uuid.UUID) -> None:
         try:
             node = await sync_to_async(story_graph_models.Node.objects.get)(
                 uuid=node_uuid
