@@ -121,7 +121,7 @@ export default {
     loadedData() {
       // set data
       this.nodes = transformNodes(this.data.graph.nodes);
-      this.edges = transformNodes(this.data.graph.edges);
+      this.edges = transformEdges(this.data.graph.edges);
 
       this.nextNodeIndex = Object.keys(this.nodes).length + 1;
       this.nextEdgeIndex = Object.keys(this.edges).length + 1;
