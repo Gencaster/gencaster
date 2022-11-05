@@ -1,0 +1,11 @@
+services:
+  editor-local:
+    build:
+      context: caster-editor
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001
+    volumes:
+      - ./caster-editor/src/:/root/caster-editor/src/
+    depends_on:
+      - backend

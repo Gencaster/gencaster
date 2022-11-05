@@ -48,6 +48,14 @@ You can instead also use `make` via
 make docker-local
 ```
 
+#### Start without editor
+
+As `node_modules` is tied next to the source code and there seems no way to point this to another directory we get into trouble if we mix up a `node_modules` of the host machine with a `node_modules` folder of our container as this can contain platform specific binaries.
+
+[It is said](https://esbuild.github.io/getting-started/#simultaneous-platforms) that *yarn* allows to circumvent this by [downloading binaries for multiple platforms](https://yarnpkg.com/configuration/yarnrc#supportedArchitectures) but this feature seems to be not working currently.
+
+To therefore allow for hot-reloading during development it is also possible to start GenCaster without the editor via `make -e docker-local`. If you start `make docker-local` without the `-e` flag you will start build version of the editor which is served via nginx.
+
 ### Server setup
 
 The deployment server requires the following dependencies installed
