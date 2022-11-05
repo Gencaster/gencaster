@@ -16,11 +16,13 @@
     "sass-loader": "10"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-operations": "^2.5.3",
     "@graphql-codegen/typescript-urql": "^3.7.0",
     "@nuxtjs/composition-api": "^0.33.1",
     "@urql/vue": "^1.0.2",
+    "element-plus": "^2.2.19",
     "graphql": "^16.6.0",
     "v-network-graph": "^0.6.10"
   }

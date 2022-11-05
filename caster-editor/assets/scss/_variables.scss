@@ -1,6 +1,6 @@
 /* ============ Interface ============ */
 // spacing
-$globalPadding: 14px;
+$globalPadding: 10px;
 $spacingXS: 0.25rem;
 $spacingS: 0.5rem;
 $spacingM: 1rem;
@@ -21,6 +21,9 @@ $largerFontSize: 3.5rem;
 
 // colors
 $bodyBackground: white;
+$mainWhite: white;
+$mainBlack: black;
+$hoverColor: lightgrey;
 
 // transition
 // $transitionDefault: 300ms ease;
