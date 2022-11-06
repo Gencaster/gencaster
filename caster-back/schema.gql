@@ -7,10 +7,16 @@ type Edge {
   outNode: Node!
 }
 
+input EdgeInput {
+  nodeInUuid: UUID!
+  nodeOutUuid: UUID!
+}
+
 type Graph {
   uuid: UUID!
   name: String!
   nodes: [Node!]!
+  edges: [Edge!]!
 }
 
 input IntFilterLookup {
@@ -33,6 +39,13 @@ input IntFilterLookup {
   iRegex: String
 }
 
+type Mutation {
+  addNode(newNode: NodeInput!): Void
+  addEdge(newEdge: EdgeInput!): Void
+  deleteEdge(edgeUuid: UUID!): Void
+  deleteNode(nodeUuid: UUID!): Void
+}
+
 type Node {
   uuid: UUID!
   name: String!
@@ -41,10 +54,18 @@ type Node {
   scriptCells: [ScriptCell!]!
 }
 
+input NodeInput {
+  name: String!
+  graphUuid: UUID!
+}
+
 type Query {
   streamPoint(pk: ID): StreamPoint!
   streamPoints(filters: StreamPointFilter): [StreamPoint!]!
   graphs: [Graph!]!
+  graph(pk: ID): Graph!
+  nodes: [Node!]!
+  node(pk: ID): Node!
 }
 
 type ScriptCell {
@@ -72,6 +93,10 @@ input StreamPointFilter {
   janusInPort: IntFilterLookup
 }
 
+type Subscription {
+  count(target: Int! = 100): Int!
+}
+
 scalar UUID
 
 input UUIDFilterLookup {
@@ -93,3 +118,6 @@ input UUIDFilterLookup {
   regex: String
   iRegex: String
 }
+
+"""Represents NULL values"""
+scalar Void

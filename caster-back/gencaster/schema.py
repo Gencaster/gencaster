@@ -1,4 +1,5 @@
 import asyncio
+import uuid
 from typing import AsyncGenerator, List
 
 import strawberry
@@ -48,6 +49,28 @@ class Mutation:
             out_node=out_node,
         )
         print("Created new edge ", edge)
+        return None
+
+    @strawberry.mutation
+    async def delete_edge(self, info, edge_uuid: uuid.UUID) -> None:
+        try:
+            edge = await sync_to_async(story_graph_models.Edge.objects.get)(
+                uuid=edge_uuid
+            )
+            await sync_to_async(edge.delete)()
+        except Exception:
+            raise Exception(f"Could not delete edge {edge_uuid}")
+        return None
+
+    @strawberry.mutation
+    async def delete_node(self, info, node_uuid: uuid.UUID) -> None:
+        try:
+            node = await sync_to_async(story_graph_models.Node.objects.get)(
+                uuid=node_uuid
+            )
+            await sync_to_async(node.delete)()
+        except Exception:
+            raise Exception(f"Could delete node {node_uuid}")
         return None
 
 

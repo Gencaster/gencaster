@@ -56,3 +56,11 @@ mutation createEdge($nodeInUuid:UUID!, $nodeOutUuid:UUID!) {
 mutation createNode($name:String!, $graphUuid:UUID!) {
   addNode(newNode: {name: $name, graphUuid: $graphUuid})
 }
+
+mutation deleteNode($nodeUuid: UUID!) {
+  deleteNode(nodeUuid: $nodeUuid)
+}
+
+mutation deleteEdge($edgeUuid: UUID!) {
+  deleteEdge(edgeUuid: $edgeUuid)
+}

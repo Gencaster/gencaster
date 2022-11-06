@@ -48,5 +48,8 @@ docker-deploy-dev:
 	docker compose $(DOCKER_DEPLOY_DEV) build
 	docker compose $(DOCKER_DEPLOY_DEV) up -d
 
-graphql-schema: venv
-	cd caster-back; . venv/bin/activate; python manage.py export_schema "gencaster.schema" > "schema.gql"
+graphql-schema:
+	# assumes that you have docker running and a local setup for caster-editor
+	docker compose -f docker-compose.yml -f docker-compose.local.yml exec backend ./generate_graphql_schema.sh
+	cd caster-editor && yarn codegen
+	@echo "Sucessfully generated new schema in caster-editor/graphql/graphql.ts"
