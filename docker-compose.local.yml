@@ -40,16 +40,3 @@ services:
   frontend:
     volumes:
       - ./caster-front/:/root/caster-front/
-
-  editor-local:
-    build:
-      context: caster-editor
-      dockerfile: Dockerfile
-    depends_on:
-      - backend
-    ports:
-      - 3001:3001
-    volumes:
-      - ./caster-editor:/root/caster-editor/
-    environment:
-      - NODE_PATH=/root/caster-editor/
