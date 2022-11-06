@@ -28,9 +28,6 @@ services:
       - 57130:57130/udp
 
   sound:
-    build:
-      args:
-        - MAKE_JOBS=16
     network_mode: host
     env_file:
       - vars.env
