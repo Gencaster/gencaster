@@ -19,9 +19,17 @@ import { Edit } from '@element-plus/icons-vue';
         <div class="control">
           <p><b>Controls</b></p>
           <div class="row">
-            <el-button text bg @click="addNode()">Add Node</el-button>
+            <el-button text bg @click="refresh()">Force Refresh</el-button>
+
             <el-input v-model="newNodeName" placeholder="New Node Name" />
-            <el-button text bg @click="addEdge()">Add Edge</el-button>
+            <el-button text bg @click="addNode()">Add Node</el-button>
+            <el-button
+              text
+              bg
+              :disabled="selectedNodes.length !== 2"
+              @click="addEdge()"
+              >Add Edge</el-button
+            >
           </div>
 
           <div class="row">
