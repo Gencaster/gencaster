@@ -16,14 +16,30 @@ import { Edit } from '@element-plus/icons-vue';
         <br />
       </h1>
       <div class="demo-control-panel">
-        <div class="constol-btns">
+        <div class="control">
           <p><b>Controls</b></p>
-          <button :disabled="selectedNodes.length == 0" @click="removeNode()">
-            Remove Node
-          </button>
-          <button disabled="true" @click="removeEdge">Remove Edge</button>
-          <button @click="addNode">Add Node</button>
-          <button @click="addEdge">Add Edge</button>
+          <div class="row">
+            <el-button text bg @click="addNode()">Add Node</el-button>
+            <el-input v-model="newNodeName" placeholder="New Node Name" />
+            <el-button text bg @click="addEdge()">Add Edge</el-button>
+          </div>
+
+          <div class="row">
+            <el-button
+              text
+              bg
+              :disabled="selectedNodes.length == 0"
+              @click="removeNode()"
+              >Remove Node</el-button
+            >
+            <el-button
+              text
+              bg
+              :disabled="selectedEdges.length == 0"
+              @click="removeEdge()"
+              >Remove Edge</el-button
+            >
+          </div>
         </div>
       </div>
       <br />
@@ -50,6 +66,8 @@ import {
   useGetGraphQuery,
   useCreateNodeMutation,
   useCreateEdgeMutation,
+  useDeleteNodeMutation,
+  useDeleteEdgeMutation,
 } from '../graphql/graphql';
 import * as vNG from 'v-network-graph';
 import { Nodes, Edges } from 'v-network-graph';
@@ -86,16 +104,30 @@ export default {
       transformEdges,
       transformNodes,
       configs: vNG.getFullConfigs(),
+
+      // interface
+      newNodeName: '',
     };
   },
 
   mounted() {
     this.configs.node.selectable = true;
+
+    // add node
     const { executeMutation: addNodeMutation } = useCreateNodeMutation();
     this.addNodeMutation = addNodeMutation;
 
+    // remove node
+    const { executeMutation: removeNodeMutation } = useDeleteNodeMutation();
+    this.removeNodeMutation = removeNodeMutation;
+
+    // add edge
     const { executeMutation: addEdgeMutation } = useCreateEdgeMutation();
     this.addEdgeMutation = addEdgeMutation;
+
+    // remove edge
+    const { executeMutation: removeEdgeMutation } = useDeleteEdgeMutation();
+    this.removeEdgeMutation = removeEdgeMutation;
 
     this.configs = GraphSettings.standard;
 
@@ -132,16 +164,21 @@ export default {
     },
 
     addNode() {
-      const singleid = Math.round(Math.random() * 1000000);
-      console.log('start adding note');
+      if (this.newNodeName === '') {
+        alert('please add a name for your node');
+        return;
+      }
+
       const variables = {
         graphUuid: this.uuid,
-        name: `${singleid}`,
+        name: this.newNodeName,
       };
       this.addNodeMutation(variables).then(() => {
         this.refresh();
         console.log('Added node');
       });
+
+      this.newNodeName = '';
     },
 
     addEdge() {
@@ -150,8 +187,6 @@ export default {
         return;
       }
       const [source, target] = this.selectedNodes;
-
-      console.log(source, target);
 
       const variables = {
         nodeInUuid: source,
@@ -165,24 +200,29 @@ export default {
     },
 
     removeNode() {
-      if (this.selectedNodes > 1) {
-        alert('please only delete one at a time');
-      } else {
+      for (const nodeId of this.selectedNodes) {
         const variables = {
-          uuid: this.selectedNodes[0],
+          nodeUuid: nodeId,
         };
 
-        // [] needs correct function from graphql
-        // this.removeNodeMutation(variables).then(() => {
-        //   this.refresh();
-        //   console.log('Removed node');
-        // });
+        this.removeNodeMutation(variables).then(() => {
+          this.refresh();
+          console.log('Removed node');
+        });
       }
     },
 
     removeEdge() {
-      alert('tbd');
-      // [] needs correct function from graphql
+      for (const edgeId of this.selectedEdges) {
+        const variables = {
+          edgeUuid: edgeId,
+        };
+
+        this.removeEdgeMutation(variables).then(() => {
+          this.refresh();
+          console.log('Removed edge');
+        });
+      }
     },
   },
 };
