@@ -23,3 +23,6 @@ CORS_ALLOWED_ORIGINS = [
     "https://dev.gencaster.org",
     "https://backend.dev.gencaster.org",
 ]
+
+SESSION_COOKIE_DOMAIN = ".dev.gencaster.org"
+CSRF_COOKIE_DOMAIN = ".dev.gencaster.org"
