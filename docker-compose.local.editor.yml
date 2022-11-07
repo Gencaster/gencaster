@@ -1,5 +1,6 @@
 services:
   editor-local:
+    platform: linux/amd64
     build:
       context: caster-editor
       dockerfile: Dockerfile
