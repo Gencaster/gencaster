@@ -168,7 +168,11 @@ export default {
     },
 
     refresh() {
-      this.result.executeQuery();
+      this.result.executeQuery().then(() => {
+        console.log('finished refresh');
+        this.nodes = transformNodes(this.data.graph.nodes);
+        this.edges = transformEdges(this.data.graph.edges);
+      });
     },
 
     addNode() {
