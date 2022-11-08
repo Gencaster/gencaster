@@ -30,14 +30,6 @@ services:
       - .secrets.env
     command: ['python', 'osc_server.py']
 
-  frontend:
-    build: caster-front
-    platform: linux/amd64
-    depends_on:
-      - backend
-    ports:
-      - 3000:3000
-
   sound:
     build:
       context: caster-sound
@@ -48,5 +40,6 @@ services:
       - osc_backend
     env_file:
       - vars.env
-# editor depends on different dockerfile for dev/prod
+
+# editor and frontend depends on different dockerfile for dev/prod
 # so we declare it in its respective environment docker-compose file

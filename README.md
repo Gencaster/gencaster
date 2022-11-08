@@ -36,25 +36,23 @@ After a commit on the `main` branch it will trigger a re-deployment on the devel
 
 ### Local development
 
-To start a local instance of GenCaster with all its services simply type the following command into a shell.
-
-```shell
-docker compose -f docker-compose.yml -f docker-compose.local.yml up
-```
-
-You can instead also use `make` via
+To start a local instance of GenCaster with all its services simply type use `make`
 
 ```shell
 make docker-local
 ```
 
-#### Start without editor
+You can use the following flags to modify the stack
 
-As `node_modules` is tied next to the source code and there seems no way to point this to another directory we get into trouble if we mix up a `node_modules` of the host machine with a `node_modules` folder of our container as this can contain platform specific binaries.
 
-[It is said](https://esbuild.github.io/getting-started/#simultaneous-platforms) that *yarn* allows to circumvent this by [downloading binaries for multiple platforms](https://yarnpkg.com/configuration/yarnrc#supportedArchitectures) but this feature seems to be not working currently.
+flag | comment
+--- | ---
+`-e` | Starts without the editor
+`-s` | Starts without the frontend
 
-To therefore allow for hot-reloading during development it is also possible to start GenCaster without the editor via `make -e docker-local`. If you start `make docker-local` without the `-e` flag you will start build version of the editor which is served via nginx.
+**Example:** `make -es docker-local` starts without editor and frontend.
+
+This allows you to use your local host machine in place to develop with auto reload as Docker and NodeJS is not a nice tandem because of the dependence of the `node_modules` folder.
 
 ### Server setup
 
