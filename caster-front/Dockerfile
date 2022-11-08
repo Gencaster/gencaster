@@ -6,7 +6,7 @@ WORKDIR /install
 ADD package.json .
 ADD yarn.lock .
 
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 WORKDIR /root/caster-front
 
