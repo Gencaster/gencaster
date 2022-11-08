@@ -5,7 +5,8 @@ volumes:
 
 services:
   database:
-    image: postgres:14.5-alpine
+    image: amd64/postgres:14.5-alpine
+    platform: linux/amd64
     env_file:
       - vars.env
     volumes:
@@ -13,6 +14,7 @@ services:
 
   backend:
     build: caster-back
+    platform: linux/amd64
     env_file:
       - vars.env
       - .secrets.env
@@ -22,13 +24,15 @@ services:
 
   osc_backend:
     build: caster-back
+    platform: linux/amd64
     env_file:
       - vars.env
       - .secrets.env
-    command: ["python", "osc_server.py"]
+    command: ['python', 'osc_server.py']
 
   frontend:
     build: caster-front
+    platform: linux/amd64
     depends_on:
       - backend
     ports:
@@ -39,11 +43,10 @@ services:
       context: caster-sound
       args:
         - MAKE_JOBS=8
+    platform: linux/amd64
     depends_on:
       - osc_backend
     env_file:
       - vars.env
-
-
 # editor depends on different dockerfile for dev/prod
 # so we declare it in its respective environment docker-compose file
