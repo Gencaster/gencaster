@@ -11,7 +11,7 @@ WORKDIR /root/caster-editor/
 ADD package.json .
 ADD yarn.lock .
 
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 COPY . .
 
