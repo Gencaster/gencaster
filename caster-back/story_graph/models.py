@@ -79,6 +79,14 @@ class Edge(models.Model):
         on_delete=models.CASCADE,
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["in_node", "out_node"],
+                name="unique_edge",
+            )
+        ]
+
     def __str__(self) -> str:
         return f"{self.in_node} -> {self.out_node}"
 
