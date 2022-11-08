@@ -11,6 +11,8 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^2.13.1",
     "@graphql-codegen/typescript-vue-urql": "^2.3.3",
+    "eslint": "^8.27.0",
+    "eslint-plugin-vue": "^9.7.0",
     "nuxt": "3.0.0-rc.12",
     "sass": "^1.55.0",
     "sass-loader": "10"
@@ -21,8 +23,12 @@
     "@graphql-codegen/typescript-operations": "^2.5.3",
     "@graphql-codegen/typescript-urql": "^3.7.0",
     "@nuxtjs/composition-api": "^0.33.1",
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/parser": "^5.42.1",
     "@urql/vue": "^1.0.2",
     "element-plus": "^2.2.19",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
     "graphql": "^16.6.0",
     "typescript": "^4.8.4",
     "v-network-graph": "^0.6.10"
