@@ -56,3 +56,17 @@ services:
       - NGINX_HOST=0.0.0.0
     depends_on:
       - backend
+
+  frontend:
+    platform: linux/amd64
+    build:
+      context: caster-front
+      dockerfile: Dockerfile.deploy
+      args:
+        - BACKEND_GRAPHQL_URL=https://backend.dev.gencaster.org/graphql
+    ports:
+      - 3000:80
+    environment:
+      - NGINX_HOST=0.0.0.0
+    depends_on:
+      - backend

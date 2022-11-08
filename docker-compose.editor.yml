@@ -1,0 +1,12 @@
+services:
+  editor:
+    platform: linux/amd64
+    build:
+      context: caster-editor
+      dockerfile: Dockerfile.deploy
+    ports:
+      - 3001:80
+    depends_on:
+      - backend
+    environment:
+      - NGINX_HOST=0.0.0.0

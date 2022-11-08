@@ -36,7 +36,3 @@ services:
       - ./caster-back/:/home/gencaster
       - ./data:/data
       - ./data:/home/gencaster/media
-
-  frontend:
-    volumes:
-      - ./caster-front/:/root/caster-front/

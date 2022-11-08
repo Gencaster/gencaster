@@ -12,10 +12,10 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['@/assets/styles/main.scss'],
+  // css: ['src/assets/styles/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [{ src: '@/plugins/plugins.js' }],
+  plugins: [{ src: 'plugins/plugins.js' }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -54,4 +54,6 @@ export default {
     port: process.env.PORT || 3000, // default: 3000
     host: process.env.HOST || '0.0.0.0', // default: localhost 0.0.0.0 for sharing // 127.0.0.1 for online
   },
+
+  srcDir: "src/",
 }
