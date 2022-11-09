@@ -8,7 +8,8 @@
     "postinstall": "nuxt prepare",
     "codegen": "graphql-codegen --config codegen.yml",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "lint:ci": "eslint . --max-warnings 0"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
