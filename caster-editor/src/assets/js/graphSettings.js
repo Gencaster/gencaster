@@ -1,4 +1,4 @@
-import * as vNG from 'v-network-graph';
+import * as vNG from 'v-network-graph'
 
 const GraphSettings = {
   standard: vNG.defineConfigs({
@@ -65,6 +65,6 @@ const GraphSettings = {
       },
     },
   }),
-};
+}
 
-export { GraphSettings };
+export { GraphSettings }

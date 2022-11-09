@@ -1,26 +1,17 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": [
-        "plugin:vue/vue3-essential",
-        "airbnb-base",
-        "airbnb-typescript/base"
-    ],
-    "overrides": [
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module",
-        "project": "./tsconfig.json"
-    },
-    "plugins": [
-        "vue",
-        "@typescript-eslint"
-    ],
-    "rules": {
-        "no-console": "off"
-    }
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "@antfu"
+  ],
+  "ignorePatterns": ["**/graphql/graphql.ts"],
+  "rules": {
+    "no-console": "off",
+    "no-alert": "off",
+    "vue/component-tags-order": ["error", {
+      "order": [["template", "script"], "style"]
+    }]
+  }
 }
