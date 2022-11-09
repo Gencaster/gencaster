@@ -1,0 +1,12 @@
+services:
+  frontend:
+    platform: linux/amd64
+    build:
+      context: caster-front
+      dockerfile: Dockerfile.deploy
+    ports:
+      - 3000:80
+    depends_on:
+      - backend
+    environment:
+      - NGINX_HOST=0.0.0.0

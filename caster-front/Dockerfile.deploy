@@ -1,0 +1,20 @@
+FROM node:14-alpine AS builder
+
+WORKDIR /root/caster-front
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+ARG BACKEND_GRAPHQL_URL
+
+ENV BACKEND_GRAPHQL_URL=${BACKEND_GRAPHQL_URL}
+
+RUN yarn generate
+
+FROM nginx:1.23-alpine
+
+COPY --from=builder /root/caster-front/dist/ /usr/share/nginx/html
