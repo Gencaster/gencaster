@@ -1,9 +1,10 @@
 .PHONY: docs
 
-DOCKER_LOCAL_NO_EDITOR = -f docker-compose.yml -f docker-compose.local.yml
-DOCKER_LOCAL = $(DOCKER_LOCAL_NO_EDITOR) -f docker-compose.local.editor.yml
+DOCKER_EDITOR = -f docker-compose.editor.yml
+DOCKER_FRONTEND = -f docker-compose.frontend.yml
+DOCKER_LOCAL = -f docker-compose.yml -f docker-compose.local.yml
 DOCKER_DEPLOY_DEV = -f docker-compose.yml -f docker-compose.deploy.dev.yml
-DOCKER_ALL_FILES = $(DOCKER_LOCAL) -f docker-compose.deploy.dev.yml
+DOCKER_ALL_FILES = $(DOCKER_LOCAL) $(DOCKER_EDITOR) $(DOCKER_FRONTEND) -f docker-compose.deploy.dev.yml
 
 venv: caster-back/venv/touchfile
 
@@ -34,14 +35,20 @@ dev-server: venv virtualenv
 
 docker-local:
 	docker compose $(DOCKER_ALL_FILES) stop
+	$(eval FILES += $(DOCKER_LOCAL))
 ifneq (,$(findstring e, $(MAKEFLAGS)))
 	@echo "Start with NO editor"
-	docker compose $(DOCKER_LOCAL_NO_EDITOR) build
-	docker compose $(DOCKER_LOCAL_NO_EDITOR) up
 else
-	docker compose $(DOCKER_LOCAL) build
-	docker compose $(DOCKER_LOCAL) up
+	$(eval FILES += $(DOCKER_EDITOR))
 endif
+ifneq (,$(findstring s, $(MAKEFLAGS)))
+	@echo "Start with NO frontend"
+else
+	$(eval FILES += $(DOCKER_FRONTEND))
+endif
+	@echo "Start with $(FILES)"
+	docker compose $(FILES) build
+	docker compose $(FILES) up
 
 docker-deploy-dev:
 	docker compose $(DOCKER_ALL_FILES) stop
