@@ -8,53 +8,62 @@ import { Edit } from '@element-plus/icons-vue';
 
 <template>
   <div class="index-page">
-    <div v-if="fetching"><elementsLoading /></div>
+    <div v-if="fetching">
+      <elementsLoading />
+    </div>
     <div v-else>
       <h1>
         Editing: <b>{{ data.graph.name }}</b>
-        <br />
-        <br />
+        <br>
+        <br>
       </h1>
       <div class="demo-control-panel">
         <div class="control">
           <p><b>Controls</b></p>
           <div class="row">
-            <el-button text bg @click="refresh()">Force Refresh</el-button>
+            <el-button text bg @click="refresh()">
+              Force Refresh
+            </el-button>
 
             <el-input v-model="newNodeName" placeholder="New Node Name" />
-            <el-button text bg @click="addNode()">Add Node</el-button>
+            <el-button text bg @click="addNode()">
+              Add Node
+            </el-button>
             <el-button
               text
               bg
               :disabled="selectedNodes.length !== 2"
               @click="addEdge()"
-              >Add Edge</el-button
             >
+              Add Edge
+            </el-button>
           </div>
 
           <div class="row">
             <el-button
               text
               bg
-              :disabled="selectedNodes.length == 0"
+              :disabled="selectedNodes.length === 0"
               @click="removeNode()"
-              >Remove Node</el-button
             >
+              Remove Node
+            </el-button>
             <el-button
               text
               bg
-              :disabled="selectedEdges.length == 0"
+              :disabled="selectedEdges.length === 0"
               @click="removeEdge()"
-              >Remove Edge</el-button
             >
+              Remove Edge
+            </el-button>
           </div>
         </div>
       </div>
-      <br />
+      <br>
       <v-network-graph
-        class="graph"
         v-model:selected-nodes="selectedNodes"
         v-model:selected-edges="selectedEdges"
+        class="graph"
         :nodes="nodes"
         :edges="transformEdges(data.graph.edges)"
         :configs="configs"
@@ -70,36 +79,40 @@ import { Edit } from '@element-plus/icons-vue';
 </template>
 
 <script lang="ts">
+import * as vNG from "v-network-graph";
+import { Edges, Nodes } from "v-network-graph";
 import {
-  useGetGraphQuery,
-  useCreateNodeMutation,
   useCreateEdgeMutation,
-  useDeleteNodeMutation,
+  useCreateNodeMutation,
   useDeleteEdgeMutation,
-} from '../graphql/graphql';
-import * as vNG from 'v-network-graph';
-import { Nodes, Edges } from 'v-network-graph';
-import { GraphSettings } from '~/assets/js/graphSettings';
+  useDeleteNodeMutation,
+  useGetGraphQuery
+} from "../graphql/graphql";
 
-import { transformEdges, transformNodes } from '../tools/typeTransformers';
+import { transformEdges, transformNodes } from "../tools/typeTransformers";
+import { GraphSettings } from "../assets/js/graphSettings";
 
 export default {
-  name: 'graphComponent',
+  name: "GraphComponent",
 
   props: {
     uuid: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
-
-  computed: {},
 
   data() {
     return {
       fetching: true,
       result: null,
-      data: null,
+      data: {
+        graph: {
+          name: "",
+          edges: [],
+          nodes: []
+        }
+      },
       error: null,
 
       // graph
@@ -114,9 +127,11 @@ export default {
       configs: vNG.getFullConfigs(),
 
       // interface
-      newNodeName: '',
+      newNodeName: ""
     };
   },
+
+  computed: {},
 
   mounted() {
     this.configs.node.selectable = true;
@@ -146,7 +161,7 @@ export default {
     async loadData() {
       const result = await useGetGraphQuery({
         variables: { uuid: this.uuid },
-        requestPolicy: 'network-only',
+        requestPolicy: "network-only"
       });
 
       this.result = result;
@@ -154,7 +169,7 @@ export default {
       this.error = result.error;
       this.fetching = result.fetching;
 
-      console.log('loaded graph');
+      console.log("loaded graph");
       this.loadedData();
     },
 
@@ -169,57 +184,57 @@ export default {
 
     refresh() {
       this.result.executeQuery().then(() => {
-        console.log('finished refresh');
+        console.log("finished refresh");
         this.nodes = transformNodes(this.data.graph.nodes);
         this.edges = transformEdges(this.data.graph.edges);
       });
     },
 
     addNode() {
-      if (this.newNodeName === '') {
-        alert('please add a name for your node');
+      if (this.newNodeName === "") {
+        alert("please add a name for your node");
         return;
       }
 
       const variables = {
         graphUuid: this.uuid,
-        name: this.newNodeName,
+        name: this.newNodeName
       };
       this.addNodeMutation(variables).then(() => {
         this.refresh();
-        console.log('Added node');
+        console.log("Added node");
       });
 
-      this.newNodeName = '';
+      this.newNodeName = "";
     },
 
     addEdge() {
       if (this.selectedNodes.length !== 2) {
-        alert('requires exactly 2 nodes selected');
+        alert("requires exactly 2 nodes selected");
         return;
       }
       const [source, target] = this.selectedNodes;
 
       const variables = {
         nodeInUuid: source,
-        nodeOutUuid: target,
+        nodeOutUuid: target
       };
 
       this.addEdgeMutation(variables).then(() => {
         this.refresh();
-        console.log('Added edge');
+        console.log("Added edge");
       });
     },
 
     removeNode() {
       for (const nodeId of this.selectedNodes) {
         const variables = {
-          nodeUuid: nodeId,
+          nodeUuid: nodeId
         };
 
         this.removeNodeMutation(variables).then(() => {
           this.refresh();
-          console.log('Removed node');
+          console.log("Removed node");
         });
       }
     },
@@ -227,15 +242,15 @@ export default {
     removeEdge() {
       for (const edgeId of this.selectedEdges) {
         const variables = {
-          edgeUuid: edgeId,
+          edgeUuid: edgeId
         };
 
         this.removeEdgeMutation(variables).then(() => {
           this.refresh();
-          console.log('Removed edge');
+          console.log("Removed edge");
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>

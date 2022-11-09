@@ -1,12 +1,6 @@
-<template>
-  <div class="edit-page">
-    <Graph :uuid="uuid" />
-  </div>
-</template>
-
 <script lang="ts">
 export default {
-  name: 'uuidWrapper',
+  name: "UuidWrapper",
 
   data() {
     return {};
@@ -14,9 +8,15 @@ export default {
   computed: {
     uuid() {
       return this.$route.params.uuid;
-    },
+    }
   },
   mounted() {},
-  methods: {},
+  methods: {}
 };
 </script>
+
+<template>
+  <div class="edit-page">
+    <Graph :uuid="uuid" />
+  </div>
+</template>

@@ -6,11 +6,11 @@
 
 <script lang="ts">
 export default {
-  name: 'landingComponent',
+  name: "LandingComponent",
   data() {
     return {};
   },
   mounted() {},
-  methods: {},
+  methods: {}
 };
 </script>

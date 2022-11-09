@@ -1,20 +1,20 @@
 <template>
   <div>
-    <div class="fetching-screen" v-if="fetching">
+    <div v-if="fetching" class="fetching-screen">
       <elementsLoading />
     </div>
     <div v-else>
       <h1>Select one of your Graphs</h1>
       <div class="demo-control-panel">
         <div>
-          <br />
+          <br>
           <div
-            class="graph-selection"
             v-for="graph in graphsData.graphs"
             :key="graph.uuid"
+            class="graph-selection"
             :value="graph.uuid"
           >
-            <NuxtLink class="graph" :to="'graph/' + graph.uuid">
+            <NuxtLink class="graph" :to="`graph/${graph.uuid}`">
               <div>
                 <p>{{ graph.name }}</p>
               </div>
@@ -32,22 +32,27 @@
           </div>
         </div>
       </div>
-      <br />
+      <br>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { useGetGraphsQuery } from '../graphql/graphql';
+import { useGetGraphsQuery } from "../graphql/graphql";
 
 export default {
-  name: 'graphsOverviewComponent',
+  name: "GraphsOverviewComponent",
 
   data() {
     return {
       fetching: true,
       result: null,
-      graphsData: null,
+      graphsData: {
+        graphs: [{
+          uuid: "",
+          name: ""
+        }]
+      }
     };
   },
   mounted() {
@@ -64,8 +69,8 @@ export default {
     },
 
     createNewGraph() {
-      alert('tbd');
-    },
-  },
+      alert("tbd");
+    }
+  }
 };
 </script>
