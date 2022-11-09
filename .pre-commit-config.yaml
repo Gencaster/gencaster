@@ -22,3 +22,15 @@ repos:
     rev: 5.6.4
     hooks:
       - id: isort
+-   repo: local
+    hooks:
+      - id: editor-lint
+        name: "Linting editor"
+        files: caster-editor
+        language: system
+        entry: /bin/sh -c "cd caster-editor && yarn lint:ci"
+      - id: frontend-lint
+        name: "Linting frontend"
+        files: caster-front
+        language: system
+        entry: /bin/sh -c "cd caster-front && yarn lint:ci"
