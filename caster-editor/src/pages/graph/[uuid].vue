@@ -1,18 +1,18 @@
 <script lang="ts">
 export default {
-  name: 'UuidWrapper',
+  name: "UuidWrapper",
 
   data() {
-    return {}
+    return {};
   },
   computed: {
     uuid() {
-      return this.$route.params.uuid
-    },
+      return this.$route.params.uuid;
+    }
   },
   mounted() {},
-  methods: {},
-}
+  methods: {}
+};
 </script>
 
 <template>

@@ -79,27 +79,27 @@ import { Edit } from '@element-plus/icons-vue';
 </template>
 
 <script lang="ts">
-import * as vNG from 'v-network-graph'
-import { Edges, Nodes } from 'v-network-graph'
+import * as vNG from "v-network-graph";
+import { Edges, Nodes } from "v-network-graph";
 import {
   useCreateEdgeMutation,
   useCreateNodeMutation,
   useDeleteEdgeMutation,
   useDeleteNodeMutation,
-  useGetGraphQuery,
-} from '../graphql/graphql'
+  useGetGraphQuery
+} from "../graphql/graphql";
 
-import { transformEdges, transformNodes } from '../tools/typeTransformers'
-import { GraphSettings } from '../assets/js/graphSettings'
+import { transformEdges, transformNodes } from "../tools/typeTransformers";
+import { GraphSettings } from "../assets/js/graphSettings";
 
 export default {
-  name: 'GraphComponent',
+  name: "GraphComponent",
 
   props: {
     uuid: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
 
   data() {
@@ -108,10 +108,10 @@ export default {
       result: null,
       data: {
         graph: {
-          name: '',
+          name: "",
           edges: [],
-          nodes: [],
-        },
+          nodes: []
+        }
       },
       error: null,
 
@@ -127,130 +127,130 @@ export default {
       configs: vNG.getFullConfigs(),
 
       // interface
-      newNodeName: '',
-    }
+      newNodeName: ""
+    };
   },
 
   computed: {},
 
   mounted() {
-    this.configs.node.selectable = true
+    this.configs.node.selectable = true;
 
     // add node
-    const { executeMutation: addNodeMutation } = useCreateNodeMutation()
-    this.addNodeMutation = addNodeMutation
+    const { executeMutation: addNodeMutation } = useCreateNodeMutation();
+    this.addNodeMutation = addNodeMutation;
 
     // remove node
-    const { executeMutation: removeNodeMutation } = useDeleteNodeMutation()
-    this.removeNodeMutation = removeNodeMutation
+    const { executeMutation: removeNodeMutation } = useDeleteNodeMutation();
+    this.removeNodeMutation = removeNodeMutation;
 
     // add edge
-    const { executeMutation: addEdgeMutation } = useCreateEdgeMutation()
-    this.addEdgeMutation = addEdgeMutation
+    const { executeMutation: addEdgeMutation } = useCreateEdgeMutation();
+    this.addEdgeMutation = addEdgeMutation;
 
     // remove edge
-    const { executeMutation: removeEdgeMutation } = useDeleteEdgeMutation()
-    this.removeEdgeMutation = removeEdgeMutation
+    const { executeMutation: removeEdgeMutation } = useDeleteEdgeMutation();
+    this.removeEdgeMutation = removeEdgeMutation;
 
-    this.configs = GraphSettings.standard
+    this.configs = GraphSettings.standard;
 
-    this.loadData()
+    this.loadData();
   },
 
   methods: {
     async loadData() {
       const result = await useGetGraphQuery({
         variables: { uuid: this.uuid },
-        requestPolicy: 'network-only',
-      })
+        requestPolicy: "network-only"
+      });
 
-      this.result = result
-      this.data = result.data
-      this.error = result.error
-      this.fetching = result.fetching
+      this.result = result;
+      this.data = result.data;
+      this.error = result.error;
+      this.fetching = result.fetching;
 
-      console.log('loaded graph')
-      this.loadedData()
+      console.log("loaded graph");
+      this.loadedData();
     },
 
     loadedData() {
       // set data
-      this.nodes = transformNodes(this.data.graph.nodes)
-      this.edges = transformEdges(this.data.graph.edges)
+      this.nodes = transformNodes(this.data.graph.nodes);
+      this.edges = transformEdges(this.data.graph.edges);
 
-      this.nextNodeIndex = Object.keys(this.nodes).length + 1
-      this.nextEdgeIndex = Object.keys(this.edges).length + 1
+      this.nextNodeIndex = Object.keys(this.nodes).length + 1;
+      this.nextEdgeIndex = Object.keys(this.edges).length + 1;
     },
 
     refresh() {
       this.result.executeQuery().then(() => {
-        console.log('finished refresh')
-        this.nodes = transformNodes(this.data.graph.nodes)
-        this.edges = transformEdges(this.data.graph.edges)
-      })
+        console.log("finished refresh");
+        this.nodes = transformNodes(this.data.graph.nodes);
+        this.edges = transformEdges(this.data.graph.edges);
+      });
     },
 
     addNode() {
-      if (this.newNodeName === '') {
-        alert('please add a name for your node')
-        return
+      if (this.newNodeName === "") {
+        alert("please add a name for your node");
+        return;
       }
 
       const variables = {
         graphUuid: this.uuid,
-        name: this.newNodeName,
-      }
+        name: this.newNodeName
+      };
       this.addNodeMutation(variables).then(() => {
-        this.refresh()
-        console.log('Added node')
-      })
+        this.refresh();
+        console.log("Added node");
+      });
 
-      this.newNodeName = ''
+      this.newNodeName = "";
     },
 
     addEdge() {
       if (this.selectedNodes.length !== 2) {
-        alert('requires exactly 2 nodes selected')
-        return
+        alert("requires exactly 2 nodes selected");
+        return;
       }
-      const [source, target] = this.selectedNodes
+      const [source, target] = this.selectedNodes;
 
       const variables = {
         nodeInUuid: source,
-        nodeOutUuid: target,
-      }
+        nodeOutUuid: target
+      };
 
       this.addEdgeMutation(variables).then(() => {
-        this.refresh()
-        console.log('Added edge')
-      })
+        this.refresh();
+        console.log("Added edge");
+      });
     },
 
     removeNode() {
       for (const nodeId of this.selectedNodes) {
         const variables = {
-          nodeUuid: nodeId,
-        }
+          nodeUuid: nodeId
+        };
 
         this.removeNodeMutation(variables).then(() => {
-          this.refresh()
-          console.log('Removed node')
-        })
+          this.refresh();
+          console.log("Removed node");
+        });
       }
     },
 
     removeEdge() {
       for (const edgeId of this.selectedEdges) {
         const variables = {
-          edgeUuid: edgeId,
-        }
+          edgeUuid: edgeId
+        };
 
         this.removeEdgeMutation(variables).then(() => {
-          this.refresh()
-          console.log('Removed edge')
-        })
+          this.refresh();
+          console.log("Removed edge");
+        });
       }
-    },
-  },
-}
+    }
+  }
+};
 </script>

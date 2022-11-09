@@ -38,10 +38,10 @@
 </template>
 
 <script lang="ts">
-import { useGetGraphsQuery } from '../graphql/graphql'
+import { useGetGraphsQuery } from "../graphql/graphql";
 
 export default {
-  name: 'GraphsOverviewComponent',
+  name: "GraphsOverviewComponent",
 
   data() {
     return {
@@ -49,28 +49,28 @@ export default {
       result: null,
       graphsData: {
         graphs: [{
-          uuid: '',
-          name: '',
-        }],
-      },
-    }
+          uuid: "",
+          name: ""
+        }]
+      }
+    };
   },
   mounted() {
-    this.initQuery()
+    this.initQuery();
   },
   methods: {
     async initQuery() {
-      const result = await useGetGraphsQuery()
+      const result = await useGetGraphsQuery();
 
-      this.result = result
-      this.graphsData = result.data
-      this.fetching = result.fetching
-      this.error = result.error
+      this.result = result;
+      this.graphsData = result.data;
+      this.fetching = result.fetching;
+      this.error = result.error;
     },
 
     createNewGraph() {
-      alert('tbd')
-    },
-  },
-}
+      alert("tbd");
+    }
+  }
+};
 </script>

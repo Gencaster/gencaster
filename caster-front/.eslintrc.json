@@ -12,6 +12,9 @@
     "no-alert": "off",
     "vue/component-tags-order": ["error", {
       "order": [["template", "script"], "style"]
-    }]
+    }],
+    "@typescript-eslint/quotes": ["error", "double"],
+    "@typescript-eslint/semi": [2, "always"],
+    "@typescript-eslint/comma-dangle": ["error", "never"]
   }
 }
