@@ -1,0 +1,17 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "@antfu"
+  ],
+  "ignorePatterns": ["**/static/sw.js"],
+  "rules": {
+    "no-console": "off",
+    "no-alert": "off",
+    "vue/component-tags-order": ["error", {
+      "order": [["template", "script"], "style"]
+    }]
+  }
+}

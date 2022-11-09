@@ -1,24 +1,24 @@
 <template>
   <div class="index-page">
     <h1>Nuxt - Django + SocketIO</h1>
-    <audio ref="player" controls></audio>
+    <audio ref="player" controls />
     <div class="forms">
       <h2>Send</h2>
       <form @submit.prevent="emitData">
-        <input v-model="formData.emit" type="text" placeholder="Message" />
-        <input type="submit" value="Echo" />
+        <input v-model="formData.emit" type="text" placeholder="Message">
+        <input type="submit" value="Echo">
       </form>
       <form @submit.prevent="emitBroadcast">
-        <input v-model="formData.broadcast" type="text" placeholder="Message" />
-        <input type="submit" value="Broadcast" />
+        <input v-model="formData.broadcast" type="text" placeholder="Message">
+        <input type="submit" value="Broadcast">
       </form>
       <form @submit.prevent="emitJoin">
         <input
           v-model="formData.joinRoom"
           type="text"
           placeholder="Room Name"
-        />
-        <input type="submit" value="Join Room" />
+        >
+        <input type="submit" value="Join Room">
       </form>
 
       <form @submit.prevent="emitLeave">
@@ -26,8 +26,8 @@
           v-model="formData.leaveRoom"
           type="text"
           placeholder="Room Name"
-        />
-        <input type="submit" value="Leave Room" />
+        >
+        <input type="submit" value="Leave Room">
       </form>
 
       <form @submit.prevent="emitSendRoom">
@@ -35,27 +35,27 @@
           v-model="formData.sendRoomName"
           type="text"
           placeholder="Room Name"
-        />
+        >
         <input
           v-model="formData.sendRoomMessage"
           type="text"
           placeholder="Message"
-        />
-        <input type="submit" value="Send to Room" />
+        >
+        <input type="submit" value="Send to Room">
       </form>
       <form @submit.prevent="emitClose">
         <input
           v-model="formData.closeRoom"
           type="text"
           placeholder="Room Name"
-        />
-        <input type="submit" value="Close Room" />
+        >
+        <input type="submit" value="Close Room">
       </form>
       <form @submit.prevent="emitDisconnect">
-        <input type="submit" value="Disconnect" />
+        <input type="submit" value="Disconnect">
       </form>
     </div>
-    <br />
+    <br>
     <div class="receive">
       <h2>Receive</h2>
       <div class="logs">
@@ -118,34 +118,35 @@ export default {
   created() {},
   methods: {
     initSocket() {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that = this
       this.socket = io.connect('ws://localhost:8081')
 
-      this.socket.on('connect', function () {
-        that.socket.emit('my_event', { data: "I'm connected!" })
+      this.socket.on('connect', () => {
+        that.socket.emit('my_event', { data: 'I\'m connected!' })
       })
-      this.socket.on('disconnect', function () {
+      this.socket.on('disconnect', () => {
         that.logs.push({ message: 'Disconnected' })
       })
-      this.socket.on('my_response', function (msg) {
+      this.socket.on('my_response', (msg) => {
         that.logs.push({ message: `Received: ${msg.data}` })
       })
     },
 
     initJanus() {
-      // eslint-disable-next-line no-undef
       this.Janus = Janus
 
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that = this
       const { hostname, protocol } = window.location
 
-      const server =
-        protocol === 'http:'
+      const server
+        = protocol === 'http:'
           ? `http://${hostname}:8088/janus`
           : `https://${hostname}:8089/janus`
 
-      const opaqueId =
-        this.params.opaqueIdAppendix + this.Janus.randomString(12)
+      const opaqueId
+        = this.params.opaqueIdAppendix + this.Janus.randomString(12)
       this.audioElem = this.$refs.player
       this.Janus.init({
         debug: 'all',
@@ -153,7 +154,7 @@ export default {
           // Make sure the browser supports WebRTC
           // [] To do: Send to page explaining webrtc support needed
           if (!this.Janus.isWebrtcSupported()) {
-            alert("Unfortunately, your devices doesn't seem to support WebRTC.")
+            alert('Unfortunately, your devices doesn\'t seem to support WebRTC.')
             return
           }
           // Create session
@@ -169,27 +170,27 @@ export default {
                 success: (pluginHandle) => {
                   that.streaming = pluginHandle
                   console.log(
-                    'Plugin attached! (' +
-                      that.streaming.getPlugin() +
-                      ', id=' +
-                      that.streaming.getId() +
-                      ')'
+                    `Plugin attached! (${
+                      that.streaming.getPlugin()
+                      }, id=${
+                      that.streaming.getId()
+                      })`,
                   )
                   // Setup streaming session
                   that.updateStreamsList()
                 },
                 error(error) {
                   console.error('  -- Error attaching plugin... ', error)
-                  alert('Error attaching plugin... ' + error)
+                  alert(`Error attaching plugin... ${error}`)
                 },
                 iceState(state) {
-                  console.log('ICE state changed to ' + state)
+                  console.log(`ICE state changed to ${state}`)
                 },
                 webrtcState(on) {
                   console.log(
-                    'Janus says our WebRTC PeerConnection is ' +
-                      (on ? 'up' : 'down') +
-                      ' now'
+                    `Janus says our WebRTC PeerConnection is ${
+                      on ? 'up' : 'down'
+                      } now`,
                   )
                 },
                 onmessage(msg, jsep) {
@@ -209,7 +210,7 @@ export default {
                           // Make sure that our offer contains stereo too
                           jsep.sdp = jsep.sdp.replace(
                             'useinbandfec=1',
-                            'useinbandfec=1;stereo=1'
+                            'useinbandfec=1;stereo=1',
                           )
                         }
                       },
@@ -220,7 +221,7 @@ export default {
                       },
                       error(error) {
                         console.error('WebRTC error:', error)
-                        alert('WebRTC error... ' + error.message)
+                        alert(`WebRTC error... ${error.message}`)
                       },
                     })
                   }
@@ -247,6 +248,7 @@ export default {
       })
     },
     updateStreamsList() {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that = this
       const body = { request: 'list' }
       console.log('Sending message:', body)
@@ -265,13 +267,13 @@ export default {
             console.log(list)
             for (const mp in list) {
               console.log(
-                '  >> [' +
-                  list[mp].id +
-                  '] ' +
-                  list[mp].description +
-                  ' (' +
-                  list[mp].type +
-                  ')'
+                `  >> [${
+                  list[mp].id
+                  }] ${
+                  list[mp].description
+                  } (${
+                  list[mp].type
+                  })`,
               )
             }
 
