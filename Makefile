@@ -28,7 +28,7 @@ dev-server: venv virtualenv
 	. caster-back/venv/bin/activate && (\
 		pip3 install --quiet -r requirements-docs.txt; \
 		cd caster-back; \
-		export SUPERCOLLIDER_HOST=localhost; \
+		export SUPERCOLLIDER_HOST=127.0.0.1; \
 		export SUPERCOLLIDER_PORT=57120; \
 		python manage.py runserver --settings gencaster.settings.test; \
 	)

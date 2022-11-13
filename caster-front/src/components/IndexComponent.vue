@@ -120,7 +120,7 @@ export default {
     initSocket() {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that = this;
-      this.socket = io.connect("ws://localhost:8081");
+      this.socket = io.connect("ws://127.0.0.1:8081");
 
       this.socket.on("connect", () => {
         that.socket.emit("my_event", { data: "I'm connected!" });
