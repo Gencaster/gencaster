@@ -1,7 +1,5 @@
 #!/bin/sh
 
-sleep 2;
-
 echo "Apply database migrations";
 python manage.py migrate;
 

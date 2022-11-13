@@ -20,7 +20,6 @@ services:
       - .secrets.env
     depends_on:
       - database
-      - sound
 
   osc_backend:
     build: caster-back
