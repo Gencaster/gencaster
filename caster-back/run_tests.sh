@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export SUPERCOLLIDER_HOST=localhost
+export SUPERCOLLIDER_HOST=127.0.0.1
 export SUPERCOLLIDER_PORT=57120
 
 cd "$(dirname "$0")"

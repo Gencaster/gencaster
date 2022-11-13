@@ -14,7 +14,7 @@ If you do not want to use the `docker-compose.yml` file you can build and start 
 
 The container is called `caster-sound`.
 
-One can listen to the stream on and go to [http://localhost:8090](http://localhost:8090).
+One can listen to the stream on and go to [http://127.0.0.1:8090](http://127.0.0.1:8090).
 
 ## Services
 
