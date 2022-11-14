@@ -116,6 +116,26 @@ class StreamPoint(models.Model):
         null=True,
     )
 
+    @property
+    def client(self) -> SimpleUDPClient:
+        return SimpleUDPClient(address=self.host, port=self.port)
+
+    # todo make this async?
+    def send_raw_instruction(self, instruction_text: str) -> None:
+        instruction: StreamInstruction = StreamInstruction.objects.create(
+            stream_point=self,
+            instruction_text=instruction_text,
+        )
+        self.send_stream_instruction(instruction)
+
+    def send_stream_instruction(self, instruction: "StreamInstruction") -> None:
+        self.client.send_message(
+            address="/instruction",
+            value=[str(instruction.uuid), instruction.instruction_text],
+        )
+        instruction.state = StreamInstruction.InstructionState.SENT
+        instruction.save()
+
     @admin.display(
         boolean=True,
         description=_("Live signal within last 60 sec"),
@@ -200,11 +220,13 @@ class StreamInstruction(models.Model):
         SUCCESS = "SUCCESS", _("SUCCESS")
         FAILURE = "FAILURE", _("FAILURE")
         READY = "READY", _("READY")
+        SENT = "SENT", _("SENT")
         UNACKNOWLEDGED = "UNACKNOWLEDGED", _("UNACKNOWLEDGED")
         FINISHED = "FINISHED", _("FINISHED")
         RECEIVED = "RECEIVED", _("RECEIVED")
 
-        def from_sc_string(self, sc_string: str):
+        @classmethod
+        def from_sc_string(cls, sc_string: str):
             """Converts a string from SuperCollider to our typed state choices.
 
             .. todo::
@@ -212,10 +234,10 @@ class StreamInstruction(models.Model):
                 return type
             """
             try:
-                return getattr(self, sc_string.upper())
+                return getattr(cls, sc_string.upper())
             except AttributeError:
                 log.error(f'Could not parse "{sc_string}" state to django state')
-                return self.FAILURE
+                return cls.FAILURE
 
     uuid = models.UUIDField(
         primary_key=True,
@@ -227,10 +249,12 @@ class StreamInstruction(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 
-    stream = models.ForeignKey(
-        "stream.Stream",
+    stream_point = models.ForeignKey(
+        "stream.StreamPoint",
         on_delete=models.CASCADE,
         related_name="instructions",
+        # @todo remove null
+        null=True,
     )
 
     instruction_text = models.TextField(
@@ -242,10 +266,18 @@ class StreamInstruction(models.Model):
         max_length=100,
         choices=InstructionState.choices,
         default=InstructionState.UNACKNOWLEDGED,
+        editable=False,
+    )
+
+    return_value = models.TextField(
+        verbose_name="Return value from statement",
+        blank=True,
+        default="",
+        editable=False,
     )
 
     class Meta:
-        ordering = ["-created_date", "stream"]
+        ordering = ["-created_date", "stream_point"]
         verbose_name = _("Stream Instruction")
         verbose_name_plural = _("Stream Instructions")
 
