@@ -40,9 +40,9 @@ until [ $COUNT -gt $NUM_STREAMS ]; do
 
     echo "### Start instance $SC_NAME on port $SC_LANG_PORT ###"
 
-    (sclang -u "$SC_LANG_PORT" /root/sc.scd &> "/root/sclang_$COUNT.log") &
+    (sclang -u "$SC_LANG_PORT" -l /root/sclang_conf_gencaster.yaml /root/sc.scd &> "/root/sclang_$COUNT.log") &
 
-    sleep 10
+    sleep 5
     echo "Create gstreamer out pipeline on port $JANUS_OUT_PORT"
     (gst-launch-1.0 jackaudiosrc port-pattern=$SC_NAME ! queue ! audioconvert ! audioresample ! opusenc ! rtpopuspay ! queue max-size-bytes=0 max-size-buffers=0 ! udpsink host=127.0.0.1 port=$JANUS_OUT_PORT &> "/root/gstreamer_out_$COUNT.log") &
 
