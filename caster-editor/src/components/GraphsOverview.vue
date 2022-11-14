@@ -4,33 +4,33 @@
       <elementsLoading />
     </div>
     <div v-else>
-      <h1>Select one of your Graphs</h1>
-      <div class="demo-control-panel">
-        <div>
-          <br>
-          <div
-            v-for="graph in graphsData.graphs"
-            :key="graph.uuid"
-            class="graph-selection"
-            :value="graph.uuid"
-          >
-            <NuxtLink class="graph" :to="`graph/${graph.uuid}`">
-              <div>
-                <p>{{ graph.name }}</p>
-              </div>
-              <div>
-                <p>{{ graph.uuid }}</p>
-              </div>
-            </NuxtLink>
-          </div>
-          <div class="graph-selection">
-            <div class="graph new-one" @click="createNewGraph()">
-              <div>
-                <p>+</p>
+      <div v-if="graphsData !== null">
+        <h1>Select one of your Graphs</h1>
+        <div class="demo-control-panel">
+          <div>
+            <br>
+            <div v-for="graph in graphsData.graphs" :key="graph.uuid" class="graph-selection" :value="graph.uuid">
+              <NuxtLink class="graph" :to="`../graphs/${graph.uuid}`">
+                <div>
+                  <p>{{ graph.name }}</p>
+                </div>
+                <div>
+                  <p>{{ graph.uuid }}</p>
+                </div>
+              </NuxtLink>
+            </div>
+            <div class="graph-selection">
+              <div class="graph new-one" @click="createNewGraph()">
+                <div>
+                  <p>+</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div v-else>
+        <p>You're not logged in.</p>
       </div>
       <br>
     </div>
@@ -60,12 +60,17 @@ export default {
   },
   methods: {
     async initQuery() {
-      const result = await useGetGraphsQuery();
+      try {
+        const result = await useGetGraphsQuery();
 
-      this.result = result;
-      this.graphsData = result.data;
-      this.fetching = result.fetching;
-      this.error = result.error;
+        this.result = result;
+        this.graphsData = result.data;
+        this.fetching = result.fetching;
+        this.error = result.error;
+      }
+      catch (error) {
+        console.log("not allowed");
+      }
     },
 
     createNewGraph() {
