@@ -53,6 +53,7 @@ GenCasterServer {
 	// private
 	var <>oscBackendClient;
 	var <>environment; // shall this be a proxy space?
+	var <>server;
 
 	// basically a constructor which allows us to set
 	// the necessary values directly or via env variables
@@ -110,6 +111,7 @@ GenCasterServer {
 		);
 		environment = this.serverInfo;
 		environment[\oscBackendClient] = oscBackendClient;
+		environment[\this] = this;
 	}
 
 	*arrayToEvent {
@@ -157,7 +159,7 @@ GenCasterServer {
 
 	}
 
-	printInfo {
+	postServerInfo {
 		"### GenCaster server ###".postln;
 		this.serverInfo.pairsDo({|k, v|
 			"%: %".format(k, v).postln;
@@ -166,12 +168,16 @@ GenCasterServer {
 	}
 
 	startServer {
-		var server = Server.default;
+		server = Server(
+			name: name,
+			addr: NetAddr(hostname: "127.0.0.1", port: synthPort),
+		);
 		server.options.sampleRate_(48000).memoryLocking_(true).memSize_(8192*4);
 		server.options.numOutputBusChannels =2;
 		server.options.device = "default:%".format(name);
 		server.options.bindAddress = "0.0.0.0";
 		server.options.maxLogins = 2;
+		Server.default = server;
 
 		"Booting server % on port %".format(name, synthPort).postln;
 		server.waitForBoot(onComplete: this.postStartServer);
@@ -191,8 +197,8 @@ GenCasterServer {
 		});
 	}
 
-	statementReceiver {
-		^OSCdef(\statementReceiver, {|msg, time, addr, recvPort|
+	instructionReceiver {
+		^OSCdef(\instructionReceiver, {|msg, time, addr, recvPort|
 			var uuid = msg[1];
 			var function = (msg[2] ? "{}").asString;
 			this.sendAck(status: GenCasterStatus.received, uuid: uuid);
@@ -204,12 +210,12 @@ GenCasterServer {
 					message: (returnValue: returnValue),
 				);
 			}.fork;
-		}, path: "/statement");
+		}, path: "/instruction");
 	}
 
 	postStartServer {
 		"Finished booting server".postln;
 		this.beacon.play;
-		this.statementReceiver;
+		this.instructionReceiver;
 	}
 }
