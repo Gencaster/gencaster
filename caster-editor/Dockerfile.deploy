@@ -10,6 +10,10 @@ RUN yarn install --frozen-lockfile
 
 COPY src/ /root/caster-editor/src/
 
+ARG BACKEND_GRAPHQL_URL
+
+ENV BACKEND_GRAPHQL_URL=${BACKEND_GRAPHQL_URL}
+
 RUN yarn build
 
 CMD ["node", ".output/server/index.mjs"]
