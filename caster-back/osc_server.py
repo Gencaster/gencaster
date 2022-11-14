@@ -14,24 +14,39 @@ from stream.models import StreamInstruction, StreamPoint
 log = logging.getLogger(__name__)
 
 
-def acknowledge_handler(client_address: Tuple[str, int], address: str, ack_uuid: str):
+def parse_message(osc_message: Any) -> Dict[str, Any]:
+    """transforms [k1, v1, k2, v2, ...] to {k1: v1, k2:v2, ...}"""
+    return dict(zip(osc_message[0::2], osc_message[1::2]))
+
+
+def acknowledge_handler(
+    client_address: Tuple[str, int], address: str, *osc_args: List[Any]
+) -> None:
+    message = parse_message(osc_args)
+
     try:
-        instruction: StreamInstruction = StreamInstruction.objects.get(uuid=ack_uuid)
-        instruction.acknowledged_time = timezone.now()
-        instruction.save()
-        log.info(f"Acknowledged instruction {instruction}")
+        stream_instruction: StreamInstruction = StreamInstruction.objects.get(
+            uuid=message["uuid"],
+        )
     except StreamInstruction.DoesNotExist:
-        log.error(f"Could not find stream instruction {ack_uuid}")
+        log.error(
+            f"Could not find StreamInstruction with UUID {message.get('uuid', 'unknown')}"
+        )
+        return
+
+    stream_instruction.state = StreamInstruction.InstructionState.from_sc_string  # type: ignore
+    stream_instruction.save()
 
 
-def live_handler(client_address: Tuple[str, int], address: str, *osc_args: List[Any]):
-    # transforms [k1, v1, k2, v2, ...] to {k1: v1, k2:v2, ...}
-    message: Dict[str, Any] = dict(zip(osc_args[0::2], osc_args[1::2]))  # type: ignore
+def beacon_handler(
+    client_address: Tuple[str, int], address: str, *osc_args: List[Any]
+) -> None:
+    message = parse_message(osc_args)
 
     point: StreamPoint
     point, created = StreamPoint.objects.get_or_create(
         host=client_address[0],
-        port=message["scLangPort"],
+        port=message["langPort"],
     )
     point.last_live = timezone.now()
     point.use_input = bool(message.get("useInput"))
@@ -40,7 +55,7 @@ def live_handler(client_address: Tuple[str, int], address: str, *osc_args: List[
     point.janus_in_room = message.get("janusInRoom")
     point.janus_out_room = message.get("janusOutRoom")
     point.janus_public_ip = message.get("janusPublicIp")
-    point.sc_name = message.get("scName")
+    point.sc_name = message.get("name")
     point.save()
 
     if created:
@@ -50,8 +65,8 @@ def live_handler(client_address: Tuple[str, int], address: str, *osc_args: List[
 
 
 dispatcher = Dispatcher()
-dispatcher.map("/acknowledge", acknowledge_handler, needs_reply_address=True)
-dispatcher.map("/live", live_handler, needs_reply_address=True)
+dispatcher.map("/ack", acknowledge_handler, needs_reply_address=True)  # type: ignore
+dispatcher.map("/beacon", beacon_handler, needs_reply_address=True)  # type: ignore
 
 if __name__ == "__main__":
     port = int(os.environ["BACKEND_OSC_PORT"])
