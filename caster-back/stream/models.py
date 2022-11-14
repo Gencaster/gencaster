@@ -196,6 +196,27 @@ class Stream(models.Model):
 
 
 class StreamInstruction(models.Model):
+    class InstructionState(models.TextChoices):
+        SUCCESS = "SUCCESS", _("SUCCESS")
+        FAILURE = "FAILURE", _("FAILURE")
+        READY = "READY", _("READY")
+        UNACKNOWLEDGED = "UNACKNOWLEDGED", _("UNACKNOWLEDGED")
+        FINISHED = "FINISHED", _("FINISHED")
+        RECEIVED = "RECEIVED", _("RECEIVED")
+
+        def from_sc_string(self, sc_string: str):
+            """Converts a string from SuperCollider to our typed state choices.
+
+            .. todo::
+
+                return type
+            """
+            try:
+                return getattr(self, sc_string.upper())
+            except AttributeError:
+                log.error(f'Could not parse "{sc_string}" state to django state')
+                return self.FAILURE
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -216,7 +237,12 @@ class StreamInstruction(models.Model):
         verbose_name=_("Instruction that gets transmitted via OSC"),
     )
 
-    acknowledged_time = models.DateTimeField()
+    state = models.TextField(
+        verbose_name="Instruction state",
+        max_length=100,
+        choices=InstructionState.choices,
+        default=InstructionState.UNACKNOWLEDGED,
+    )
 
     class Meta:
         ordering = ["-created_date", "stream"]
@@ -224,4 +250,4 @@ class StreamInstruction(models.Model):
         verbose_name_plural = _("Stream Instructions")
 
     def __str__(self) -> str:
-        return f"Stream Instruction {self.instruction_text[0:100]} for {self.stream}"
+        return f"{self.uuid} ({self.state})"
