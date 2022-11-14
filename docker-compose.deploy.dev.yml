@@ -48,6 +48,8 @@ services:
     build:
       context: caster-editor
       dockerfile: Dockerfile.deploy
+      args:
+        - BACKEND_GRAPHQL_URL=https://backend.dev.gencaster.org/graphql
     ports:
       - 3001:3001
     environment:
