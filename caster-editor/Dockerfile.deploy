@@ -1,20 +1,15 @@
-FROM node:18-alpine AS builder
+FROM node:18-alpine
 
 WORKDIR /root/caster-editor
 
 COPY package.json .
 COPY yarn.lock .
+COPY nuxt.config.ts .
 
 RUN yarn install --frozen-lockfile
 
-COPY . .
+COPY src/ /root/caster-editor/src/
 
-ARG BACKEND_GRAPHQL_URL
+RUN yarn build
 
-ENV BACKEND_GRAPHQL_URL=${BACKEND_GRAPHQL_URL}
-
-RUN yarn generate
-
-FROM nginx:1.23-alpine
-
-COPY --from=builder /root/caster-editor/.output/public/ /usr/share/nginx/html
+CMD ["node", ".output/server/index.mjs"]
