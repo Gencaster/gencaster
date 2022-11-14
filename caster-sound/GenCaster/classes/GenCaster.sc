@@ -144,7 +144,7 @@ GenCasterServer {
 		message = message ? ();
 		message[\uuid] = uuid ? 0;
 		message[\status] = status;
-		address = address ? "/ack"
+		address = address ? "/ack";
 
 		if(verbosity<=GenCasterVerbosity.debug, {
 			if(status==GenCasterStatus.beacon, {
