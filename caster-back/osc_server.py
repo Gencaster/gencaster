@@ -34,7 +34,8 @@ def acknowledge_handler(
         )
         return
 
-    stream_instruction.state = StreamInstruction.InstructionState.from_sc_string  # type: ignore
+    stream_instruction.state = StreamInstruction.InstructionState.from_sc_string(message.get("status", "FAILURE"))  # type: ignore
+    stream_instruction.return_value = message.get("returnValue", "")
     stream_instruction.save()
 
 
@@ -54,7 +55,7 @@ def beacon_handler(
     point.janus_out_port = message.get("janusOutPort")
     point.janus_in_room = message.get("janusInRoom")
     point.janus_out_room = message.get("janusOutRoom")
-    point.janus_public_ip = message.get("janusPublicIp")
+    point.janus_public_ip = message.get("janusPublicIP")
     point.sc_name = message.get("name")
     point.save()
 
