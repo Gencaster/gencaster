@@ -277,7 +277,7 @@ class StreamInstruction(models.Model):
     )
 
     class Meta:
-        ordering = ["-created_date", "stream_point"]
+        ordering = ["-modified_date", "stream_point"]
         verbose_name = _("Stream Instruction")
         verbose_name_plural = _("Stream Instructions")
 
