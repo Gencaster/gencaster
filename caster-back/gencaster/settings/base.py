@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "story_graph",
-    "voice",
     "stream",
     "strawberry.django",
     "strawberry_django_plus",

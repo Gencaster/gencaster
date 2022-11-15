@@ -1,3 +1,4 @@
+import io
 import logging
 from datetime import timedelta
 from typing import List
@@ -8,7 +9,7 @@ from django.utils import timezone
 from mixer.backend.django import mixer
 
 from .exceptions import NoStreamAvailable
-from .models import Stream, StreamInstruction, StreamPoint
+from .models import AudioFile, Stream, StreamInstruction, StreamPoint, TextToSpeech
 
 logging.disable(logging.CRITICAL)
 
@@ -159,3 +160,46 @@ class StreamInstructionTestCase(TestCase):
     def test_str(self):
         stream_instruction = self.get_stream_instruction()
         self.assertTrue(str(stream_instruction.uuid) in str(stream_instruction))
+
+
+class AudioFileTestCase(TestCase):
+    @staticmethod
+    def get_audio_file(**kwargs) -> AudioFile:
+        return mixer.blend(
+            AudioFile,
+            **kwargs,
+        )  # type: ignore
+
+    def test_creation(self):
+        file_content = io.BytesIO(b"hello_world")
+        audio_file = AudioFile.from_file(file_content)
+        self.assertEqual(AudioFile.objects.all().count(), 1)
+        self.assertEqual(audio_file.file.read(), b"hello_world")
+
+    def test_str(self):
+        audio_file = self.get_audio_file()
+        self.assertTrue(str(audio_file.file) in str(audio_file))
+
+
+class TextToSpeechTestCase(TestCase):
+    @staticmethod
+    def get_text_to_speech(**kwargs) -> TextToSpeech:
+        return mixer.blend(TextToSpeech, **kwargs)  # type: ignore
+
+    def test_existing_one(self):
+        existing = self.get_text_to_speech(text="hello world")
+        new = TextToSpeech.create_from_text(text="hello world")
+        self.assertEqual(existing, new)
+
+    @mock.patch("stream.models.texttospeech")
+    def test_mock_call(self, tts):
+        tts.TextToSpeechClient.return_value.synthesize_speech.return_value.audio_content = (
+            b"hello_world"
+        )
+        t = TextToSpeech.create_from_text("foo")
+        self.assertEqual(t.audio_file.file.read(), b"hello_world")
+        self.assertEqual(TextToSpeech.objects.all().count(), 1)
+
+    def test_str(self):
+        t = self.get_text_to_speech(text="Hello world")
+        self.assertTrue("Hello world" in str(t))
