@@ -14,8 +14,14 @@ from stream.models import StreamInstruction, StreamPoint
 log = logging.getLogger(__name__)
 
 
+class MalformedOscMessage(Exception):
+    pass
+
+
 def parse_message(osc_message: Any) -> Dict[str, Any]:
     """transforms [k1, v1, k2, v2, ...] to {k1: v1, k2:v2, ...}"""
+    if len(osc_message) % 2 != 0:
+        raise MalformedOscMessage(f"OSC message is not sent as tuples: {osc_message}")
     return dict(zip(osc_message[0::2], osc_message[1::2]))
 
 
