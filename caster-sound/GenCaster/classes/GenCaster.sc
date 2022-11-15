@@ -149,9 +149,7 @@ GenCasterServer {
 		address = address ? "/ack";
 
 		if(verbosity<=GenCasterVerbosity.debug, {
-			if(status==GenCasterStatus.beacon, {
-				"BEACON".postln;
-			}, {
+			if(status!=GenCasterStatus.beacon, {
 				"%\t%\t%".format(status, message.uuid, message).postln;
 			});
 		});
@@ -215,6 +213,7 @@ GenCasterServer {
 
 	postStartServer {
 		"Finished booting server".postln;
+		"Start beacon".postln;
 		this.beacon.play;
 		this.instructionReceiver;
 	}
