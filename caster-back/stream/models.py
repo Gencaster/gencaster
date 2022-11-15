@@ -1,8 +1,6 @@
 import logging
 import uuid
-from dataclasses import dataclass
 from datetime import timedelta
-from typing import Any, Dict
 
 from django.contrib import admin
 from django.db import models
@@ -13,22 +11,6 @@ from pythonosc.udp_client import SimpleUDPClient
 from .exceptions import NoStreamAvailable
 
 log = logging.getLogger(__name__)
-
-
-@dataclass
-class OSCMessage:
-    address: str
-    data: Any
-
-    @classmethod
-    def from_dict(cls, address: str, data: Dict):
-        # todo: assert depth = 1
-        # transform {k1: v1, k2: v2, ...} to [(k1, v1), (k2, v2), ...]
-        tuples = [(k, v) for k, v in data.items()]
-        # and now to [k1, v1, k2, v2, ...]
-        data_list = [item for sublist in tuples for item in sublist]
-
-        return cls(address=address, data=data_list)
 
 
 class StreamPointManager(models.Manager):
@@ -144,11 +126,6 @@ class StreamPoint(models.Model):
         if not self.last_live:
             return False
         return (timezone.now() - self.last_live).seconds < 60
-
-    def send_osc_message(self, osc_message: OSCMessage):
-        SimpleUDPClient(self.host, self.port).send_message(
-            address=osc_message.address, value=osc_message.data
-        )
 
     class Meta:
         unique_together = ["host", "port"]
