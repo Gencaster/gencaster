@@ -75,7 +75,7 @@ dispatcher = Dispatcher()
 dispatcher.map("/ack", acknowledge_handler, needs_reply_address=True)  # type: ignore
 dispatcher.map("/beacon", beacon_handler, needs_reply_address=True)  # type: ignore
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     port = int(os.environ["BACKEND_OSC_PORT"])
     server = BlockingOSCUDPServer(("0.0.0.0", port), dispatcher)
     try:
