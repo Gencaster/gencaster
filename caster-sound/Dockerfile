@@ -161,4 +161,6 @@ COPY caster-sound.conf /root/caster-sound.conf
 
 COPY sc.scd /root/sc.scd
 
+COPY GenCaster/ /usr/local/share/SuperCollider/Extensions/GenCaster/
+
 CMD ["/usr/bin/supervisord", "-c", "/root/caster-sound.conf"]

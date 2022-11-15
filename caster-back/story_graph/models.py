@@ -21,6 +21,11 @@ class Graph(models.Model):
         unique=True,
     )
 
+    async def get_entry_node(self) -> "Node":
+        # @todo need to return the "Main" node
+        # which shall be our entry node
+        return await self.nodes.afirst()
+
     class Meta:
         verbose_name = "Graph"
         verbose_name_plural = "Graphs"

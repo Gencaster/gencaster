@@ -3,6 +3,11 @@ from django.contrib import admin
 from .models import Edge, Graph, GraphSession, Node, ScriptCell
 
 
+class NodeInline(admin.TabularInline):
+    model = Node
+    extra: int = 0
+
+
 class InEdgeInline(admin.TabularInline):
     model = Edge
     extra = 1
@@ -22,7 +27,7 @@ class ScriptCellInline(admin.TabularInline):
 
 @admin.register(Graph)
 class GraphAdmin(admin.ModelAdmin):
-    pass
+    inlines = [NodeInline]
 
 
 @admin.register(Node)

@@ -1,8 +1,6 @@
 import logging
 import uuid
-from dataclasses import dataclass
 from datetime import timedelta
-from typing import Any, Dict
 
 from django.contrib import admin
 from django.db import models
@@ -13,22 +11,6 @@ from pythonosc.udp_client import SimpleUDPClient
 from .exceptions import NoStreamAvailable
 
 log = logging.getLogger(__name__)
-
-
-@dataclass
-class OSCMessage:
-    address: str
-    data: Any
-
-    @classmethod
-    def from_dict(cls, address: str, data: Dict):
-        # todo: assert depth = 1
-        # transform {k1: v1, k2: v2, ...} to [(k1, v1), (k2, v2), ...]
-        tuples = [(k, v) for k, v in data.items()]
-        # and now to [k1, v1, k2, v2, ...]
-        data_list = [item for sublist in tuples for item in sublist]
-
-        return cls(address=address, data=data_list)
 
 
 class StreamPointManager(models.Manager):
@@ -116,6 +98,26 @@ class StreamPoint(models.Model):
         null=True,
     )
 
+    @property
+    def client(self) -> SimpleUDPClient:
+        return SimpleUDPClient(address=self.host, port=self.port)
+
+    # todo make this async?
+    def send_raw_instruction(self, instruction_text: str) -> None:
+        instruction: StreamInstruction = StreamInstruction.objects.create(
+            stream_point=self,
+            instruction_text=instruction_text,
+        )
+        self.send_stream_instruction(instruction)
+
+    def send_stream_instruction(self, instruction: "StreamInstruction") -> None:
+        self.client.send_message(
+            address="/instruction",
+            value=[str(instruction.uuid), instruction.instruction_text],
+        )
+        instruction.state = StreamInstruction.InstructionState.SENT
+        instruction.save()
+
     @admin.display(
         boolean=True,
         description=_("Live signal within last 60 sec"),
@@ -124,11 +126,6 @@ class StreamPoint(models.Model):
         if not self.last_live:
             return False
         return (timezone.now() - self.last_live).seconds < 60
-
-    def send_osc_message(self, osc_message: OSCMessage):
-        SimpleUDPClient(self.host, self.port).send_message(
-            address=osc_message.address, value=osc_message.data
-        )
 
     class Meta:
         unique_together = ["host", "port"]
@@ -196,6 +193,29 @@ class Stream(models.Model):
 
 
 class StreamInstruction(models.Model):
+    class InstructionState(models.TextChoices):
+        SUCCESS = "SUCCESS", _("SUCCESS")
+        FAILURE = "FAILURE", _("FAILURE")
+        READY = "READY", _("READY")
+        SENT = "SENT", _("SENT")
+        UNACKNOWLEDGED = "UNACKNOWLEDGED", _("UNACKNOWLEDGED")
+        FINISHED = "FINISHED", _("FINISHED")
+        RECEIVED = "RECEIVED", _("RECEIVED")
+
+        @classmethod
+        def from_sc_string(cls, sc_string: str):
+            """Converts a string from SuperCollider to our typed state choices.
+
+            .. todo::
+
+                return type
+            """
+            try:
+                return getattr(cls, sc_string.upper())
+            except AttributeError:
+                log.error(f'Could not parse "{sc_string}" state to django state')
+                return cls.FAILURE
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -206,22 +226,37 @@ class StreamInstruction(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 
-    stream = models.ForeignKey(
-        "stream.Stream",
+    stream_point = models.ForeignKey(
+        "stream.StreamPoint",
         on_delete=models.CASCADE,
         related_name="instructions",
+        # @todo remove null
+        null=True,
     )
 
     instruction_text = models.TextField(
         verbose_name=_("Instruction that gets transmitted via OSC"),
     )
 
-    acknowledged_time = models.DateTimeField()
+    state = models.TextField(
+        verbose_name="Instruction state",
+        max_length=100,
+        choices=InstructionState.choices,
+        default=InstructionState.UNACKNOWLEDGED,
+        editable=False,
+    )
+
+    return_value = models.TextField(
+        verbose_name="Return value from statement",
+        blank=True,
+        default="",
+        editable=False,
+    )
 
     class Meta:
-        ordering = ["-created_date", "stream"]
+        ordering = ["-modified_date", "stream_point"]
         verbose_name = _("Stream Instruction")
         verbose_name_plural = _("Stream Instructions")
 
     def __str__(self) -> str:
-        return f"Stream Instruction {self.instruction_text[0:100]} for {self.stream}"
+        return f"{self.uuid} ({self.state})"

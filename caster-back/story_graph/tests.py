@@ -5,11 +5,30 @@ from mixer.backend.django import mixer
 from .models import Edge, Graph, Node
 
 
+class GraphTestCase(TransactionTestCase):
+    @staticmethod
+    def get_graph(**kwargs) -> Graph:
+        return mixer.blend(Graph, **kwargs)  # type: ignore
+
+
+class NodeTestCase(TransactionTestCase):
+    @staticmethod
+    def get_node(**kwargs) -> Node:
+        return mixer.blend(
+            Node,
+            **kwargs,
+        )  # type: ignore
+
+
 class EdgeTestCase(TransactionTestCase):
     def setUp(self) -> None:
         self.graph: Graph = mixer.blend(Graph)
         self.in_node: Node = mixer.blend(Node, graph=self.graph)
         self.out_node: Node = mixer.blend(Node, graph=self.graph)
+
+    @staticmethod
+    def get_edge(**kwargs) -> Edge:
+        return mixer.blend(Edge, **kwargs)  # type: ignore
 
     def test_fail_unique(self):
         Edge(

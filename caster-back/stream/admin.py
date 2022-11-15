@@ -40,4 +40,18 @@ class StreamPointAdmin(admin.ModelAdmin):
 
 @admin.register(StreamInstruction)
 class StreamInstructionAdmin(admin.ModelAdmin):
-    pass
+    list_display = [
+        "uuid",
+        "stream_point",
+        "state",
+    ]
+
+    list_filter = [
+        "stream_point",
+        "state",
+    ]
+
+    readonly_fields = [
+        "state",
+        "return_value",
+    ]
