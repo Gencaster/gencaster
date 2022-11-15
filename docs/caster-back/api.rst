@@ -17,11 +17,6 @@ Story graph
 
 .. automodule:: story_graph
 
-Voice
------
-
-.. automodule:: voice
-
 
 Global model graph
 ------------------
