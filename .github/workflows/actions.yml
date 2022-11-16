@@ -54,13 +54,13 @@ jobs:
         with:
           python-version: "3.8"
       - run: ./caster-back/run_tests.sh
-      - uses: actions/upload-artifact@v2
+      - name: Backend Test Report
+        uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: test-results
-          path: |
-            caster-back/tests.xml
-            caster-back/mypy-tests.xml
+          name: Test reporting
+          path: caster-back/mypy-tests.xml,caster-back/tests.xml
+          reporter: java-junit
       - uses: 5monkeys/cobertura-action@master
         with:
           path: caster-back/coverage.xml
