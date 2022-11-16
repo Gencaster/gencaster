@@ -18,8 +18,8 @@ class SchemaTestCase(TestCase):
         return m
 
     NODE_MUTATION = """
-        mutation TestMutation($name:String!, $graphUuid:UUID!) {
-            addNode(newNode: {name: $name, graphUuid: $graphUuid})
+        mutation TestMutation($name:String!, $graphUuid:UUID!, $color:String) {
+            addNode(newNode: {name: $name, graphUuid: $graphUuid, color: $color})
         }
     """
 
@@ -48,6 +48,55 @@ class SchemaTestCase(TestCase):
 
         self.assertGreaterEqual(len(resp.errors), 1)  # type: ignore
         self.assertEqual(await Node.objects.all().acount(), 0)
+
+    @async_to_sync
+    async def test_add_node_with_color(self):
+        graph = await sync_to_async(GraphTestCase.get_graph)()
+
+        resp = await schema.execute(
+            self.NODE_MUTATION,
+            variable_values={
+                "name": "foo",
+                "graphUuid": str(graph.uuid),
+                "color": "#aaa",
+            },
+            context_value=self.get_login_context(),
+        )
+        node = await Node.objects.afirst()
+        self.assertIsNotNone(node)
+        self.assertEqual(node.color, "#aaa")  # type: ignore
+
+    NODE_UPDATE_MUTATION = """
+    mutation updateNode($nodeUuid: UUID!, $name: String, $color: String, $positionX: Float, $positionY: Float) {
+        updateNode(
+            nodeUpdate: {uuid: $nodeUuid, name: $name, color: $color, positionX: $positionX, positionY: $positionY}
+        )
+    }
+    """
+
+    @async_to_sync
+    async def test_update_node(self):
+        node: Node = await sync_to_async(NodeTestCase.get_node)()
+
+        resp = await schema.execute(
+            self.NODE_UPDATE_MUTATION,
+            variable_values={
+                "nodeUuid": str(node.uuid),
+                "name": "foo",
+                "positionX": 20.0,
+                "positionY": 40.0,
+                "color": "#aaa",
+            },
+            context_value=self.get_login_context(),
+        )
+
+        self.assertEqual(await Node.objects.all().acount(), 1)
+        node_db: Node = await Node.objects.afirst()  # type: ignore
+        self.assertIsNotNone(node_db)
+        self.assertEqual(node_db.name, "foo")
+        self.assertEqual(node_db.position_x, 20.0)
+        self.assertEqual(node_db.position_y, 40.0)
+        self.assertEqual(node_db.color, "#aaa")
 
     @async_to_sync
     async def test_add_edge(self):
