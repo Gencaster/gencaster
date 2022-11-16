@@ -64,6 +64,7 @@ jobs:
             caster-back/requirements*.txt
       - run: ./caster-back/run_tests.sh
       - uses: 5monkeys/cobertura-action@master
+        if: success() || failure()
         with:
           path: caster-back/coverage.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
