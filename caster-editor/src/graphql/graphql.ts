@@ -64,6 +64,7 @@ export type Mutation = {
   addNode?: Maybe<Scalars['Void']>;
   deleteEdge?: Maybe<Scalars['Void']>;
   deleteNode?: Maybe<Scalars['Void']>;
+  updateNode?: Maybe<Scalars['Void']>;
 };
 
 
@@ -86,18 +87,37 @@ export type MutationDeleteNodeArgs = {
   nodeUuid: Scalars['UUID'];
 };
 
+
+export type MutationUpdateNodeArgs = {
+  nodeUpdate: NodeUpdate;
+};
+
 export type Node = {
   __typename?: 'Node';
+  color: Scalars['String'];
   inEdges: Array<Edge>;
   name: Scalars['String'];
   outEdges: Array<Edge>;
+  positionX: Scalars['Float'];
+  positionY: Scalars['Float'];
   scriptCells: Array<ScriptCell>;
   uuid: Scalars['UUID'];
 };
 
 export type NodeInput = {
+  color?: InputMaybe<Scalars['String']>;
   graphUuid: Scalars['UUID'];
   name: Scalars['String'];
+  positionX?: InputMaybe<Scalars['Float']>;
+  positionY?: InputMaybe<Scalars['Float']>;
+};
+
+export type NodeUpdate = {
+  color?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  positionX?: InputMaybe<Scalars['Float']>;
+  positionY?: InputMaybe<Scalars['Float']>;
+  uuid: Scalars['UUID'];
 };
 
 export type Query = {
@@ -157,16 +177,6 @@ export type StreamPointFilter = {
   uuid?: InputMaybe<UuidFilterLookup>;
 };
 
-export type Subscription = {
-  __typename?: 'Subscription';
-  count: Scalars['Int'];
-};
-
-
-export type SubscriptionCountArgs = {
-  target?: Scalars['Int'];
-};
-
 export type UuidFilterLookup = {
   contains?: InputMaybe<Scalars['UUID']>;
   endsWith?: InputMaybe<Scalars['UUID']>;
@@ -220,10 +230,24 @@ export type CreateEdgeMutation = { __typename?: 'Mutation', addEdge?: any | null
 export type CreateNodeMutationVariables = Exact<{
   name: Scalars['String'];
   graphUuid: Scalars['UUID'];
+  color?: InputMaybe<Scalars['String']>;
+  positionX?: InputMaybe<Scalars['Float']>;
+  positionY?: InputMaybe<Scalars['Float']>;
 }>;
 
 
 export type CreateNodeMutation = { __typename?: 'Mutation', addNode?: any | null };
+
+export type UpdateNodeMutationVariables = Exact<{
+  nodeUuid: Scalars['UUID'];
+  name?: InputMaybe<Scalars['String']>;
+  color?: InputMaybe<Scalars['String']>;
+  positionX?: InputMaybe<Scalars['Float']>;
+  positionY?: InputMaybe<Scalars['Float']>;
+}>;
+
+
+export type UpdateNodeMutation = { __typename?: 'Mutation', updateNode?: any | null };
 
 export type DeleteNodeMutationVariables = Exact<{
   nodeUuid: Scalars['UUID'];
@@ -321,13 +345,26 @@ export function useCreateEdgeMutation() {
   return Urql.useMutation<CreateEdgeMutation, CreateEdgeMutationVariables>(CreateEdgeDocument);
 };
 export const CreateNodeDocument = gql`
-    mutation createNode($name: String!, $graphUuid: UUID!) {
-  addNode(newNode: {name: $name, graphUuid: $graphUuid})
+    mutation createNode($name: String!, $graphUuid: UUID!, $color: String, $positionX: Float, $positionY: Float) {
+  addNode(
+    newNode: {name: $name, graphUuid: $graphUuid, color: $color, positionX: $positionX, positionY: $positionY}
+  )
 }
     `;
 
 export function useCreateNodeMutation() {
   return Urql.useMutation<CreateNodeMutation, CreateNodeMutationVariables>(CreateNodeDocument);
+};
+export const UpdateNodeDocument = gql`
+    mutation updateNode($nodeUuid: UUID!, $name: String, $color: String, $positionX: Float, $positionY: Float) {
+  updateNode(
+    nodeUpdate: {uuid: $nodeUuid, name: $name, color: $color, positionX: $positionX, positionY: $positionY}
+  )
+}
+    `;
+
+export function useUpdateNodeMutation() {
+  return Urql.useMutation<UpdateNodeMutation, UpdateNodeMutationVariables>(UpdateNodeDocument);
 };
 export const DeleteNodeDocument = gql`
     mutation deleteNode($nodeUuid: UUID!) {

@@ -53,8 +53,16 @@ mutation createEdge($nodeInUuid:UUID!, $nodeOutUuid:UUID!) {
   addEdge(newEdge: {nodeInUuid: $nodeInUuid, nodeOutUuid: $nodeOutUuid})
 }
 
-mutation createNode($name:String!, $graphUuid:UUID!) {
-  addNode(newNode: {name: $name, graphUuid: $graphUuid})
+mutation createNode($name: String!, $graphUuid: UUID!, $color: String, $positionX: Float, $positionY: Float) {
+  addNode(
+    newNode: {name: $name, graphUuid: $graphUuid, color: $color, positionX: $positionX, positionY: $positionY}
+  )
+}
+
+mutation updateNode($nodeUuid: UUID!, $name: String, $color: String, $positionX: Float, $positionY: Float) {
+  updateNode(
+    nodeUpdate: {uuid: $nodeUuid, name: $name, color: $color, positionX: $positionX, positionY: $positionY}
+  )
 }
 
 mutation deleteNode($nodeUuid: UUID!) {

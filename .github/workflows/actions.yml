@@ -35,6 +35,11 @@ jobs:
       - uses: actions/setup-python@v3
         with:
           python-version: "3.8"
+          cache: "pip"
+          cache-dependency-path: |
+            caster-back/setup.cfg
+            caster-back/requirements*.txt
+            ./requirements-docs.txt
       - run: pip3 install -r requirements-docs.txt
       - run: make -C docs html
       - uses: actions/upload-artifact@v2
@@ -53,6 +58,10 @@ jobs:
       - uses: actions/setup-python@v3
         with:
           python-version: "3.8"
+          cache: "pip"
+          cache-dependency-path: |
+            caster-back/setup.cfg
+            caster-back/requirements*.txt
       - run: ./caster-back/run_tests.sh
       - name: Backend Test Report
         uses: dorny/test-reporter@v1

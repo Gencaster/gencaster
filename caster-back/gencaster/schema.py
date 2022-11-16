@@ -10,7 +10,7 @@ from strawberry.types import Info
 from strawberry_django.fields.field import StrawberryDjangoField
 
 import story_graph.models as story_graph_models
-from story_graph.types import EdgeInput, Graph, Node, NodeInput
+from story_graph.types import EdgeInput, Graph, Node, NodeInput, NodeUpdate
 from stream.types import StreamPoint
 
 
@@ -49,9 +49,32 @@ class Mutation:
         graph = await sync_to_async(story_graph_models.Graph.objects.get)(
             uuid=new_node.graph_uuid
         )
-        node = await sync_to_async(story_graph_models.Node.objects.create)(
-            name=new_node.name, graph=graph
+        node = story_graph_models.Node(
+            name=new_node.name,
+            graph=graph,
         )
+
+        # transfer from new_node to node model if attribute is not none
+        for field in ["position_x", "position_y", "color"]:
+            if new_value := getattr(new_node, field):
+                setattr(node, field, new_value)
+
+        await sync_to_async(node.save)()
+
+        return None
+
+    @strawberry.mutation
+    async def update_node(self, info: Info, node_update: NodeUpdate) -> None:
+        await graphql_check_authenticated(info)
+
+        node = await story_graph_models.Node.objects.aget(uuid=node_update.uuid)
+
+        for field in ["position_x", "position_y", "color", "name"]:
+            if new_value := getattr(node_update, field):
+                setattr(node, field, new_value)
+
+        await sync_to_async(node.save)()
+
         return None
 
     @strawberry.mutation
