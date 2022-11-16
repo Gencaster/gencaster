@@ -1,8 +1,8 @@
 -r requirements-dev.txt
 
 mixer==7.2.2
-mypy==0.950
+mypy==0.991
 coverage==6.4
 black==22.3.0
 unittest-xml-reporting==3.2.0
-django-stubs==1.11.0
+django-stubs==1.13.0
