@@ -19,8 +19,7 @@ build-graphs:
 	echo "Start building model graph images"
 	cd ../caster-back && python manage.py graph_models --pydot -g -o ../docs/graphs/stream.png stream
 	cd ../caster-back && python manage.py graph_models --pydot -g -o ../docs/graphs/story_graph.png story_graph
-	cd ../caster-back && python manage.py graph_models --pydot -g -o ../docs/graphs/voice.png voice
-	cd ../caster-back && python manage.py graph_models --pydot -g -o ../docs/graphs/global.png stream story_graph voice
+	cd ../caster-back && python manage.py graph_models --pydot -g -o ../docs/graphs/global.png stream story_graph
 	echo "Finished building model graph images"
 
 # Catch-all target: route all unknown targets to Sphinx using the new

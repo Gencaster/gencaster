@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Stream, StreamInstruction, StreamPoint
+from .models import AudioFile, Stream, StreamInstruction, StreamPoint, TextToSpeech
 
 
 @admin.register(Stream)
@@ -54,4 +54,46 @@ class StreamInstructionAdmin(admin.ModelAdmin):
     readonly_fields = [
         "state",
         "return_value",
+    ]
+
+
+@admin.register(AudioFile)
+class AudioFileAdmin(admin.ModelAdmin):
+    list_display = [
+        "uuid",
+        "created_date",
+        "file",
+    ]
+
+    readonly_fields = [
+        "uuid",
+        "created_date",
+        "modified_date",
+    ]
+
+    list_filter = [
+        "created_date",
+    ]
+
+
+@admin.register(TextToSpeech)
+class TextToSpeechAdmin(admin.ModelAdmin):
+    list_display = (
+        "uuid",
+        "created_date",
+        "text",
+        "voice_name",
+    )
+
+    readonly_fields = [
+        "uuid",
+        "created_date",
+        "modified_date",
+        "text",
+        "voice_name",
+    ]
+
+    list_filter = [
+        "created_date",
+        "voice_name",
     ]
