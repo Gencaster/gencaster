@@ -3,7 +3,7 @@ schema: 'http://127.0.0.1:8081/graphql'
 documents: '../caster-back/*.gql'
 
 generates:
-  graphql/graphql.ts:
+  src/graphql/graphql.ts:
     plugins:
       - typescript
       - typescript-operations

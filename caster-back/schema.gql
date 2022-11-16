@@ -41,6 +41,7 @@ input IntFilterLookup {
 
 type Mutation {
   addNode(newNode: NodeInput!): Void
+  updateNode(nodeUpdate: NodeUpdate!): Void
   addEdge(newEdge: EdgeInput!): Void
   deleteEdge(edgeUuid: UUID!): Void
   deleteNode(nodeUuid: UUID!): Void
@@ -49,6 +50,9 @@ type Mutation {
 type Node {
   uuid: UUID!
   name: String!
+  color: String!
+  positionX: Float!
+  positionY: Float!
   inEdges: [Edge!]!
   outEdges: [Edge!]!
   scriptCells: [ScriptCell!]!
@@ -57,6 +61,17 @@ type Node {
 input NodeInput {
   name: String!
   graphUuid: UUID!
+  positionX: Float = null
+  positionY: Float = null
+  color: String = null
+}
+
+input NodeUpdate {
+  uuid: UUID!
+  name: String = null
+  positionX: Float = null
+  positionY: Float = null
+  color: String = null
 }
 
 type Query {
@@ -91,10 +106,6 @@ type StreamPoint {
 input StreamPointFilter {
   uuid: UUIDFilterLookup
   janusInPort: IntFilterLookup
-}
-
-type Subscription {
-  count(target: Int! = 100): Int!
 }
 
 scalar UUID

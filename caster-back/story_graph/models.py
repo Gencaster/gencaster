@@ -49,6 +49,22 @@ class Node(models.Model):
         default="",
     )
 
+    color = models.CharField(
+        verbose_name=_("HEX color of the node in graph canvas"),
+        max_length=16,
+        default="#fff",
+    )
+
+    position_x = models.FloatField(
+        help_text=_("x-Position in graph canvas"),
+        default=0.0,
+    )
+
+    position_y = models.FloatField(
+        help_text=_("y-Position in graph canvas"),
+        default=0.0,
+    )
+
     graph = models.ForeignKey(
         Graph,
         related_name="nodes",
