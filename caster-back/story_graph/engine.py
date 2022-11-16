@@ -12,13 +12,22 @@ class Engine:
         self._current_node: Node
 
     async def start(self):
-        self._current_node: Node = await self.graph.get_entry_node()
+        if new_node := await self.graph.get_entry_node():
+            self._current_node = new_node
+        else:
+            print("Could not find entry node :/")
+            return
 
         for _ in range(10):
             print(self._current_node)
-            self._current_node = (
-                await Node.objects.filter(out_edges__out_node=self._current_node)
+            if (
+                new_node := await Node.objects.filter(
+                    out_edges__out_node=self._current_node
+                )
                 .order_by("?")
                 .afirst()
-            )
+            ):
+                self._current_node = new_node
+            else:
+                print("Got nowhere to go?")
             await asyncio.sleep(0.5)

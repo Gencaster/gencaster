@@ -1,4 +1,5 @@
 import uuid
+from typing import Optional
 
 from django.db import models
 from django.utils.translation import gettext as _
@@ -21,10 +22,10 @@ class Graph(models.Model):
         unique=True,
     )
 
-    async def get_entry_node(self) -> "Node":
+    async def get_entry_node(self) -> Optional["Node"]:
         # @todo need to return the "Main" node
         # which shall be our entry node
-        return await self.nodes.afirst()
+        return await self.nodes.afirst()  # type: ignore
 
     class Meta:
         verbose_name = "Graph"

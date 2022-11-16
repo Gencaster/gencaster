@@ -60,3 +60,10 @@ graphql-schema:
 	docker compose -f docker-compose.yml -f docker-compose.local.yml exec backend ./generate_graphql_schema.sh
 	cd caster-editor && yarn codegen
 	@echo "Sucessfully generated new schema in caster-editor/src/graphql/graphql.ts"
+
+test-backend: venv virtualenv
+	. caster-back/venv/bin/activate && (\
+		cd caster-back; \
+		export DJANGO_SETTINGS_MODULE="gencaster.settings.dev_local"; \
+		./run_tests.sh; \
+	)

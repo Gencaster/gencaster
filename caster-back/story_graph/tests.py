@@ -14,7 +14,7 @@ class GraphTestCase(TransactionTestCase):
 class NodeTestCase(TransactionTestCase):
     @staticmethod
     def get_node(**kwargs) -> Node:
-        return mixer.blend(
+        return mixer.blend(  # type: ignore
             Node,
             **kwargs,
         )  # type: ignore
