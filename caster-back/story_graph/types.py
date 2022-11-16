@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, Optional
 
 import strawberry
 import strawberry.django
@@ -12,6 +12,9 @@ from . import models
 class NodeInput:
     name: str
     graph_uuid: uuid.UUID
+    position_x: Optional[float]
+    position_y: Optional[float]
+    color: Optional[str]
     # script_cells: List["ScriptCell"]
 
 
@@ -36,6 +39,10 @@ class Graph:
 class Node:
     uuid: auto
     name: auto
+    color: auto
+    position_x: auto
+    position_y: auto
+
     in_edges: List["Edge"]
     out_edges: List["Edge"]
     script_cells: List["ScriptCell"]
