@@ -12,10 +12,19 @@ from . import models
 class NodeInput:
     name: str
     graph_uuid: uuid.UUID
-    position_x: Optional[float]
-    position_y: Optional[float]
-    color: Optional[str]
+    position_x: Optional[float] = None
+    position_y: Optional[float] = None
+    color: Optional[str] = None
     # script_cells: List["ScriptCell"]
+
+
+@strawberry.input
+class NodeUpdate:
+    uuid: uuid.UUID
+    name: Optional[str] = None
+    position_x: Optional[float] = None
+    position_y: Optional[float] = None
+    color: Optional[str] = None
 
 
 @strawberry.input
