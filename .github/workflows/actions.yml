@@ -63,6 +63,11 @@ jobs:
             caster-back/setup.cfg
             caster-back/requirements*.txt
       - run: ./caster-back/run_tests.sh
+      - uses: 5monkeys/cobertura-action@master
+        with:
+          path: caster-back/coverage.xml
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          minimum_coverage: 50
       - name: Backend Test Report
         uses: dorny/test-reporter@v1
         if: success() || failure()
@@ -70,11 +75,6 @@ jobs:
           name: Test reporting
           path: caster-back/mypy-tests.xml,caster-back/tests.xml
           reporter: java-junit
-      - uses: 5monkeys/cobertura-action@master
-        with:
-          path: caster-back/coverage.xml
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          minimum_coverage: 50
 
   deploy-dev:
     if: success() && github.ref == 'refs/heads/main' # only deploy main
