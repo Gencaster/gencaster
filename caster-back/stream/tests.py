@@ -20,7 +20,7 @@ class StreamPointTestCase(TestCase):
 
     @staticmethod
     def get_stream_point(last_live_sec=1) -> StreamPoint:
-        return mixer.blend(
+        return mixer.blend(  # type: ignore
             StreamPoint, last_live=timezone.now() - timedelta(seconds=last_live_sec)
         )  # type: ignore
 
@@ -39,7 +39,7 @@ class StreamPointTestCase(TestCase):
             StreamPoint, last_live=timezone.now() - timedelta(seconds=120)
         )
         self.assertEqual(
-            StreamPoint.objects.free_stream_points().first().uuid, stream_point.uuid
+            StreamPoint.objects.free_stream_points().first().uuid, stream_point.uuid  # type: ignore
         )
         self.assertTrue(stream_point.is_online())
 
@@ -92,7 +92,7 @@ class StreamPointTestCase(TestCase):
 
 class StreamTestCase(TestCase):
     def get_stream(self, **kwargs) -> Stream:
-        return mixer.blend(
+        return mixer.blend(  # type: ignore
             Stream,
             **kwargs,
         )  # type: ignore
@@ -165,7 +165,7 @@ class StreamInstructionTestCase(TestCase):
 class AudioFileTestCase(TestCase):
     @staticmethod
     def get_audio_file(**kwargs) -> AudioFile:
-        return mixer.blend(
+        return mixer.blend(  # type: ignore
             AudioFile,
             **kwargs,
         )  # type: ignore

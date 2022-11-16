@@ -16,7 +16,7 @@ from .exceptions import NoStreamAvailable
 log = logging.getLogger(__name__)
 
 
-class StreamPointManager(models.Manager):
+class StreamPointManager(models.Manager["StreamPoint"]):
     def free_stream_points(self) -> models.QuerySet["StreamPoint"]:
         last_online_time = timezone.now() - timedelta(seconds=60)
         return self.exclude(streams__active=True).filter(last_live__gt=last_online_time)

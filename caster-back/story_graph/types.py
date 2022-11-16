@@ -41,7 +41,7 @@ class Graph:
 
     @strawberry.django.field
     def edges(self) -> List["Edge"]:
-        return models.Edge.objects.filter(in_node__graph=self)
+        return models.Edge.objects.filter(in_node__graph=self)  # type: ignore
 
 
 @strawberry.django.type(models.Node)
