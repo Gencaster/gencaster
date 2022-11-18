@@ -46,24 +46,21 @@ const GraphSettings = {
         color: "black",
         dasharray: "0",
         linecap: "butt",
-        animate: false,
-        animationSpeed: 50
+        animate: false
       },
       hover: {
         width: 4,
         color: "black",
         dasharray: "0",
         linecap: "butt",
-        animate: false,
-        animationSpeed: 50
+        animate: false
       },
       selected: {
         width: 3,
-        color: "#dd8800",
-        dasharray: "6",
-        linecap: "round",
-        animate: false,
-        animationSpeed: 50
+        color: "#ADFF00",
+        dasharray: "0",
+        linecap: "butt",
+        animate: false
       },
       gap: 5,
       type: "straight",
