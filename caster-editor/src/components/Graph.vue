@@ -22,30 +22,44 @@ import { Edit } from '@element-plus/icons-vue';
               <el-radio-button label="test">
                 Test
               </el-radio-button>
+              <el-radio-button label="dev">
+                Dev
+              </el-radio-button>
             </el-radio-group>
           </div>
           <div class="menu-items">
             {{ data.graph.name }}
           </div>
           <div class="menu-items">
-            <button class="unstyled underline">
+            <button class="unstyled">
               Save
             </button>
-            <button class="unstyled underline">
+            <button class="unstyled">
               Exit
             </button>
           </div>
         </div>
-        <div class="level level-2" />
+        <div class="level level-2">
+          <div v-if="menuLevel1 === 'edit'" class="left">
+            <button class="unstyled" @click="addNode()">
+              Add Node
+            </button>
+            <button class="unstyled" :disabled="selectedNodes.length !== 2" @click="addEdge()">
+              Add Connection
+            </button>
+            <button class="unstyled" @click="removeAny()">
+              Remove
+            </button>
+            <button class="unstyled" @click="refresh()">
+              Refresh
+            </button>
+          </div>
+          <div v-if="menuLevel1 === 'test'" />
+        </div>
       </div>
       <div class="menu-spacer" />
 
-      <h1>
-        Editing: <b>{{ data.graph.name }}</b>
-        <br>
-        <br>
-      </h1>
-      <div class="demo-control-panel">
+      <!-- <div class="demo-control-panel">
         <div class="control">
           <p><b>Controls</b></p>
           <div class="row">
@@ -71,17 +85,18 @@ import { Edit } from '@element-plus/icons-vue';
             </el-button>
           </div>
         </div>
-      </div>
-      <br>
+      </div> -->
+
       <v-network-graph
         v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
         :nodes="nodes" :edges="transformEdges(data.graph.edges)" :configs="configs"
       />
 
       <div class="stats">
-        <p><b>Stats</b></p>
-        <p>Nodes: {{ data.graph.nodes.length }}</p>
-        <p>Edges: {{ data.graph.edges.length }}</p>
+        <p>
+          Nodes: {{ data.graph.nodes.length }} &nbsp;
+          Edges: {{ data.graph.edges.length }}
+        </p>
       </div>
     </div>
   </div>
@@ -241,6 +256,10 @@ export default {
         this.refresh();
         console.log("Added edge");
       });
+    },
+
+    removeAny() {
+
     },
 
     removeNode() {

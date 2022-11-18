@@ -16,14 +16,14 @@
     font-size: 15px;
     padding: 4px 8px 4px 8px;
     margin: 0;
-    color: #{$grey};
+    color: #{$black};
     background-color: transparent;
     border: none;
     border-left: none !important;
 
     &:hover {
       color: #{$black};
-      // background-color: $grey;
+      background-color: $grey;
     }
     
   }

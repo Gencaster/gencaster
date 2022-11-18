@@ -29,14 +29,36 @@
       align-items: center;
     }
 
-    button.unstyled.underline {
+
+    .margin-left {
+      margin-left: $buttonMargin;
+    }
+
+    .margin-right {
+      margin-right: $buttonMargin;
+    }
+
+    button.unstyled {
       background-color: transparent;
       border-radius: 0;
       border: 0;
-      text-decoration: underline;
       cursor: pointer;
       padding: 0;
-      margin-left: $buttonMargin;
+      padding-left: 8px;
+      padding-right: 8px;
+      border-radius: 2px;
+      height: 23px;
+
+      transition: all 250ms;
+
+
+      &:hover {
+        background-color: $grey;
+      }
+    }
+
+    button.underline {
+      text-decoration: underline;
 
       &:hover {
         text-decoration: none;
