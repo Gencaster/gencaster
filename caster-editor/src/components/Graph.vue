@@ -59,39 +59,13 @@
       <elementsLoading />
     </div>
     <div v-else>
-      <!-- <div class="demo-control-panel">
-        <div class="control">
-          <p><b>Controls</b></p>
-          <div class="row">
-            <el-button text bg @click="refresh()">
-              Force Refresh
-            </el-button>
-
-            <el-input v-model="newNodeName" placeholder="New Node Name" />
-            <el-button text bg @click="addNode()">
-              Add Node
-            </el-button>
-            <el-button text bg :disabled="selectedNodes.length !== 2" @click="addEdge()">
-              Add Edge
-            </el-button>
-          </div>
-
-          <div class="row">
-            <el-button text bg :disabled="selectedNodes.length === 0" @click="removeNode()">
-              Remove Node
-            </el-button>
-            <el-button text bg :disabled="selectedEdges.length === 0" @click="removeEdge()">
-              Remove Edge
-            </el-button>
-          </div>
-        </div>
-      </div> -->
-
+      <p v-if="showGraphData">
+        {{ data.graph }}
+      </p>
       <v-network-graph
         v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
         :nodes="nodes" :edges="edges" :configs="configs"
       />
-      <p>{{ data.graph }}</p>
 
       <div class="stats">
         <p>
@@ -156,7 +130,10 @@ export default {
       defaultNodeName: "new scene",
 
       // interface
-      menuLevel1: "edit"
+      menuLevel1: "edit",
+
+      // debug
+      showGraphData: false
     };
   },
 
