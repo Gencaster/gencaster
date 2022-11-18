@@ -98,6 +98,7 @@ import { Edit } from '@element-plus/icons-vue';
         v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
         :nodes="nodes" :edges="transformEdges(data.graph.edges)" :configs="configs"
       />
+      <p>{{ data.graph }}</p>
 
       <div class="stats">
         <p>
@@ -157,8 +158,10 @@ export default {
       transformNodes,
       configs: vNG.getFullConfigs(),
 
+      // settings
+      defaultNodeName: "new scene",
+
       // interface
-      newNodeName: "",
       menuLevel1: "edit"
     };
   },
@@ -230,21 +233,14 @@ export default {
     },
 
     addNode() {
-      if (this.newNodeName === "") {
-        alert("please add a name for your node");
-        return;
-      }
-
       const variables = {
         graphUuid: this.uuid,
-        name: this.newNodeName
+        name: this.defaultNodeName
       };
       this.addNodeMutation(variables).then(() => {
         this.refresh();
         console.log("Added node");
       });
-
-      this.newNodeName = "";
     },
 
     addEdge() {
