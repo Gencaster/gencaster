@@ -40,7 +40,7 @@
               Add Node
             </button>
             <!-- <button class="unstyled" :disabled="selectedNodes.length !== 2" @click="addEdge()"> -->
-            <button class="unstyled" @click="addEdge()">
+            <button class="unstyled" :class="{ lighter: selectedNodes.length !== 2 }" @click="addEdge()">
               Add Connection
             </button>
             <button class="unstyled" @click="removeAny()">

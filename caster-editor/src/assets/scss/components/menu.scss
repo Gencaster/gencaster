@@ -65,6 +65,10 @@
 
       transition: background-color 250ms;
 
+      &.lighter {
+        opacity: 0.5;
+      }
+
       &:disabled {
         opacity: 0.5;
       }
