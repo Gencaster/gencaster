@@ -1,11 +1,3 @@
-<!-- <script lang="ts" setup>
-import { Edit } from '@element-plus/icons-vue';
-</script> -->
-<!-- <el-switch v-model="value1" /> -->
-<!-- <el-config-provider size="small">
-      <el-button type="primary" :icon="Edit" />
-    </el-config-provider> -->
-
 <template>
   <div class="index-page">
     <div>
@@ -47,7 +39,8 @@ import { Edit } from '@element-plus/icons-vue';
             <button class="unstyled" @click="addNode()">
               Add Node
             </button>
-            <button class="unstyled" :disabled="selectedNodes.length !== 2" @click="addEdge()">
+            <!-- <button class="unstyled" :disabled="selectedNodes.length !== 2" @click="addEdge()"> -->
+            <button class="unstyled" @click="addEdge()">
               Add Connection
             </button>
             <button class="unstyled" @click="removeAny()">
@@ -111,6 +104,7 @@ import { Edit } from '@element-plus/icons-vue';
 </template>
 
 <script lang="ts">
+import { ElMessage } from "element-plus";
 import * as vNG from "v-network-graph";
 import { Edges, Nodes } from "v-network-graph";
 import {
@@ -235,7 +229,10 @@ export default {
     addNode() {
       const variables = {
         graphUuid: this.uuid,
-        name: this.defaultNodeName
+        name: this.defaultNodeName,
+        color: "standard",
+        positionX: 0,
+        positionY: 0
       };
       this.addNodeMutation(variables).then(() => {
         this.refresh();
@@ -245,7 +242,11 @@ export default {
 
     addEdge() {
       if (this.selectedNodes.length !== 2) {
-        alert("requires exactly 2 nodes selected");
+        ElMessage({
+          message: "requires exactly 2 nodes selected.",
+          type: "error",
+          customClass: "messages-editor"
+        });
         return;
       }
       const [source, target] = this.selectedNodes;
@@ -262,7 +263,12 @@ export default {
     },
 
     removeAny() {
-
+      ElMessage({
+        message: "Warning, this is a warning message.",
+        type: "warning",
+        // duration: 50000,
+        customClass: "messages-editor"
+      });
     },
 
     removeNode() {

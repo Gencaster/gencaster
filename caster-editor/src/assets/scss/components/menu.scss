@@ -65,6 +65,9 @@
 
       transition: background-color 250ms;
 
+      &:disabled {
+        opacity: 0.5;
+      }
 
       &:hover {
         background-color: $grey;

@@ -6,13 +6,7 @@
 
   }
 
-  .demo-control-panel {
-    button {
-      display: inline-block;
-    }
-    margin-bottom: 10px;
-  }
-
+  
   .stats {
     position: fixed;
     bottom: 10px;
@@ -21,4 +15,8 @@
       margin: 0;
     }
   }
+}
+
+.messages-editor {
+  margin-top: 60px;
 }
