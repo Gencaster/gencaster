@@ -89,7 +89,7 @@
 
       <v-network-graph
         v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
-        :nodes="nodes" :edges="transformEdges(data.graph.edges)" :configs="configs"
+        :nodes="nodes" :edges="edges" :configs="configs"
       />
       <p>{{ data.graph }}</p>
 
@@ -220,6 +220,7 @@ export default {
       this.error = result.error;
       this.fetching = result.fetching;
 
+      // console.log(JSON.stringify(this.data));
       console.log("loaded graph");
       this.loadedData();
     },
@@ -238,6 +239,8 @@ export default {
         console.log("finished refresh");
         this.nodes = transformNodes(this.data.graph.nodes);
         this.edges = transformEdges(this.data.graph.edges);
+        this.selectedNodes = [];
+        this.selectedEdges = [];
       });
     },
 
@@ -279,11 +282,13 @@ export default {
 
     removeAny() {
       // check if only one type is selected
+      // right now we only allow one element deletion
+      // needs to check if the async call is not buggy if looping through
       if ((this.selectedNodes.length === 1 && this.selectedEdges.length === 0)) {
-        console.log("nodes");
+        this.removeNode();
       }
       else if ((this.selectedNodes.length === 0 && this.selectedEdges.length === 1)) {
-        console.log("edges");
+        this.removeEdge();
       }
       else {
         ElMessage({
