@@ -106,12 +106,13 @@ class StreamPoint(models.Model):
         return SimpleUDPClient(address=self.host, port=self.port)
 
     # todo make this async?
-    def send_raw_instruction(self, instruction_text: str) -> None:
+    def send_raw_instruction(self, instruction_text: str) -> "StreamInstruction":
         instruction: StreamInstruction = StreamInstruction.objects.create(
             stream_point=self,
             instruction_text=instruction_text,
         )
         self.send_stream_instruction(instruction)
+        return instruction
 
     def send_stream_instruction(self, instruction: "StreamInstruction") -> None:
         self.client.send_message(
