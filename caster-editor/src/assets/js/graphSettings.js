@@ -5,14 +5,39 @@ const GraphSettings = {
     node: {
       selectable: true,
       normal: {
-        color: "lightgrey"
+        type: "circle",
+        radius: 16,
+        strokeWidth: 0,
+        color: "#CDCDCD"
       },
       hover: {
-        color: "black"
+        type: "circle",
+        radius: 16,
+        strokeWidth: 0,
+        color: "#ADFF00"
+      },
+      selected: {
+        type: "circle",
+        radius: 16,
+        strokeWidth: 0,
+        color: "#ADFF00"
       },
       label: {
-        fontSize: 14
-      }
+        fontSize: 15,
+        fontFamily: "arial",
+        color: "#000000",
+        margin: 4,
+        background: {
+          visible: false,
+          color: "#ffffff",
+          padding: {
+            vertical: 1,
+            horizontal: 4
+          },
+          borderRadius: 2
+        }
+      },
+      focusring: { visible: false }
     },
     edge: {
       selectable: true,
@@ -40,10 +65,10 @@ const GraphSettings = {
         animate: false,
         animationSpeed: 50
       },
-      // gap: 5,
-      // type: 'straight',
-      type: "curve",
-      gap: 40,
+      gap: 5,
+      type: "straight",
+      // type: "curve",
+      // gap: 40,
       margin: 2,
       marker: {
         source: {
@@ -57,7 +82,7 @@ const GraphSettings = {
         target: {
           type: "arrow",
           width: 4,
-          height: 4,
+          height: 6,
           margin: -1,
           units: "strokeWidth",
           color: null
