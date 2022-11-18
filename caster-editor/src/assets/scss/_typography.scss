@@ -1,7 +1,7 @@
 /* ============ Font ============ */
 
 *::selection {
-  background: yellow;
+  background: #ADFF00;
 }
 
 html,
@@ -68,21 +68,21 @@ a:active {
   text-underline-offset: 0.1em !important;
 }
 
-// a[target='_blank'] {
-//   &::after {
-//     content: '↗';
+a[target='_blank'] {
+  &::after {
+    content: '↗';
 
-//     margin-left: 1px;
-//     text-decoration: none;
-//     display: inline-block;
-//   }
-// }
+    margin-left: 1px;
+    text-decoration: none;
+    display: inline-block;
+  }
+}
 
-// a[target='_blank'].no-arrow {
-//   &::after {
-//     display: none;
-//   }
-// }
+a[target='_blank'].no-arrow {
+  &::after {
+    display: none;
+  }
+}
 
 // hover states
 @include onScreen('hover-device') {
@@ -102,7 +102,7 @@ a:active {
   }
 }
 
-// /hover statest
+// hover statest
 
 p {
   margin-bottom: 1em;
