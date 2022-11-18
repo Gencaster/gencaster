@@ -5,7 +5,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 98;
+  z-index: 100;
 
 
   .level {
@@ -21,6 +21,20 @@
 
     .left {
       transform: translateX(-8px);
+      width: 33%;
+    }
+
+    .middle {
+      width: 33%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .right {
+      transform: translateX(8px);
+      width: 33%;
+      display: flex;
+      justify-content: flex-end;
     }
 
     .menu-items {
@@ -49,7 +63,7 @@
       border-radius: 2px;
       height: 23px;
 
-      transition: all 250ms;
+      transition: background-color 250ms;
 
 
       &:hover {

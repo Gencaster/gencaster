@@ -8,10 +8,7 @@ import { Edit } from '@element-plus/icons-vue';
 
 <template>
   <div class="index-page">
-    <div v-if="fetching">
-      <elementsLoading />
-    </div>
-    <div v-else>
+    <div>
       <div class="menu menu-edit">
         <div class="level level-1">
           <div class="menu-items left">
@@ -27,10 +24,16 @@ import { Edit } from '@element-plus/icons-vue';
               </el-radio-button>
             </el-radio-group>
           </div>
-          <div class="menu-items">
-            {{ data.graph.name }}
+          <div class="menu-items middle">
+            <span v-if="fetching">
+              Loading ...
+            </span>
+            <span v-if="!fetching">
+
+              {{ data.graph.name }}
+            </span>
           </div>
-          <div class="menu-items">
+          <div class="menu-items right">
             <button class="unstyled">
               Save
             </button>
@@ -58,7 +61,11 @@ import { Edit } from '@element-plus/icons-vue';
         </div>
       </div>
       <div class="menu-spacer" />
-
+    </div>
+    <div v-if="fetching">
+      <elementsLoading />
+    </div>
+    <div v-else>
       <!-- <div class="demo-control-panel">
         <div class="control">
           <p><b>Controls</b></p>
