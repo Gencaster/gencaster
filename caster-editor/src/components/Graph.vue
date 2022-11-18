@@ -40,10 +40,10 @@
               Add Node
             </button>
             <!-- <button class="unstyled" :disabled="selectedNodes.length !== 2" @click="addEdge()"> -->
-            <button class="unstyled" :class="{ lighter: selectedNodes.length !== 2 }" @click="addEdge()">
+            <button class="unstyled" :class="{ lighter: hideConnectionButton }" @click="addEdge()">
               Add Connection
             </button>
-            <button class="unstyled" @click="removeAny()">
+            <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeAny()">
               Remove
             </button>
             <button class="unstyled" @click="refresh()">
@@ -160,7 +160,22 @@ export default {
     };
   },
 
-  computed: {},
+  computed: {
+    hideConnectionButton() {
+      if (this.selectedNodes.length !== 2)
+        return true;
+      else
+        return false;
+    },
+    hideRemoveButton() {
+      if ((this.selectedNodes.length === 0 && this.selectedEdges.length === 0) || (this.selectedNodes.length === 0 && this.selectedEdges.length === 0))
+        return true;
+      else if ((this.selectedNodes.length > 1 || this.selectedEdges.length > 1))
+        return true;
+      else
+        return false;
+    }
+  },
 
   mounted() {
     this.configs.node.selectable = true;
@@ -243,7 +258,7 @@ export default {
     addEdge() {
       if (this.selectedNodes.length !== 2) {
         ElMessage({
-          message: "requires exactly 2 nodes selected.",
+          message: "requires exactly 2 scenes selected.",
           type: "error",
           customClass: "messages-editor"
         });
@@ -263,12 +278,20 @@ export default {
     },
 
     removeAny() {
-      ElMessage({
-        message: "Warning, this is a warning message.",
-        type: "warning",
-        // duration: 50000,
-        customClass: "messages-editor"
-      });
+      // check if only one type is selected
+      if ((this.selectedNodes.length === 1 && this.selectedEdges.length === 0)) {
+        console.log("nodes");
+      }
+      else if ((this.selectedNodes.length === 0 && this.selectedEdges.length === 1)) {
+        console.log("edges");
+      }
+      else {
+        ElMessage({
+          message: "Select max one scene or one connection.",
+          type: "error",
+          customClass: "messages-editor"
+        });
+      }
     },
 
     removeNode() {
