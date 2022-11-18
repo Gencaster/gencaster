@@ -12,6 +12,34 @@ import { Edit } from '@element-plus/icons-vue';
       <elementsLoading />
     </div>
     <div v-else>
+      <div class="menu menu-edit">
+        <div class="level level-1">
+          <div class="menu-items left">
+            <el-radio-group v-model="menuLevel1">
+              <el-radio-button label="edit">
+                Edit
+              </el-radio-button>
+              <el-radio-button label="test">
+                Test
+              </el-radio-button>
+            </el-radio-group>
+          </div>
+          <div class="menu-items">
+            {{ data.graph.name }}
+          </div>
+          <div class="menu-items">
+            <button class="unstyled underline">
+              Save
+            </button>
+            <button class="unstyled underline">
+              Exit
+            </button>
+          </div>
+        </div>
+        <div class="level level-2" />
+      </div>
+      <div class="menu-spacer" />
+
       <h1>
         Editing: <b>{{ data.graph.name }}</b>
         <br>
@@ -29,31 +57,16 @@ import { Edit } from '@element-plus/icons-vue';
             <el-button text bg @click="addNode()">
               Add Node
             </el-button>
-            <el-button
-              text
-              bg
-              :disabled="selectedNodes.length !== 2"
-              @click="addEdge()"
-            >
+            <el-button text bg :disabled="selectedNodes.length !== 2" @click="addEdge()">
               Add Edge
             </el-button>
           </div>
 
           <div class="row">
-            <el-button
-              text
-              bg
-              :disabled="selectedNodes.length === 0"
-              @click="removeNode()"
-            >
+            <el-button text bg :disabled="selectedNodes.length === 0" @click="removeNode()">
               Remove Node
             </el-button>
-            <el-button
-              text
-              bg
-              :disabled="selectedEdges.length === 0"
-              @click="removeEdge()"
-            >
+            <el-button text bg :disabled="selectedEdges.length === 0" @click="removeEdge()">
               Remove Edge
             </el-button>
           </div>
@@ -61,12 +74,8 @@ import { Edit } from '@element-plus/icons-vue';
       </div>
       <br>
       <v-network-graph
-        v-model:selected-nodes="selectedNodes"
-        v-model:selected-edges="selectedEdges"
-        class="graph"
-        :nodes="nodes"
-        :edges="transformEdges(data.graph.edges)"
-        :configs="configs"
+        v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
+        :nodes="nodes" :edges="transformEdges(data.graph.edges)" :configs="configs"
       />
 
       <div class="stats">
@@ -127,7 +136,8 @@ export default {
       configs: vNG.getFullConfigs(),
 
       // interface
-      newNodeName: ""
+      newNodeName: "",
+      menuLevel1: "edit"
     };
   },
 
@@ -158,6 +168,13 @@ export default {
   },
 
   methods: {
+    ////////////////////
+    // interface
+    ////////////////////
+
+    ////////////////////
+    // graph
+    ////////////////////
     async loadData() {
       const result = await useGetGraphQuery({
         variables: { uuid: this.uuid },

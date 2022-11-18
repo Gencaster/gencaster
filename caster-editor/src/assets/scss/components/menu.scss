@@ -1,0 +1,53 @@
+// menu
+
+.menu {
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 98;
+
+
+  .level {
+    height: 32px;
+    background-color: $grey-light;
+    border-bottom: 1px solid $black;
+    padding-left: $paddingSidesDesktop;
+    padding-right: $paddingSidesDesktop;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left {
+      transform: translateX(-8px);
+    }
+
+    .menu-items {
+      height: 30px;
+      display: flex;
+      align-items: center;
+    }
+
+    button.unstyled.underline {
+      background-color: transparent;
+      border-radius: 0;
+      border: 0;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 0;
+      margin-left: $buttonMargin;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+}
+
+.menu-spacer {
+  position: relative;
+  height: 54px;
+  background-color: red;
+}
