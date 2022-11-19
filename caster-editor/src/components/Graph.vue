@@ -21,7 +21,6 @@
               Loading ...
             </span>
             <span v-if="!fetching">
-
               {{ data.graph.name }}
             </span>
           </div>
@@ -62,7 +61,13 @@
     </div>
     <div v-else>
       <p v-if="showGraphData">
-        {{ data.graph }}
+        {{ nodes }}
+        <br>
+
+        {{ layouts }}
+        <br>
+        {{ data.graph.nodes }}
+        <!-- {{ data.graph }} -->
       </p>
       <v-network-graph
         v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
@@ -103,7 +108,8 @@ import {
   useCreateNodeMutation,
   useDeleteEdgeMutation,
   useDeleteNodeMutation,
-  useGetGraphQuery
+  useGetGraphQuery,
+  useUpdateNodeMutation
 } from "../graphql/graphql";
 
 import { transformEdges, transformLayout, transformNodes } from "../tools/typeTransformers";
@@ -188,17 +194,21 @@ export default {
     };
 
     // mutations
-    // add node
-    const { executeMutation: addNodeMutation } = useCreateNodeMutation();
-    this.addNodeMutation = addNodeMutation;
+    // create node
+    const { executeMutation: createNodeMutation } = useCreateNodeMutation();
+    this.createNodeMutation = createNodeMutation;
+
+    // update node
+    const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();
+    this.updateNodeMutation = updateNodeMutation;
 
     // remove node
     const { executeMutation: removeNodeMutation } = useDeleteNodeMutation();
     this.removeNodeMutation = removeNodeMutation;
 
-    // add edge
-    const { executeMutation: addEdgeMutation } = useCreateEdgeMutation();
-    this.addEdgeMutation = addEdgeMutation;
+    // create edge
+    const { executeMutation: createEdgeMutation } = useCreateEdgeMutation();
+    this.createEdgeMutation = createEdgeMutation;
 
     // remove edge
     const { executeMutation: removeEdgeMutation } = useDeleteEdgeMutation();
@@ -239,7 +249,12 @@ export default {
     },
 
     saveState() {
-      console.log("yeah");
+      // update positions
+      for (const uuid in this.nodes) {
+        // get positions
+        const n = this.nodes[uuid];
+        this.updateNode(uuid, n.name, n.color, this.layouts.nodes[uuid].x, this.layouts.nodes[uuid].y);
+      }
     },
 
     ////////////////////
@@ -290,7 +305,7 @@ export default {
         positionX: 0,
         positionY: 0
       };
-      this.addNodeMutation(variables).then(() => {
+      this.createNodeMutation(variables).then(() => {
         this.refresh();
         console.log("Added node");
       });
@@ -312,9 +327,23 @@ export default {
         nodeOutUuid: target
       };
 
-      this.addEdgeMutation(variables).then(() => {
+      this.createEdgeMutation(variables).then(() => {
         this.refresh();
         console.log("Added edge");
+      });
+    },
+
+    updateNode(uuid: string, name: string, color: string, positionX: number, positionY: number) {
+      const variables = {
+        nodeUuid: uuid,
+        name,
+        color,
+        positionX,
+        positionY
+      };
+      this.updateNodeMutation(variables).then(() => {
+        this.refresh();
+        console.log("Updated node");
       });
     },
 
