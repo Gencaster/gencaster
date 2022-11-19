@@ -85,6 +85,24 @@ const GraphSettings = {
           color: null
         }
       }
+    },
+    view: {
+      grid: {
+        visible: false,
+        interval: 30,
+        thickIncrements: 0,
+        line: {
+          color: "#F5F5F5",
+          width: 1,
+          dasharray: 0
+        },
+        thick: {
+          color: "#F5F5F5",
+          width: 1,
+          dasharray: 0
+        }
+      }
+      // layoutHandler: new vNG.GridLayout({ grid: 30 })
     }
   })
 };
