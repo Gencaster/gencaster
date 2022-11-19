@@ -30,7 +30,7 @@ Be sure to run this in the proper Python environment (e.g. virtualenv).
 
 ## Development
 
-Please use [`pre-commit`](https://pre-commit.com/) before committing to the repository.
+Please install [`pre-commit`](https://pre-commit.com/) and set it pu via `pre-commit install` before committing to the repository.
 
 After a commit on the `main` branch it will trigger a re-deployment on the development server.
 

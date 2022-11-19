@@ -45,7 +45,26 @@ query getGraph($uuid: ID) {
         cellType
         uuid
       }
+      positionX
+      positionY
+      color
     }
+  }
+}
+
+query getNode($nodeUuid: ID!) {
+  node(pk: $nodeUuid) {
+    color
+    name
+    positionX
+    positionY
+    scriptCells {
+      cellCode
+      cellOrder
+      cellType
+      uuid
+    }
+    uuid
   }
 }
 
