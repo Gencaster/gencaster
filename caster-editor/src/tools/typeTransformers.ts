@@ -41,6 +41,5 @@ export function transformLayout(nodes: StoryNode[]): GraphNodes {
   const layout = {
     nodes: n
   };
-
   return layout;
 }
