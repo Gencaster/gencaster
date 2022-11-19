@@ -53,6 +53,25 @@
       }
     }
 
+    .blocks {
+      .cell {
+        margin-bottom: 16px;
+        p {
+          margin-bottom: 4px;
+        }
+      }
+
+      .cell-editor {
+        padding: 10px 10px 10px 10px;
+        background-color: $grey-light;
+
+        .ProseMirror p {
+          margin: 0.1em 0;
+        }
+      }
+      margin-bottom: 14px;
+    }
+
     .footer {
       display: flex;
       align-items: flex-end;

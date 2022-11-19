@@ -95,11 +95,12 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
           <el-button text bg :icon="VideoPause" />
         </div>
         <div class="blocks">
-          {{ selectedNodeScriptCells }}
+          <!-- {{ selectedNodeScriptCells }} -->
           <div v-for="cell in selectedNodeScriptCells" :key="cell.uuid">
             <div class="cell">
               <p>{{ cell.cellType }}</p>
-              <p> {{ cell.cellCode }}</p>
+              <Editor v-model="cell.cellCode" class="cell-editor" />
+              <!-- <EditorContent v-if="editors[index]" :editor="editors[index]" /> -->
             </div>
           </div>
         </div>
@@ -150,8 +151,14 @@ import {
 
 import { transformEdges, transformLayout, transformNodes } from "../tools/typeTransformers";
 import { GraphSettings } from "../assets/js/graphSettings";
+import Editor from "./elements/Editor.vue";
+
 export default {
   name: "GraphComponent",
+
+  components: {
+    Editor
+  },
 
   props: {
     uuid: {
@@ -193,8 +200,9 @@ export default {
       exitDialogVisible: false,
 
       // node data
-      showNodeData: true,
-      selectedNodeScriptCells: [{ cellCode: "### Title\r\nHello this is a markdown cell", cellOrder: 0, cellType: "markdown", uuid: "f158234f-33c0-4382-993c-170967818a22", __typename: "ScriptCell" }, { cellCode: "def my_function():\r\n print(\"Hello from a function\")\r\n\r\nmy_function()", cellOrder: 1, cellType: "python", uuid: "8461f884-cddd-4045-9b10-d499bd3ca33c", __typename: "ScriptCell" }, { cellCode: "{ SinOsc.ar(SinOsc.kr([1, 3]).exprange(100, 2e3), 0, 0.2) }.play", cellOrder: 2, cellType: "supercollider", uuid: "766cb847-e8a4-4e5e-9f37-6464f8e14b7f", __typename: "ScriptCell" }, { cellCode: "This is a normal comment having no meaning", cellOrder: 3, cellType: "comment", uuid: "de3bd6db-c84a-4381-9181-4c22356077b6", __typename: "ScriptCell" }],
+      showNodeData: false,
+      selectedNodeScriptCells: [],
+      editors: [],
 
       // debug
       showGraphData: false
@@ -216,6 +224,10 @@ export default {
       else
         return false;
     }
+  },
+
+  onBeforeUnmount() {
+    this.destroyEditors();
   },
 
   mounted() {
@@ -285,8 +297,29 @@ export default {
       console.log(this.nodes[node]);
     },
 
+    destroyEditors() {
+      this.editors.forEach((editor) => {
+        editor.destroy();
+      });
+    },
+
     setupNodeDataWindow(node) {
-      this.selectedNodeScriptCells = this.nodes[node].scriptCells;
+      // empty editors
+      this.destroyEditors();
+
+      const cells = this.nodes[node].scriptCells;
+      // cells.forEach((cell) => {
+      //   const editor = new Editor({
+      //     content: cell.cellCode,
+      //     extensions: [
+      //       StarterKit
+      //     ]
+      //   });
+
+      //   this.editors.push(editor);
+      // });
+
+      this.selectedNodeScriptCells = cells;
     },
 
     nodeDraggedEnd(node) {
@@ -307,6 +340,7 @@ export default {
     // node data
     closeNodeData() {
       this.showNodeData = false;
+      this.selectedNodeScriptCells = [];
     },
 
     showNodeDataJSON() {
