@@ -26,9 +26,11 @@
             </span>
           </div>
           <div class="menu-items right">
-            <button class="unstyled">
+            <button class="unstyled state" @click="saveState()">
+              <div class="state-indicator" :class="{ saved: stateSaved }" />
               Save
             </button>
+
             <button class="unstyled" @click="exitEditing()">
               Exit
             </button>
@@ -64,7 +66,7 @@
       </p>
       <v-network-graph
         v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
-        :nodes="nodes" :edges="edges" :configs="configs" :layouts="layouts"
+        :nodes="nodes" :edges="edges" :configs="configs" :layouts="layouts" :event-handlers="eventHandlers"
       />
 
       <div class="stats">
@@ -139,6 +141,7 @@ export default {
       nextNodeIndex: 0,
       nextEdgeIndex: 0,
       configs: vNG.getFullConfigs(),
+      eventHandlers: undefined,
       stateSaved: true,
 
       // settings
@@ -149,7 +152,7 @@ export default {
       exitDialogVisible: false,
 
       // debug
-      showGraphData: true
+      showGraphData: false
     };
   },
 
@@ -172,7 +175,19 @@ export default {
 
   mounted() {
     this.configs.node.selectable = true;
+    // event listeners
 
+    this.eventHandlers = {
+      "node:click": ({ node }) => {
+        this.clickedNode(node);
+        // console.log(node);
+      },
+      "node:dragend": (node) => {
+        this.nodeDraggedEnd(node);
+      }
+    };
+
+    // mutations
     // add node
     const { executeMutation: addNodeMutation } = useCreateNodeMutation();
     this.addNodeMutation = addNodeMutation;
@@ -215,6 +230,18 @@ export default {
       });
     },
 
+    clickedNode(node) {
+      console.log(node);
+    },
+
+    nodeDraggedEnd(node) {
+      // const uuid = Object.entries(node);
+    },
+
+    saveState() {
+      console.log("yeah");
+    },
+
     ////////////////////
     // graph
     ////////////////////
@@ -239,7 +266,6 @@ export default {
       this.nodes = transformNodes(this.data.graph.nodes);
       this.edges = transformEdges(this.data.graph.edges);
       this.layouts = transformLayout(this.data.graph.nodes);
-      console.log(this.layout);
 
       this.nextNodeIndex = Object.keys(this.nodes).length + 1;
       this.nextEdgeIndex = Object.keys(this.edges).length + 1;

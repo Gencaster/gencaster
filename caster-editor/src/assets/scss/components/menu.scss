@@ -41,6 +41,22 @@
       height: 30px;
       display: flex;
       align-items: center;
+      .state {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .state-indicator {
+        width: 11px;
+        height: 11px;
+        border-radius: 11px;
+        background-color: $alertRed;
+        margin-right: 4px;
+
+        &.saved {
+          background-color: $green-light;
+        }
+      }
     }
 
 
