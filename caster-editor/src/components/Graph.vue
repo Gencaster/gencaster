@@ -64,7 +64,7 @@
       </p>
       <v-network-graph
         v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
-        :nodes="nodes" :edges="edges" :configs="configs"
+        :nodes="nodes" :edges="edges" :configs="configs" :layouts="layouts"
       />
 
       <div class="stats">
@@ -104,7 +104,7 @@ import {
   useGetGraphQuery
 } from "../graphql/graphql";
 
-import { transformEdges, transformNodes } from "../tools/typeTransformers";
+import { transformEdges, transformLayout, transformNodes } from "../tools/typeTransformers";
 import { GraphSettings } from "../assets/js/graphSettings";
 
 export default {
@@ -133,12 +133,11 @@ export default {
       // graph
       nodes: {},
       edges: {},
+      layouts: {},
       selectedNodes: new Array<string>(),
       selectedEdges: new Array<string>(),
       nextNodeIndex: 0,
       nextEdgeIndex: 0,
-      transformEdges,
-      transformNodes,
       configs: vNG.getFullConfigs(),
       stateSaved: true,
 
@@ -150,7 +149,7 @@ export default {
       exitDialogVisible: false,
 
       // debug
-      showGraphData: false
+      showGraphData: true
     };
   },
 
@@ -239,6 +238,8 @@ export default {
       // set data
       this.nodes = transformNodes(this.data.graph.nodes);
       this.edges = transformEdges(this.data.graph.edges);
+      this.layouts = transformLayout(this.data.graph.nodes);
+      console.log(this.layout);
 
       this.nextNodeIndex = Object.keys(this.nodes).length + 1;
       this.nextEdgeIndex = Object.keys(this.edges).length + 1;
@@ -249,6 +250,7 @@ export default {
         console.log("finished refresh");
         this.nodes = transformNodes(this.data.graph.nodes);
         this.edges = transformEdges(this.data.graph.edges);
+        this.layouts = transformLayout(this.data.graph.nodes);
         this.selectedNodes = [];
         this.selectedEdges = [];
       });

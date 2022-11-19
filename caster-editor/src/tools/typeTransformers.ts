@@ -28,3 +28,19 @@ export function transformNodes(nodes: StoryNode[]): GraphNodes {
   });
   return n;
 }
+
+export function transformLayout(nodes: StoryNode[]): GraphNodes {
+  const n: GraphNodes = {};
+  nodes.forEach((node) => {
+    const graphNode: GraphNode = {
+      x: node.positionX,
+      y: node.positionY
+    };
+    n[node.uuid] = graphNode;
+  });
+  const layout = {
+    nodes: n
+  };
+
+  return layout;
+}
