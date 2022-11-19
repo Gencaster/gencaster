@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
+</script>
+
 <template>
   <div class="index-page">
     <div>
@@ -63,10 +67,9 @@
       <p v-if="showGraphData">
         {{ nodes }}
         <br>
-
         {{ layouts }}
         <br>
-        {{ data.graph.nodes }}
+        {{ data.graph }}
         <!-- {{ data.graph }} -->
       </p>
       <v-network-graph
@@ -74,7 +77,40 @@
         :nodes="nodes" :edges="edges" :configs="configs" :layouts="layouts" :event-handlers="eventHandlers"
       />
 
-      <div class="stats">
+      <div v-if="showNodeData" class="node-data">
+        <div class="title">
+          <div class="left">
+            <p>Test 1 (Scene)</p>
+          </div>
+          <div class="right">
+            <button class="unstyled" @click="closeNodeData()">
+              Close
+            </button>
+          </div>
+        </div>
+        <div class="node-menu-bar">
+          <el-button text bg :icon="Plus" />
+          <el-button text bg :icon="Scissor" />
+          <el-button text bg :icon="VideoPlay" />
+          <el-button text bg :icon="VideoPause" />
+        </div>
+        <div class="blocks">
+          {{ selectedNodeScriptCells }}
+          <div v-for="cell in selectedNodeScriptCells" :key="cell.uuid">
+            <div class="cell">
+              <p>{{ cell.cellType }}</p>
+              <p> {{ cell.cellCode }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="footer">
+          <button class="unstyled" @click="showNodeDataJSON()">
+            JSON
+          </button>
+        </div>
+      </div>
+
+      <div v-if="!showNodeData" class="stats">
         <p>
           Nodes: {{ data.graph.nodes.length }} &nbsp;
           Edges: {{ data.graph.edges.length }}
@@ -114,7 +150,6 @@ import {
 
 import { transformEdges, transformLayout, transformNodes } from "../tools/typeTransformers";
 import { GraphSettings } from "../assets/js/graphSettings";
-
 export default {
   name: "GraphComponent",
 
@@ -157,6 +192,10 @@ export default {
       menuLevel1: "edit",
       exitDialogVisible: false,
 
+      // node data
+      showNodeData: true,
+      selectedNodeScriptCells: [{ cellCode: "### Title\r\nHello this is a markdown cell", cellOrder: 0, cellType: "markdown", uuid: "f158234f-33c0-4382-993c-170967818a22", __typename: "ScriptCell" }, { cellCode: "def my_function():\r\n print(\"Hello from a function\")\r\n\r\nmy_function()", cellOrder: 1, cellType: "python", uuid: "8461f884-cddd-4045-9b10-d499bd3ca33c", __typename: "ScriptCell" }, { cellCode: "{ SinOsc.ar(SinOsc.kr([1, 3]).exprange(100, 2e3), 0, 0.2) }.play", cellOrder: 2, cellType: "supercollider", uuid: "766cb847-e8a4-4e5e-9f37-6464f8e14b7f", __typename: "ScriptCell" }, { cellCode: "This is a normal comment having no meaning", cellOrder: 3, cellType: "comment", uuid: "de3bd6db-c84a-4381-9181-4c22356077b6", __typename: "ScriptCell" }],
+
       // debug
       showGraphData: false
     };
@@ -186,9 +225,9 @@ export default {
     this.eventHandlers = {
       "node:click": ({ node }) => {
         this.clickedNode(node);
-        // console.log(node);
       },
       "node:dragend": (node) => {
+        this.stateSaved = false;
         this.nodeDraggedEnd(node);
       }
     };
@@ -241,7 +280,13 @@ export default {
     },
 
     clickedNode(node) {
-      console.log(node);
+      this.setupNodeDataWindow(node);
+      this.showNodeData = true;
+      console.log(this.nodes[node]);
+    },
+
+    setupNodeDataWindow(node) {
+      this.selectedNodeScriptCells = this.nodes[node].scriptCells;
     },
 
     nodeDraggedEnd(node) {
@@ -255,6 +300,18 @@ export default {
         const n = this.nodes[uuid];
         this.updateNode(uuid, n.name, n.color, this.layouts.nodes[uuid].x, this.layouts.nodes[uuid].y);
       }
+      // TODO: make it async with callbacks
+      this.stateSaved = true;
+    },
+
+    // node data
+    closeNodeData() {
+      this.showNodeData = false;
+    },
+
+    showNodeDataJSON() {
+      // TODO: Write the json display
+      console.log("show node data");
     },
 
     ////////////////////

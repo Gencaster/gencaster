@@ -9,7 +9,7 @@
 
 
   .level {
-    height: 32px;
+    height: $menuHeight;
     background-color: $grey-light;
     border-bottom: 1px solid $black;
     padding-left: $paddingSidesDesktop;
@@ -68,41 +68,43 @@
       margin-right: $buttonMargin;
     }
 
-    button.unstyled {
-      background-color: transparent;
-      border-radius: 0;
-      border: 0;
-      cursor: pointer;
-      padding: 0;
-      padding-left: 8px;
-      padding-right: 8px;
-      border-radius: 2px;
-      height: 23px;
 
-      transition: background-color 250ms;
-
-      &.lighter {
-        opacity: 0.5;
-      }
-
-      &:disabled {
-        opacity: 0.5;
-      }
-
-      &:hover {
-        background-color: $grey;
-      }
-    }
-
-    button.underline {
-      text-decoration: underline;
-
-      &:hover {
-        text-decoration: none;
-      }
-    }
   }
 
+}
+
+button.unstyled {
+  background-color: transparent;
+  border-radius: 0;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 2px;
+  height: 23px;
+
+  transition: background-color 250ms;
+
+  &.lighter {
+    opacity: 0.5;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+
+  &:hover {
+    background-color: $grey;
+  }
+}
+
+button.underline {
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 .menu-spacer {

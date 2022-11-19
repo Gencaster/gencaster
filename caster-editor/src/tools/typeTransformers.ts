@@ -23,7 +23,8 @@ export function transformNodes(nodes: StoryNode[]): GraphNodes {
   nodes.forEach((node) => {
     const graphNode: GraphNode = {
       name: node.name,
-      color: node.color
+      color: node.color,
+      scriptCells: node.scriptCells
     };
     n[node.uuid] = graphNode;
   });
