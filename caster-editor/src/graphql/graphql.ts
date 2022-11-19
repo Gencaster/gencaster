@@ -217,7 +217,14 @@ export type GetGraphQueryVariables = Exact<{
 }>;
 
 
-export type GetGraphQuery = { __typename?: 'Query', graph: { __typename?: 'Graph', name: string, uuid: any, edges: Array<{ __typename?: 'Edge', uuid: any, outNode: { __typename?: 'Node', uuid: any }, inNode: { __typename?: 'Node', uuid: any } }>, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: string, uuid: any }> }> } };
+export type GetGraphQuery = { __typename?: 'Query', graph: { __typename?: 'Graph', name: string, uuid: any, edges: Array<{ __typename?: 'Edge', uuid: any, outNode: { __typename?: 'Node', uuid: any }, inNode: { __typename?: 'Node', uuid: any } }>, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, positionX: number, positionY: number, color: string, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: string, uuid: any }> }> } };
+
+export type GetNodeQueryVariables = Exact<{
+  nodeUuid: Scalars['ID'];
+}>;
+
+
+export type GetNodeQuery = { __typename?: 'Query', node: { __typename?: 'Node', color: string, name: string, positionX: number, positionY: number, uuid: any, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: string, uuid: any }> } };
 
 export type CreateEdgeMutationVariables = Exact<{
   nodeInUuid: Scalars['UUID'];
@@ -327,6 +334,9 @@ export const GetGraphDocument = gql`
         cellType
         uuid
       }
+      positionX
+      positionY
+      color
     }
   }
 }
@@ -334,6 +344,27 @@ export const GetGraphDocument = gql`
 
 export function useGetGraphQuery(options: Omit<Urql.UseQueryArgs<never, GetGraphQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetGraphQuery>({ query: GetGraphDocument, ...options });
+};
+export const GetNodeDocument = gql`
+    query getNode($nodeUuid: ID!) {
+  node(pk: $nodeUuid) {
+    color
+    name
+    positionX
+    positionY
+    scriptCells {
+      cellCode
+      cellOrder
+      cellType
+      uuid
+    }
+    uuid
+  }
+}
+    `;
+
+export function useGetNodeQuery(options: Omit<Urql.UseQueryArgs<never, GetNodeQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetNodeQuery>({ query: GetNodeDocument, ...options });
 };
 export const CreateEdgeDocument = gql`
     mutation createEdge($nodeInUuid: UUID!, $nodeOutUuid: UUID!) {
