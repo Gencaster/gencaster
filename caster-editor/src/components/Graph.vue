@@ -29,7 +29,7 @@
             <button class="unstyled">
               Save
             </button>
-            <button class="unstyled">
+            <button class="unstyled" @click="exitEditing()">
               Exit
             </button>
           </div>
@@ -73,6 +73,21 @@
           Edges: {{ data.graph.edges.length }}
         </p>
       </div>
+
+      <!-- Dialogs -->
+      <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
+        <span>
+          Are you sure to exit without saving? <br> Some of your changes might get lost.
+        </span>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
+            <el-button color="#FF0000" @click="exitWithoutSaving()">
+              Exit
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -125,12 +140,14 @@ export default {
       transformEdges,
       transformNodes,
       configs: vNG.getFullConfigs(),
+      stateSaved: true,
 
       // settings
       defaultNodeName: "new scene",
 
       // interface
       menuLevel1: "edit",
+      exitDialogVisible: false,
 
       // debug
       showGraphData: false
@@ -182,6 +199,22 @@ export default {
     ////////////////////
     // interface
     ////////////////////
+    exitEditing() {
+      if (!this.stateSaved) {
+        this.exitDialogVisible = true;
+      }
+      else {
+        this.$router.push({
+          path: "/graphs"
+        });
+      }
+    },
+
+    exitWithoutSaving() {
+      this.$router.push({
+        path: "/graphs"
+      });
+    },
 
     ////////////////////
     // graph
