@@ -80,7 +80,10 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
       <div v-if="showNodeData" class="node-data">
         <div class="title">
           <div class="left">
-            <p>Test 1 (Scene)</p>
+            <p>{{ currentNodeName }}</p>
+            <button class="unstyled" @click="openNodeNameEdit()">
+              edit
+            </button>
           </div>
           <div class="right">
             <button class="unstyled" @click="closeNodeData()">
@@ -119,6 +122,7 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
       </div>
 
       <!-- Dialogs -->
+      <!-- Exit Page -->
       <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
         <span>
           Are you sure to exit without saving? <br> Some of your changes might get lost.
@@ -128,6 +132,18 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
             <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
             <el-button color="#FF0000" @click="exitWithoutSaving()">
               Exit
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <!-- Change name dialog -->
+      <el-dialog v-model="renameNodeDialogVisible" width="25%" title="Rename Node" :show-close="false">
+        <el-input v-model="renameNodeDialogName" placeholder="Please input" />
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="renameNodeDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="renameNodeFromDialog()">
+              Confirm
             </el-button>
           </span>
         </template>
@@ -168,6 +184,12 @@ export default {
   },
 
   data() {
+    interface Cell {
+      uuid: string
+      cellType: string
+      cellCode: string
+    }
+
     return {
       fetching: true,
       result: null,
@@ -197,11 +219,17 @@ export default {
 
       // interface
       menuLevel1: "edit",
+
+      // dialogs
       exitDialogVisible: false,
+      renameNodeDialogVisible: false,
+      renameNodeDialogName: "",
 
       // node data
       showNodeData: false,
-      selectedNodeScriptCells: [],
+      currentNodeName: "",
+      currentNodeUUID: "",
+      selectedNodeScriptCells: "Jane" as Cell,
       editors: [],
 
       // debug
@@ -235,8 +263,8 @@ export default {
     // event listeners
 
     this.eventHandlers = {
-      "node:click": ({ node }) => {
-        this.clickedNode(node);
+      "node:dblclick": ({ node }) => {
+        this.doubleClickedNode(node);
       },
       "node:dragend": (node) => {
         this.stateSaved = false;
@@ -291,7 +319,7 @@ export default {
       });
     },
 
-    clickedNode(node) {
+    doubleClickedNode(node) {
       this.setupNodeDataWindow(node);
       this.showNodeData = true;
       console.log(this.nodes[node]);
@@ -304,6 +332,8 @@ export default {
     },
 
     setupNodeDataWindow(node) {
+      this.currentNodeName = this.nodes[node].name;
+      this.currentNodeUUID = node;
       // empty editors
       this.destroyEditors();
 
@@ -346,6 +376,28 @@ export default {
     showNodeDataJSON() {
       // TODO: Write the json display
       console.log("show node data");
+    },
+
+    openNodeNameEdit() {
+      this.renameNodeDialogName = this.currentNodeName;
+      this.renameNodeDialogVisible = true;
+    },
+
+    renameNodeFromDialog() {
+      if (this.renameNodeDialogName === "") {
+        ElMessage({
+          message: "Node name can't be empty",
+          type: "error",
+          customClass: "messages-editor"
+        });
+        return;
+      }
+
+      const uuid = this.currentNodeUUID;
+      const n = this.nodes[uuid];
+      this.currentNodeName = this.renameNodeDialogName;
+      this.updateNode(uuid, this.renameNodeDialogName, n.color, this.layouts.nodes[uuid].x, this.layouts.nodes[uuid].y);
+      this.renameNodeDialogVisible = false;
     },
 
     ////////////////////

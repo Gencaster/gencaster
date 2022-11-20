@@ -24,6 +24,17 @@
       align-items: center;
       margin-bottom: 4px;
 
+      .left {
+        button {
+          color: $grey-dark;
+
+          &:hover {
+            font-style: italic;
+            background-color: transparent;
+          }
+        }
+      }
+
       .right {
         transform: translateX(8px);
         text-decoration: underline;
