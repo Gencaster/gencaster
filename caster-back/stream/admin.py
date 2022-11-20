@@ -43,12 +43,14 @@ class StreamInstructionAdmin(admin.ModelAdmin):
     list_display = [
         "uuid",
         "stream_point",
+        "modified_date",
         "state",
     ]
 
     list_filter = [
         "stream_point",
         "state",
+        "modified_date",
     ]
 
     readonly_fields = [
