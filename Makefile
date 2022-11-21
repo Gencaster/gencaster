@@ -55,6 +55,9 @@ docker-deploy-dev:
 	docker compose $(DOCKER_DEPLOY_DEV) build
 	docker compose $(DOCKER_DEPLOY_DEV) up -d
 
+docker-stop:
+	docker compose $(DOCKER_ALL_FILES) stop
+
 graphql-schema:
 	# assumes that you have docker running and a local setup for caster-editor
 	docker compose -f docker-compose.yml -f docker-compose.local.yml exec backend ./generate_graphql_schema.sh
