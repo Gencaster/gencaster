@@ -1,3 +1,5 @@
+// This is a nuxt specific setup to give element-plus components a unique reference in the renderlogic.
+// It was taken from their examples
 import { ID_INJECTION_KEY } from "element-plus";
 
 // @ts-expect-error: Auto Imported by nuxt
