@@ -89,7 +89,7 @@ class GencasterRenderer(BaseRenderer):
         return "\n"
 
     def render_raw_text(self, token: span_token.RawText) -> str:
-        return token.content
+        return token.content  # type: ignore
 
     def render_document(self, token: block_token.Document) -> str:
         text = super().render_document(token)
