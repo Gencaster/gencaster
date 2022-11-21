@@ -255,9 +255,9 @@ export default {
     }
   },
 
-  onBeforeUnmount() {
-    this.destroyEditors();
-  },
+  // onBeforeUnmount() {
+  //   this.destroyEditors();
+  // },
 
   mounted() {
     this.configs.node.selectable = true;
