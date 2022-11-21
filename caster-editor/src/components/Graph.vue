@@ -229,7 +229,8 @@ export default {
       showNodeData: false,
       currentNodeName: "",
       currentNodeUUID: "",
-      selectedNodeScriptCells: "Jane" as Cell,
+      // TODO Import the interface ontop
+      selectedNodeScriptCells: [],
       editors: [],
 
       // debug

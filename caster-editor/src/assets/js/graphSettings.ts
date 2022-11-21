@@ -28,7 +28,7 @@ const GraphSettings = {
         color: "#000000",
         margin: 4,
         background: {
-          visible: false,
+          visible: true,
           color: "#ffffff",
           padding: {
             vertical: 1,
