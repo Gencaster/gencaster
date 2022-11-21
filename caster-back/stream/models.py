@@ -105,6 +105,21 @@ class StreamPoint(models.Model):
     def client(self) -> SimpleUDPClient:
         return SimpleUDPClient(address=self.host, port=self.port)
 
+    def speak_on_stream(self, ssml_text: str):
+        """Speaks on the stream
+
+        :param ssml_text: See https://cloud.google.com/text-to-speech/docs/ssml
+        """
+        tts = TextToSpeech.create_from_text(ssml_text)
+        self.play_audio_file(tts.audio_file)
+
+    def play_audio_file(self, audio_file: "AudioFile"):
+        sc_audio_file_path = f"/data/{audio_file.file.name}"
+        sc_code = (
+            f'{{Buffer.read(s, path: "{sc_audio_file_path}", action: {{|b| b.play;}})}}'
+        )
+        self.send_raw_instruction(sc_code)
+
     # todo make this async?
     def send_raw_instruction(self, instruction_text: str) -> "StreamInstruction":
         instruction: StreamInstruction = StreamInstruction.objects.create(
