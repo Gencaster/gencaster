@@ -30,7 +30,7 @@
     "@graphql-codegen/cli": "^2.13.1",
     "@graphql-codegen/typescript-vue-urql": "^2.3.3",
     "eslint": "^8.27.0",
-    "nuxt": "3.0.0-rc.12",
+    "nuxt": "^3.0.0-rc.14",
     "sass": "^1.55.0",
     "sass-loader": "10"
   }
