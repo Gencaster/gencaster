@@ -42,7 +42,7 @@ class GencasterRenderer(BaseRenderer):
     def validate_gencaster_tokens(self, text: str) -> bool:
         """Validates if the used tags are known to GenCaster"""
         # @todo this is not implemented and should raise an exception
-        return True
+        raise NotImplementedError()
 
     def _chars(self, text: str) -> str:
         return f'<say-as interpret-as="characters">{text}</say-as>'
