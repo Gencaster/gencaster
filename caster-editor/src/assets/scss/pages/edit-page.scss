@@ -1,37 +1,104 @@
 // index page
 .edit-page {
   .graph {
+    position: relative;
     width: 100%;
-    height: 600px;
-    border: 1px solid #000;
+    height: calc(100vh - 64px);
   }
 
-  .demo-control-panel {
-    button {
-      display: inline-block;
-    }
-    margin-bottom: 10px;
-  }
+  .node-data {
+    z-index: 2;
+    background-color: $mainWhite;
+    position: fixed;
+    width: 50vw;
+    height: calc(100vh - 100px);
+    right: 15px;
+    top: 80px;
+    border: 1px solid rgb(79, 78, 78);
+    padding: 5px 15px 15px 15px;
 
-  .control {
-    .row {
+    .title {
       display: flex;
-      margin-bottom: 12px;
-      .el-input {
-        margin-left: 12px;
-        margin-right: 12px;
-        width: 200px;
+      height: $menuHeight;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+
+      .left {
+        button {
+          color: $grey-dark;
+
+          &:hover {
+            font-style: italic;
+            background-color: transparent;
+          }
+        }
+      }
+
+      .right {
+        transform: translateX(8px);
+        text-decoration: underline;
+      }
+
+      .left,
+      .right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        p {
+          margin: 0;
+        }
       }
     }
 
-    p {
-      margin-bottom: 6px;
+    .node-menu-bar {
+      display: flex;
+      height: $menuHeight;
+      background-color: $grey-light;
+      border-radius: 4px;
+      margin-bottom: 12px;
+
+      .el-icon svg {
+        transform: scale(1.5);
+      }
+    }
+
+    .blocks {
+      .cell {
+        margin-bottom: 16px;
+        p {
+          margin-bottom: 4px;
+        }
+      }
+
+      .cell-editor {
+        padding: 10px 10px 10px 10px;
+        background-color: $grey-light;
+        .ProseMirror p {
+          margin: 0.1em 0;
+        }
+      }
+      margin-bottom: 14px;
+    }
+
+    .footer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
     }
   }
 
   .stats {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
     p {
       margin: 0;
     }
   }
+}
+
+.messages-editor {
+  margin-top: 60px;
 }

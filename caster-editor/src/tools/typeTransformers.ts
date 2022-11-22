@@ -22,9 +22,26 @@ export function transformNodes(nodes: StoryNode[]): GraphNodes {
   const n: GraphNodes = {};
   nodes.forEach((node) => {
     const graphNode: GraphNode = {
-      name: node.name
+      name: node.name,
+      color: node.color,
+      scriptCells: node.scriptCells
     };
     n[node.uuid] = graphNode;
   });
   return n;
+}
+
+export function transformLayout(nodes: StoryNode[]): GraphNodes {
+  const n: GraphNodes = {};
+  nodes.forEach((node) => {
+    const graphNode: GraphNode = {
+      x: node.positionX,
+      y: node.positionY
+    };
+    n[node.uuid] = graphNode;
+  });
+  const layout = {
+    nodes: n
+  };
+  return layout;
 }
