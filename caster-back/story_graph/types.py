@@ -7,15 +7,16 @@ from strawberry import auto
 
 from . import models
 
+CellType = strawberry.enum(models.ScriptCell.CellType)
+
 
 @strawberry.input
-class NodeInput:
+class NodeCreate:
     name: str
     graph_uuid: uuid.UUID
     position_x: Optional[float] = None
     position_y: Optional[float] = None
     color: Optional[str] = None
-    # script_cells: List["ScriptCell"]
 
 
 @strawberry.input
@@ -74,6 +75,14 @@ class GraphSession:
 class ScriptCell:
     uuid: auto
     node: Node
-    cell_type: auto
+    cell_type: CellType
+    cell_code: auto
+    cell_order: auto
+
+
+@strawberry.django.input(models.ScriptCell)
+class ScriptCellInput:
+    uuid: auto
+    cell_type: CellType
     cell_code: auto
     cell_order: auto
