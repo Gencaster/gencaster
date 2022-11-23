@@ -115,7 +115,9 @@ class StreamPoint(models.Model):
 
     def play_audio_file(self, audio_file: "AudioFile"):
         sc_audio_file_path = f"/data/{audio_file.file.name}"
-        sc_code = f'{{Buffer.read(s, path: "{sc_audio_file_path}", action: {{|b| {{PlayBuf.ar(1, b)!2}}.play;}})}}'
+        sc_code = (
+            f'{{Buffer.read(s, path: "{sc_audio_file_path}", action: {{|b| b.play;}})}}'
+        )
         self.send_raw_instruction(sc_code)
 
     # todo make this async?
