@@ -1,75 +1,14 @@
 <template>
   <div class="index-page">
-    <h1>Nuxt - Django + SocketIO</h1>
+    <h1>Gencaster Stream</h1>
+    <p>
+      <span>Currently on stream: {{ streamId }}</span>
+    </p>
     <audio ref="player" controls />
-    <div class="forms">
-      <h2>Send</h2>
-      <form @submit.prevent="emitData">
-        <input v-model="formData.emit" type="text" placeholder="Message">
-        <input type="submit" value="Echo">
-      </form>
-      <form @submit.prevent="emitBroadcast">
-        <input v-model="formData.broadcast" type="text" placeholder="Message">
-        <input type="submit" value="Broadcast">
-      </form>
-      <form @submit.prevent="emitJoin">
-        <input
-          v-model="formData.joinRoom"
-          type="text"
-          placeholder="Room Name"
-        >
-        <input type="submit" value="Join Room">
-      </form>
-
-      <form @submit.prevent="emitLeave">
-        <input
-          v-model="formData.leaveRoom"
-          type="text"
-          placeholder="Room Name"
-        >
-        <input type="submit" value="Leave Room">
-      </form>
-
-      <form @submit.prevent="emitSendRoom">
-        <input
-          v-model="formData.sendRoomName"
-          type="text"
-          placeholder="Room Name"
-        >
-        <input
-          v-model="formData.sendRoomMessage"
-          type="text"
-          placeholder="Message"
-        >
-        <input type="submit" value="Send to Room">
-      </form>
-      <form @submit.prevent="emitClose">
-        <input
-          v-model="formData.closeRoom"
-          type="text"
-          placeholder="Room Name"
-        >
-        <input type="submit" value="Close Room">
-      </form>
-      <form @submit.prevent="emitDisconnect">
-        <input type="submit" value="Disconnect">
-      </form>
-    </div>
-    <br>
-    <div class="receive">
-      <h2>Receive</h2>
-      <div class="logs">
-        <p v-for="item in logs" :key="item.message">
-          {{ item.message }}
-        </p>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-import { io } from "socket.io-client";
-
 export default {
   name: "IndexComponent",
   components: {},
@@ -89,7 +28,7 @@ export default {
         sendRoomMessage: "",
         closeRoom: ""
       },
-
+      streamId: "",
       // internal
       Janus: null,
       janusInstance: null,
@@ -112,27 +51,10 @@ export default {
   },
   computed: {},
   mounted() {
-    this.initSocket();
     this.initJanus();
   },
   created() { },
   methods: {
-    initSocket() {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const that = this;
-      this.socket = io.connect("ws://127.0.0.1:8081");
-
-      this.socket.on("connect", () => {
-        that.socket.emit("my_event", { data: "I'm connected!" });
-      });
-      this.socket.on("disconnect", () => {
-        that.logs.push({ message: "Disconnected" });
-      });
-      this.socket.on("my_response", (msg) => {
-        that.logs.push({ message: `Received: ${msg.data}` });
-      });
-    },
-
     initJanus() {
       this.Janus = Janus;
 
@@ -277,11 +199,14 @@ export default {
               );
             }
 
-            // start first one
+            // start random one
             if (list && list[0]) {
+              const randomStream = list[Math.floor(Math.random() * list.length)];
+              // alert(`Use stream ${randomStream.id}`);
+              that.streamId = randomStream.id;
               const body = {
                 request: "watch",
-                id: list[0].id
+                id: randomStream.id
               };
               console.log(body);
               that.streaming.send({ message: body });
@@ -289,49 +214,6 @@ export default {
           }
         }
       });
-    },
-
-    //  =============================== FORM ===============================
-    // event handler for server sent data
-    // the data is displayed in the "Received" section of the page
-    // handlers for the different forms in the page
-    // these send data to the server in a variety of ways
-
-    emitData() {
-      // console.log(this.formData.emit)
-      this.socket.emit("my_event", { data: this.formData.emit });
-    },
-
-    emitBroadcast() {
-      // console.log(this.formData.broadcast)
-      this.socket.emit("my_broadcast_event", { data: this.formData.broadcast });
-    },
-
-    emitJoin() {
-      // console.log(this.formData.joinRoom)
-      this.socket.emit("join", { data: this.formData.joinRoom });
-    },
-    emitLeave() {
-      // console.log(this.formData.leaveRoom)
-      this.socket.emit("leave", { data: this.formData.leaveRoom });
-    },
-
-    emitSendRoom() {
-      // console.log(this.formData.sendRoomName, this.formData.sendRoomMessage)
-      this.socket.emit("my_room_event", {
-        room: this.formData.sendRoomName,
-        data: this.formData.sendRoomMessage
-      });
-    },
-
-    emitClose() {
-      // console.log(this.formData.closeRoom)
-      this.socket.emit("close_room", { room: this.formData.closeRoom });
-    },
-
-    emitDisconnect() {
-      console.log("Sending disconnect_request");
-      this.socket.emit("disconnect_request");
     }
   }
 };
