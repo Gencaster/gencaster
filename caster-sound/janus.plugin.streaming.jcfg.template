@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# please set the variables
+# NUM
+# PORT
+
+cat << EOF
+sc-stream-${NUM}: {
+	# secret = "adminpwd"
+	id = ${NUM}
+	# description = "Opus/VP8 live stream coming from external source"
+	# metadata = "You can use this metadata section to put any info you want!"
+	type = "rtp"
+	audioport = ${JANUS_OUT_PORT}
+	audiopt = 111 # <audio RTP payload type> (e.g., 111)
+	audiortpmap = "opus/48000/2"
+	audio = true
+	video = false
+	data = false
+}
+
+EOF

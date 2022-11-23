@@ -17,8 +17,8 @@ services:
       - ./caster-sound/sc.scd:/root/sc.scd
       - ./caster-sound/start_streams.sh:/root/start_streams.sh
       - ./caster-sound/janus.jcfg:/opt/janus/etc/janus/janus.jcfg
-      - ./caster-sound/janus.plugin.streaming.jcfg:/opt/janus/etc/janus/janus.plugin.streaming.jcfg
-      - ./caster-sound/janus.plugin.audiobridge.jcfg:/opt/janus/etc/janus/janus.plugin.audiobridge.jcfg
+      # - ./caster-sound/janus.plugin.streaming.jcfg:/opt/janus/etc/janus/janus.plugin.streaming.jcfg
+      # - ./caster-sound/janus.plugin.audiobridge.jcfg:/opt/janus/etc/janus/janus.plugin.audiobridge.jcfg
       - ./caster-sound/caster-sound.conf:/root/caster-sound.conf
       - ./caster-sound/GenCaster/:/usr/local/share/SuperCollider/Extensions/
 
