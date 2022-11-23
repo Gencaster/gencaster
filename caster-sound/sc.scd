@@ -10,7 +10,7 @@ s.waitForBoot({
     Ndef(\chordTest, {
         var delay;
         var speed = 0.5;
-        var pitches = [60, 67, 65, 69];
+        var pitches = [60, 67, 65, 69] + (g.synthPort%16);
         var trig = Impulse.kr(speed);
         var pitch = TChoose.kr(trig!pitches.size, pitches.collect({|i| i + LFDNoise3.kr(0.1).range(-0.2, 0.2)}));
         var sig = SyncSaw.ar(
