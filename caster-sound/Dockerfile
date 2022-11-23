@@ -163,4 +163,9 @@ COPY sc.scd /root/sc.scd
 
 COPY GenCaster/ /usr/local/share/SuperCollider/Extensions/GenCaster/
 
-CMD ["/usr/bin/supervisord", "-c", "/root/caster-sound.conf"]
+COPY create_config.sh /root/create_config.sh
+COPY janus.plugin.audiobridge.jcfg.template /root/janus.plugin.audiobridge.jcfg.template
+COPY janus.plugin.streaming.jcfg.template /root/janus.plugin.streaming.jcfg.template
+
+# CMD ["tail", "-f", "/dev/null"]
+CMD ["/bin/sh", "-c", "/root/create_config.sh && /usr/bin/supervisord -c /root/caster-sound.conf"]
