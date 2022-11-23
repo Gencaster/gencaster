@@ -16,6 +16,8 @@ services:
       - .secrets.env
     volumes:
       - static:/home/gencaster/static:rw
+      - ./data:/data
+      - ./data:/home/gencaster/media
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -33,6 +35,7 @@ services:
       - vars.env
       - vars.deploy.dev.env
     volumes:
+      - ./data:/data
       - ./caster-sound/janus.jcfg:/opt/janus/etc/janus/janus.jcfg
       # - ./caster-sound/janus.plugin.audiobridge.jcfg:/opt/janus/etc/janus/janus.plugin.audiobridge.jcfg
 
