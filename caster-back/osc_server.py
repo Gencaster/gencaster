@@ -154,7 +154,7 @@ def remote_action_handler(
 
     stream_points = StreamPoint.objects.free_stream_points().filter()
     if osc_message.target.upper() != "BROADCAST":
-        stream_points.filter(janus_out_room=osc_message.target)
+        stream_points = stream_points.filter(janus_out_room=osc_message.target)
 
     if stream_points.count() == 0:
         log.error(f"Could not find matching streaming point {osc_message.target}")

@@ -28,7 +28,8 @@ GenCasterClient {
 			\text: text,
 			\target: name,
 		);
-		netClient.sendMsg("/remote/action", *GenCasterClient.eventToList(msg));
+		msg = GenCasterClient.eventToList(msg);
+		netClient.sendMsg("/remote/action", *msg);
 	}
 
 	*eventToList {|event|
