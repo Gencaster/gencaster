@@ -101,13 +101,13 @@ GenCasterClients {
 		^clients[k];
 	}
 
-	activate {|k|
+	activate {|...ks|
+		this.clear;
+		ks.do({|k|
 		var c, interp, fun;
-		// @todo check not nil
-		// @todo make k an array so we can send to multiple streams
+
 		c = this.at(k);
 
-		this.clear;
 		interp = thisProcess.interpreter;
 		// @todo make this a classvar func
 		fun = {|code|
@@ -116,7 +116,7 @@ GenCasterClients {
 		};
 		interp.codeDump = interp.codeDump.addFunc(fun);
 		^c;
-
+		});
 	}
 
 	broadcast {
