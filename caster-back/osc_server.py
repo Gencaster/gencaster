@@ -98,7 +98,7 @@ def is_authorized(osc_message: Dict[str, Any]) -> bool:
     # idea: use two keys - first one is a hashed password, second is a random salt
     # and we need it to hash with the message to verify that it does not get
     # copy/pasted with a timecode?
-    return osc_message.get("password", None) == PASSWORD
+    return bool(osc_message.get("password", None) == PASSWORD)
 
 
 def acknowledge_handler(

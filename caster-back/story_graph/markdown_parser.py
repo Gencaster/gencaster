@@ -16,7 +16,7 @@ def md_to_ssml(text: str) -> str:
     with GencasterRenderer() as render:
         document = Document(text)
         ssml_text = render.render(document)
-    return ssml_text
+    return ssml_text  # type: ignore
 
 
 class GencasterToken(SpanToken):
