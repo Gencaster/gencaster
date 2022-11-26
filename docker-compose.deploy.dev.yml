@@ -22,6 +22,9 @@ services:
       - "host.docker.internal:host-gateway"
 
   osc_backend:
+    volumes:
+      - ./data:/data
+      - ./data:/home/gencaster/media
     env_file:
       - vars.env
       - vars.deploy.dev.env
