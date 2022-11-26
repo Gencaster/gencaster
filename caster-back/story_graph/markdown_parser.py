@@ -3,13 +3,20 @@ import re
 from datetime import datetime
 from typing import Callable, Dict
 
-from mistletoe import block_token, span_token
+from mistletoe import Document, block_token, span_token
 from mistletoe.base_renderer import BaseRenderer
 from mistletoe.span_token import SpanToken
 
 from stream.models import TextToSpeech
 
 log = logging.getLogger(__name__)
+
+
+def md_to_ssml(text: str) -> str:
+    with GencasterRenderer() as render:
+        document = Document(text)
+        ssml_text = render.render(document)
+    return ssml_text
 
 
 class GencasterToken(SpanToken):

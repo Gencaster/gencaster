@@ -13,7 +13,6 @@ services:
     env_file:
       - vars.env
       - vars.deploy.dev.env
-      - .secrets.env
     volumes:
       - static:/home/gencaster/static:rw
       - ./data:/data
@@ -27,7 +26,7 @@ services:
       - vars.deploy.dev.env
       - .secrets.env
     ports:
-      - 57130:57130/udp
+      - 7000:7000/udp
 
   sound:
     network_mode: host
