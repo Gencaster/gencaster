@@ -37,3 +37,5 @@ services:
       - ./caster-back/:/home/gencaster
       - ./data:/data
       - ./data:/home/gencaster/media
+    ports:
+      - 7000:7000/udp

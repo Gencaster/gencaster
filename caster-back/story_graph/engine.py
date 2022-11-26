@@ -2,11 +2,10 @@ import asyncio
 import logging
 
 from asgiref.sync import sync_to_async
-from mistletoe import Document
 
 from stream.models import StreamInstruction, StreamPoint
 
-from .markdown_parser import GencasterRenderer
+from .markdown_parser import md_to_ssml
 from .models import Graph, Node, ScriptCell
 
 log = logging.getLogger(__name__)
@@ -19,9 +18,7 @@ class Engine:
         self._current_node: Node
 
     def execute_markdown_code(self, cell_code: str):
-        with GencasterRenderer() as render:
-            document = Document(cell_code)
-            ssml_text = render.render(document)
+        ssml_text = md_to_ssml(cell_code)
         self.streaming_point.speak_on_stream(ssml_text)
 
     async def execute_sc_code(self, cell_code: str):

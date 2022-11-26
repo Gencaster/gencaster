@@ -1,3 +1,148 @@
+GenCasterClient {
+	var <name;
+	var <netClient;
+	var <password;
+
+	*new {|name, netClient, password|
+		^super.newCopyArgs(name, netClient, password).init;
+	}
+
+	init {}
+
+	send {|cmd|
+		var msg = (
+			\password: password,
+			\action: \code,
+			\text: cmd,
+			\target: name,
+		);
+		msg.postln;
+		msg = GenCasterClient.eventToList(msg);
+		netClient.sendMsg("/remote/action", *msg);
+	}
+
+	speak{|text|
+		var msg = (
+			\password: password,
+			\action: \speak,
+			\text: text,
+			\target: name,
+		);
+		netClient.sendMsg("/remote/action", *GenCasterClient.eventToList(msg));
+	}
+
+	*eventToList {|event|
+		var list = [];
+		event.pairsDo({|k, v|
+			list = list ++ [k];
+			list = list ++ [v];
+		});
+		^list;
+	}
+
+}
+
+GenCasterClients {
+	classvar activeClients;
+
+	var <hostname;
+	var <port;
+	var password;
+
+	// own variables
+	var <clients;
+	var <netClient;
+	var <servers;
+
+	*initClass {
+		activeClients = ();
+	}
+
+
+	*new {|hostname, port, password|
+		^super.newCopyArgs(hostname, port, password).init;
+	}
+
+	init {
+		netClient = NetAddr(hostname, port);
+		clients = ();
+		(0..15).do({|i|
+			clients[i] = GenCasterClient(i, netClient, password);
+		});
+	}
+
+	prListenFunc {|code|
+		["hi", code].postln;
+	}
+
+
+	sendAll {|cmd|
+		var msg = (
+			\password: password,
+			\action: \speak,
+			\text: cmd,
+			\target: "BROADCAST",
+		);
+		netClient.sendMsg("/remote/action", *GenCasterClient.eventToList(msg));
+	}
+
+	speakAll {|text|
+		var msg = (
+			\password: password,
+			\action: \speak,
+			\text: text,
+			\target: "BROADCAST",
+		);
+		netClient.sendMsg("/remote/action", *GenCasterClient.eventToList(msg));
+	}
+
+	at {|k|
+		^clients[k];
+	}
+
+	activate {|k|
+		var c, interp, fun;
+		// @todo check not nil
+		// @todo make k an array so we can send to multiple streams
+		c = this.at(k);
+
+		this.clear;
+		interp = thisProcess.interpreter;
+		// @todo make this a classvar func
+		fun = {|code|
+			"send to '%': '%'".format(c.name, code).postln;
+			c.send(code);
+		};
+		interp.codeDump = interp.codeDump.addFunc(fun);
+		^c;
+
+	}
+
+	broadcast {
+		var interp, fun, genclient;
+		this.clear;
+		genclient = this;
+		interp = thisProcess.interpreter;
+
+		fun = {|code|
+			"send to all: '%'".format(code).postln;
+			genclient.sendAll(code);
+		};
+		interp.codeDump = interp.codeDump.addFunc(fun);
+	}
+
+	clear {
+		var interp = thisProcess.interpreter;
+		interp.codeDump = nil;
+	}
+
+	login {
+		netClient.sendMsg("/remote/login");
+	}
+
+}
+
+
 GenCasterStatus {
 	classvar <success;
 	classvar <failure;
