@@ -93,7 +93,7 @@ GenCasterClient {
 	}
 }
 
-GenCasterClients {
+GenCaster {
 	classvar activeClients;
 
 	var <hostname;
@@ -110,7 +110,7 @@ GenCasterClients {
 	}
 
 
-	*new {|hostname, port, password|
+	*new {|hostname="195.201.163.94", port=7000, password="demo"|
 		^super.newCopyArgs(hostname, port, password).init;
 	}
 
@@ -291,8 +291,8 @@ GenCasterServer {
 		environment[\this] = this;
 	}
 
-	*arrayToEvent {
-
+	num {
+		synthPort%16;
 	}
 
 	serverInfo {
