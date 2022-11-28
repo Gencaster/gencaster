@@ -27,7 +27,7 @@ services:
     env_file:
       - vars.env
       - .secrets.env
-    command: ['python', 'osc_server.py']
+    command: ['python', '-m', 'osc_server.server']
 
   sound:
     build:

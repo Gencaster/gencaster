@@ -378,7 +378,7 @@ class TextToSpeech(models.Model):
     @classmethod
     def create_from_text(
         cls,
-        text: str,
+        ssml_text: str,
         voice_name: str = VoiceNameChoices.DE_STANDARD_D__MALE,
         force_new: bool = False,
     ) -> "TextToSpeech":
@@ -387,17 +387,17 @@ class TextToSpeech(models.Model):
         """
         if not force_new:
             existing_text = cls.objects.filter(
-                text=text,
+                text=ssml_text,
             ).first()
             if existing_text:
                 return existing_text
 
         client = texttospeech.TextToSpeechClient()
 
-        log.info(f"Request text to speech for {text[0:100]}")
+        log.info(f"Request text to speech for {ssml_text[0:100]}")
         response = client.synthesize_speech(
             input=texttospeech.SynthesisInput(
-                ssml=text,
+                ssml=ssml_text,
             ),
             voice=texttospeech.VoiceSelectionParams(
                 language_code="de-de",
@@ -407,15 +407,15 @@ class TextToSpeech(models.Model):
                 audio_encoding=texttospeech.AudioEncoding.LINEAR16,
             ),
         )
-        log.debug(f"Received text to speech for {text[0:100]}")
+        log.debug(f"Received text to speech for {ssml_text[0:100]}")
 
         audio_file = AudioFile.from_file(
             file_content=io.BytesIO(response.audio_content)  # type: ignore
         )
-        log.info(f"Saved audio of text {text[0:100]} to {audio_file.file.name}")
+        log.info(f"Saved audio of text {ssml_text[0:100]} to {audio_file.file.name}")
         return cls.objects.create(
             audio_file=audio_file,
-            text=text,
+            text=ssml_text,
             voice_name=voice_name,
         )
 
