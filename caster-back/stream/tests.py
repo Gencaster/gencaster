@@ -188,7 +188,7 @@ class TextToSpeechTestCase(TestCase):
 
     def test_existing_one(self):
         existing = self.get_text_to_speech(text="hello world")
-        new = TextToSpeech.create_from_text(text="hello world")
+        new = TextToSpeech.create_from_text(ssml_text="hello world")
         self.assertEqual(existing, new)
 
     @mock.patch("stream.models.texttospeech")
