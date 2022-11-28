@@ -66,6 +66,35 @@ GenCasterMessage {
 		});
 		^list;
 	}
+
+	*eventToJson {|v|
+		var val = case
+		{v.class == Association} { GenCasterMessage.eventToJson.value(v.key) }
+		{v===true} { "true" }
+		{v===false} { "false" }
+		{v.isString} { "\"%\"".format(v.replace("\"", "\\\"")).replace("\n", "\\n").replace("\t", " ") }
+		{v.class == Symbol } { "\"%\"".format(v.replace("\"", "\\\"")).replace("\n", "\\n") }
+		{v.isNil} {val = "null"}
+		{v.isFloat} { "%".format(v)}
+		{v.isInteger} { "%".format(v)}
+		{v.isArray} {
+			var jsonRepArray = v.collect{|i| GenCasterMessage.eventToJson.value(i)};
+			val = "%".format(jsonRepArray);
+		}
+		{v.isFunction} { "\"a function\"" }
+		{v.class == Event} {
+			var string = "{";
+			v.pairsDo({|k, v|
+				string = string + "\"%\": %,".format(k, GenCasterMessage.eventToJson.(v));
+			});
+			// remove last ,
+			string = string[0..string.size-2];
+			string = string + "}";
+			string;
+		}
+		{ "\"%\"".format(v.replace("\"", "\\\"")).replace("\n", "\\n") };
+		val;
+	}
 }
 
 GenCasterClient {
@@ -380,6 +409,10 @@ GenCasterServer {
 				var returnValue = function.interpret;
 				if(returnValue.class==Function, {
 					returnValue = function.interpret.(environment);
+				});
+
+				if(returnValue.class==Event, {
+					returnValue = GenCasterMessage.eventToJson(returnValue);
 				});
 				this.sendAck(
 					status: GenCasterStatus.finished,
