@@ -1,3 +1,73 @@
+GenCasterMessage {
+	*addressRemoteAction {
+		^"/remote/action";
+	}
+
+	*addressBeacon {
+		^"/beacon";
+	}
+
+	*addressAcknowledge {
+		^"/acknowledge";
+	}
+
+	*response {|uuid, status, returnValue|
+		^GenCasterMessage.eventToList((
+			\uuid: uuid,
+			\status: status,
+			\returnValue: returnValue,
+		));
+	}
+
+	*remoteAction {|action, password, cmd, target=nil|
+		// @todo check if action is speak or code
+		^GenCasterMessage.eventToList((
+			\protocol_version: "0.1",
+			\action: action,
+			\password: password,
+			\cmd: cmd,
+			\target: target,
+		));
+	}
+
+	*beacon {|
+		name,
+		synthPort,
+		langPort,
+		janusOutPort,
+		janusInPort,
+		janusOutRoom,
+		janusInRoom,
+		janusPublicIp,
+		useInput,
+		oscBackendHost,
+		oscBackendPort
+	|
+		^GenCasterMessage.eventToList((
+			\name: name,
+			\synth_port: synthPort,
+			\lang_port: langPort,
+			\janus_out_port: janusOutPort,
+			\janus_in_port: janusInPort,
+			\janus_out_room: janusOutRoom,
+			\janus_in_room: janusInRoom,
+			\janus_public_ip: janusPublicIp,
+			\use_input: useInput,
+			\osc_backend_host: oscBackendHost,
+			\osc_backend_port: oscBackendPort,
+		));
+	}
+
+	*eventToList {|event|
+		var list = [];
+		event.pairsDo({|k, v|
+			list = list ++ [k];
+			list = list ++ [v];
+		});
+		^list;
+	}
+}
+
 GenCasterClient {
 	var <name;
 	var <netClient;
@@ -9,38 +79,18 @@ GenCasterClient {
 
 	init {}
 
-	send {|cmd|
-		var msg = (
-			\password: password,
-			\action: \code,
-			\text: cmd,
-			\target: name,
-		);
-		msg.postln;
-		msg = GenCasterClient.eventToList(msg);
-		netClient.sendMsg("/remote/action", *msg);
+	send {|cmd, action=\code|
+		netClient.sendMsg(GenCasterMessage.addressRemoteAction, *GenCasterMessage.remoteAction(
+			action: action,
+			password: password,
+			cmd: cmd,
+			target: name
+		));
 	}
 
 	speak{|text|
-		var msg = (
-			\password: password,
-			\action: \speak,
-			\text: text,
-			\target: name,
-		);
-		msg = GenCasterClient.eventToList(msg);
-		netClient.sendMsg("/remote/action", *msg);
+		this.send(cmd: text, action: \speak);
 	}
-
-	*eventToList {|event|
-		var list = [];
-		event.pairsDo({|k, v|
-			list = list ++ [k];
-			list = list ++ [v];
-		});
-		^list;
-	}
-
 }
 
 GenCasterClients {
@@ -72,29 +122,17 @@ GenCasterClients {
 		});
 	}
 
-	prListenFunc {|code|
-		["hi", code].postln;
-	}
-
-
-	sendAll {|cmd|
-		var msg = (
-			\password: password,
-			\action: \speak,
-			\text: cmd,
-			\target: "BROADCAST",
-		);
-		netClient.sendMsg("/remote/action", *GenCasterClient.eventToList(msg));
+	sendAll {|code, action=\code|
+		"send to all: '%'".format(code).postln;
+		netClient.sendMsg(GenCasterMessage.addressRemoteAction, *GenCasterMessage.remoteAction(
+			action: action,
+			password: password,
+			cmd: code,
+		));
 	}
 
 	speakAll {|text|
-		var msg = (
-			\password: password,
-			\action: \speak,
-			\text: text,
-			\target: "BROADCAST",
-		);
-		netClient.sendMsg("/remote/action", *GenCasterClient.eventToList(msg));
+		this.sendAll(code: text, action: \speak);
 	}
 
 	at {|k|
@@ -102,32 +140,33 @@ GenCasterClients {
 	}
 
 	activate {|...ks|
-		this.clear;
-		ks.do({|k|
-		var c, interp, fun;
-
-		c = this.at(k);
-
-		interp = thisProcess.interpreter;
-		// @todo make this a classvar func
-		fun = {|code|
-			"send to '%': '%'".format(c.name, code).postln;
-			c.send(code);
+		var targets = ks.collect({|k| this.at(k)});
+		var interp;
+		var fun = {|code|
+			"send to '%': '%'".format(targets, code).postln;
+			targets.do({|target|
+				target.send(code);
+			});
 		};
+
+		this.clear;
+		interp = thisProcess.interpreter;
 		interp.codeDump = interp.codeDump.addFunc(fun);
-		^c;
-		});
 	}
 
 	broadcast {
-		var interp, fun, genclient;
+		var interp, fun;
 		this.clear;
-		genclient = this;
 		interp = thisProcess.interpreter;
 
 		fun = {|code|
+			var msg;
 			"send to all: '%'".format(code).postln;
-			genclient.sendAll(code);
+			netClient.sendMsg(GenCasterMessage.addressRemoteAction, *GenCasterMessage.remoteAction(
+				action: \code,
+				password: password,
+				cmd: code,
+			));
 		};
 		interp.codeDump = interp.codeDump.addFunc(fun);
 	}
@@ -135,10 +174,6 @@ GenCasterClients {
 	clear {
 		var interp = thisProcess.interpreter;
 		interp.codeDump = nil;
-	}
-
-	login {
-		netClient.sendMsg("/remote/login");
 	}
 
 }
@@ -180,7 +215,6 @@ GenCasterServer {
 	var <name;
 	var <synthPort;
 	var <langPort;
-	var <publicIP;
 
 	var <janusOutPort;
 	var <janusInPort;
@@ -208,7 +242,6 @@ GenCasterServer {
 		name = nil,
 		synthPort = nil,
 		langPort = nil,
-		publicIP = nil,
 		janusOutPort = nil,
 		janusInPort = nil,
 		janusOutRoom = nil,
@@ -222,7 +255,6 @@ GenCasterServer {
 		name = name ? "SC_NAME".getenv ? "GENCASTER_LOCAL";
 		synthPort = synthPort ? ("SC_SYNTH_PORT".getenv ? 57110).asInteger;
 		langPort = langPort ? NetAddr.langPort ? 57120;
-		publicIP = publicIP ? "SUPERCOLLIDER_PUBLIC_IP".getenv;
 		janusOutPort = janusOutPort ? ("JANUS_OUT_PORT".getenv ? 0).asInteger;
 		janusInPort = janusInPort ? ("JANUS_IN_PORT".getenv ? 0).asInteger;
 		janusOutRoom = janusOutRoom ? "JANUS_OUT_ROOM".getenv;
@@ -237,7 +269,6 @@ GenCasterServer {
 			name,
 			synthPort,
 			langPort,
-			publicIP,
 			janusOutPort,
 			janusInPort,
 			janusOutRoom,
@@ -267,17 +298,16 @@ GenCasterServer {
 	serverInfo {
 		^(
 			name: name,
-			synthPort: synthPort,
-			langPort: langPort,
-			publicIP: publicIP,
-			janusOutPort: janusOutPort,
-			janusInPort: janusInPort,
-			janusOutRoom: janusOutRoom,
-			janusInRoom: janusInRoom,
-			janusPublicIP: janusPublicIP,
-			useInput: useInput,
-			oscBackendHost: oscBackendHost,
-			oscBackendPort: oscBackendPort,
+			synth_port: synthPort,
+			lang_port: langPort,
+			janus_out_port: janusOutPort,
+			janus_in_port: janusInPort,
+			janus_out_room: janusOutRoom,
+			janus_in_room: janusInRoom,
+			janus_public_ip: janusPublicIP,
+			use_input: useInput,
+			osc_backend_host: oscBackendHost,
+			osc_backend_port: oscBackendPort,
 		);
 	}
 
@@ -292,7 +322,7 @@ GenCasterServer {
 		message = message ? ();
 		message[\uuid] = uuid ? 0;
 		message[\status] = status;
-		address = address ? "/ack";
+		address = address ? "/acknowledge";
 
 		if(verbosity<=GenCasterVerbosity.debug, {
 			if(status!=GenCasterStatus.beacon, {
@@ -347,11 +377,14 @@ GenCasterServer {
 			var function = (msg[2] ? "{}").asString;
 			this.sendAck(status: GenCasterStatus.received, uuid: uuid);
 			{
-				var returnValue = function.interpret.(environment);
+				var returnValue = function.interpret;
+				if(returnValue.class==Function, {
+					returnValue = function.interpret.(environment);
+				});
 				this.sendAck(
 					status: GenCasterStatus.finished,
 					uuid: uuid,
-					message: (returnValue: returnValue),
+					message: (return_value: returnValue),
 				);
 			}.fork;
 		}, path: "/instruction");
