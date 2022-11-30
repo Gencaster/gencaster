@@ -23,10 +23,25 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
       <el-button text bg :icon="VideoPlay" />
       <el-button text bg :icon="VideoPause" />
     </div>
+    <div class="blocks">
+      <div v-for="cell in blocksData" :key="cell.uuid">
+        <div class="cell">
+          <ElementsBlock :cell-data="cell" class="cell-editor" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
+interface Cell {
+  cellCode: string
+  cellOrder: number
+  cellType: string
+  uuid: string
+  __typename: string
+}
+
 export default {
   name: "NodeEditor",
 
@@ -36,8 +51,8 @@ export default {
       required: false,
       default: () => false
     },
-    blockData: {
-      type: Array,
+    blocksData: {
+      type: Array<Cell>,
       required: true,
       default: () => []
     },
@@ -59,8 +74,8 @@ export default {
   },
 
   methods: {
-    openNodeNameEdit() {},
-    closeNodeData() {}
+    openNodeNameEdit() { },
+    closeNodeData() { }
   }
 };
 </script>
@@ -74,51 +89,61 @@ export default {
   border: 1px solid $black;
 
   .title {
+    display: flex;
+    height: $menuHeight;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+
+    .left {
+      button {
+        color: $grey-dark;
+
+        &:hover {
+          font-style: italic;
+          background-color: transparent;
+        }
+      }
+    }
+
+    .right {
+      transform: translateX(8px);
+      text-decoration: underline;
+    }
+
+    .left,
+    .right {
       display: flex;
-      height: $menuHeight;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      margin-bottom: 4px;
 
-      .left {
-        button {
-          color: $grey-dark;
-
-          &:hover {
-            font-style: italic;
-            background-color: transparent;
-          }
-        }
-      }
-
-      .right {
-        transform: translateX(8px);
-        text-decoration: underline;
-      }
-
-      .left,
-      .right {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        p {
-          margin: 0;
-        }
+      p {
+        margin: 0;
       }
     }
+  }
 
-    .node-menu-bar {
-      display: flex;
-      height: $menuHeight;
-      background-color: $grey-light;
+  .node-menu-bar {
+    display: flex;
+    height: $menuHeight;
+    background-color: $grey-light;
+    border-radius: 4px;
+    margin-bottom: 12px;
+
+    .el-icon svg {
+      transform: scale(1.5);
+    }
+  }
+
+  .blocks {
+    .cell {
+      margin-bottom: $spacingM;
       border-radius: 4px;
-      margin-bottom: 12px;
-
-      .el-icon svg {
-        transform: scale(1.5);
-      }
+      background-color: $grey-light;
+      padding: 10px;
+      border: 1px solid #CDCDCD;
     }
+  }
 
 }
 </style>

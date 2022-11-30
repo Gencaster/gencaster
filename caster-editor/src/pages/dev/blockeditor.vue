@@ -2,7 +2,7 @@
   <div>
     <div class="editor-wrapper">
       <div class="editor-inner">
-        <ElementsNodeEditor :dev="true" :block-data="debugBlockData" />
+        <ElementsNodeEditor :dev="true" :blocks-data="debugBlockData" />
       </div>
     </div>
   </div>
