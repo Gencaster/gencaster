@@ -1,12 +1,26 @@
 <template>
   <div class="block">
     <!-- {{ cellData }} -->
+    <!-- markdown -->
+    <div v-if="editor && editorType === 'markdown'" class="editor-markdown">
+      <EditorContent :editor="editor" />
+    </div>
+
     <!-- python -->
     <div v-if="editorType === 'python'" class="editor-python">
       <Codemirror
-        v-model="code" placeholder="Code goes here..." :autofocus="false"
-        :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady"
-        @change="emitPython('change', $event)" @focus="emitPython('focus', $event)" @blur="emitPython('blur', $event)"
+        v-model="code" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
+        :tab-size="2" :extensions="extensions" @ready="codemirrorReady" @change="emitCodemirror('change', $event)"
+        @focus="emitCodemirror('focus', $event)" @blur="emitCodemirror('blur', $event)"
+      />
+    </div>
+
+    <!-- supercollider -->
+    <div v-if="editorType === 'supercollider'" class="editor-supercollider">
+      <Codemirror
+        v-model="code" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
+        :tab-size="2" :extensions="extensions" @ready="codemirrorReady" @change="emitCodemirror('change', $event)"
+        @focus="emitCodemirror('focus', $event)" @blur="emitCodemirror('blur', $event)"
       />
     </div>
 
@@ -19,7 +33,6 @@
 
 <script lang="ts">
 // python
-import { emit } from "process";
 import { Codemirror } from "vue-codemirror";
 import { python } from "@codemirror/lang-python";
 
@@ -70,13 +83,30 @@ export default {
           ],
           content: this.cellData.cellCode,
           // triggered on every change
-          onUpdate: () => this.onEditorUpdate()
+          onUpdate: () => this.onTipTapUpdate()
+        });
+        break;
+
+      case "markdown":
+        this.editor = new Editor({
+          extensions: [
+            StarterKit,
+            Highlight,
+            Typography
+          ],
+          content: this.cellData.cellCode,
+          // triggered on every change
+          onUpdate: () => this.onTipTapUpdate()
         });
         break;
 
       case "python":
         this.code = this.cellData.cellCode;
-        console.log("python");
+        this.extensions = [python()];
+        break;
+
+      case "supercollider":
+        this.code = this.cellData.cellCode;
         this.extensions = [python()];
         break;
 
@@ -90,17 +120,20 @@ export default {
   },
 
   methods: {
-    onEditorUpdate() {
+    // TipTap
+    onTipTapUpdate() {
       // console.log(this.editor.getText());
       // console.log(JSON.stringify(this.editor.getJSON()));
       // console.log(this.editor.getHtml());
     },
-    emitPython(event, data) {
+
+    // Python & Supercollider
+    emitCodemirror(event, data) {
       // console.log(data);
     },
 
-    handleReady() {
-      console.log("handle ready");
+    codemirrorReady() {
+      // console.log("handle ready");
     }
   }
 };
