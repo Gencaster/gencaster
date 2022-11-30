@@ -34,13 +34,9 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
 </template>
 
 <script lang="ts">
-interface Cell {
-  cellCode: string
-  cellOrder: number
-  cellType: string
-  uuid: string
-  __typename: string
-}
+// @ts-expect-error: Auto Imported by nuxt
+import type { NodeCell } from "~/assets/js/interfaces";
+// TODO: Fix typescript import to be linked in editor as well
 
 export default {
   name: "NodeEditor",
@@ -52,7 +48,7 @@ export default {
       default: () => false
     },
     blocksData: {
-      type: Array<Cell>,
+      type: Array<NodeCell>,
       required: true,
       default: () => []
     },
@@ -87,6 +83,7 @@ export default {
   padding: 5px 15px 15px 15px;
   background-color: $mainWhite;
   border: 1px solid $black;
+  overflow-y: scroll;
 
   .title {
     display: flex;
