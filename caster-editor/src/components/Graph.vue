@@ -63,7 +63,12 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
     <div v-if="fetching">
       <elementsLoading />
     </div>
-    <div v-else>
+    <div v-if="fetchedOnce">
+      <v-network-graph
+        v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
+        :nodes="nodes" :edges="edges" :configs="configs" :layouts="layouts" :event-handlers="eventHandlers"
+      />
+
       <p v-if="showGraphData">
         {{ nodes }}
         <br>
@@ -72,40 +77,9 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
         {{ data.graph }}
         <!-- {{ data.graph }} -->
       </p>
-      <v-network-graph
-        v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
-        :nodes="nodes" :edges="edges" :configs="configs" :layouts="layouts" :event-handlers="eventHandlers"
-      />
 
       <div v-if="showNodeData" class="node-data">
         <ElementsBlockEditor :current-node-name="currentNodeName" :blocks-data="selectedNodeScriptCells" />
-        <!-- <div class="title">
-          <div class="left">
-            <p>{{ currentNodeName }}</p>
-            <button class="unstyled" @click="openNodeNameEdit()">
-              edit
-            </button>
-          </div>
-          <div class="right">
-            <button class="unstyled" @click="closeNodeData()">
-              Close
-            </button>
-          </div>
-        </div>
-        <div class="node-menu-bar">
-          <el-button text bg :icon="Plus" />
-          <el-button text bg :icon="Scissor" />
-          <el-button text bg :icon="VideoPlay" />
-          <el-button text bg :icon="VideoPause" />
-        </div>
-        <div class="blocks">
-          {{ selectedNodeScriptCells }}
-        </div>
-        <div class="footer">
-          <button class="unstyled" @click="showNodeDataJSON()">
-            JSON
-          </button>
-        </div> -->
       </div>
 
       <div v-if="!showNodeData" class="stats">
@@ -180,6 +154,7 @@ export default {
     }
 
     return {
+      fetchedOnce: false,
       fetching: true,
       result: null,
       data: {
@@ -244,10 +219,6 @@ export default {
     }
   },
 
-  // onBeforeUnmount() {
-  //   this.destroyEditors();
-  // },
-
   mounted() {
     this.configs.node.selectable = true;
     // event listeners
@@ -304,10 +275,6 @@ export default {
       this.$bus.$on("closeNodeData", () => {
         this.closeNodeData();
       });
-
-      // this.$on("openNodeNameEdit", () => {
-      //   console.log("yeah");
-      // });
     },
 
     ////////////////////
@@ -402,11 +369,12 @@ export default {
       this.fetching = result.fetching;
 
       // console.log(JSON.stringify(this.data));
+      this.transformLoadedData();
+      this.fetchedOnce = true;
       console.log("loaded graph");
-      this.loadedData();
     },
 
-    loadedData() {
+    transformLoadedData() {
       // set data
       this.transformData();
       this.nextNodeIndex = Object.keys(this.nodes).length + 1;
