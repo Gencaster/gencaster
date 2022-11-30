@@ -336,30 +336,11 @@ export default {
       console.log(this.nodes[node]);
     },
 
-    destroyEditors() {
-      this.editors.forEach((editor) => {
-        editor.destroy();
-      });
-    },
-
     setupNodeDataWindow(node) {
       this.currentNodeName = this.nodes[node].name;
       this.currentNodeUUID = node;
-      // empty editors
-      this.destroyEditors();
 
       const cells = this.nodes[node].scriptCells;
-      // cells.forEach((cell) => {
-      //   const editor = new Editor({
-      //     content: cell.cellCode,
-      //     extensions: [
-      //       StarterKit
-      //     ]
-      //   });
-
-      //   this.editors.push(editor);
-      // });
-
       this.selectedNodeScriptCells = cells;
     },
 
