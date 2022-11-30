@@ -39,6 +39,11 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
         </div>
       </div>
     </div>
+    <div class="footer">
+      <button class="unstyled" @click="showNodeDataJSON()">
+        JSON
+      </button>
+    </div>
   </div>
 </template>
 
@@ -79,8 +84,16 @@ export default {
   },
 
   methods: {
-    openNodeNameEdit() { },
-    closeNodeData() { }
+    openNodeNameEdit() {
+      this.$bus.$emit("openNodeNameEdit");
+    },
+    closeNodeData() {
+      this.$bus.$emit("closeNodeData");
+    },
+    showNodeDataJSON() {
+      // TODO: Write the json display
+      console.log("show node data");
+    }
   }
 };
 </script>

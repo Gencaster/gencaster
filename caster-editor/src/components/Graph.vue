@@ -78,7 +78,7 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
       />
 
       <div v-if="showNodeData" class="node-data">
-        <ElementsBlockEditor :blocks-data="selectedNodeScriptCells" />
+        <ElementsBlockEditor :current-node-name="currentNodeName" :blocks-data="selectedNodeScriptCells" />
         <!-- <div class="title">
           <div class="left">
             <p>{{ currentNodeName }}</p>
@@ -262,6 +262,8 @@ export default {
       }
     };
 
+    this.addEmitListeners();
+
     // mutations
     // create node
     const { executeMutation: createNodeMutation } = useCreateNodeMutation();
@@ -289,6 +291,25 @@ export default {
   },
 
   methods: {
+    ////////////////////
+    // Emits
+    ////////////////////
+
+    addEmitListeners() {
+      // https://github.com/nuxt/framework/discussions/2288
+      this.$bus.$on("openNodeNameEdit", () => {
+        this.openNodeNameEdit();
+      });
+
+      this.$bus.$on("closeNodeData", () => {
+        this.closeNodeData();
+      });
+
+      // this.$on("openNodeNameEdit", () => {
+      //   console.log("yeah");
+      // });
+    },
+
     ////////////////////
     // interface
     ////////////////////
@@ -361,11 +382,6 @@ export default {
     closeNodeData() {
       this.showNodeData = false;
       this.selectedNodeScriptCells = [];
-    },
-
-    showNodeDataJSON() {
-      // TODO: Write the json display
-      console.log("show node data");
     },
 
     openNodeNameEdit() {
