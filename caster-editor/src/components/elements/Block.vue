@@ -4,9 +4,9 @@
     <!-- python -->
     <div v-if="editorType === 'python'" class="editor-python">
       <Codemirror
-        v-model="code" placeholder="Code goes here..." :style="{ height: '400px' }" :autofocus="true"
+        v-model="code" placeholder="Code goes here..." :autofocus="false"
         :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady"
-        @change="emit('change', $event)" @focus="emit('focus', $event)" @blur="emit('blur', $event)"
+        @change="emitPython('change', $event)" @focus="emitPython('focus', $event)" @blur="emitPython('blur', $event)"
       />
     </div>
 
@@ -50,8 +50,8 @@ export default {
     return {
       editorType: "",
       editor: null,
-      code: "console.log('Hello, world!')",
-      extensions: [python()]
+      code: "",
+      extensions: undefined
     };
   },
 
@@ -60,20 +60,28 @@ export default {
   mounted() {
     this.editorType = this.cellData.cellType;
 
-    if (this.editorType === "comment") {
-      this.editor = new Editor({
-        extensions: [
-          StarterKit,
-          Highlight,
-          Typography
-        ],
-        content: this.cellData.cellCode,
-        // triggered on every change
-        onUpdate: () => this.onEditorUpdate()
-      });
-    }
-    else if (this.editorType === "python") {
-      console.log("python");
+    switch (this.editorType) {
+      case "comment":
+        this.editor = new Editor({
+          extensions: [
+            StarterKit,
+            Highlight,
+            Typography
+          ],
+          content: this.cellData.cellCode,
+          // triggered on every change
+          onUpdate: () => this.onEditorUpdate()
+        });
+        break;
+
+      case "python":
+        this.code = this.cellData.cellCode;
+        console.log("python");
+        this.extensions = [python()];
+        break;
+
+      default:
+        break;
     }
   },
 
@@ -87,8 +95,8 @@ export default {
       // console.log(JSON.stringify(this.editor.getJSON()));
       // console.log(this.editor.getHtml());
     },
-    emit(event, data) {
-      console.log(data);
+    emitPython(event, data) {
+      // console.log(data);
     },
 
     handleReady() {
