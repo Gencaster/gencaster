@@ -98,14 +98,14 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
           <el-button text bg :icon="VideoPause" />
         </div>
         <div class="blocks">
-          <!-- {{ selectedNodeScriptCells }} -->
-          <div v-for="cell in selectedNodeScriptCells" :key="cell.uuid">
+          <ElementsBlockEditor />
+          {{ selectedNodeScriptCells }}
+          <!-- <div v-for="cell in selectedNodeScriptCells" :key="cell.uuid">
             <div class="cell">
               <p>{{ cell.cellType }}</p>
               <Editor v-model="cell.cellCode" class="cell-editor" />
-              <!-- <EditorContent v-if="editors[index]" :editor="editors[index]" /> -->
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="footer">
           <button class="unstyled" @click="showNodeDataJSON()">
@@ -167,14 +167,9 @@ import {
 
 import { transformEdges, transformLayout, transformNodes } from "../tools/typeTransformers";
 import { GraphSettings } from "../assets/js/graphSettings";
-import Editor from "./elements/Editor.vue";
 
 export default {
   name: "GraphComponent",
-
-  components: {
-    Editor
-  },
 
   props: {
     uuid: {
