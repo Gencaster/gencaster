@@ -27,6 +27,14 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
       <div v-for="cell in blocksData" :key="cell.uuid">
         <!-- {{ cell.cellCode }} -->
         <div class="cell">
+          <p class="cell-type">
+            {{ cell.cellType }}
+          </p>
+          <div class="drag-button">
+            <div class="bar" />
+            <div class="bar" />
+            <div class="bar" />
+          </div>
           <ElementsBlock :cell-data="cell" class="cell-editor" />
         </div>
       </div>
@@ -134,12 +142,45 @@ export default {
   }
 
   .blocks {
+    display: block;
+    position: relative;
+
     .cell {
+      position: relative;
       margin-bottom: $spacingM;
       border-radius: 4px;
       background-color: $grey-light;
-      padding: 10px;
+      padding: 20px 20px 15px 20px;
       border: 1px solid #CDCDCD;
+
+      .cell-type {
+        position: absolute;
+        top: 4px;
+        right: 8px;
+        color: $grey-dark;
+        font-style: italic;
+      }
+
+      .drag-button {
+        cursor: ns-resize;
+        width: 30px;
+        height: 25px;
+        position: absolute;
+        bottom: 12px;
+        right: 8px;
+
+        .bar {
+          width: 30px;
+          height: 1px;
+          background-color: $grey-dark;
+          margin-top: 8px;
+        }
+
+      }
+
+      .cell-editor {
+        width: calc(100% - 40px);
+      }
     }
   }
 
