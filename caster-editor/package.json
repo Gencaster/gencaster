@@ -12,6 +12,7 @@
     "lint:ci": "eslint . --max-warnings 0"
   },
   "dependencies": {
+    "@codemirror/lang-python": "^6.1.0",
     "@element-plus/icons-vue": "^2.0.10",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-operations": "^2.5.3",
@@ -22,10 +23,12 @@
     "@tiptap/starter-kit": "^2.0.0-beta.204",
     "@tiptap/vue-3": "^2.0.0-beta.204",
     "@urql/vue": "^1.0.2",
+    "codemirror": "^6.0.1",
     "element-plus": "^2.2.19",
     "graphql": "^16.6.0",
     "typescript": "^4.8.4",
-    "v-network-graph": "^0.6.10"
+    "v-network-graph": "^0.6.10",
+    "vue-codemirror": "^6.1.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.29.4",

@@ -98,14 +98,7 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
           <el-button text bg :icon="VideoPause" />
         </div>
         <div class="blocks">
-          <ElementsBlockEditor />
           {{ selectedNodeScriptCells }}
-          <!-- <div v-for="cell in selectedNodeScriptCells" :key="cell.uuid">
-            <div class="cell">
-              <p>{{ cell.cellType }}</p>
-              <Editor v-model="cell.cellCode" class="cell-editor" />
-            </div>
-          </div> -->
         </div>
         <div class="footer">
           <button class="unstyled" @click="showNodeDataJSON()">

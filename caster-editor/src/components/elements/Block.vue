@@ -1,9 +1,13 @@
 <template>
-  <div>
+  <div class="block">
     <!-- {{ cellData }} -->
     <!-- python -->
     <div v-if="editorType === 'python'" class="editor-python">
-      <input type="text">
+      <Codemirror
+        v-model="code" placeholder="Code goes here..." :style="{ height: '400px' }" :autofocus="true"
+        :indent-with-tab="true" :tab-size="2" :extensions="extensions" @ready="handleReady"
+        @change="emit('change', $event)" @focus="emit('focus', $event)" @blur="emit('blur', $event)"
+      />
     </div>
 
     <!-- comment -->
@@ -14,6 +18,12 @@
 </template>
 
 <script lang="ts">
+// python
+import { emit } from "process";
+import { Codemirror } from "vue-codemirror";
+import { python } from "@codemirror/lang-python";
+
+// markdown
 import Highlight from "@tiptap/extension-highlight";
 import Typography from "@tiptap/extension-typography";
 import StarterKit from "@tiptap/starter-kit";
@@ -24,7 +34,8 @@ import type { NodeCell } from "~/assets/js/interfaces";
 
 export default {
   components: {
-    EditorContent
+    EditorContent,
+    Codemirror
   },
 
   props: {
@@ -38,7 +49,9 @@ export default {
   data() {
     return {
       editorType: "",
-      editor: null
+      editor: null,
+      code: "console.log('Hello, world!')",
+      extensions: [python()]
     };
   },
 
@@ -60,16 +73,7 @@ export default {
       });
     }
     else if (this.editorType === "python") {
-      this.editor = new Editor({
-        extensions: [
-          StarterKit,
-          Highlight,
-          Typography
-        ],
-        content: this.cellData.cellCode,
-        // triggered on every change
-        onUpdate: () => this.onEditorUpdate()
-      });
+      console.log("python");
     }
   },
 
@@ -82,6 +86,13 @@ export default {
       // console.log(this.editor.getText());
       // console.log(JSON.stringify(this.editor.getJSON()));
       // console.log(this.editor.getHtml());
+    },
+    emit(event, data) {
+      console.log(data);
+    },
+
+    handleReady() {
+      console.log("handle ready");
     }
   }
 };
@@ -89,43 +100,4 @@ export default {
 
 <style lang="scss">
 /* Basic editor styles */
-.ProseMirror {
-  >*+* {
-    margin-top: 0.75em;
-  }
-
-  ul,
-  ol {
-    padding: 0 1rem;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    line-height: 1.1;
-  }
-
-  code {
-    background-color: rgba(#616161, 0.1);
-    color: #616161;
-  }
-
-  pre {
-    background: #0D0D0D;
-    color: #FFF;
-    font-family: monospace;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-
-    code {
-      color: inherit;
-      padding: 0;
-      background: none;
-      font-size: 0.8rem;
-    }
-  }
-}
 </style>
