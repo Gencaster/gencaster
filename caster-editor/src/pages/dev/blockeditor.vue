@@ -2,25 +2,31 @@
   <div>
     <div class="editor-wrapper">
       <div class="editor-inner">
-        <ElementsNodeEditor />
+        <ElementsNodeEditor :dev="true" :block-data="debugBlockData" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+// @ts-expect-error: Auto Imported by nuxt
+import { debugBlockData } from "~/assets/js/dev/debugBlockData";
+// TODO: ts can't resolve the url. Work with alias or find out why it's bugging
+
 export default {
   name: "BlockEditorTestPage",
 
   data() {
-    return {};
+    return {
+      debugBlockData: []
+    };
   },
 
   computed: {
   },
 
   mounted() {
-    console.log("yeah");
+    this.debugBlockData = debugBlockData;
   }
 };
 </script>

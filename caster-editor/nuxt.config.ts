@@ -1,4 +1,5 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
+
 // @ts-expect-error: Auto Imported by nuxt
 export default defineNuxtConfig({
   title: "Gencaster - Editor",
