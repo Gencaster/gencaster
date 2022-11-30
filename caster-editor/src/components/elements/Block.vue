@@ -1,7 +1,13 @@
 <template>
   <div>
     <!-- {{ cellData }} -->
-    <div v-if="editor">
+    <!-- python -->
+    <div v-if="editorType === 'python'" class="editor-python">
+      <input type="text">
+    </div>
+
+    <!-- comment -->
+    <div v-if="editor && editorType === 'comment'" class="editor-comment">
       <EditorContent :editor="editor" />
     </div>
   </div>
@@ -53,6 +59,18 @@ export default {
         onUpdate: () => this.onEditorUpdate()
       });
     }
+    else if (this.editorType === "python") {
+      this.editor = new Editor({
+        extensions: [
+          StarterKit,
+          Highlight,
+          Typography
+        ],
+        content: this.cellData.cellCode,
+        // triggered on every change
+        onUpdate: () => this.onEditorUpdate()
+      });
+    }
   },
 
   beforeUnmount() {
@@ -62,7 +80,7 @@ export default {
   methods: {
     onEditorUpdate() {
       // console.log(this.editor.getText());
-      // console.log(this.editor.getJSON());
+      // console.log(JSON.stringify(this.editor.getJSON()));
       // console.log(this.editor.getHtml());
     }
   }
