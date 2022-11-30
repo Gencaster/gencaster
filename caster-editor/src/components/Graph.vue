@@ -78,7 +78,8 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
       />
 
       <div v-if="showNodeData" class="node-data">
-        <div class="title">
+        <ElementsBlockEditor :blocks-data="selectedNodeScriptCells" />
+        <!-- <div class="title">
           <div class="left">
             <p>{{ currentNodeName }}</p>
             <button class="unstyled" @click="openNodeNameEdit()">
@@ -104,7 +105,7 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
           <button class="unstyled" @click="showNodeDataJSON()">
             JSON
           </button>
-        </div>
+        </div> -->
       </div>
 
       <div v-if="!showNodeData" class="stats">

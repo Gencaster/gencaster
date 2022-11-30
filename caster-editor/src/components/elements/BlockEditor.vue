@@ -48,7 +48,7 @@ import type { NodeCell } from "~/assets/js/interfaces";
 // TODO: Fix typescript import to be linked in editor as well
 
 export default {
-  name: "BlockEditor",
+  name: "NodeEditor",
 
   props: {
     dev: {

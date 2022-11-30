@@ -14,73 +14,8 @@
     height: calc(100vh - 100px);
     right: 15px;
     top: 80px;
-    border: 1px solid rgb(79, 78, 78);
-    padding: 5px 15px 15px 15px;
 
-    .title {
-      display: flex;
-      height: $menuHeight;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
 
-      .left {
-        button {
-          color: $grey-dark;
-
-          &:hover {
-            font-style: italic;
-            background-color: transparent;
-          }
-        }
-      }
-
-      .right {
-        transform: translateX(8px);
-        text-decoration: underline;
-      }
-
-      .left,
-      .right {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        p {
-          margin: 0;
-        }
-      }
-    }
-
-    .node-menu-bar {
-      display: flex;
-      height: $menuHeight;
-      background-color: $grey-light;
-      border-radius: 4px;
-      margin-bottom: 12px;
-
-      .el-icon svg {
-        transform: scale(1.5);
-      }
-    }
-
-    .blocks {
-      .cell {
-        margin-bottom: 16px;
-        p {
-          margin-bottom: 4px;
-        }
-      }
-
-      .cell-editor {
-        padding: 10px 10px 10px 10px;
-        background-color: $grey-light;
-        .ProseMirror p {
-          margin: 0.1em 0;
-        }
-      }
-      margin-bottom: 14px;
-    }
 
     .footer {
       display: flex;
