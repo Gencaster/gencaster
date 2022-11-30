@@ -1,11 +1,15 @@
 <template>
   <div>
-    {{ cellData }}
-    <EditorContent :editor="editor" />
+    <!-- {{ cellData }} -->
+    <div v-if="editor">
+      <EditorContent :editor="editor" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
+import Highlight from "@tiptap/extension-highlight";
+import Typography from "@tiptap/extension-typography";
 import StarterKit from "@tiptap/starter-kit";
 import { Editor, EditorContent } from "@tiptap/vue-3";
 // @ts-expect-error: Auto Imported by nuxt
@@ -21,7 +25,7 @@ export default {
     cellData: {
       type: Object as () => NodeCell,
       required: true,
-      default: () => {}
+      default: () => { }
     }
   },
 
@@ -37,23 +41,30 @@ export default {
   mounted() {
     this.editorType = this.cellData.cellType;
 
-    this.editor = new Editor({
-      extensions: [
-        StarterKit
-      ],
-      content: `
-        <h2>
-          Hi there,
-        </h2>
-        <p>
-          this is a <em>basic</em> example of <strong>tiptap</strong>. Sure, there are all kind of basic text styles you’d probably expect from a text editor. But wait until you see the lists:
-        </p>
-      `
-    });
+    if (this.editorType === "comment") {
+      this.editor = new Editor({
+        extensions: [
+          StarterKit,
+          Highlight,
+          Typography
+        ],
+        content: this.cellData.cellCode,
+        // triggered on every change
+        onUpdate: () => this.onEditorUpdate()
+      });
+    }
   },
 
   beforeUnmount() {
     this.editor.destroy();
+  },
+
+  methods: {
+    onEditorUpdate() {
+      // console.log(this.editor.getText());
+      // console.log(this.editor.getJSON());
+      // console.log(this.editor.getHtml());
+    }
   }
 };
 </script>
@@ -61,7 +72,7 @@ export default {
 <style lang="scss">
 /* Basic editor styles */
 .ProseMirror {
-  > * + * {
+  >*+* {
     margin-top: 0.75em;
   }
 
@@ -87,7 +98,7 @@ export default {
   pre {
     background: #0D0D0D;
     color: #FFF;
-    font-family: 'JetBrainsMono', monospace;
+    font-family: monospace;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
 
@@ -97,22 +108,6 @@ export default {
       background: none;
       font-size: 0.8rem;
     }
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  blockquote {
-    padding-left: 1rem;
-    border-left: 2px solid rgba(#0D0D0D, 0.1);
-  }
-
-  hr {
-    border: none;
-    border-top: 2px solid rgba(#0D0D0D, 0.1);
-    margin: 2rem 0;
   }
 }
 </style>

@@ -25,6 +25,7 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
     </div>
     <div class="blocks">
       <div v-for="cell in blocksData" :key="cell.uuid">
+        <!-- {{ cell.cellCode }} -->
         <div class="cell">
           <ElementsBlock :cell-data="cell" class="cell-editor" />
         </div>
