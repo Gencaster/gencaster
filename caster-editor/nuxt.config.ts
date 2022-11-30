@@ -9,6 +9,15 @@ export default defineNuxtConfig({
   //     },
   //   },
   css: ["assets/scss/main.scss", "v-network-graph/lib/style.css"],
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: "@import \"@/assets/scss/_variables.scss\";"
+        }
+      }
+    }
+  },
   components: true,
   srcDir: "src/",
   runtimeConfig: {

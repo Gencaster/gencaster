@@ -12,12 +12,13 @@
     "lint:ci": "eslint . --max-warnings 0"
   },
   "dependencies": {
-    "@editorjs/editorjs": "^2.26.0",
     "@element-plus/icons-vue": "^2.0.10",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-operations": "^2.5.3",
     "@graphql-codegen/typescript-urql": "^3.7.0",
     "@nuxtjs/composition-api": "^0.33.1",
+    "@tiptap/starter-kit": "^2.0.0-beta.204",
+    "@tiptap/vue-3": "^2.0.0-beta.204",
     "@urql/vue": "^1.0.2",
     "element-plus": "^2.2.19",
     "graphql": "^16.6.0",
