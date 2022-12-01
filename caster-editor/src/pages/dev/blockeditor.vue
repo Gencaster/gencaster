@@ -9,9 +9,7 @@
 </template>
 
 <script lang="ts">
-// @ts-expect-error: Auto Imported by nuxt
-import { debugBlockData } from "~/assets/js/dev/debugBlockData";
-// TODO: ts can't resolve the url. Work with alias or find out why it's bugging
+import { debugBlockData } from "@/assets/js/dev/debugBlockData";
 
 export default {
   name: "BlockEditorTestPage",

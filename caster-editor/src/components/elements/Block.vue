@@ -41,9 +41,7 @@ import Highlight from "@tiptap/extension-highlight";
 import Typography from "@tiptap/extension-typography";
 import StarterKit from "@tiptap/starter-kit";
 import { Editor, EditorContent } from "@tiptap/vue-3";
-// @ts-expect-error: Auto Imported by nuxt
-import type { NodeCell } from "~/assets/js/interfaces";
-// TODO: Fix typescript import to be linked in editor as well
+import type { NodeCell } from "@/assets/js/interfaces";
 
 export default {
   components: {
