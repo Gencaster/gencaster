@@ -1,5 +1,5 @@
 import * as vNG from "v-network-graph";
-import variables from "@/assets/scss/variables.module.scss";
+import * as variables from "@/assets/scss/variables.module.scss";
 
 const GraphSettings = {
   standard: vNG.defineConfigs({

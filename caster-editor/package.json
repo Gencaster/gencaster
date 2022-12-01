@@ -35,6 +35,7 @@
     "@antfu/eslint-config": "^0.29.4",
     "@graphql-codegen/cli": "^2.13.1",
     "@graphql-codegen/typescript-vue-urql": "^2.3.3",
+    "@nuxt/types": "2.13.2",
     "eslint": "^8.27.0",
     "nuxt": "^3.0.0-rc.14",
     "sass": "^1.55.0",

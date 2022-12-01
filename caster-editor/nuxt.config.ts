@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   //       primary: '#ff0000',
   //     },
   //   },
+  buildModules: ["@nuxt/typescript-build"],
   css: ["assets/scss/main.scss", "v-network-graph/lib/style.css"],
   components: true,
   srcDir: "src/",
