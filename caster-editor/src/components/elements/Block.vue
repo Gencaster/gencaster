@@ -41,7 +41,7 @@ import Highlight from "@tiptap/extension-highlight";
 import Typography from "@tiptap/extension-typography";
 import StarterKit from "@tiptap/starter-kit";
 import { Editor, EditorContent } from "@tiptap/vue-3";
-import type { NodeCell } from "@/assets/js/interfaces";
+import type { ScriptCell } from "@/graphql/graphql";
 
 export default {
   components: {
@@ -51,7 +51,7 @@ export default {
 
   props: {
     cellData: {
-      type: Object as () => NodeCell,
+      type: Object as () => ScriptCell,
       required: true,
       default: () => { }
     }
@@ -60,9 +60,9 @@ export default {
   data() {
     return {
       editorType: "",
-      editor: null,
-      code: "",
-      extensions: undefined
+      editor: {} as any,
+      code: "" as string,
+      extensions: [] as any
     };
   },
 
@@ -127,7 +127,7 @@ export default {
     },
 
     // Python & Supercollider
-    emitCodemirror(event, data) {
+    emitCodemirror(event: any, data: any) {
       // console.log(data);
     },
 

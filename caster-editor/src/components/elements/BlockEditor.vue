@@ -48,7 +48,7 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
 </template>
 
 <script lang="ts">
-import type { NodeCell } from "@/assets/js/interfaces";
+import type { ScriptCell } from "@/graphql/graphql";
 
 export default {
   name: "NodeEditor",
@@ -60,7 +60,7 @@ export default {
       default: () => false
     },
     blocksData: {
-      type: Array<NodeCell>,
+      type: Array<ScriptCell>,
       required: true,
       default: () => []
     },
@@ -87,6 +87,7 @@ export default {
     },
     closeNodeData() {
       this.$bus.$emit("closeNodeData");
+      // TODO: Emit like in Manus example
     },
     showNodeDataJSON() {
       // TODO: Write the json display
