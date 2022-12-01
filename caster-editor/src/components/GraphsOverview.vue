@@ -4,7 +4,7 @@
       <elementsLoading />
     </div>
     <div v-else>
-      <div v-if="graphsData !== null">
+      <div v-if="result !== null">
         <h1>Select one of your Graphs</h1>
         <div class="demo-control-panel">
           <div>
@@ -38,21 +38,20 @@
 </template>
 
 <script lang="ts">
-import { useGetGraphsQuery } from "../graphql/graphql";
+// import type { GetGraphsQuery } from "@/graphql/graphql";
+import type { GetGraphsQuery } from "@/graphql/graphql";
+import { useGetGraphsQuery } from "@/graphql/graphql";
 
 export default {
   name: "GraphsOverviewComponent",
 
   data() {
     return {
-      fetching: true,
-      result: null,
-      graphsData: {
-        graphs: [{
-          uuid: "",
-          name: ""
-        }]
-      }
+      fetching: true as boolean,
+      result: {},
+      graphsData: {},
+      error: {}
+      // TODO: import the correct types. Somehow GetGraphsQuery is not working
     };
   },
   mounted() {
@@ -62,10 +61,9 @@ export default {
     async initQuery() {
       try {
         const result = await useGetGraphsQuery();
-
         this.result = result;
+        this.fetching = result.fetching.value;
         this.graphsData = result.data;
-        this.fetching = result.fetching;
         this.error = result.error;
       }
       catch (error) {

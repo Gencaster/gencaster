@@ -123,7 +123,8 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
 <script lang="ts">
 import { ElMessage } from "element-plus";
 import * as vNG from "v-network-graph";
-import { Edges, Nodes } from "v-network-graph";
+import type { Edges, Layouts, Node } from "v-network-graph";
+import { Nodes } from "v-network-graph";
 import {
   useCreateEdgeMutation,
   useCreateNodeMutation,
@@ -135,6 +136,7 @@ import {
 
 import { transformEdges, transformLayout, transformNodes } from "../tools/typeTransformers";
 import { GraphSettings } from "../assets/js/graphSettings";
+import type { ScriptCell } from "@/graphql/graphql";
 
 export default {
   name: "GraphComponent",
@@ -167,25 +169,25 @@ export default {
       error: null,
 
       // graph
-      nodes: {},
-      edges: {},
-      layouts: {},
-      selectedNodes: new Array<string>(),
-      selectedEdges: new Array<string>(),
+      nodes: {} as Node,
+      edges: {} as Edges,
+      layouts: {} as Layouts,
+      selectedNodes: [] as String[],
+      selectedEdges: [] as String[],
       nextNodeIndex: 0,
       nextEdgeIndex: 0,
-      configs: vNG.getFullConfigs(),
-      eventHandlers: undefined,
+      configs: GraphSettings.standard,
+      eventHandlers: {},
       stateSaved: true,
 
       // settings
-      defaultNodeName: "new scene",
+      defaultNodeName: "new scene" as string,
 
       // interface
       menuLevel1: "edit",
 
       // dialogs
-      exitDialogVisible: false,
+      exitDialogVisible: false as boolean,
       renameNodeDialogVisible: false,
       renameNodeDialogName: "",
 
@@ -193,9 +195,8 @@ export default {
       showNodeData: false,
       currentNodeName: "",
       currentNodeUUID: "",
-      // TODO Import the interface ontop
-      selectedNodeScriptCells: [],
-      editors: [],
+
+      selectedNodeScriptCells: [] as ScriptCell[],
 
       // debug
       showGraphData: false
@@ -224,10 +225,10 @@ export default {
     // event listeners
 
     this.eventHandlers = {
-      "node:dblclick": ({ node }) => {
+      "node:dblclick": ({ node }: Node) => {
         this.doubleClickedNode(node);
       },
-      "node:dragend": (node) => {
+      "node:dragend": ({ node }: Node) => {
         this.stateSaved = false;
         this.nodeDraggedEnd(node);
       }
@@ -255,8 +256,6 @@ export default {
     // remove edge
     const { executeMutation: removeEdgeMutation } = useDeleteEdgeMutation();
     this.removeEdgeMutation = removeEdgeMutation;
-
-    this.configs = GraphSettings.standard;
 
     this.loadData();
   },
@@ -297,13 +296,13 @@ export default {
       });
     },
 
-    doubleClickedNode(node) {
+    doubleClickedNode(node: string) {
       this.setupNodeDataWindow(node);
       this.showNodeData = true;
       console.log(this.nodes[node]);
     },
 
-    setupNodeDataWindow(node) {
+    setupNodeDataWindow(node: string) {
       this.currentNodeName = this.nodes[node].name;
       this.currentNodeUUID = node;
 
@@ -311,7 +310,7 @@ export default {
       this.selectedNodeScriptCells = cells;
     },
 
-    nodeDraggedEnd(node) {
+    nodeDraggedEnd(node: string) {
       // const uuid = Object.entries(node);
     },
 
