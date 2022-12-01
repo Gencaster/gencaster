@@ -10,13 +10,14 @@
 
 <script lang="ts">
 import { debugBlockData } from "@/assets/js/dev/debugBlockData";
+import type { ScriptCell } from "@/graphql/graphql";
 
 export default {
   name: "BlockEditorTestPage",
 
   data() {
     return {
-      debugBlockData: []
+      debugBlockData: [] as ScriptCell[]
     };
   },
 

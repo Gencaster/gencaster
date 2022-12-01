@@ -13,13 +13,16 @@
     "sourceMap": true,
     "strict": true,
     "noEmit": true,
-    "baseUrl": "./src/",
+    "baseUrl": "./",
     "paths": {
       "~/*": [
-        "./*"
+        "./src/*"
+      ],
+      "@": [
+        "./src"
       ],
       "@/*": [
-        "./*"
+        "./src/*"
       ]
     },
     "types": [

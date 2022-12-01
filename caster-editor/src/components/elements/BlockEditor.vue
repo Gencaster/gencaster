@@ -48,9 +48,7 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
 </template>
 
 <script lang="ts">
-// @ts-expect-error: Auto Imported by nuxt
-import type { NodeCell } from "~/assets/js/interfaces";
-// TODO: Fix typescript import to be linked in editor as well
+import type { NodeCell } from "@/assets/js/interfaces";
 
 export default {
   name: "NodeEditor",
