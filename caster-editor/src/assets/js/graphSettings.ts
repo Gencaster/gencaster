@@ -1,4 +1,5 @@
 import * as vNG from "v-network-graph";
+import variables from "@/assets/scss/variables.module.scss";
 
 const GraphSettings = {
   standard: vNG.defineConfigs({
@@ -8,28 +9,28 @@ const GraphSettings = {
         type: "circle",
         radius: 16,
         strokeWidth: 0,
-        color: "#CDCDCD"
+        color: variables.grey
       },
       hover: {
         type: "circle",
         radius: 16,
         strokeWidth: 0,
-        color: "#ADFF00"
+        color: variables.greenLight
       },
       selected: {
         type: "circle",
         radius: 16,
         strokeWidth: 0,
-        color: "#ADFF00"
+        color: variables.greenLight
       },
       label: {
         fontSize: 15,
         fontFamily: "arial",
-        color: "#000000",
+        color: variables.black,
         margin: 4,
         background: {
           visible: true,
-          color: "#ffffff",
+          color: variables.white,
           padding: {
             vertical: 1,
             horizontal: 4
@@ -56,14 +57,14 @@ const GraphSettings = {
       },
       hover: {
         width: 4,
-        color: "#ADFF00",
+        color: variables.greenLight,
         dasharray: "0",
         linecap: "square",
         animate: false
       },
       selected: {
         width: 3,
-        color: "#ADFF00",
+        color: variables.greenLight,
         dasharray: "0",
         linecap: "square",
         animate: false

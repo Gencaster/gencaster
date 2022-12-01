@@ -139,7 +139,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-/* Basic editor styles */
-</style>
