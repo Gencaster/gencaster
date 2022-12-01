@@ -42,12 +42,12 @@ jobs:
             ./requirements-docs.txt
       - run: pip3 install -r requirements-docs.txt
       - run: make -C docs html
-      - uses: actions/upload-artifact@v2
-        if: success() || failure()
-        with:
-          name: docs
-          path: |
-            docs/_build/html
+      # - uses: actions/upload-artifact@v2
+      #   if: success() || failure()
+      #   with:
+      #     name: docs
+      #     path: |
+      #       docs/_build/html
 
   run-tests:
     needs: ["pre-commit"]
