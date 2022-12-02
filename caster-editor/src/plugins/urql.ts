@@ -1,9 +1,9 @@
 import urql from "@urql/vue";
-// @ts-expect-error: Auto Imported by nuxt
-import { defineNuxtPlugin } from "#app";
 
-export default defineNuxtPlugin((nuxtApp) => {
-  // @ts-expect-error: Auto Imported by nuxt
+import { defineNuxtPlugin } from "#app";
+import { useRuntimeConfig } from "#imports";
+
+export default defineNuxtPlugin((nuxtApp: any) => {
   const config = useRuntimeConfig();
 
   nuxtApp.vueApp.use(urql, {

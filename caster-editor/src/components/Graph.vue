@@ -25,7 +25,7 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
               Loading ...
             </span>
             <span v-if="!fetching">
-              {{ data.graph.name }}
+              {{ graphData.name }}
             </span>
           </div>
           <div class="menu-items right">
@@ -74,8 +74,8 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
         <br>
         {{ layouts }}
         <br>
-        {{ data.graph }}
-        <!-- {{ data.graph }} -->
+        {{ graphData }}
+        <!-- {{ graphData }} -->
       </p>
 
       <div v-if="showNodeData" class="node-data">
@@ -84,8 +84,8 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
 
       <div v-if="!showNodeData" class="stats">
         <p>
-          Nodes: {{ data.graph.nodes.length }} &nbsp;
-          Edges: {{ data.graph.edges.length }}
+          Nodes: {{ graphData.nodes.length }} &nbsp;
+          Edges: {{ graphData.edges.length }}
         </p>
       </div>
 
@@ -125,6 +125,7 @@ import { ElMessage } from "element-plus";
 import * as vNG from "v-network-graph";
 import type { Edges, Layouts, Node } from "v-network-graph";
 import { Nodes } from "v-network-graph";
+import type { AnyVariables, UseQueryState } from "@urql/vue";
 import {
   useCreateEdgeMutation,
   useCreateNodeMutation,
@@ -136,7 +137,8 @@ import {
 
 import { transformEdges, transformLayout, transformNodes } from "../tools/typeTransformers";
 import { GraphSettings } from "../assets/js/graphSettings";
-import type { ScriptCell } from "@/graphql/graphql";
+import type { GetGraphQuery, Graph, ScriptCell } from "@/graphql/graphql";
+import { createError } from "#app";
 
 export default {
   name: "GraphComponent",
@@ -149,24 +151,12 @@ export default {
   },
 
   data() {
-    interface Cell {
-      uuid: string
-      cellType: string
-      cellCode: string
-    }
-
     return {
       fetchedOnce: false,
       fetching: true,
-      result: null,
-      data: {
-        graph: {
-          name: "",
-          edges: [],
-          nodes: []
-        }
-      },
-      error: null,
+      result: {},
+      graphData: {} as Graph,
+      error: {},
 
       // graph
       nodes: {} as Node,
@@ -200,6 +190,9 @@ export default {
 
       // debug
       showGraphData: false
+
+      // mutations
+      // createNodeMutation: () => {}
     };
   },
 
@@ -240,6 +233,8 @@ export default {
     // create node
     const { executeMutation: createNodeMutation } = useCreateNodeMutation();
     this.createNodeMutation = createNodeMutation;
+    // TODO: Make simpler and use setup
+    // reference: https://codesandbox.io/s/urql-hooks-typescript-example-yk3xw?file=/movies.tsx
 
     // update node
     const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();
@@ -362,10 +357,18 @@ export default {
         requestPolicy: "network-only"
       });
 
+      if (!result.data.value?.graph) {
+        throw createError({
+          statusCode: 404,
+          statusMessage: "Page Not Found"
+        });
+      }
       this.result = result;
-      this.data = result.data;
+      // this.result = result;
+      // console.log(result);
+      this.graphData = result.data.value?.graph;
       this.error = result.error;
-      this.fetching = result.fetching;
+      this.fetching = result.fetching.value;
 
       // console.log(JSON.stringify(this.data));
       this.transformLoadedData();
@@ -381,7 +384,11 @@ export default {
     },
 
     refresh() {
-      this.result.executeQuery().then(() => {
+      // check if result is not undefined
+      if (!this.result)
+        return;
+
+      (this.result as UseQueryState<GetGraphQuery, AnyVariables>).executeQuery().then(() => {
         console.log("finished refresh");
         this.transformData();
         this.selectedNodes = [];
@@ -390,9 +397,9 @@ export default {
     },
 
     transformData() {
-      this.nodes = transformNodes(this.data.graph.nodes);
-      this.edges = transformEdges(this.data.graph.edges);
-      this.layouts = transformLayout(this.data.graph.nodes);
+      this.nodes = transformNodes(this.graphData.nodes);
+      this.edges = transformEdges(this.graphData.edges);
+      this.layouts = transformLayout(this.graphData.nodes);
     },
 
     addNode() {

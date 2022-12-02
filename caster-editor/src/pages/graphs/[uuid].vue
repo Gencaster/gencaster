@@ -7,7 +7,7 @@ export default {
   },
   computed: {
     uuid() {
-      return this.$route.params.uuid;
+      return this.$route.params.uuid as string;
     }
   },
   mounted() {},
@@ -17,6 +17,6 @@ export default {
 
 <template>
   <div class="edit-page">
-    <Graph :uuid="uuid" />
+    <GraphV2 :uuid="uuid" />
   </div>
 </template>

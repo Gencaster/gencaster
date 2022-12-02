@@ -1,15 +1,16 @@
-// https://v3.nuxtjs.org/api/configuration/nuxt.config
-
-// @ts-expect-error: Auto Imported by nuxt
 export default defineNuxtConfig({
-  title: "Gencaster - Editor",
   //   theme: {
   //     dark: true,
   //     colors: {
   //       primary: '#ff0000',
   //     },
   //   },
-  buildModules: ["@nuxt/typescript-build"],
+  // imports: {
+  //   autoImport: false
+  // },
+  typescript: {
+    shim: false
+  },
   css: ["assets/scss/main.scss", "v-network-graph/lib/style.css"],
   components: true,
   srcDir: "src/",
