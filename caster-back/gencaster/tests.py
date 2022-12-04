@@ -4,8 +4,13 @@ from unittest import mock
 from asgiref.sync import async_to_sync, sync_to_async
 from django.test import TestCase
 
-from story_graph.models import Edge, Graph, Node
-from story_graph.tests import EdgeTestCase, GraphTestCase, NodeTestCase
+from story_graph.models import Edge, Graph, Node, ScriptCell
+from story_graph.tests import (
+    EdgeTestCase,
+    GraphTestCase,
+    NodeTestCase,
+    ScriptCellTestCase,
+)
 
 from .schema import schema
 
@@ -212,3 +217,169 @@ class SchemaTestCase(TestCase):
         )
 
         self.assertGreaterEqual(len(resp.errors), 1)  # type: ignore
+
+    CREATE_SCRIPT_CELL = """
+    mutation createScriptCell($nodeUuid: UUID!, $order: Int!) {
+        addScriptCell(nodeUuid: $nodeUuid, order: $order) {
+            cellOrder
+            uuid
+            cellType
+            cellCode
+        }
+    }
+    """
+
+    @async_to_sync
+    async def test_add_script_cell(self):
+        node: Node = await sync_to_async(NodeTestCase.get_node)()
+
+        resp = await schema.execute(
+            self.CREATE_SCRIPT_CELL,
+            variable_values={
+                "nodeUuid": str(node.uuid),
+                "order": 100,
+                "cellType": "MARKDOWN",
+            },
+            context_value=self.get_login_context(),
+        )
+
+        self.assertIsNone(resp.errors)
+        self.assertEqual(await ScriptCell.objects.all().acount(), 1)
+
+    @async_to_sync
+    async def test_add_script_cell_no_auth(self):
+        node: Node = await sync_to_async(NodeTestCase.get_node)()
+
+        resp = await schema.execute(
+            self.CREATE_SCRIPT_CELL,
+            variable_values={
+                "nodeUuid": str(node.uuid),
+                "order": 100,
+                "cellType": "MARKDOWN",
+            },
+        )
+
+        self.assertIsNotNone(resp.errors)
+
+    @async_to_sync
+    async def test_add_script_cell_invalid_node(self):
+        resp = await schema.execute(
+            self.CREATE_SCRIPT_CELL,
+            variable_values={
+                "nodeUuid": str(uuid.uuid4()),
+                "order": 100,
+                "cellType": "MARKDOWN",
+            },
+            context_value=self.get_login_context(),
+        )
+
+        self.assertIsNotNone(resp.errors)
+        self.assertEqual(0, await ScriptCell.objects.all().acount())
+
+    UPDATE_SCRIPT_CELL = """
+    mutation MyMutation($newCells: [ScriptCellInput!]!) {
+        updateScriptCells(newCells: $newCells)
+    }
+    """
+
+    @async_to_sync
+    async def test_update_script_cell(self):
+        script_cell: ScriptCell = await sync_to_async(
+            ScriptCellTestCase.get_script_cell
+        )()
+
+        resp = await schema.execute(
+            self.UPDATE_SCRIPT_CELL,
+            variable_values={
+                "newCells": [
+                    {
+                        "uuid": str(script_cell.uuid),
+                        "cellType": "MARKDOWN",
+                        "cellOrder": 4,
+                        "cellCode": "Hello vinzenz!",
+                    }
+                ]
+            },
+            context_value=self.get_login_context(),
+        )
+        self.assertIsNone(resp.errors)
+        await sync_to_async(script_cell.refresh_from_db)()
+
+        self.assertEqual("Hello vinzenz!", script_cell.cell_code)
+
+    @async_to_sync
+    async def test_update_script_cell_no_auth(self):
+        script_cell: ScriptCell = await sync_to_async(
+            ScriptCellTestCase.get_script_cell
+        )(cell_code="Hello world!")
+
+        resp = await schema.execute(
+            self.UPDATE_SCRIPT_CELL,
+            variable_values={
+                "newCells": [
+                    {
+                        "uuid": str(script_cell.uuid),
+                        "cellType": "MARKDOWN",
+                        "cellOrder": 4,
+                        "cellCode": "Hello vinzenz!",
+                    }
+                ]
+            },
+        )
+        self.assertIsNotNone(resp.errors)
+        await sync_to_async(script_cell.refresh_from_db)()
+
+        self.assertEqual("Hello world!", script_cell.cell_code)
+
+    @async_to_sync
+    async def test_update_script_cell_invalid_cell(self):
+        resp = await schema.execute(
+            self.UPDATE_SCRIPT_CELL,
+            variable_values={
+                "newCells": [
+                    {
+                        "uuid": str(uuid.uuid4()),
+                        "cellType": "MARKDOWN",
+                        "cellOrder": 4,
+                        "cellCode": "Hello vinzenz!",
+                    }
+                ]
+            },
+            context_value=self.get_login_context(),
+        )
+        # does NOT yield an error!
+        self.assertIsNone(resp.errors)
+        self.assertEqual(0, await ScriptCell.objects.all().acount())
+
+    DELETE_SCRIPT_CELL = """
+    mutation deleteScriptCell($scriptCellUuid:UUID!) {
+        deleteScriptCell(scriptCellUuid: $scriptCellUuid)
+    }
+    """
+
+    @async_to_sync
+    async def test_delete_script_cell(self):
+        script_cell: ScriptCell = await sync_to_async(
+            ScriptCellTestCase.get_script_cell
+        )()
+        resp = await schema.execute(
+            self.DELETE_SCRIPT_CELL,
+            variable_values={"scriptCellUuid": str(script_cell.uuid)},
+            context_value=self.get_login_context(),
+        )
+
+        self.assertIsNone(resp.errors)
+        self.assertEqual(0, await ScriptCell.objects.all().acount())
+
+    @async_to_sync
+    async def test_delete_script_cell_no_auth(self):
+        script_cell: ScriptCell = await sync_to_async(
+            ScriptCellTestCase.get_script_cell
+        )()
+        resp = await schema.execute(
+            self.DELETE_SCRIPT_CELL,
+            variable_values={"scriptCellUuid": str(script_cell.uuid)},
+        )
+
+        self.assertIsNotNone(resp.errors)
+        self.assertEqual(1, await ScriptCell.objects.all().acount())
