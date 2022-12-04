@@ -4,7 +4,7 @@ from mistletoe import Document
 from mixer.backend.django import mixer
 
 from .markdown_parser import GencasterRenderer
-from .models import Edge, Graph, Node
+from .models import Edge, Graph, Node, ScriptCell
 
 
 class GraphTestCase(TransactionTestCase):
@@ -106,3 +106,19 @@ baz.
 
     def test_moderate(self):
         self.assertTrue('emphasis level="moderate"' in self.gm_md("{moderate}`foo`"))
+
+
+class ScriptCellTestCase(TransactionTestCase):
+    @staticmethod
+    def get_script_cell(**kwargs) -> ScriptCell:
+        return mixer.blend(ScriptCell, **kwargs)  # type: ignore
+
+    def test_str(self):
+        cell = self.get_script_cell()
+        self.assertTrue(cell.cell_type in str(cell))
+
+    def test_non_unique_multiple_orders(self):
+        node = NodeTestCase.get_node()
+        cell_a = self.get_script_cell(node=node, cell_order=10)
+        cell_b = self.get_script_cell(node=node, cell_order=10)
+        self.assertEqual(cell_a.cell_order, cell_b.cell_order)
