@@ -136,6 +136,7 @@ class ScriptCell(models.Model):
     cell_type = models.CharField(
         max_length=128,
         choices=CellType.choices,
+        default=CellType.COMMENT,
         verbose_name=_("Cell type"),
         null=False,
         blank=False,
