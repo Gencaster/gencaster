@@ -164,6 +164,7 @@ class Mutation:
 
     @strawberry.mutation
     async def update_script_cells(self, info, new_cells: List[ScriptCellInput]) -> None:
+        await graphql_check_authenticated(info)
         await sync_to_async(_update_cells)(new_cells)
 
     @strawberry.mutation
