@@ -18,6 +18,14 @@ export type Scalars = {
   Void: any;
 };
 
+/** An enumeration. */
+export enum CellType {
+  Comment = 'COMMENT',
+  Markdown = 'MARKDOWN',
+  Python = 'PYTHON',
+  Supercollider = 'SUPERCOLLIDER'
+}
+
 export type Edge = {
   __typename?: 'Edge';
   inNode: Node;
@@ -62,9 +70,12 @@ export type Mutation = {
   __typename?: 'Mutation';
   addEdge?: Maybe<Scalars['Void']>;
   addNode?: Maybe<Scalars['Void']>;
+  addScriptCell: ScriptCell;
   deleteEdge?: Maybe<Scalars['Void']>;
   deleteNode?: Maybe<Scalars['Void']>;
+  deleteScriptCell?: Maybe<Scalars['Void']>;
   updateNode?: Maybe<Scalars['Void']>;
+  updateScriptCells?: Maybe<Scalars['Void']>;
 };
 
 
@@ -74,7 +85,13 @@ export type MutationAddEdgeArgs = {
 
 
 export type MutationAddNodeArgs = {
-  newNode: NodeInput;
+  newNode: NodeCreate;
+};
+
+
+export type MutationAddScriptCellArgs = {
+  nodeUuid: Scalars['UUID'];
+  order: Scalars['Int'];
 };
 
 
@@ -88,8 +105,18 @@ export type MutationDeleteNodeArgs = {
 };
 
 
+export type MutationDeleteScriptCellArgs = {
+  scriptCellUuid: Scalars['UUID'];
+};
+
+
 export type MutationUpdateNodeArgs = {
   nodeUpdate: NodeUpdate;
+};
+
+
+export type MutationUpdateScriptCellsArgs = {
+  newCells: Array<ScriptCellInput>;
 };
 
 export type Node = {
@@ -104,7 +131,7 @@ export type Node = {
   uuid: Scalars['UUID'];
 };
 
-export type NodeInput = {
+export type NodeCreate = {
   color?: InputMaybe<Scalars['String']>;
   graphUuid: Scalars['UUID'];
   name: Scalars['String'];
@@ -154,9 +181,16 @@ export type ScriptCell = {
   __typename?: 'ScriptCell';
   cellCode: Scalars['String'];
   cellOrder: Scalars['Int'];
-  cellType: Scalars['String'];
+  cellType: CellType;
   node: Node;
   uuid: Scalars['UUID'];
+};
+
+export type ScriptCellInput = {
+  cellCode: Scalars['String'];
+  cellOrder?: InputMaybe<Scalars['Int']>;
+  cellType?: InputMaybe<CellType>;
+  uuid?: InputMaybe<Scalars['UUID']>;
 };
 
 export type StreamPoint = {
@@ -217,14 +251,14 @@ export type GetGraphQueryVariables = Exact<{
 }>;
 
 
-export type GetGraphQuery = { __typename?: 'Query', graph: { __typename?: 'Graph', name: string, uuid: any, edges: Array<{ __typename?: 'Edge', uuid: any, outNode: { __typename?: 'Node', uuid: any }, inNode: { __typename?: 'Node', uuid: any } }>, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, positionX: number, positionY: number, color: string, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: string, uuid: any }> }> } };
+export type GetGraphQuery = { __typename?: 'Query', graph: { __typename?: 'Graph', name: string, uuid: any, edges: Array<{ __typename?: 'Edge', uuid: any, outNode: { __typename?: 'Node', uuid: any }, inNode: { __typename?: 'Node', uuid: any } }>, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, positionX: number, positionY: number, color: string, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> }> } };
 
 export type GetNodeQueryVariables = Exact<{
   nodeUuid: Scalars['ID'];
 }>;
 
 
-export type GetNodeQuery = { __typename?: 'Query', node: { __typename?: 'Node', color: string, name: string, positionX: number, positionY: number, uuid: any, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: string, uuid: any }> } };
+export type GetNodeQuery = { __typename?: 'Query', node: { __typename?: 'Node', color: string, name: string, positionX: number, positionY: number, uuid: any, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> } };
 
 export type CreateEdgeMutationVariables = Exact<{
   nodeInUuid: Scalars['UUID'];
@@ -269,6 +303,28 @@ export type DeleteEdgeMutationVariables = Exact<{
 
 
 export type DeleteEdgeMutation = { __typename?: 'Mutation', deleteEdge?: any | null };
+
+export type CreateScriptCellMutationVariables = Exact<{
+  nodeUuid: Scalars['UUID'];
+  order: Scalars['Int'];
+}>;
+
+
+export type CreateScriptCellMutation = { __typename?: 'Mutation', addScriptCell: { __typename?: 'ScriptCell', cellOrder: number, uuid: any, cellType: CellType, cellCode: string } };
+
+export type DeleteScriptCellMutationVariables = Exact<{
+  scriptCellUuid: Scalars['UUID'];
+}>;
+
+
+export type DeleteScriptCellMutation = { __typename?: 'Mutation', deleteScriptCell?: any | null };
+
+export type UpdateScriptCellsMutationVariables = Exact<{
+  newCells: Array<ScriptCellInput> | ScriptCellInput;
+}>;
+
+
+export type UpdateScriptCellsMutation = { __typename?: 'Mutation', updateScriptCells?: any | null };
 
 
 export const MyQueryDocument = gql`
@@ -414,4 +470,36 @@ export const DeleteEdgeDocument = gql`
 
 export function useDeleteEdgeMutation() {
   return Urql.useMutation<DeleteEdgeMutation, DeleteEdgeMutationVariables>(DeleteEdgeDocument);
+};
+export const CreateScriptCellDocument = gql`
+    mutation createScriptCell($nodeUuid: UUID!, $order: Int!) {
+  addScriptCell(nodeUuid: $nodeUuid, order: $order) {
+    cellOrder
+    uuid
+    cellType
+    cellCode
+  }
+}
+    `;
+
+export function useCreateScriptCellMutation() {
+  return Urql.useMutation<CreateScriptCellMutation, CreateScriptCellMutationVariables>(CreateScriptCellDocument);
+};
+export const DeleteScriptCellDocument = gql`
+    mutation deleteScriptCell($scriptCellUuid: UUID!) {
+  deleteScriptCell(scriptCellUuid: $scriptCellUuid)
+}
+    `;
+
+export function useDeleteScriptCellMutation() {
+  return Urql.useMutation<DeleteScriptCellMutation, DeleteScriptCellMutationVariables>(DeleteScriptCellDocument);
+};
+export const UpdateScriptCellsDocument = gql`
+    mutation updateScriptCells($newCells: [ScriptCellInput!]!) {
+  updateScriptCells(newCells: $newCells)
+}
+    `;
+
+export function useUpdateScriptCellsMutation() {
+  return Urql.useMutation<UpdateScriptCellsMutation, UpdateScriptCellsMutationVariables>(UpdateScriptCellsDocument);
 };

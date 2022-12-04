@@ -91,3 +91,21 @@ mutation deleteNode($nodeUuid: UUID!) {
 mutation deleteEdge($edgeUuid: UUID!) {
   deleteEdge(edgeUuid: $edgeUuid)
 }
+
+mutation createScriptCell($nodeUuid: UUID!, $order: Int!) {
+  addScriptCell(nodeUuid: $nodeUuid, order: $order) {
+    cellOrder
+    uuid
+    cellType
+    cellCode
+  }
+}
+
+mutation deleteScriptCell($scriptCellUuid:UUID!) {
+  deleteScriptCell(scriptCellUuid: $scriptCellUuid)
+}
+
+# script cells get updated according to the uuid field
+mutation updateScriptCells($newCells: [ScriptCellInput!]!) {
+  updateScriptCells(newCells: $newCells)
+}
