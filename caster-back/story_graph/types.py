@@ -75,7 +75,7 @@ class GraphSession:
 class ScriptCell:
     uuid: auto
     node: Node
-    cell_type: CellType
+    cell_type: CellType  # type: ignore
     cell_code: auto
     cell_order: auto
 
@@ -83,6 +83,6 @@ class ScriptCell:
 @strawberry.django.input(models.ScriptCell)
 class ScriptCellInput:
     uuid: auto
-    cell_type: CellType
+    cell_type: CellType  # type: ignore
     cell_code: auto
     cell_order: auto
