@@ -69,6 +69,10 @@ class ScriptCellAdmin(admin.ModelAdmin):
         "cell_type",
     ]
 
+    readonly_fields = [
+        "uuid",
+    ]
+
 
 @admin.register(GraphSession)
 class GraphSessionAdmin(admin.ModelAdmin):

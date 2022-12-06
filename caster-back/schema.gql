@@ -1,3 +1,11 @@
+"""An enumeration."""
+enum CellType {
+  MARKDOWN
+  PYTHON
+  SUPERCOLLIDER
+  COMMENT
+}
+
 """Date with time (isoformat)"""
 scalar DateTime
 
@@ -40,11 +48,14 @@ input IntFilterLookup {
 }
 
 type Mutation {
-  addNode(newNode: NodeInput!): Void
+  addNode(newNode: NodeCreate!): Void
   updateNode(nodeUpdate: NodeUpdate!): Void
   addEdge(newEdge: EdgeInput!): Void
   deleteEdge(edgeUuid: UUID!): Void
   deleteNode(nodeUuid: UUID!): Void
+  addScriptCell(nodeUuid: UUID!, order: Int!): ScriptCell!
+  updateScriptCells(newCells: [ScriptCellInput!]!): Void
+  deleteScriptCell(scriptCellUuid: UUID!): Void
 }
 
 type Node {
@@ -58,7 +69,7 @@ type Node {
   scriptCells: [ScriptCell!]!
 }
 
-input NodeInput {
+input NodeCreate {
   name: String!
   graphUuid: UUID!
   positionX: Float = null
@@ -86,9 +97,16 @@ type Query {
 type ScriptCell {
   uuid: UUID!
   node: Node!
-  cellType: String!
+  cellType: CellType!
   cellCode: String!
   cellOrder: Int!
+}
+
+input ScriptCellInput {
+  uuid: UUID
+  cellType: CellType
+  cellCode: String!
+  cellOrder: Int
 }
 
 type StreamPoint {
