@@ -6,6 +6,14 @@ SC_SYNTH_START_PORT=5600
 JANUS_START_PORT_OUT=5002
 JANUS_START_PORT_IN=6002
 
+if [[ -z "${SUPERCOLLIDER_USE_INPUT}" ]]; then
+    echo "Create no input streams"
+    USE_INPUT=0
+else
+    echo "Create input streams"
+    USE_INPUT=1
+fi
+
 # reset configs
 echo "" > "/opt/janus/etc/janus/janus.plugin.audiobridge.jcfg"
 echo "" > "/opt/janus/etc/janus/janus.plugin.streaming.jcfg"
@@ -22,7 +30,7 @@ until [ $COUNT -gt $SUPERCOLLIDER_NUM_STREAMS ]; do
     echo $streaming_config;
     printf "%s" "$streaming_config" >> "/opt/janus/etc/janus/janus.plugin.streaming.jcfg"
 
-    if [[ -z "${SUPERCOLLIDER_USE_INPUT}" ]]; then
+    if [ $USE_INPUT -gt 0 ]; then
         audiobridge_config=$(/bin/sh $PWD/janus.plugin.audiobridge.jcfg.template);
         printf "%s" "$audiobridge_config" >> "/opt/janus/etc/janus/janus.plugin.audiobridge.jcfg"
         # cat <<< "$audiobridge_config" >> "/opt/janus/etc/janus/janus.plugin.audiobridge.jcfg";

@@ -5,6 +5,16 @@
       <span>Currently on stream: {{ streamId }}</span>
     </p>
     <audio ref="player" controls />
+    <p>
+      <button @click="startMicStreaming()">
+        Start microphone
+      </button>
+    </p>
+    <p>
+      <button @click="stopMicStreaming()">
+        Stop microphone
+      </button>
+    </p>
   </div>
 </template>
 
@@ -32,7 +42,8 @@ export default {
       // internal
       Janus: null,
       janusInstance: null,
-      streaming: null
+      streaming: null,
+      mixertest: null
     };
   },
   head() {
@@ -53,13 +64,14 @@ export default {
   mounted() {
     this.initJanus();
   },
-  created() { },
+  created() {},
   methods: {
     initJanus() {
       this.Janus = Janus;
 
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that = this;
+      let audioBridgeWebRtcUp = false;
       const { hostname, protocol } = window.location;
 
       const server
@@ -69,6 +81,8 @@ export default {
 
       const opaqueId
         = this.params.opaqueIdAppendix + this.Janus.randomString(12);
+      const sendOpaqueId = `streaming-${this.Janus.randomString(12)}`;
+
       this.audioElem = this.$refs.player;
       this.Janus.init({
         debug: "all",
@@ -76,7 +90,9 @@ export default {
           // Make sure the browser supports WebRTC
           // [] To do: Send to page explaining webrtc support needed
           if (!this.Janus.isWebrtcSupported()) {
-            alert("Unfortunately, your devices doesn't seem to support WebRTC.");
+            alert(
+              "Unfortunately, your devices doesn't seem to support WebRTC."
+            );
             return;
           }
           // Create session
@@ -85,6 +101,65 @@ export default {
             // TODO: needed?
             iceServers: [{ urls: this.params.iceServers }],
             success: () => {
+              // attach to audiobridge
+              that.janusInstance.attach({
+                plugin: "janus.plugin.audiobridge",
+                opaqueId: sendOpaqueId,
+                success(pluginHandle) {
+                  that.mixertest = pluginHandle;
+                  Janus.log("Audiobridge attached");
+                },
+                onmessage(msg, jsep) {
+                  Janus.debug(" ::: Got a message :::", msg);
+                  const event = msg.audiobridge;
+                  Janus.debug(`Event: ${event}`);
+                  if (event) {
+                    if (event === "joined") {
+                      // Successfully joined, negotiate WebRTC now
+                      if (msg.id) {
+                        Janus.log(`Successfully joined room ${msg.room}`);
+                        if (!audioBridgeWebRtcUp) {
+                          audioBridgeWebRtcUp = true;
+                          // Publish our stream
+                          that.mixertest.createOffer({
+                            media: { video: false }, // This is an audio only room
+                            customizeSdp(jsep) {
+                              if (!jsep.sdp.includes("stereo=1")) {
+                                // Make sure that our offer contains stereo too
+                                jsep.sdp = jsep.sdp.replace(
+                                  "useinbandfec=1",
+                                  "useinbandfec=1;stereo=1"
+                                );
+                              }
+                            },
+                            success(jsep) {
+                              Janus.debug("Got SDP!", jsep);
+                              const publish = {
+                                request: "configure",
+                                muted: false
+                              };
+                              that.mixertest.send({ message: publish, jsep });
+                            },
+                            error(error) {
+                              Janus.error(`WebRTC error: ${error}`);
+                            }
+                          });
+                        }
+                      }
+                    }
+                    else if (event === "event") {
+                      if (msg.error) {
+                        console.log(msg.error);
+                        return;
+                      }
+                    }
+                  }
+                  if (jsep) {
+                    Janus.debug("Handling SDP as well...", jsep);
+                    that.mixertest.handleRemoteJsep({ jsep });
+                  }
+                }
+              });
               // Attach to Streaming plugin
               that.janusInstance.attach({
                 plugin: "janus.plugin.streaming",
@@ -92,11 +167,7 @@ export default {
                 success: (pluginHandle) => {
                   that.streaming = pluginHandle;
                   console.log(
-                    `Plugin attached! (${
-                      that.streaming.getPlugin()
-                      }, id=${
-                      that.streaming.getId()
-                      })`
+                    `Plugin attached! (${that.streaming.getPlugin()}, id=${that.streaming.getId()})`
                   );
                   // Setup streaming session
                   that.updateStreamsList();
@@ -112,7 +183,7 @@ export default {
                   console.log(
                     `Janus says our WebRTC PeerConnection is ${
                       on ? "up" : "down"
-                      } now`
+                    } now`
                   );
                 },
                 onmessage(msg, jsep) {
@@ -163,12 +234,31 @@ export default {
             },
             destroyed() {
               console.log("destroyed");
-              // window.location.reload();
             }
           });
         }
       });
     },
+
+    startMicStreaming() {
+      console.log("Start mic streaming");
+      this.mixertest.send({
+        message: {
+          request: "join",
+          room: this.streamId
+        }
+      });
+    },
+
+    stopMicStreaming() {
+      console.log("Stop mic streaming");
+      this.mixertest.send({
+        message: {
+          request: "leave"
+        }
+      });
+    },
+
     updateStreamsList() {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that = this;
@@ -189,19 +279,14 @@ export default {
             console.log(list);
             for (const mp in list) {
               console.log(
-                `  >> [${
-                  list[mp].id
-                  }] ${
-                  list[mp].description
-                  } (${
-                  list[mp].type
-                  })`
+                `>> [${list[mp].id}] ${list[mp].description} (${list[mp].type})`
               );
             }
 
             // start random one
             if (list && list[0]) {
-              const randomStream = list[Math.floor(Math.random() * list.length)];
+              const randomStream
+                = list[Math.floor(Math.random() * list.length)];
               // alert(`Use stream ${randomStream.id}`);
               that.streamId = randomStream.id;
               const body = {

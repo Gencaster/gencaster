@@ -31,4 +31,9 @@ s.waitForBoot({
         );
         sig + delay;
     }).play;
+
+    Ndef(\micTest, {
+        var sig = SoundIn.ar(0);
+        FreqShift.ar(sig, 100);
+    }).play;
 });
