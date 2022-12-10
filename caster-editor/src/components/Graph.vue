@@ -5,7 +5,7 @@
       <div class="menu menu-edit">
         <div class="level level-1">
           <div class="menu-items left">
-            <el-radio-group v-model="menuLevel1">
+            <el-radio-group v-model="menuStore.tab">
               <el-radio-button label="edit">
                 Edit
               </el-radio-button>
@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="level level-2">
-          <div v-if="menuLevel1 === 'edit'" class="left">
+          <div v-if="menuStore.tab === 'edit'" class="left">
             <button class="unstyled" @click="addNode()">
               Add Node
             </button>
@@ -116,18 +116,27 @@
 <script lang="ts" setup>
 import type { Edges, Node, Nodes } from "v-network-graph";
 import type { Ref } from "vue";
+import { storeToRefs } from "pinia";
 import { GraphSettings } from "../assets/js/graphSettings";
 import type { Graph, ScriptCell } from "../graphql/graphql";
 import { transformEdges, transformLayout, transformNodes } from "../tools/typeTransformers";
+import { useMenuStore } from "@/stores/MenuStore";
+import { useGraphStore } from "@/stores/GraphStore";
+
+// Props
+const props = defineProps<GraphProps>();
+
+// Store
+const menuStore = useMenuStore();
+const graphStore = useGraphStore();
 
 interface GraphProps {
   graph: Graph
 }
-// Props
-const props = defineProps<GraphProps>();
 
 // Data
-const menuLevel1 = ref("edit");
+// const menuLevel1 = ref("edit");
+// const menuLevel1 = storeToRef(menuStore.tab);
 const showGraphData = ref(false);
 const showNodeData = ref(false);
 const stateSaved = ref(false);

@@ -8,6 +8,7 @@ export default defineNuxtConfig({
   // imports: {
   //   autoImport: false
   // },
+  modules: ["@pinia/nuxt"],
   typescript: {
     shim: false
   },
