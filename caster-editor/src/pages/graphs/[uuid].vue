@@ -17,6 +17,6 @@ export default {
 
 <template>
   <div class="edit-page">
-    <GraphV2 :uuid="uuid" />
+    <Graph :uuid="uuid" />
   </div>
 </template>
