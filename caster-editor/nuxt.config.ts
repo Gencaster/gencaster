@@ -11,6 +11,7 @@ export default defineNuxtConfig({
   typescript: {
     shim: false
   },
+  ssr: false,
   css: ["assets/scss/main.scss", "v-network-graph/lib/style.css"],
   components: true,
   srcDir: "src/",
