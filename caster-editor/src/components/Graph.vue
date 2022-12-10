@@ -49,7 +49,7 @@
               Refresh
             </button>
           </div>
-          <div v-if="menuLevel1 === 'test'" />
+          <div v-if="menuStore.tab === 'test'" />
         </div>
       </div>
       <div class="menu-spacer" />
@@ -116,6 +116,7 @@
 <script lang="ts" setup>
 import type { Edges, Node, Nodes } from "v-network-graph";
 import type { Ref } from "vue";
+import { computed, reactive } from "vue";
 import { storeToRefs } from "pinia";
 import { GraphSettings } from "../assets/js/graphSettings";
 import type { Graph, ScriptCell } from "../graphql/graphql";
@@ -135,8 +136,6 @@ interface GraphProps {
 }
 
 // Data
-// const menuLevel1 = ref("edit");
-// const menuLevel1 = storeToRef(menuStore.tab);
 const showGraphData = ref(false);
 const showNodeData = ref(false);
 const stateSaved = ref(false);
@@ -148,6 +147,16 @@ const configs = GraphSettings.standard;
 const nodes: Ref<Nodes> = ref(transformNodes(props.graph.nodes));
 const edges: Ref<Edges> = ref(transformEdges(props.graph.edges));
 const layouts: Ref<Nodes> = ref(transformLayout(props.graph.nodes));
+const selectedNodes = ref<String[]>([]);
+const selectedEdges = ref<String[]>([]);
+
+// Computed
+const hideConnectionButton = computed(() => {
+  if (selectedNodes.value.length !== 2)
+    return true;
+  else
+    return false;
+});
 
 // Methods
 const addEdge = () => {};
