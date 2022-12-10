@@ -5,12 +5,21 @@ import strawberry
 import strawberry.django
 from asgiref.sync import sync_to_async
 from django.core.exceptions import PermissionDenied
+from django.db import transaction
 from django.http.request import HttpRequest
 from strawberry.types import Info
 from strawberry_django.fields.field import StrawberryDjangoField
 
 import story_graph.models as story_graph_models
-from story_graph.types import EdgeInput, Graph, Node, NodeInput, NodeUpdate
+from story_graph.types import (
+    EdgeInput,
+    Graph,
+    Node,
+    NodeCreate,
+    NodeUpdate,
+    ScriptCell,
+    ScriptCellInput,
+)
 from stream.types import StreamPoint
 
 
@@ -30,6 +39,16 @@ async def graphql_check_authenticated(info: Info):
         raise PermissionDenied()
 
 
+def _update_cells(new_cells: List[ScriptCellInput]):
+    with transaction.atomic():
+        for new_cell in new_cells:
+            story_graph_models.ScriptCell.objects.filter(uuid=new_cell.uuid).update(
+                cell_order=new_cell.cell_order,
+                cell_code=new_cell.cell_code,
+                cell_type=new_cell.cell_type,
+            )
+
+
 @strawberry.type
 class Query:
     stream_point: StreamPoint = AuthStrawberryDjangoField()
@@ -43,7 +62,7 @@ class Query:
 @strawberry.type
 class Mutation:
     @strawberry.mutation
-    async def add_node(self, info: Info, new_node: NodeInput) -> None:
+    async def add_node(self, info: Info, new_node: NodeCreate) -> None:
         await graphql_check_authenticated(info)
 
         graph = await sync_to_async(story_graph_models.Graph.objects.get)(
@@ -117,6 +136,45 @@ class Mutation:
         except Exception:
             raise Exception(f"Could delete node {node_uuid}")
         return None
+
+    @strawberry.mutation
+    async def add_script_cell(
+        self, info, node_uuid: uuid.UUID, order: int
+    ) -> ScriptCell:
+        await graphql_check_authenticated(info)
+        try:
+            node: story_graph_models.Node = await story_graph_models.Node.objects.aget(
+                uuid=node_uuid
+            )
+            script_cell: story_graph_models.ScriptCell = (
+                await story_graph_models.ScriptCell.objects.acreate(
+                    cell_order=order,
+                    node=node,
+                )
+            )
+        except Exception as e:
+            raise Exception(f"Could not create node: {e}")
+        return ScriptCell(
+            uuid=script_cell.uuid,
+            node=script_cell.node,
+            cell_order=script_cell.cell_order,
+            cell_code=script_cell.cell_code,
+            cell_type=script_cell.cell_type,
+        )  # type: ignore
+
+    @strawberry.mutation
+    async def update_script_cells(self, info, new_cells: List[ScriptCellInput]) -> None:
+        await graphql_check_authenticated(info)
+        await sync_to_async(_update_cells)(new_cells)
+
+    @strawberry.mutation
+    async def delete_script_cell(self, info, script_cell_uuid: uuid.UUID) -> None:
+        await graphql_check_authenticated(info)
+
+        await story_graph_models.ScriptCell.objects.filter(
+            uuid=script_cell_uuid
+        ).adelete()
+        return
 
 
 schema = strawberry.Schema(

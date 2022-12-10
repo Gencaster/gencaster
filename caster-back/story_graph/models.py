@@ -136,6 +136,7 @@ class ScriptCell(models.Model):
     cell_type = models.CharField(
         max_length=128,
         choices=CellType.choices,
+        default=CellType.COMMENT,
         verbose_name=_("Cell type"),
         null=False,
         blank=False,
@@ -150,8 +151,9 @@ class ScriptCell(models.Model):
     )
 
     class Meta:
-        unique_together = ["cell_order", "node"]
-        ordering = ["node", "cell_order"]
+        # ordering by uuid provides a deterministic order
+        # in case cell_order is not unique
+        ordering = ["node", "cell_order", "uuid"]
 
     def __str__(self) -> str:
         return f"{self.node}-{self.cell_order} ({self.cell_type})"
