@@ -247,7 +247,27 @@ const removeEdge = () => {
   }
 };
 
-const addEdge = () => { };
+const addEdge = () => {
+  if (selectedNodes.value.length !== 2) {
+    ElMessage({
+      message: "requires exactly 2 scenes selected.",
+      type: "error",
+      customClass: "messages-editor"
+    });
+    return;
+  }
+  const [source, target] = selectedNodes.value;
+
+  const variables = {
+    nodeInUuid: source,
+    nodeOutUuid: target
+  };
+
+  createEdgeMutation(variables).then(() => {
+    refresh();
+    console.log("Added edge");
+  });
+};
 const exitEditing = () => { };
 
 const removeAny = () => {
