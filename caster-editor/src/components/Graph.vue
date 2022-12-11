@@ -84,7 +84,7 @@
 
       <!-- Dialogs -->
       <!-- Exit Page -->
-      <!-- <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
+      <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
         <span>
           Are you sure to exit without saving? <br> Some of your changes might get lost.
         </span>
@@ -96,7 +96,7 @@
             </el-button>
           </span>
         </template>
-      </el-dialog> -->
+      </el-dialog>
       <!-- Change name dialog -->
       <!-- <el-dialog v-model="renameNodeDialogVisible" width="25%" title="Rename Node" :show-close="false">
         <el-input v-model="renameNodeDialogName" placeholder="Please input" />
@@ -136,6 +136,9 @@ import { useGraphStore } from "@/stores/GraphStore";
 // Props
 const props = defineProps<GraphProps>();
 
+// Composables
+const router = useRouter();
+
 // Store
 const menuStore = useMenuStore();
 const graphStore = useGraphStore();
@@ -148,7 +151,7 @@ interface GraphProps {
 // Data
 const showGraphData = ref(false);
 const showNodeData = ref(false);
-const stateSaved = ref(false);
+const stateSaved = ref(true);
 const currentNodeName = ref<string>();
 const currentNodeUUID = ref<string>();
 const selectedNodeScriptCells: Ref<ScriptCell[]> = ref([]);
@@ -159,6 +162,11 @@ const edges: Ref<Edges> = ref(transformEdges(props.graph.edges));
 const layouts: Ref<Nodes> = ref(transformLayout(props.graph.nodes));
 const selectedNodes = ref<String[]>([]);
 const selectedEdges = ref<String[]>([]);
+
+// Interface
+const exitDialogVisible = ref(false);
+const renameNodeDialogVisible = ref(false);
+const renameNodeDialogName = ref("");
 
 // mutations
 // create node
@@ -268,7 +276,23 @@ const addEdge = () => {
     console.log("Added edge");
   });
 };
-const exitEditing = () => { };
+
+const exitEditing = () => {
+  if (!stateSaved.value) {
+    exitDialogVisible.value = true;
+  }
+  else {
+    router.push({
+      path: "/graphs"
+    });
+  }
+};
+
+const exitWithoutSaving = () => {
+  router.push({
+    path: "/graphs"
+  });
+};
 
 const removeAny = () => {
   // check if only one type is selected
@@ -313,6 +337,7 @@ const eventHandlers = {
     doubleClickedNode(node);
   },
   "node:dragend": ({ node }: Node) => {
+    console.log(stateSaved.value);
     stateSaved.value = false;
     nodeDraggedEnd(node);
   }
