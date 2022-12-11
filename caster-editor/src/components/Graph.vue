@@ -114,6 +114,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ElMessage } from "element-plus";
 import type { Edges, Node, Nodes } from "v-network-graph";
 import type { Ref } from "vue";
 import { computed } from "vue";
@@ -220,11 +221,42 @@ const addNode = () => {
     console.log("Added node");
   });
 };
-const addEdge = () => {};
-const exitEditing = () => {};
+const removeNode = () => {
+  for (const nodeId of selectedNodes.value) {
+    const variables = {
+      nodeUuid: nodeId
+    };
 
-const removeAny = () => {};
-const saveState = () => {};
+    removeNodeMutation(variables).then(() => {
+      refresh();
+      console.log("Removed node");
+    });
+  }
+};
+
+const addEdge = () => { };
+const exitEditing = () => { };
+
+const removeAny = () => {
+  // check if only one type is selected
+  // right now we only allow one element deletion
+  // needs to check if the async call is not buggy if looping through
+  if ((selectedNodes.value.length === 1 && selectedEdges.value.length === 0)) {
+    removeNode();
+  }
+  else if ((selectedNodes.value.length === 0 && selectedEdges.value.length === 1)) {
+    // removeEdge();
+    console.log("remove edge");
+  }
+  else {
+    ElMessage({
+      message: "Please select max one scene or one connection.",
+      type: "error",
+      customClass: "messages-editor"
+    });
+  }
+};
+const saveState = () => { };
 const setupNodeDataWindow = (node: string) => {
   currentNodeName.value = nodes.value[node].name;
   currentNodeUUID.value = node;
