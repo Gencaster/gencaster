@@ -312,7 +312,32 @@ const removeAny = () => {
     });
   }
 };
-const saveState = () => { };
+
+const updateNode = (uuid: string, name: string | undefined, color: string, positionX: number, positionY: number) => {
+  const variables = {
+    nodeUuid: uuid,
+    name,
+    color,
+    positionX,
+    positionY
+  };
+  updateNodeMutation(variables).then(() => {
+    refresh();
+    console.log("Updated node");
+  });
+};
+
+const saveState = () => {
+  // update positions
+  for (const uuid in nodes.value) {
+    // get positions
+    const n = nodes.value[uuid];
+    updateNode(uuid, n.name, n.color, layouts.value.nodes[uuid].x, layouts.value.nodes[uuid].y);
+  }
+  // TODO: make it async with callbacks
+  stateSaved.value = true;
+};
+
 const setupNodeDataWindow = (node: string) => {
   currentNodeName.value = nodes.value[node].name;
   currentNodeUUID.value = node;
