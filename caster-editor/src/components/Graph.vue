@@ -84,7 +84,7 @@
 
       <!-- Dialogs -->
       <!-- Exit Page -->
-      <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
+      <!-- <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
         <span>
           Are you sure to exit without saving? <br> Some of your changes might get lost.
         </span>
@@ -96,9 +96,9 @@
             </el-button>
           </span>
         </template>
-      </el-dialog>
+      </el-dialog> -->
       <!-- Change name dialog -->
-      <el-dialog v-model="renameNodeDialogVisible" width="25%" title="Rename Node" :show-close="false">
+      <!-- <el-dialog v-model="renameNodeDialogVisible" width="25%" title="Rename Node" :show-close="false">
         <el-input v-model="renameNodeDialogName" placeholder="Please input" />
         <template #footer>
           <span class="dialog-footer">
@@ -108,7 +108,7 @@
             </el-button>
           </span>
         </template>
-      </el-dialog>
+      </el-dialog> -->
     </div>
   </div>
 </template>
@@ -116,10 +116,18 @@
 <script lang="ts" setup>
 import type { Edges, Node, Nodes } from "v-network-graph";
 import type { Ref } from "vue";
-import { computed, reactive } from "vue";
+import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import { GraphSettings } from "../assets/js/graphSettings";
-import type { Graph, ScriptCell } from "../graphql/graphql";
+import {
+  useCreateEdgeMutation,
+  useCreateNodeMutation,
+  useDeleteEdgeMutation,
+  useDeleteNodeMutation,
+  useGetGraphQuery,
+  useUpdateNodeMutation
+} from "../graphql/graphql";
+import type { Graph, Scalars, ScriptCell } from "../graphql/graphql";
 import { transformEdges, transformLayout, transformNodes } from "../tools/typeTransformers";
 import { useMenuStore } from "@/stores/MenuStore";
 import { useGraphStore } from "@/stores/GraphStore";
@@ -133,6 +141,7 @@ const graphStore = useGraphStore();
 
 interface GraphProps {
   graph: Graph
+  uuid: Scalars["UUID"]
 }
 
 // Data
@@ -150,6 +159,18 @@ const layouts: Ref<Nodes> = ref(transformLayout(props.graph.nodes));
 const selectedNodes = ref<String[]>([]);
 const selectedEdges = ref<String[]>([]);
 
+// mutations
+// create node
+const { executeMutation: createNodeMutation } = useCreateNodeMutation();
+// update node
+const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();
+// remove node
+const { executeMutation: removeNodeMutation } = useDeleteNodeMutation();
+// create edge
+const { executeMutation: createEdgeMutation } = useCreateEdgeMutation();
+// remove edge
+const { executeMutation: removeEdgeMutation } = useDeleteEdgeMutation();
+
 // Computed
 const hideConnectionButton = computed(() => {
   if (selectedNodes.value.length !== 2)
@@ -158,11 +179,50 @@ const hideConnectionButton = computed(() => {
     return false;
 });
 
+const hideRemoveButton = computed(() => {
+  if ((selectedNodes.value.length === 0 && selectedEdges.value.length === 0) || (selectedNodes.value.length === 0 && selectedEdges.value.length === 0))
+    return true;
+  else if ((selectedNodes.value.length > 1 || selectedEdges.value.length > 1))
+    return true;
+  else
+    return false;
+});
+
 // Methods
+const transformData = () => {
+  nodes.value = transformNodes(props.graph.nodes);
+  edges.value = transformEdges(props.graph.edges);
+  layouts.value = transformLayout(props.graph.nodes);
+};
+
+const refresh = () => {
+  if (graphStore.executeQuery !== undefined) {
+    graphStore?.executeQuery().then(() => {
+      transformData();
+      selectedNodes.value = [];
+      selectedEdges.value = [];
+      console.log("finished refresh");
+    });
+  }
+};
+
+const addNode = () => {
+  const variables = {
+    graphUuid: props.uuid,
+    name: graphStore.defaultNewNodeName,
+    color: graphStore.defaultNewNodeColor,
+    positionX: 0,
+    positionY: 0
+  };
+
+  createNodeMutation(variables).then(() => {
+    refresh();
+    console.log("Added node");
+  });
+};
 const addEdge = () => {};
-const addNode = () => {};
 const exitEditing = () => {};
-const refresh = () => {};
+
 const removeAny = () => {};
 const saveState = () => {};
 const setupNodeDataWindow = (node: string) => {
