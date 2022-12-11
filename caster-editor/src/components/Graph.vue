@@ -234,19 +234,31 @@ const removeNode = () => {
   }
 };
 
+const removeEdge = () => {
+  for (const edgeId of selectedEdges.value) {
+    const variables = {
+      edgeUuid: edgeId
+    };
+
+    removeEdgeMutation(variables).then(() => {
+      refresh();
+      console.log("Removed edge");
+    });
+  }
+};
+
 const addEdge = () => { };
 const exitEditing = () => { };
 
 const removeAny = () => {
   // check if only one type is selected
   // right now we only allow one element deletion
-  // needs to check if the async call is not buggy if looping through
+  // TODO: needs to check if the async call is not buggy if looping through
   if ((selectedNodes.value.length === 1 && selectedEdges.value.length === 0)) {
     removeNode();
   }
   else if ((selectedNodes.value.length === 0 && selectedEdges.value.length === 1)) {
-    // removeEdge();
-    console.log("remove edge");
+    removeEdge();
   }
   else {
     ElMessage({
