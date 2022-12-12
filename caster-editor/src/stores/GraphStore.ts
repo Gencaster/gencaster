@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { GetGraphQuery } from "../graphql/graphql";
+import type { GetGraphQuery } from "@/graphql/graphql";
 
 export const useGraphStore = defineStore({
   id: "GraphStore",

@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useGetGraphQuery } from "~~/src/graphql/graphql";
+import { useGetGraphQuery } from "@/graphql/graphql";
 import { useGraphStore } from "@/stores/GraphStore";
 
 // Store

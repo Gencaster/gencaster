@@ -38,7 +38,6 @@
             <button class="unstyled" @click="addNode()">
               Add Node
             </button>
-            <!-- <button class="unstyled" :disabled="selectedNodes.length !== 2" @click="addEdge()"> -->
             <button class="unstyled" :class="{ lighter: hideConnectionButton }" @click="addEdge()">
               Add Connection
             </button>
@@ -118,18 +117,16 @@ import { ElMessage } from "element-plus";
 import type { Edges, Node, Nodes } from "v-network-graph";
 import type { Ref } from "vue";
 import { computed } from "vue";
-import { storeToRefs } from "pinia";
-import { GraphSettings } from "../assets/js/graphSettings";
+import { transformEdges, transformLayout, transformNodes } from "@/tools/typeTransformers";
+import { GraphSettings } from "@/assets/js/graphSettings";
+import type { Graph, Scalars, ScriptCell } from "@/graphql/graphql";
 import {
   useCreateEdgeMutation,
   useCreateNodeMutation,
   useDeleteEdgeMutation,
   useDeleteNodeMutation,
-  useGetGraphQuery,
   useUpdateNodeMutation
-} from "../graphql/graphql";
-import type { Graph, Scalars, ScriptCell } from "../graphql/graphql";
-import { transformEdges, transformLayout, transformNodes } from "../tools/typeTransformers";
+} from "@/graphql/graphql";
 import { useMenuStore } from "@/stores/MenuStore";
 import { useGraphStore } from "@/stores/GraphStore";
 // Props
