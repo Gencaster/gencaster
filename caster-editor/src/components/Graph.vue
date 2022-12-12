@@ -347,8 +347,6 @@ const setupNodeDataWindow = (node: string) => {
 const doubleClickedNode = (node: string) => {
   setupNodeDataWindow(node);
   showNodeData.value = true;
-  console.log("dblclick");
-  console.log(nodes.value[node]);
 };
 
 const nodeDraggedEnd = (node: string) => {
