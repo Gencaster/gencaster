@@ -10,26 +10,8 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { debugBlockData } from "@/assets/js/dev/debugBlockData";
-import type { ScriptCell } from "@/graphql/graphql";
-
-export default {
-  name: "BlockEditorTestPage",
-
-  data() {
-    return {
-      debugBlockData: [] as ScriptCell[]
-    };
-  },
-
-  computed: {
-  },
-
-  mounted() {
-    this.debugBlockData = debugBlockData;
-  }
-};
 </script>
 
 <style lang="scss">

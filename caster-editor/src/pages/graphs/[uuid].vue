@@ -1,3 +1,12 @@
+<template>
+  <div v-if="fetching">
+    <elementsLoading />
+  </div>
+  <div v-else class="edit-page">
+    <Graph v-if="graph" :uuid="uuid" :graph="graph" />
+  </div>
+</template>
+
 <script lang="ts" setup>
 import { useGetGraphQuery } from "~~/src/graphql/graphql";
 import { useGraphStore } from "@/stores/GraphStore";
@@ -21,12 +30,3 @@ if (error.value)
 
 const graph = computed(() => data.value?.graph);
 </script>
-
-<template>
-  <div v-if="fetching">
-    <elementsLoading />
-  </div>
-  <div v-else class="edit-page">
-    <Graph v-if="graph" :uuid="uuid" :graph="graph" />
-  </div>
-</template>

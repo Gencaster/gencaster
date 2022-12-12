@@ -344,7 +344,6 @@ const setupNodeDataWindow = (node: string) => {
   currentNodeUUID.value = node;
 
   const cells = nodes.value[node].scriptCells;
-  console.log(cells);
   selectedNodeScriptCells.value = cells;
 };
 
@@ -395,9 +394,4 @@ const eventHandlers = {
 // Events
 $bus.$on("closeNodeData", () => showNodeData.value = false);
 $bus.$on("openNodeNameEdit", () => openNodeNameEdit());
-
-// On Mounted
-onMounted(() => {
-  configs.node.selectable = true;
-});
 </script>

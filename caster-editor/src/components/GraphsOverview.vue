@@ -4,12 +4,12 @@
       <elementsLoading />
     </div>
     <div v-else>
-      <div v-if="result !== null">
+      <div v-if="data !== null">
         <h1>Select one of your Graphs</h1>
         <div class="demo-control-panel">
           <div>
             <br>
-            <div v-for="graph in graphsData.graphs" :key="graph.uuid" class="graph-selection" :value="graph.uuid">
+            <div v-for="graph in data?.graphs" :key="graph.uuid" class="graph-selection" :value="graph.uuid">
               <NuxtLink class="graph" :to="`../graphs/${graph.uuid}`">
                 <div>
                   <p>{{ graph.name }}</p>
@@ -37,43 +37,11 @@
   </div>
 </template>
 
-<script lang="ts">
-// import type { GetGraphsQuery } from "@/graphql/graphql";
-import type { GetGraphsQuery } from "@/graphql/graphql";
+<script lang="ts" setup>
 import { useGetGraphsQuery } from "@/graphql/graphql";
+const { data, executeQuery, fetching, error } = await useGetGraphsQuery();
 
-export default {
-  name: "GraphsOverviewComponent",
-
-  data() {
-    return {
-      fetching: true as boolean,
-      result: {},
-      graphsData: {},
-      error: {}
-      // TODO: import the correct types. Somehow GetGraphsQuery is not working
-    };
-  },
-  mounted() {
-    this.initQuery();
-  },
-  methods: {
-    async initQuery() {
-      try {
-        const result = await useGetGraphsQuery();
-        this.result = result;
-        this.fetching = result.fetching.value;
-        this.graphsData = result.data;
-        this.error = result.error;
-      }
-      catch (error) {
-        console.log("not allowed");
-      }
-    },
-
-    createNewGraph() {
-      alert("tbd");
-    }
-  }
+const createNewGraph = () => {
+  alert("tbd");
 };
 </script>

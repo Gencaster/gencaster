@@ -70,49 +70,46 @@ const codemirrorReady = () => {};
 // // console.log(this.editor.getHtml());
 //     },
 
-// On Mounted
-onMounted(() => {
-  editorType.value = props.cellData.cellType;
+editorType.value = props.cellData.cellType;
 
-  switch (editorType.value) {
-    case CellType.Comment:
-      editor = new Editor({
-        extensions: [
-          StarterKit,
-          Highlight,
-          Typography
-        ],
-        content: props.cellData.cellCode,
-        // triggered on every change
-        onUpdate: () => onTipTapUpdate()
-      });
-      break;
+switch (editorType.value) {
+  case CellType.Comment:
+    editor = new Editor({
+      extensions: [
+        StarterKit,
+        Highlight,
+        Typography
+      ],
+      content: props.cellData.cellCode,
+      // triggered on every change
+      onUpdate: () => onTipTapUpdate()
+    });
+    break;
 
-    case CellType.Markdown:
-      editor = new Editor({
-        extensions: [
-          StarterKit,
-          Highlight,
-          Typography
-        ],
-        content: props.cellData.cellCode,
-        // triggered on every change
-        onUpdate: () => onTipTapUpdate()
-      });
-      break;
+  case CellType.Markdown:
+    editor = new Editor({
+      extensions: [
+        StarterKit,
+        Highlight,
+        Typography
+      ],
+      content: props.cellData.cellCode,
+      // triggered on every change
+      onUpdate: () => onTipTapUpdate()
+    });
+    break;
 
-    case CellType.Python:
-      code.value = props.cellData.cellCode;
-      extensions = [python()];
-      break;
+  case CellType.Python:
+    code.value = props.cellData.cellCode;
+    extensions = [python()];
+    break;
 
-    case CellType.Supercollider:
-      code.value = props.cellData.cellCode;
-      extensions = [python()];
-      break;
+  case CellType.Supercollider:
+    code.value = props.cellData.cellCode;
+    extensions = [python()];
+    break;
 
-    default:
-      break;
-  }
-});
+  default:
+    break;
+}
 </script>
