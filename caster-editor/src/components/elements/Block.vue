@@ -1,13 +1,13 @@
 <template>
   <div class="block">
-    <!-- {{ cellData }} -->
+    {{ code }}
     <!-- markdown -->
-    <div v-if="editor && editorType === 'markdown'" class="editor-markdown">
+    <div v-if="editor && editorType === CellType.Markdown" class="editor-markdown">
       <EditorContent :editor="editor" />
     </div>
 
     <!-- python -->
-    <div v-if="editorType === 'python'" class="editor-python">
+    <div v-if="editorType === CellType.Python" class="editor-python">
       <Codemirror
         v-model="code" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
         :tab-size="2" :extensions="extensions" @ready="codemirrorReady" @change="emitCodemirror('change', $event)"
@@ -16,7 +16,7 @@
     </div>
 
     <!-- supercollider -->
-    <div v-if="editorType === 'supercollider'" class="editor-supercollider">
+    <div v-if="editorType === CellType.Supercollider" class="editor-supercollider">
       <Codemirror
         v-model="code" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
         :tab-size="2" :extensions="extensions" @ready="codemirrorReady" @change="emitCodemirror('change', $event)"
@@ -25,14 +25,13 @@
     </div>
 
     <!-- comment -->
-    <div v-if="editor && editorType === 'comment'" class="editor-comment">
+    <div v-if="editor && editorType === CellType.Comment" class="editor-comment">
       <EditorContent :editor="editor" />
     </div>
   </div>
 </template>
 
-<script lang="ts">
-// python
+<script lang="ts" setup>
 import { Codemirror } from "vue-codemirror";
 import { python } from "@codemirror/lang-python";
 
@@ -41,99 +40,79 @@ import Highlight from "@tiptap/extension-highlight";
 import Typography from "@tiptap/extension-typography";
 import StarterKit from "@tiptap/starter-kit";
 import { Editor, EditorContent } from "@tiptap/vue-3";
+import { CellType } from "@/graphql/graphql";
 import type { ScriptCell } from "@/graphql/graphql";
 
-export default {
-  components: {
-    EditorContent,
-    Codemirror
-  },
+interface BlockProps {
+  cellData: ScriptCell
+}
 
-  props: {
-    cellData: {
-      type: Object as () => ScriptCell,
-      required: true,
-      default: () => { }
-    }
-  },
+const props = defineProps<BlockProps>();
 
-  data() {
-    return {
-      editorType: "",
-      editor: {} as any,
-      code: "" as string,
-      extensions: [] as any
-    };
-  },
+// Variables
+const editorType = ref<string>();
+let editor = ref<any>({});
+const code = ref<string>();
+let extensions = ref<any>([]);
 
-  watch: {},
-
-  mounted() {
-    this.editorType = this.cellData.cellType;
-
-    switch (this.editorType) {
-      case "comment":
-        this.editor = new Editor({
-          extensions: [
-            StarterKit,
-            Highlight,
-            Typography
-          ],
-          content: this.cellData.cellCode,
-          // triggered on every change
-          onUpdate: () => this.onTipTapUpdate()
-        });
-        break;
-
-      case "markdown":
-        this.editor = new Editor({
-          extensions: [
-            StarterKit,
-            Highlight,
-            Typography
-          ],
-          content: this.cellData.cellCode,
-          // triggered on every change
-          onUpdate: () => this.onTipTapUpdate()
-        });
-        break;
-
-      case "python":
-        this.code = this.cellData.cellCode;
-        this.extensions = [python()];
-        break;
-
-      case "supercollider":
-        this.code = this.cellData.cellCode;
-        this.extensions = [python()];
-        break;
-
-      default:
-        break;
-    }
-  },
-
-  beforeUnmount() {
-    if (this.editor)
-      this.editor.destroy();
-  },
-
-  methods: {
-    // TipTap
-    onTipTapUpdate() {
-      // console.log(this.editor.getText());
-      // console.log(JSON.stringify(this.editor.getJSON()));
-      // console.log(this.editor.getHtml());
-    },
-
-    // Python & Supercollider
-    emitCodemirror(event: any, data: any) {
-      // console.log(data);
-    },
-
-    codemirrorReady() {
-      // console.log("handle ready");
-    }
-  }
+// methods
+const onTipTapUpdate = () => {
+  console.log(editor.getText());
+  console.log(JSON.stringify(editor.getJSON()));
+  console.log(editor.getHtml());
 };
+
+const emitCodemirror = (eventType?: string, event?: any) => {};
+const codemirrorReady = () => {};
+// onTipTapUpdate() {
+// // console.log(this.editor.getText());
+// // console.log(JSON.stringify(this.editor.getJSON()));
+// // console.log(this.editor.getHtml());
+//     },
+
+// On Mounted
+onMounted(() => {
+  editorType.value = props.cellData.cellType;
+
+  switch (editorType.value) {
+    case CellType.Comment:
+      editor = new Editor({
+        extensions: [
+          StarterKit,
+          Highlight,
+          Typography
+        ],
+        content: props.cellData.cellCode,
+        // triggered on every change
+        onUpdate: () => onTipTapUpdate()
+      });
+      break;
+
+    case CellType.Markdown:
+      editor = new Editor({
+        extensions: [
+          StarterKit,
+          Highlight,
+          Typography
+        ],
+        content: props.cellData.cellCode,
+        // triggered on every change
+        onUpdate: () => onTipTapUpdate()
+      });
+      break;
+
+    case CellType.Python:
+      code.value = props.cellData.cellCode;
+      extensions = [python()];
+      break;
+
+    case CellType.Supercollider:
+      code.value = props.cellData.cellCode;
+      extensions = [python()];
+      break;
+
+    default:
+      break;
+  }
+});
 </script>

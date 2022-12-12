@@ -1,7 +1,3 @@
-<script setup lang="ts">
-import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
-</script>
-
 <template>
   <div class="node-editor-outer">
     <div class="title">
@@ -40,59 +36,55 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
       </div>
     </div>
     <div class="footer">
-      <button class="unstyled" @click="showNodeDataJSON()">
+      <button class="unstyled" @click="toggleShowJSONData()">
         JSON
       </button>
+    </div>
+    <div v-if="showJSONData" class="json">
+      <Codemirror
+        v-model="JSONViewerData" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
+        :tab-size="2" :extensions="extensions" :disabled="true"
+      />
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { Codemirror } from "vue-codemirror";
+import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
+import { json } from "@codemirror/lang-json";
+import { computed } from "vue";
 import type { ScriptCell } from "@/graphql/graphql";
 
-export default {
-  name: "NodeEditor",
+const props = defineProps({
+  dev: Boolean,
+  blocksData: Array<ScriptCell>,
+  currentNodeName: String
+});
 
-  props: {
-    dev: {
-      type: Boolean,
-      required: false,
-      default: () => false
-    },
-    blocksData: {
-      type: Array<ScriptCell>,
-      required: true,
-      default: () => []
-    },
-    currentNodeName: {
-      type: String,
-      required: false,
-      default: () => "Placeholder"
-    }
-  },
+const { $bus } = useNuxtApp();
 
-  data() {
-    return {};
-  },
+// Variables
+const extensions = [json()];
 
-  computed: {
-  },
+// interface
+const showJSONData = ref(false);
 
-  mounted() {
-  },
+// Computed
+const JSONViewerData = computed(() => {
+  return JSON.stringify({ data: props.blocksData }, null, 2);
+});
 
-  methods: {
-    openNodeNameEdit() {
-      this.$bus.$emit("openNodeNameEdit");
-    },
-    closeNodeData() {
-      this.$bus.$emit("closeNodeData");
-      // TODO: Emit like in Manus example
-    },
-    showNodeDataJSON() {
-      // TODO: Write the json display
-      console.log("show node data");
-    }
-  }
+// Methods
+const openNodeNameEdit = () => {
+  $bus.$emit("openNodeNameEdit");
+};
+
+const closeNodeData = () => {
+  $bus.$emit("closeNodeData");
+};
+
+const toggleShowJSONData = () => {
+  showJSONData.value = !showJSONData.value;
 };
 </script>

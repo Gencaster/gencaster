@@ -62,17 +62,17 @@
         :nodes="nodes" :edges="edges" :configs="configs" :layouts="layouts" :event-handlers="eventHandlers"
       />
 
+      <!-- This is just for debugging -->
       <p v-if="showGraphData">
         {{ nodes }}
         <br>
         {{ layouts }}
         <br>
         {{ graph }}
-        <!-- {{ graphData }} -->
       </p>
 
       <div v-if="showNodeData" class="node-data">
-        <ElementsBlockEditor :current-node-name="currentNodeName" :blocks-data="selectedNodeScriptCells" />
+        <ElementsBlockEditor :dev="false" :current-node-name="currentNodeName" :blocks-data="selectedNodeScriptCells" />
       </div>
 
       <div v-if="!showNodeData" class="stats">
@@ -98,7 +98,7 @@
         </template>
       </el-dialog>
       <!-- Change name dialog -->
-      <!-- <el-dialog v-model="renameNodeDialogVisible" width="25%" title="Rename Node" :show-close="false">
+      <el-dialog v-model="renameNodeDialogVisible" width="25%" title="Rename Node" :show-close="false">
         <el-input v-model="renameNodeDialogName" placeholder="Please input" />
         <template #footer>
           <span class="dialog-footer">
@@ -108,7 +108,7 @@
             </el-button>
           </span>
         </template>
-      </el-dialog> -->
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -132,9 +132,10 @@ import type { Graph, Scalars, ScriptCell } from "../graphql/graphql";
 import { transformEdges, transformLayout, transformNodes } from "../tools/typeTransformers";
 import { useMenuStore } from "@/stores/MenuStore";
 import { useGraphStore } from "@/stores/GraphStore";
-
 // Props
 const props = defineProps<GraphProps>();
+
+const { $bus } = useNuxtApp();
 
 // Composables
 const router = useRouter();
@@ -343,6 +344,7 @@ const setupNodeDataWindow = (node: string) => {
   currentNodeUUID.value = node;
 
   const cells = nodes.value[node].scriptCells;
+  console.log(cells);
   selectedNodeScriptCells.value = cells;
 };
 
@@ -357,6 +359,28 @@ const nodeDraggedEnd = (node: string) => {
   // const uuid = Object.entries(node);
 };
 
+const openNodeNameEdit = () => {
+  renameNodeDialogName.value = currentNodeName.value as string;
+  renameNodeDialogVisible.value = true;
+};
+
+const renameNodeFromDialog = () => {
+  if (renameNodeDialogName.value === "") {
+    ElMessage({
+      message: "Node name can't be empty",
+      type: "error",
+      customClass: "messages-editor"
+    });
+    return;
+  }
+
+  const uuid = currentNodeUUID.value as string;
+  const n = nodes.value[uuid];
+  currentNodeName.value = renameNodeDialogName.value;
+  updateNode(uuid, renameNodeDialogName.value, n.color, layouts.value.nodes[uuid].x, layouts.value.nodes[uuid].y);
+  renameNodeDialogVisible.value = false;
+};
+
 const eventHandlers = {
   "node:dblclick": ({ node }: Node) => {
     doubleClickedNode(node);
@@ -367,6 +391,12 @@ const eventHandlers = {
     nodeDraggedEnd(node);
   }
 };
+
+// Events
+$bus.$on("closeNodeData", () => showNodeData.value = false);
+$bus.$on("openNodeNameEdit", () => openNodeNameEdit());
+
+// On Mounted
 onMounted(() => {
   configs.node.selectable = true;
 });

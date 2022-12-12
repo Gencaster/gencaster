@@ -12,6 +12,7 @@
     "lint:ci": "eslint . --max-warnings 0"
   },
   "dependencies": {
+    "@codemirror/lang-json": "^6.0.1",
     "@codemirror/lang-python": "^6.1.0",
     "@element-plus/icons-vue": "^2.0.10",
     "@graphql-codegen/typescript": "^2.7.3",
@@ -25,6 +26,7 @@
     "@tiptap/vue-3": "^2.0.0-beta.204",
     "@urql/vue": "^1.0.2",
     "codemirror": "^6.0.1",
+    "codemirror-formatting": "^1.0.0",
     "element-plus": "^2.2.19",
     "graphql": "^16.6.0",
     "mitt": "^3.0.0",

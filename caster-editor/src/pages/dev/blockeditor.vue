@@ -1,8 +1,10 @@
 <template>
-  <div>
+  <div class="edit-page">
     <div class="editor-wrapper">
       <div class="editor-inner">
-        <ElementsBlockEditor :dev="true" :blocks-data="debugBlockData" />
+        <div class="node-data">
+          <ElementsBlockEditor :dev="true" :blocks-data="debugBlockData" />
+        </div>
       </div>
     </div>
   </div>
@@ -31,18 +33,20 @@ export default {
 </script>
 
 <style lang="scss">
-.editor-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  background-color: white;
-  width: 100vw;
-  height: 100vh;
-  padding: 20px;
+.edit-page {
+  .editor-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: white;
+    width: 100vw;
+    height: 100vh;
+    padding: 20px;
 
-  .editor-inner {
-    width: 50%;
-    height: 100%;
+    .editor-inner {
+      width: 50%;
+      height: 100%;
+    }
   }
 }
 </style>
