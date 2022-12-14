@@ -44,7 +44,7 @@
             <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeAny()">
               Remove
             </button>
-            <button class="unstyled" @click="refresh()">
+            <button class="unstyled" @click="refresh('all')">
               Refresh
             </button>
           </div>
@@ -61,20 +61,11 @@
         :nodes="nodes" :edges="edges" :configs="configs" :layouts="layouts" :event-handlers="eventHandlers"
       />
 
-      <!-- This is just for debugging -->
-      <p v-if="showGraphData">
-        {{ nodes }}
-        <br>
-        {{ layouts }}
-        <br>
-        {{ graph }}
-      </p>
-
-      <div v-if="showNodeData" class="node-data">
+      <div v-if="graphStore.showNodeMenu" class="node-data">
         <ElementsBlockEditor :dev="false" :current-node-name="currentNodeName" :blocks-data="selectedNodeScriptCells" />
       </div>
 
-      <div v-if="!showNodeData" class="stats">
+      <div v-if="!graphStore.showNodeMenu" class="stats">
         <p>
           Nodes: {{ graph.nodes.length }} &nbsp;
           Edges: {{ graph.edges.length }}
@@ -147,8 +138,6 @@ interface GraphProps {
 }
 
 // Data
-const showGraphData = ref(false);
-const showNodeData = ref(false);
 const stateSaved = ref(true);
 const currentNodeName = ref<string>();
 const currentNodeUUID = ref<string>();
@@ -196,20 +185,42 @@ const hideRemoveButton = computed(() => {
 });
 
 // Methods
-const transformData = () => {
-  nodes.value = transformNodes(props.graph.nodes);
-  edges.value = transformEdges(props.graph.edges);
-  layouts.value = transformLayout(props.graph.nodes);
+const transformData = (updateLocalState: boolean, updateServerState: boolean) => {
+  if (updateLocalState) {
+    graphStore.graphUserState.nodes = transformNodes(props.graph.nodes) as any;
+    graphStore.graphUserState.edges = transformEdges(props.graph.edges) as any;
+    graphStore.graphUserState.layouts = transformLayout(props.graph.nodes) as any;
+  }
+
+  if (updateServerState) {
+    graphStore.graphServerState.nodes = transformNodes(props.graph.nodes) as any;
+    graphStore.graphServerState.edges = transformEdges(props.graph.edges) as any;
+    graphStore.graphServerState.layouts = transformLayout(props.graph.nodes) as any;
+  }
+  // nodes.value = transformNodes(props.graph.nodes);
+  // edges.value = transformEdges(props.graph.edges);
+  // layouts.value = transformLayout(props.graph.nodes);
 };
 
-const refresh = () => {
-  if (graphStore.executeQuery !== undefined) {
-    graphStore?.executeQuery().then(() => {
-      transformData();
-      selectedNodes.value = [];
-      selectedEdges.value = [];
-      console.log("finished refresh");
-    });
+const emptySelection = () => {
+  selectedEdges.value = [];
+  selectedNodes.value = [];
+};
+
+const refresh = (command: string) => {
+  switch (command) {
+    case "all":
+      if (graphStore.executeQuery !== undefined) {
+        graphStore?.executeQuery().then(() => {
+          emptySelection();
+          transformData(true, true);
+          console.log("finished refresh");
+        });
+      }
+      break;
+
+    default:
+      break;
   }
 };
 
@@ -223,7 +234,7 @@ const addNode = () => {
   };
 
   createNodeMutation(variables).then(() => {
-    refresh();
+    refresh("all");
     console.log("Added node");
   });
 };
@@ -234,7 +245,7 @@ const removeNode = () => {
     };
 
     removeNodeMutation(variables).then(() => {
-      refresh();
+      refresh("all");
       console.log("Removed node");
     });
   }
@@ -247,7 +258,7 @@ const removeEdge = () => {
     };
 
     removeEdgeMutation(variables).then(() => {
-      refresh();
+      refresh("all");
       console.log("Removed edge");
     });
   }
@@ -270,7 +281,7 @@ const addEdge = () => {
   };
 
   createEdgeMutation(variables).then(() => {
-    refresh();
+    refresh("all");
     console.log("Added edge");
   });
 };
@@ -320,7 +331,7 @@ const updateNode = (uuid: string, name: string | undefined, color: string, posit
     positionY
   };
   updateNodeMutation(variables).then(() => {
-    refresh();
+    refresh("all");
     console.log("Updated node");
   });
 };
@@ -345,8 +356,17 @@ const setupNodeDataWindow = (node: string) => {
 };
 
 const doubleClickedNode = (node: string) => {
-  setupNodeDataWindow(node);
-  showNodeData.value = true;
+  if (!graphStore.showNodeMenu) {
+    setupNodeDataWindow(node);
+    graphStore.showNodeMenu = true;
+  }
+  else {
+    ElMessage({
+      message: "Close scene data first",
+      type: "error",
+      customClass: "messages-editor"
+    });
+  }
 };
 
 const nodeDraggedEnd = (node: string) => {
@@ -380,13 +400,12 @@ const eventHandlers = {
     doubleClickedNode(node);
   },
   "node:dragend": ({ node }: Node) => {
-    console.log(stateSaved.value);
     stateSaved.value = false;
     nodeDraggedEnd(node);
   }
 };
 
 // Events
-$bus.$on("closeNodeData", () => showNodeData.value = false);
+$bus.$on("closeNodeData", () => graphStore.showNodeMenu = false);
 $bus.$on("openNodeNameEdit", () => openNodeNameEdit());
 </script>
