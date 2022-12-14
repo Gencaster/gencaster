@@ -57,7 +57,8 @@
     <!-- Graph -->
     <v-network-graph
       v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
-      :nodes="graphStore.graphUserState.nodes" :edges="graphStore.graphUserState.edges" :configs="configs" :layouts="graphStore.graphUserState.layouts" :event-handlers="eventHandlers"
+      :nodes="graphStore.graphUserState.nodes" :edges="graphStore.graphUserState.edges" :configs="configs"
+      :layouts="graphStore.graphUserState.layouts" :event-handlers="eventHandlers"
     />
 
     <!-- Node Content -->
@@ -104,7 +105,7 @@
 
 <script lang="ts" setup>
 import { ElMessage } from "element-plus";
-import type { Edges, Node, Nodes } from "v-network-graph";
+import type { Node } from "v-network-graph";
 import type { Ref } from "vue";
 import { computed } from "vue";
 import { transformEdges, transformLayout, transformNodes } from "@/tools/typeTransformers";
@@ -169,8 +170,7 @@ const { executeMutation: removeEdgeMutation } = useDeleteEdgeMutation();
 const hideConnectionButton = computed(() => {
   if (selectedNodes.value.length !== 2)
     return true;
-  else
-    return false;
+  else return false;
 });
 
 const hideRemoveButton = computed(() => {
@@ -178,23 +178,22 @@ const hideRemoveButton = computed(() => {
     return true;
   else if ((selectedNodes.value.length > 1 || selectedEdges.value.length > 1))
     return true;
-  else
-    return false;
+  else return false;
 });
 
 // Methods
 const transformData = (updateLocalState: boolean, updateServerState: boolean) => {
-  if (updateLocalState) {
-    graphStore.graphUserState.nodes = transformNodes(props.graph.nodes) as any;
-    graphStore.graphUserState.edges = transformEdges(props.graph.edges) as any;
-    graphStore.graphUserState.layouts = transformLayout(props.graph.nodes) as any;
-  }
+  // transform data
+  const nodes = transformNodes(props.graph.nodes);
+  const edges = transformEdges(props.graph.edges);
+  const layouts = transformLayout(props.graph.nodes);
 
-  if (updateServerState) {
-    graphStore.graphServerState.nodes = transformNodes(props.graph.nodes) as any;
-    graphStore.graphServerState.edges = transformEdges(props.graph.edges) as any;
-    graphStore.graphServerState.layouts = transformLayout(props.graph.nodes) as any;
-  }
+  // push to store
+  if (updateLocalState)
+    graphStore.updateGraphLocal(nodes, edges, layouts);
+
+  if (updateServerState)
+    graphStore.updateGraphServer(nodes, edges, layouts);
 };
 
 const emptySelection = () => {
@@ -207,9 +206,8 @@ const refresh = (command: string) => {
     case "all":
       if (graphStore.executeQuery !== undefined) {
         graphStore?.executeQuery().then(() => {
-          emptySelection();
           transformData(true, true);
-          console.log("finished refresh");
+          console.log("finished 'all' refresh");
         });
       }
       break;
@@ -382,9 +380,9 @@ const renameNodeFromDialog = () => {
   }
 
   const uuid = currentNodeUUID.value as string;
-  const n = graphStore.graphUserState.nodes[uuid];
+  const node = graphStore.graphUserState.nodes[uuid];
   currentNodeName.value = renameNodeDialogName.value;
-  updateNode(uuid, renameNodeDialogName.value, n.color, graphStore.graphUserState.layouts.nodes[uuid].x, graphStore.graphUserState.layouts.nodes[uuid].y);
+  updateNode(uuid, renameNodeDialogName.value, node.color, graphStore.graphUserState.layouts.nodes[uuid].x, graphStore.graphUserState.layouts.nodes[uuid].y);
   renameNodeDialogVisible.value = false;
 };
 
@@ -397,6 +395,18 @@ const eventHandlers = {
     nodeDraggedEnd(node);
   }
 };
+
+const compareGraphStates = () => {
+  if (JSON.stringify(graphStore.graphUserState) === JSON.stringify(graphStore.graphServerState))
+    return false;
+  else
+    return true;
+};
+
+graphStore.$subscribe((mutation, state) => {
+  graphStore.graphMapChanged = compareGraphStates();
+  // TODO: This triggers on any change. Is this good or too heavy?
+});
 
 // Events
 $bus.$on("closeNodeData", () => graphStore.showNodePanel = false);

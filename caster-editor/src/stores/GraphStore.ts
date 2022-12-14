@@ -41,6 +41,16 @@ export const useGraphStore = defineStore({
     },
     updateQuery(query: any) {
       this.executeQuery = query;
+    },
+    updateGraphLocal(newNodes: any, newEdges: any, newLayout: any) {
+      this.$state.graphUserState.nodes = newNodes;
+      this.$state.graphUserState.edges = newEdges;
+      this.$state.graphUserState.layouts = newLayout;
+    },
+    updateGraphServer(newNodes: any, newEdges: any, newLayout: any) {
+      this.$state.graphServerState.nodes = newNodes;
+      this.$state.graphServerState.edges = newEdges;
+      this.$state.graphServerState.layouts = newLayout;
     }
   }
 });
