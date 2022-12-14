@@ -70,6 +70,7 @@ const setUpMarkdown = () => {
 
   editorJS.value = new EditorJS({
     holder: editorDom.value,
+    minHeight: 0,
     tools: {
       header: Header
     },
@@ -88,6 +89,7 @@ const setUpComment = () => {
 
   editorJS.value = new EditorJS({
     holder: editorDom.value,
+    minHeight: 0,
     tools: {
       header: Header
     },

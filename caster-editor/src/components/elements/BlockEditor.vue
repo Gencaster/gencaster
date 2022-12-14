@@ -22,7 +22,7 @@
     <div class="blocks">
       <div v-for="cell in blocksData" :key="cell.uuid">
         <!-- {{ cell.cellCode }} -->
-        <div class="cell">
+        <div class="cell" :class="{ 'no-padding': noPadding(cell.cellType) }">
           <p class="cell-type">
             {{ cell.cellType }}
           </p>
@@ -55,6 +55,7 @@ import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
 import { json } from "@codemirror/lang-json";
 import { computed } from "vue";
 import type { ScriptCell } from "@/graphql/graphql";
+import { CellType } from "@/graphql/graphql";
 
 const props = defineProps({
   dev: Boolean,
@@ -74,6 +75,13 @@ const showJSONData = ref(false);
 const JSONViewerData = computed(() => {
   return JSON.stringify({ data: props.blocksData }, null, 2);
 });
+
+const noPadding = (blockCellType: CellType) => {
+  if (blockCellType === CellType.Markdown || blockCellType === CellType.Comment)
+    return true;
+  else
+    return false;
+};
 
 // Methods
 const openNodeNameEdit = () => {

@@ -63,8 +63,22 @@
       margin-bottom: $spacingM;
       border-radius: 4px;
       background-color: $grey-light;
-      padding: 20px 20px 15px 20px;
+      padding: 20px 20px 15px 30px;
       border: 1px solid #CDCDCD;
+
+      &.no-padding {
+        padding: 0px 0px 15px 65px;
+
+        .ce-block__content,
+        .ce-toolbar__content {
+          max-width: 1000px;
+          /* example value, adjust for your own use case */
+        }
+
+        .codex-editor__loader {
+          height: 38px !important;
+        }
+      }
 
       .cell-type {
         position: absolute;
@@ -89,10 +103,6 @@
           margin-top: 8px;
         }
 
-      }
-
-      .cell-editor {
-        width: calc(100% - 40px);
       }
     }
   }
