@@ -55,51 +55,50 @@
     </div>
 
     <!-- Graph -->
-    <div>
-      <v-network-graph
-        v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
-        :nodes="nodes" :edges="edges" :configs="configs" :layouts="layouts" :event-handlers="eventHandlers"
-      />
+    <v-network-graph
+      v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
+      :nodes="graphStore.graphUserState.nodes" :edges="graphStore.graphUserState.edges" :configs="configs" :layouts="graphStore.graphUserState.layouts" :event-handlers="eventHandlers"
+    />
 
-      <div v-if="graphStore.showNodeMenu" class="node-data">
-        <ElementsBlockEditor :dev="false" :current-node-name="currentNodeName" :blocks-data="selectedNodeScriptCells" />
-      </div>
-
-      <div v-if="!graphStore.showNodeMenu" class="stats">
-        <p>
-          Nodes: {{ graph.nodes.length }} &nbsp;
-          Edges: {{ graph.edges.length }}
-        </p>
-      </div>
-
-      <!-- Dialogs -->
-      <!-- Exit Page -->
-      <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
-        <span>
-          Are you sure to exit without saving? <br> Some of your changes might get lost.
-        </span>
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
-            <el-button color="#FF0000" @click="exitWithoutSaving()">
-              Exit
-            </el-button>
-          </span>
-        </template>
-      </el-dialog>
-      <!-- Change name dialog -->
-      <el-dialog v-model="renameNodeDialogVisible" width="25%" title="Rename Node" :show-close="false">
-        <el-input v-model="renameNodeDialogName" placeholder="Please input" />
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button @click="renameNodeDialogVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="renameNodeFromDialog()">
-              Confirm
-            </el-button>
-          </span>
-        </template>
-      </el-dialog>
+    <!-- Node Content -->
+    <div v-if="graphStore.showNodePanel" class="node-data">
+      <ElementsBlockEditor :dev="false" :current-node-name="currentNodeName" :blocks-data="selectedNodeScriptCells" />
     </div>
+
+    <div v-if="!graphStore.showNodePanel" class="stats">
+      <p>
+        Nodes: {{ graph.nodes.length }} &nbsp;
+        Edges: {{ graph.edges.length }}
+      </p>
+    </div>
+
+    <!-- Dialogs -->
+    <!-- Exit Page -->
+    <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
+      <span>
+        Are you sure to exit without saving? <br> Some of your changes might get lost.
+      </span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
+          <el-button color="#FF0000" @click="exitWithoutSaving()">
+            Exit
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <!-- Change name dialog -->
+    <el-dialog v-model="renameNodeDialogVisible" width="25%" title="Rename Node" :show-close="false">
+      <el-input v-model="renameNodeDialogName" placeholder="Please input" />
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="renameNodeDialogVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="renameNodeFromDialog()">
+            Confirm
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -135,6 +134,7 @@ const graphStore = useGraphStore();
 interface GraphProps {
   graph: Graph
   uuid: Scalars["UUID"]
+  fetching: boolean
 }
 
 // Data
@@ -142,13 +142,11 @@ const stateSaved = ref(true);
 const currentNodeName = ref<string>();
 const currentNodeUUID = ref<string>();
 const selectedNodeScriptCells: Ref<ScriptCell[]> = ref([]);
-
-const configs = GraphSettings.standard;
-const nodes: Ref<Nodes> = ref(transformNodes(props.graph.nodes));
-const edges: Ref<Edges> = ref(transformEdges(props.graph.edges));
-const layouts: Ref<Nodes> = ref(transformLayout(props.graph.nodes));
 const selectedNodes = ref<String[]>([]);
 const selectedEdges = ref<String[]>([]);
+
+// Config
+const configs = GraphSettings.standard;
 
 // Interface
 const exitDialogVisible = ref(false);
@@ -197,9 +195,6 @@ const transformData = (updateLocalState: boolean, updateServerState: boolean) =>
     graphStore.graphServerState.edges = transformEdges(props.graph.edges) as any;
     graphStore.graphServerState.layouts = transformLayout(props.graph.nodes) as any;
   }
-  // nodes.value = transformNodes(props.graph.nodes);
-  // edges.value = transformEdges(props.graph.edges);
-  // layouts.value = transformLayout(props.graph.nodes);
 };
 
 const emptySelection = () => {
@@ -338,27 +333,25 @@ const updateNode = (uuid: string, name: string | undefined, color: string, posit
 
 const saveState = () => {
   // update positions
-  for (const uuid in nodes.value) {
+  for (const uuid in graphStore.graphUserState.nodes) {
     // get positions
-    const n = nodes.value[uuid];
-    updateNode(uuid, n.name, n.color, layouts.value.nodes[uuid].x, layouts.value.nodes[uuid].y);
+    const n = graphStore.graphUserState.nodes[uuid];
+    updateNode(uuid, n.name, n.color, graphStore.graphUserState.layouts.nodes[uuid].x, graphStore.graphUserState.layouts.nodes[uuid].y);
   }
   // TODO: make it async with callbacks
   stateSaved.value = true;
 };
 
 const setupNodeDataWindow = (node: string) => {
-  currentNodeName.value = nodes.value[node].name;
+  currentNodeName.value = graphStore.graphUserState.nodes[node].name;
   currentNodeUUID.value = node;
-
-  const cells = nodes.value[node].scriptCells;
-  selectedNodeScriptCells.value = cells;
+  selectedNodeScriptCells.value = graphStore.graphUserState.nodes[node].scriptCells;
 };
 
 const doubleClickedNode = (node: string) => {
-  if (!graphStore.showNodeMenu) {
+  if (!graphStore.showNodePanel) {
     setupNodeDataWindow(node);
-    graphStore.showNodeMenu = true;
+    graphStore.showNodePanel = true;
   }
   else {
     ElMessage({
@@ -389,9 +382,9 @@ const renameNodeFromDialog = () => {
   }
 
   const uuid = currentNodeUUID.value as string;
-  const n = nodes.value[uuid];
+  const n = graphStore.graphUserState.nodes[uuid];
   currentNodeName.value = renameNodeDialogName.value;
-  updateNode(uuid, renameNodeDialogName.value, n.color, layouts.value.nodes[uuid].x, layouts.value.nodes[uuid].y);
+  updateNode(uuid, renameNodeDialogName.value, n.color, graphStore.graphUserState.layouts.nodes[uuid].x, graphStore.graphUserState.layouts.nodes[uuid].y);
   renameNodeDialogVisible.value = false;
 };
 
@@ -406,6 +399,11 @@ const eventHandlers = {
 };
 
 // Events
-$bus.$on("closeNodeData", () => graphStore.showNodeMenu = false);
+$bus.$on("closeNodeData", () => graphStore.showNodePanel = false);
 $bus.$on("openNodeNameEdit", () => openNodeNameEdit());
+
+// onMounted
+onMounted(() => {
+  transformData(true, true);
+});
 </script>

@@ -1,9 +1,6 @@
 <template>
-  <div v-if="fetching">
-    <elementsLoading />
-  </div>
-  <div v-else class="edit-page">
-    <Graph v-if="graph" :uuid="uuid" :graph="graph" />
+  <div class="edit-page">
+    <Graph v-if="graph" :uuid="uuid" :graph="graph" :fetching="fetching" />
   </div>
 </template>
 

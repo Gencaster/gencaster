@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-// import type { Edges, Nodes } from "v-network-graph";
+import type { Edges, Nodes } from "v-network-graph";
 import type { GetGraphQuery } from "@/graphql/graphql";
 
 export const useGraphStore = defineStore({
@@ -12,16 +12,18 @@ export const useGraphStore = defineStore({
     // graph state data
     graphMapChanged: false,
 
+    // state of the data from the server
     graphServerState: {
-      nodes: [],
-      edges: [],
-      layouts: []
+      nodes: <Nodes>{},
+      edges: <Edges>{},
+      layouts: <Nodes>{}
     },
 
+    // current state of the user
     graphUserState: {
-      nodes: [],
-      edges: [],
-      layouts: []
+      nodes: <Nodes>{},
+      edges: <Edges>{},
+      layouts: <Nodes>{}
     },
 
     // node editing
@@ -29,7 +31,7 @@ export const useGraphStore = defineStore({
     defaultNewNodeColor: "standard" as string,
 
     // node menu
-    showNodeMenu: false
+    showNodePanel: false
 
   }),
   getters: {},
