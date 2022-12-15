@@ -74,6 +74,21 @@
     </div>
 
     <!-- Dialogs -->
+    <!-- Are you sure to delete? -->
+    <el-dialog v-model="deleteDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
+      <span>
+        Are you sure to delete Scene "{{ firstNodeOfSelection }}"?
+      </span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button text bg @click="deleteDialogVisible = false">Cancel</el-button>
+          <el-button color="#FF0000" @click="removeNode()">
+            Delete Node
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+
     <!-- Exit Page -->
     <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
       <span>
@@ -150,6 +165,7 @@ const selectedEdges = ref<String[]>([]);
 const configs = GraphSettings.standard;
 
 // Interface
+const deleteDialogVisible = ref(false);
 const exitDialogVisible = ref(false);
 const renameNodeDialogVisible = ref(false);
 const renameNodeDialogName = ref("");
@@ -179,6 +195,17 @@ const hideRemoveButton = computed(() => {
   else if ((selectedNodes.value.length > 1 || selectedEdges.value.length > 1))
     return true;
   else return false;
+});
+
+const firstNodeOfSelection = computed(() => {
+  if (selectedNodes.value.length >= 0) {
+    const uuid = selectedNodes.value[0] as string;
+    const n = graphStore.graphUserState.nodes[uuid];
+    return n.name;
+  }
+  else {
+    return "undefined";
+  }
 });
 
 // Methods
@@ -232,6 +259,7 @@ const addNode = () => {
   });
 };
 const removeNode = () => {
+  deleteDialogVisible.value = false;
   for (const nodeId of selectedNodes.value) {
     const variables = {
       nodeUuid: nodeId
@@ -301,7 +329,8 @@ const removeAny = () => {
   // right now we only allow one element deletion
   // TODO: needs to check if the async call is not buggy if looping through
   if ((selectedNodes.value.length === 1 && selectedEdges.value.length === 0)) {
-    removeNode();
+    deleteDialogVisible.value = true;
+    // removeNode();
   }
   else if ((selectedNodes.value.length === 0 && selectedEdges.value.length === 1)) {
     removeEdge();
