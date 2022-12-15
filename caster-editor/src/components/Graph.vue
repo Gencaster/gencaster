@@ -77,7 +77,7 @@
     <!-- Are you sure to delete? -->
     <el-dialog v-model="deleteDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
       <span>
-        Are you sure to delete Scene "{{ firstNodeOfSelection }}"?
+        Are you sure to delete Scene "{{ nodeToDeleteName }}"?
       </span>
       <template #footer>
         <span class="dialog-footer">
@@ -169,6 +169,7 @@ const deleteDialogVisible = ref(false);
 const exitDialogVisible = ref(false);
 const renameNodeDialogVisible = ref(false);
 const renameNodeDialogName = ref("");
+const nodeToDeleteName = ref("");
 
 // mutations
 // create node
@@ -197,16 +198,11 @@ const hideRemoveButton = computed(() => {
   else return false;
 });
 
-const firstNodeOfSelection = computed(() => {
-  if (selectedNodes.value.length >= 0) {
-    const uuid = selectedNodes.value[0] as string;
-    const n = graphStore.graphUserState.nodes[uuid];
-    return n.name;
-  }
-  else {
-    return "undefined";
-  }
-});
+const getNodeToDeleteName = () => {
+  const uuid = selectedNodes.value[0] as string;
+  const node = graphStore.graphUserState.nodes[uuid];
+  nodeToDeleteName.value = node.name as string;
+};
 
 // Methods
 const transformData = (updateLocalState: boolean, updateServerState: boolean) => {
@@ -330,6 +326,7 @@ const removeAny = () => {
   // TODO: needs to check if the async call is not buggy if looping through
   if ((selectedNodes.value.length === 1 && selectedEdges.value.length === 0)) {
     deleteDialogVisible.value = true;
+    getNodeToDeleteName();
     // removeNode();
   }
   else if ((selectedNodes.value.length === 0 && selectedEdges.value.length === 1)) {
