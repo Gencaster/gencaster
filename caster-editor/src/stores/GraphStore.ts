@@ -10,17 +10,17 @@ export const useGraphStore = defineStore({
     executeQuery: <any>undefined, // TODO Set correct type.
 
     // graph state data
-    graphMapChanged: false,
+    graphMapDiffers: false,
 
-    // state of the data from the server
-    graphServerState: {
+    // current state of the user
+    graphUserState: {
       nodes: <Nodes>{},
       edges: <Edges>{},
       layouts: <Nodes>{}
     },
 
-    // current state of the user
-    graphUserState: {
+    // state of the data from the server
+    graphServerState: {
       nodes: <Nodes>{},
       edges: <Edges>{},
       layouts: <Nodes>{}

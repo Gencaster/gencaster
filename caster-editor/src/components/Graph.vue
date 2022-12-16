@@ -24,7 +24,7 @@
           </div>
           <div class="menu-items right">
             <button class="unstyled state" @click="saveState()">
-              <div class="state-indicator" :class="{ saved: stateSaved }" />
+              <div class="state-indicator" :class="{ saved: !graphStore.graphMapDiffers }" />
               Save
             </button>
 
@@ -154,7 +154,6 @@ interface GraphProps {
 }
 
 // Data
-const stateSaved = ref(true);
 const currentNodeName = ref<string>();
 const currentNodeUUID = ref<string>();
 const selectedNodeScriptCells: Ref<ScriptCell[]> = ref([]);
@@ -198,25 +197,28 @@ const hideRemoveButton = computed(() => {
   else return false;
 });
 
+// Methods
+const transformData = (updateLocalState: boolean, updateServerState: boolean) => {
+  // push to store
+  if (updateLocalState) {
+    const nodesLocal = transformNodes(props.graph.nodes);
+    const edgesLocal = transformEdges(props.graph.edges);
+    const layoutsLocal = transformLayout(props.graph.nodes);
+    graphStore.updateGraphLocal(nodesLocal, edgesLocal, layoutsLocal);
+  }
+
+  if (updateServerState) {
+    const nodesServer = transformNodes(props.graph.nodes);
+    const edgesServer = transformEdges(props.graph.edges);
+    const layoutsServer = transformLayout(props.graph.nodes);
+    graphStore.updateGraphServer(nodesServer, edgesServer, layoutsServer);
+  }
+};
+
 const getNodeToDeleteName = () => {
   const uuid = selectedNodes.value[0] as string;
   const node = graphStore.graphUserState.nodes[uuid];
   nodeToDeleteName.value = node.name as string;
-};
-
-// Methods
-const transformData = (updateLocalState: boolean, updateServerState: boolean) => {
-  // transform data
-  const nodes = transformNodes(props.graph.nodes);
-  const edges = transformEdges(props.graph.edges);
-  const layouts = transformLayout(props.graph.nodes);
-
-  // push to store
-  if (updateLocalState)
-    graphStore.updateGraphLocal(nodes, edges, layouts);
-
-  if (updateServerState)
-    graphStore.updateGraphServer(nodes, edges, layouts);
 };
 
 const emptySelection = () => {
@@ -304,7 +306,7 @@ const addEdge = () => {
 };
 
 const exitEditing = () => {
-  if (!stateSaved.value) {
+  if (graphStore.graphMapDiffers) {
     exitDialogVisible.value = true;
   }
   else {
@@ -357,13 +359,11 @@ const updateNode = (uuid: string, name: string | undefined, color: string, posit
 
 const saveState = () => {
   // update positions
-  for (const uuid in graphStore.graphUserState.nodes) {
+  for (const uuid in graphStore.graphUserState.nodes) { // TODO: This could let to errors if interface is usable while the loops go through
     // get positions
     const n = graphStore.graphUserState.nodes[uuid];
     updateNode(uuid, n.name, n.color, graphStore.graphUserState.layouts.nodes[uuid].x, graphStore.graphUserState.layouts.nodes[uuid].y);
   }
-  // TODO: make it async with callbacks
-  stateSaved.value = true;
 };
 
 const setupNodeDataWindow = (node: string) => {
@@ -417,7 +417,6 @@ const eventHandlers = {
     doubleClickedNode(node);
   },
   "node:dragend": ({ node }: Node) => {
-    stateSaved.value = false;
     nodeDraggedEnd(node);
   }
 };
@@ -430,8 +429,7 @@ const compareGraphStates = () => {
 };
 
 graphStore.$subscribe((mutation, state) => {
-  graphStore.graphMapChanged = compareGraphStates();
-  // TODO: This triggers on any change. Is this good or too heavy?
+  graphStore.graphMapDiffers = compareGraphStates(); // TODO: This triggers on any change. Is this good or too heavy?
 });
 
 // Events
