@@ -124,13 +124,11 @@ const toggleShowJSONData = () => {
 };
 
 const mutateCells = () => {
-  console.log("hit mutate cells button");
-
   // const variables: UpdateScriptCellsMutationVariables = {
   //   newCells: ref<ScriptCellInput[]>([])
   // };
 
-  const variables = { // TODO: Needs type
+  const variables = { // TODO: Needs typed version
     newCells: []
   };
 
@@ -142,7 +140,7 @@ const mutateCells = () => {
       cellType: cell.cellType,
       uuid: cell.uuid
     };
-    variables.newCells.push(newCell);
+    variables.newCells.push(newCell); // TODO: Needs typed version
     console.log(cell.uuid);
   });
 

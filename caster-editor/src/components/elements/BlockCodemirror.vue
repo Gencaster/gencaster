@@ -54,13 +54,13 @@ const emitCodemirror = (eventType?: string, event?: any) => {
     return;
 
   if (eventType === "change") {
-    // this is the original
+    // this is the original unmuted
     // const original = props.cellData.cellCode;
 
-    // this is the new
+    // this is the new code
     const newCode = event;
 
-    // mutate  store local
+    // mutate store local
     graphStore.updateNodeScriptCellLocal(props.nodeUuid, newCode, props.cellData.cellOrder, props.cellData.cellType, props.cellData.uuid);
   }
 };
