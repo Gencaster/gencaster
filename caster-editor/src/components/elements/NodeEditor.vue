@@ -33,23 +33,28 @@
     <div class="blocks">
       <div v-for="(cell, index) in scriptCells" :key="cell.uuid">
         <div class="cell" :class="{ 'no-padding': addNoPaddingClass(cell.cellType) }">
-          <div>Icon:<img src="~/assets/icon-trash.jpg" alt=""></div>
-          <p class="cell-type">
-            {{ index }} -
-            {{ cell.uuid }}
-          </p>
           <ElementsBlock :ref="el => cells.push(el)" :cell-data="cell" :node-uuid="nodeUuid" :index="index" class="cell-editor" />
-          <!-- <div class="scriptcell-tools">
-            <p>{{ cell.cellType }}</p>
+          <div class="scriptcell-tools">
+            <div class="celltype">
+              <p>{{ cell.cellType }}</p>
+            </div>
             <div class="divider" />
-            <div><img src="~/assets/icons/icon-down.svg" alt=""></div>
+            <div class="icon">
+              <img src="~/assets/icons/icon-trash.svg" alt="">
+            </div>
             <div class="divider" />
-            <div><img src="~/assets/icons/icon-down.svg" alt=""></div>
+            <div class="icon">
+              <img src="~/assets/icons/icon-play.svg" alt="">
+            </div>
             <div class="divider" />
-            <div><img src="~/assets/icons/icon-down.svg" alt=""></div>
+            <div class="icon">
+              <img src="~/assets/icons/icon-up.svg" alt="">
+            </div>
             <div class="divider" />
-            <div><img src="~/assets/icons/icon-down.svg" alt=""></div>
-          </div> -->
+            <div class="icon">
+              <img src="~/assets/icons/icon-down.svg" alt="">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -116,8 +121,6 @@ const showJSONData = ref(false);
 const graphNodeData: GraphNode = computed(() => {
   return graphStore.graphUserState.nodes[props.nodeUuid];
 });
-
-console.log(graphNodeData.value);
 
 const scriptCells = computed(() => {
   return graphNodeData.value.scriptCells as ScriptCell[];

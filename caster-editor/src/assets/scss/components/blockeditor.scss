@@ -50,7 +50,7 @@
     align-items: center;
     height: $menuHeight;
     background-color: transparent;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     border-bottom: 1px solid $grey;
     border-top: 1px solid $grey;
     padding-left: 15px;
@@ -84,7 +84,7 @@
 
     .cell {
       position: relative;
-      margin-bottom: $spacingM;
+      margin-bottom: 25px;
       border-radius: 4px;
       background-color: $grey-light;
       padding: 20px 20px 15px 30px;
@@ -112,13 +112,69 @@
         font-style: italic;
       }
 
+      &:hover {
+        .scriptcell-tools {
+          opacity: 1;
+        }
+      }
+
       .scriptcell-tools {
         display: flex;
         align-items: center;
-        background-color: yellow;
+        background-color: $grey-light;
         position: absolute;
-        bottom: 0;
-        right: 0;
+        bottom: -12px;
+        right: 8px;
+        height: 32px;
+        border-radius: 4px;
+        border: 1px solid $grey;
+        opacity: 0;
+        transition: opacity .2s ease-in-out;
+
+
+        .divider {
+          height: 32px;
+          width: 1px;
+          background-color: $grey;
+        }
+
+        .celltype {
+          height: 32px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          pointer-events: none;
+
+          p {
+            margin: 0;
+            margin-left: 12px;
+            margin-right: 12px;
+            text-transform: lowercase;
+
+            &::first-letter {
+              text-transform: uppercase
+            }
+          }
+        }
+
+        .icon {
+          height: 32px;
+          width: 32px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+
+          &:hover {
+            background-color: $grey;
+          }
+
+          img {
+            height: 20px;
+            width: 20px;
+          }
+
+        }
       }
     }
   }
