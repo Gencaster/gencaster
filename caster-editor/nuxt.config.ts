@@ -1,5 +1,3 @@
-import svgLoader from "vite-svg-loader";
-
 export default defineNuxtConfig({
   //   theme: {
   //     dark: true,
@@ -22,12 +20,5 @@ export default defineNuxtConfig({
     public: {
       BACKEND_GRAPHQL_URL: process.env.BACKEND_GRAPHQL_URL || "http://127.0.0.1:8081/graphql"
     }
-  },
-  vite: {
-    plugins: [
-      svgLoader({
-        /* ... */
-      })
-    ]
   }
 });
