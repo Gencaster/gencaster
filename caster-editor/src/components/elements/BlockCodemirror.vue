@@ -3,7 +3,7 @@
     <!-- python -->
     <div v-if="editorType === CellType.Python" class="editor-python">
       <Codemirror
-        v-model="codemirrorCode" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
+        v-model="code" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
         :tab-size="2" :extensions="extensions" @ready="codemirrorReady" @change="emitCodemirror('change', $event)"
         @focus="emitCodemirror('focus', $event)" @blur="emitCodemirror('blur', $event)"
       />
@@ -12,7 +12,7 @@
     <!-- supercollider -->
     <div v-if="editorType === CellType.Supercollider" class="editor-supercollider">
       <Codemirror
-        v-model="codemirrorCode" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
+        v-model="code" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
         :tab-size="2" :extensions="extensions" @ready="codemirrorReady" @change="emitCodemirror('change', $event)"
         @focus="emitCodemirror('focus', $event)" @blur="emitCodemirror('blur', $event)"
       />
@@ -24,7 +24,6 @@
 // code editor
 import { Codemirror } from "vue-codemirror";
 import { python } from "@codemirror/lang-python";
-import type { Node as GraphNode } from "v-network-graph";
 import { useGraphStore } from "@/stores/GraphStore";
 import { CellType } from "@/graphql/graphql";
 import type { ScriptCell } from "@/graphql/graphql";
@@ -37,46 +36,42 @@ interface BlockProps {
 }
 
 // Store
-const graphStore: GraphNode = useGraphStore();
-
-// Block Data
-const graphNodeData: GraphNode = computed(() => {
-  return graphStore.graphUserState.nodes[props.nodeUuid];
-});
+const graphStore = useGraphStore();
 
 // Variables
 const editorType = ref<string>(props.cellData.cellType);
-const codemirrorCode = ref<string>();
+const code = ref<string>(props.cellData.cellCode);
 const extensions = ref<any>([]);
+const domReady = ref<boolean>(false);
 
 // methods
-const emitCodemirror = (eventType?: string, event?: any) => {
-  if (eventType === "change") {
-    // update prop in store
-    // console.log(props.index);
-    console.log(props.nodeUuid);
-    console.log(typeof JSON.stringify(props.cellData.cellCode) === typeof JSON.stringify(event));
-  }
-
-  // setTimeout(() => {
-  //   console.log("changed");
-  //   console.log(props.cellData.cellCode);
-  //   console.log(codemirrorCode.value);
-  //   // console.log(codemirrorCode.value);
-  //   console.log(typeof JSON.stringify(props.cellData.cellCode) === typeof JSON.stringify(codemirrorCode.value));
-  // }, 100);
+const codemirrorReady = () => {
+  domReady.value = true;
 };
-const codemirrorReady = () => { };
+
+const emitCodemirror = (eventType?: string, event?: any) => {
+  if (!domReady.value)
+    return;
+
+  if (eventType === "change") {
+    // this is the original
+    // const original = props.cellData.cellCode;
+
+    // this is the new
+    const newCode = event;
+
+    // mutate  store local
+    graphStore.updateNodeScriptCellLocal(props.nodeUuid, newCode, props.cellData.cellOrder, props.cellData.cellType, props.cellData.uuid);
+  }
+};
 
 onMounted(() => {
   switch (editorType.value) {
     case CellType.Python:
-      codemirrorCode.value = props.cellData.cellCode;
       extensions.value = [python()];
       break;
 
     case CellType.Supercollider:
-      codemirrorCode.value = props.cellData.cellCode;
       extensions.value = [python()];
       break;
 

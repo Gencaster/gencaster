@@ -87,23 +87,6 @@
         color: $grey-dark;
         font-style: italic;
       }
-
-      .drag-button {
-        cursor: ns-resize;
-        width: 30px;
-        height: 25px;
-        position: absolute;
-        bottom: 12px;
-        right: 8px;
-
-        .bar {
-          width: 30px;
-          height: 1px;
-          background-color: $grey-dark;
-          margin-top: 8px;
-        }
-
-      }
     }
   }
 }

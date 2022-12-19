@@ -7,14 +7,14 @@
           <div class="menu-items left">
             <el-radio-group v-model="menuStore.tab">
               <el-radio-button label="edit">
-                Edit
+                Build
               </el-radio-button>
               <el-radio-button label="test">
                 Test
               </el-radio-button>
-              <el-radio-button label="dev">
+              <!-- <el-radio-button label="dev">
                 Dev
-              </el-radio-button>
+              </el-radio-button> -->
             </el-radio-group>
           </div>
           <div class="menu-items middle">
@@ -62,11 +62,11 @@
     />
 
     <!-- Node Content -->
-    <div v-if="graphStore.showNodePanel" class="node-data">
-      <ElementsBlockEditor :dev="false" :current-node-name="currentNodeName" :blocks-data="selectedNodeScriptCells" />
+    <div v-if="interfaceStore.showNodePanel" class="node-data">
+      <ElementsNodeEditor :node-uuid="currentNodeUUID" />
     </div>
 
-    <div v-if="!graphStore.showNodePanel" class="stats">
+    <div v-if="!interfaceStore.showNodePanel" class="stats">
       <p>
         Nodes: {{ graph.nodes.length }} &nbsp;
         Edges: {{ graph.edges.length }}
@@ -120,7 +120,7 @@
 
 <script lang="ts" setup>
 import { ElMessage } from "element-plus";
-import type { Node } from "v-network-graph";
+import type { Node as GraphNode } from "v-network-graph";
 import type { Ref } from "vue";
 import { computed } from "vue";
 import { transformEdges, transformLayout, transformNodes } from "@/tools/typeTransformers";
@@ -135,6 +135,7 @@ import {
 } from "@/graphql/graphql";
 import { useMenuStore } from "@/stores/MenuStore";
 import { useGraphStore } from "@/stores/GraphStore";
+import { useInterfaceStore } from "@/stores/InterfaceStore";
 // Props
 const props = defineProps<GraphProps>();
 
@@ -146,6 +147,7 @@ const router = useRouter();
 // Store
 const menuStore = useMenuStore();
 const graphStore = useGraphStore();
+const interfaceStore = useInterfaceStore();
 
 interface GraphProps {
   graph: Graph
@@ -154,11 +156,12 @@ interface GraphProps {
 }
 
 // Data
-const currentNodeName = ref<string>();
-const currentNodeUUID = ref<string>();
+const currentNodeName = ref<string>("");
+const currentNodeUUID = ref<string>("");
 const selectedNodeScriptCells: Ref<ScriptCell[]> = ref([]);
 const selectedNodes = ref<String[]>([]);
 const selectedEdges = ref<String[]>([]);
+const nodeInPanel = ref<GraphNode>();
 
 // Config
 const configs = GraphSettings.standard;
@@ -213,6 +216,8 @@ const transformData = (updateLocalState: boolean, updateServerState: boolean) =>
     const layoutsServer = transformLayout(props.graph.nodes);
     graphStore.updateGraphServer(nodesServer, edgesServer, layoutsServer);
   }
+
+  console.log("transformed data");
 };
 
 const getNodeToDeleteName = () => {
@@ -370,12 +375,13 @@ const setupNodeDataWindow = (node: string) => {
   currentNodeName.value = graphStore.graphUserState.nodes[node].name;
   currentNodeUUID.value = node;
   selectedNodeScriptCells.value = graphStore.graphUserState.nodes[node].scriptCells;
+  nodeInPanel.value = graphStore.graphUserState.nodes[node];
 };
 
 const doubleClickedNode = (node: string) => {
-  if (!graphStore.showNodePanel) {
+  if (!interfaceStore.showNodePanel) {
     setupNodeDataWindow(node);
-    graphStore.showNodePanel = true;
+    interfaceStore.showNodePanel = true;
   }
   else {
     ElMessage({
@@ -413,10 +419,10 @@ const renameNodeFromDialog = () => {
 };
 
 const eventHandlers = {
-  "node:dblclick": ({ node }: Node) => {
+  "node:dblclick": ({ node }: GraphNode) => {
     doubleClickedNode(node);
   },
-  "node:dragend": ({ node }: Node) => {
+  "node:dragend": ({ node }: GraphNode) => {
     nodeDraggedEnd(node);
   }
 };
@@ -429,11 +435,14 @@ const compareGraphStates = () => {
 };
 
 graphStore.$subscribe((mutation, state) => {
-  graphStore.graphMapDiffers = compareGraphStates(); // TODO: This triggers on any change. Is this good or too heavy?
+  graphStore.graphMapDiffers = compareGraphStates();
+  // console.log("mutated data");
+  // console.log(graphStore.graphMapDiffers);
+  console.log("Mutation:", mutation);
 });
 
 // Events
-$bus.$on("closeNodeData", () => graphStore.showNodePanel = false);
+$bus.$on("closeNodeEditor", () => interfaceStore.showNodePanel = false);
 $bus.$on("openNodeNameEdit", () => openNodeNameEdit());
 
 // onMounted
