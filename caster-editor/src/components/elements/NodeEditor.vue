@@ -33,12 +33,23 @@
     <div class="blocks">
       <div v-for="(cell, index) in scriptCells" :key="cell.uuid">
         <div class="cell" :class="{ 'no-padding': addNoPaddingClass(cell.cellType) }">
+          <div>Icon:<img src="~/assets/icon-trash.jpg" alt=""></div>
           <p class="cell-type">
             {{ index }} -
-            {{ cell.uuid }} -
-            {{ cell.cellType }}
+            {{ cell.uuid }}
           </p>
           <ElementsBlock :ref="el => cells.push(el)" :cell-data="cell" :node-uuid="nodeUuid" :index="index" class="cell-editor" />
+          <!-- <div class="scriptcell-tools">
+            <p>{{ cell.cellType }}</p>
+            <div class="divider" />
+            <div><img src="~/assets/icons/icon-down.svg" alt=""></div>
+            <div class="divider" />
+            <div><img src="~/assets/icons/icon-down.svg" alt=""></div>
+            <div class="divider" />
+            <div><img src="~/assets/icons/icon-down.svg" alt=""></div>
+            <div class="divider" />
+            <div><img src="~/assets/icons/icon-down.svg" alt=""></div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -48,7 +59,7 @@
       </button>
     </div>
     <div v-if="showJSONData" class="json">
-      <p style="font-style: italic;">
+      <p>
         <br>
         This is the graphUserState as in the local storage. Not all cell mutations might be commited yet. Save to see latest data.
       </p>
@@ -64,9 +75,9 @@
 import { Codemirror } from "vue-codemirror";
 import { json } from "@codemirror/lang-json";
 import { computed, ref } from "vue";
+import type { Node as GraphNode } from "v-network-graph";
 
 // import type { Node } from "@/graphql/graphql";
-import type { Node as GraphNode } from "v-network-graph";
 // import ElementsBlock from "@/components/elements/ElementsBlock.vue";
 
 import type { ScriptCell, ScriptCellInput } from "@/graphql/graphql";

@@ -61,9 +61,9 @@
       margin: 0;
       padding: 0;
       background-color: transparent;
-      margin-right: $spacingM;
       padding-left: 10px;
       padding-right: 10px;
+      transform: translateX(-10px);
 
       border-radius: 2px;
       height: 24px;
@@ -110,6 +110,15 @@
         right: 8px;
         color: $grey-dark;
         font-style: italic;
+      }
+
+      .scriptcell-tools {
+        display: flex;
+        align-items: center;
+        background-color: yellow;
+        position: absolute;
+        bottom: 0;
+        right: 0;
       }
     }
   }
