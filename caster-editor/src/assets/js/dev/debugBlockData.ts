@@ -4,15 +4,15 @@ import { CellType } from "@/graphql/graphql";
 const emptyNode: Node = {
   color: "blue",
   inEdges: [],
-  name: "test",
+  name: "debugnode",
   outEdges: [],
   positionX: 0,
   positionY: 0,
   scriptCells: [],
-  uuid: {}
+  uuid: "debugnode"
 };
 
-const debugBlockData: ScriptCell[] = [
+const debugScriptCells: ScriptCell[] = [
   // Markdown
   {
     node: emptyNode,
@@ -81,4 +81,4 @@ const debugBlockData: ScriptCell[] = [
 
 ];
 
-export { debugBlockData };
+export { debugScriptCells, emptyNode };

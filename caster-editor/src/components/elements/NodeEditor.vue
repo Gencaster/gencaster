@@ -81,11 +81,11 @@ const props = defineProps({
 const { $bus } = useNuxtApp();
 
 // Store
-const graphStore: GraphNode = useGraphStore();
+const graphStore = useGraphStore();
 
 // Variables
 const extensions = [json()];
-const cells = ref([]); // TODO: add <typeof ElementsBlock> or what is needed (<InstanceType?)
+const cells = ref([]); // TODO: add <typeof ElementsBlock> or what is needed (<InstanceType?) to fix error above
 
 // mutations
 const { executeMutation: updateScriptCellsMutation } = useUpdateScriptCellsMutation();
@@ -97,6 +97,8 @@ const showJSONData = ref(false);
 const graphNodeData: GraphNode = computed(() => {
   return graphStore.graphUserState.nodes[props.nodeUuid];
 });
+
+console.log(graphNodeData.value);
 
 const scriptCells = computed(() => {
   return graphNodeData.value.scriptCells as ScriptCell[];

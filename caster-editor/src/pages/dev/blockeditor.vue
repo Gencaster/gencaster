@@ -3,7 +3,7 @@
     <div class="editor-wrapper">
       <div class="editor-inner">
         <div class="node-data">
-          <ElementsNodePanel :dev="true" :blocks-data="debugBlockData" />
+          <ElementsNodeEditor :dev="true" node-uuid="debugnode" />
         </div>
       </div>
     </div>
@@ -11,7 +11,15 @@
 </template>
 
 <script setup lang="ts">
-import { debugBlockData } from "@/assets/js/dev/debugBlockData";
+import { debugScriptCells, emptyNode } from "@/assets/js/dev/debugBlockData";
+import { useGraphStore } from "@/stores/GraphStore";
+
+// Store
+const graphStore = useGraphStore();
+
+// commit the node data to the store
+graphStore.graphUserState.nodes.debugnode = emptyNode;
+graphStore.graphUserState.nodes.debugnode.scriptCells = debugScriptCells;
 </script>
 
 <style lang="scss">
