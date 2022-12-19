@@ -2,7 +2,7 @@
 .node-editor-outer {
   height: inherit;
   widows: inherit;
-  padding: 5px 15px 15px 15px;
+  padding: 5px 0px 15px 0px;
   background-color: $mainWhite;
   border: 1px solid $black;
   overflow-y: scroll;
@@ -13,6 +13,9 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 4px;
+
+    padding-left: 15px;
+    padding-right: 15px;
 
     .left {
       button {
@@ -44,19 +47,40 @@
 
   .node-menu-bar {
     display: flex;
+    align-items: center;
     height: $menuHeight;
-    background-color: $grey-light;
-    border-radius: 4px;
-    margin-bottom: 12px;
+    background-color: transparent;
+    margin-bottom: 15px;
+    border-bottom: 1px solid $grey;
+    border-top: 1px solid $grey;
+    padding-left: 15px;
+    padding-right: 15px;
 
-    .el-icon svg {
-      transform: scale(1.5);
+    button {
+      border: 0;
+      margin: 0;
+      padding: 0;
+      background-color: transparent;
+      margin-right: $spacingM;
+      padding-left: 10px;
+      padding-right: 10px;
+
+      border-radius: 2px;
+      height: 24px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $grey-light;
+      }
     }
+
   }
 
   .blocks {
     display: block;
     position: relative;
+    padding-left: 15px;
+    padding-right: 15px;
 
     .cell {
       position: relative;
@@ -64,7 +88,7 @@
       border-radius: 4px;
       background-color: $grey-light;
       padding: 20px 20px 15px 30px;
-      border: 1px solid #CDCDCD;
+      border: 1px solid $grey;
 
       &.no-padding {
         padding: 0px 0px 15px 65px;

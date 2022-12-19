@@ -17,10 +17,18 @@
       </div>
     </div>
     <div class="node-menu-bar">
-      <el-button text bg :icon="Plus" />
-      <el-button text bg :icon="Scissor" />
-      <el-button text bg :icon="VideoPlay" />
-      <el-button text bg :icon="VideoPause" />
+      <button @click="addScriptcell(CellType.Markdown, -1)">
+        + Markdown
+      </button>
+      <button @click="addScriptcell(CellType.Python, -1)">
+        + Python
+      </button>
+      <button @click="addScriptcell(CellType.Supercollider, -1)">
+        + Supercollider
+      </button>
+      <button @click="addScriptcell(CellType.Comment, -1)">
+        + Comment
+      </button>
     </div>
     <div class="blocks">
       <div v-for="(cell, index) in scriptCells" :key="cell.uuid">
@@ -42,7 +50,7 @@
     <div v-if="showJSONData" class="json">
       <p style="font-style: italic;">
         <br>
-        This is the graphUserState as in the local storage. Not all cell mutations might be commited yet. Save to see all changes.
+        This is the graphUserState as in the local storage. Not all cell mutations might be commited yet. Save to see latest data.
       </p>
       <Codemirror
         v-model="JSONViewerData" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
@@ -54,7 +62,6 @@
 
 <script setup lang="ts">
 import { Codemirror } from "vue-codemirror";
-import { Plus, Scissor, VideoPause, VideoPlay } from "@element-plus/icons-vue";
 import { json } from "@codemirror/lang-json";
 import { computed, ref } from "vue";
 
@@ -62,8 +69,8 @@ import { computed, ref } from "vue";
 import type { Node as GraphNode } from "v-network-graph";
 // import ElementsBlock from "@/components/elements/ElementsBlock.vue";
 
-import type { ScriptCell, ScriptCellInput, UpdateScriptCellsMutationVariables } from "@/graphql/graphql";
-import { CellType, useUpdateScriptCellsMutation } from "@/graphql/graphql";
+import type { ScriptCell, ScriptCellInput } from "@/graphql/graphql";
+import { CellType, useCreateScriptCellMutation, useUpdateScriptCellsMutation } from "@/graphql/graphql";
 import { useGraphStore } from "@/stores/GraphStore";
 
 const props = defineProps({
@@ -89,6 +96,7 @@ const cells = ref([]); // TODO: add <typeof ElementsBlock> or what is needed (<I
 
 // mutations
 const { executeMutation: updateScriptCellsMutation } = useUpdateScriptCellsMutation();
+const { executeMutation: createScriptCellMutation } = useCreateScriptCellMutation();
 
 // interface
 const showJSONData = ref(false);
@@ -148,6 +156,29 @@ const mutateCells = () => {
 
   updateScriptCellsMutation(variables).then(() => {
     console.log("Updated Scriptcells");
+  });
+};
+
+const addScriptcell = (type: CellType, position: number) => {
+  const positionEnd = scriptCells.value.length;
+
+  const variables = {
+    nodeUuid: props.nodeUuid,
+    order: positionEnd,
+    cellType: type
+  };
+
+  createScriptCellMutation(variables).then(() => {
+    console.log("Added Scriptcell");
+
+    if (position !== -1) {
+      console.log("todo: order new cell to certain position"); // TODO: Reorder Cells
+    }
+    else {
+      // TODO: need to refresh cells and before mutate all changes otherwise it will get lost
+      console.log("refresh only cells from that node");
+      $bus.$emit("refreshAll");
+    }
   });
 };
 

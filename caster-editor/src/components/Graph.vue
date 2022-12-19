@@ -372,7 +372,7 @@ const saveState = () => {
 };
 
 const setupNodeDataWindow = (node: string) => {
-  currentNodeName.value = graphStore.graphUserState.nodes[node].name;
+  currentNodeName.value = graphStore.graphUserState.nodes[node].name as string;
   currentNodeUUID.value = node;
   selectedNodeScriptCells.value = graphStore.graphUserState.nodes[node].scriptCells;
   nodeInPanel.value = graphStore.graphUserState.nodes[node];
@@ -444,6 +444,7 @@ graphStore.$subscribe((mutation, state) => {
 // Events
 $bus.$on("closeNodeEditor", () => interfaceStore.showNodePanel = false);
 $bus.$on("openNodeNameEdit", () => openNodeNameEdit());
+$bus.$on("refreshAll", () => refresh("all"));
 
 // onMounted
 onMounted(() => {

@@ -4,7 +4,7 @@ import { CellType } from "@/graphql/graphql";
 const emptyNode: Node = {
   color: "blue",
   inEdges: [],
-  name: "debugnode",
+  name: "Debugnode",
   outEdges: [],
   positionX: 0,
   positionY: 0,

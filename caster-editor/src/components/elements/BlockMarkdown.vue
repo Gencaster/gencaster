@@ -81,7 +81,7 @@ onMounted(() => {
     initData.value = JSON.parse(props.cellData.cellCode);
   }
   catch (error) {
-    console.log(error);
+    // console.log(error);
     initData.value = {};
   }
 

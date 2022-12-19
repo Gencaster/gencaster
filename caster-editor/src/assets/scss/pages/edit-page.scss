@@ -20,6 +20,17 @@
       display: flex;
       align-items: flex-end;
       justify-content: flex-end;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    .json {
+      padding-left: 15px;
+      padding-right: 15px;
+
+      p {
+        font-style: italic;
+      }
     }
   }
 
