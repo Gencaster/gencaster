@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import type { Edges, Nodes } from "v-network-graph";
-import type { GetGraphQuery } from "@/graphql/graphql";
+import type { CellType, GetGraphQuery, ScriptCell } from "@/graphql/graphql";
 
 export const useGraphStore = defineStore({
   id: "GraphStore",
@@ -54,12 +54,13 @@ export const useGraphStore = defineStore({
       this.$state.graphServerState.edges = newEdges;
       this.$state.graphServerState.layouts = newLayout;
     },
-    updateNodeScriptCellLocal(nodeUUID: string, cellCode: string, cellOrder: number, cellType: string, cellUUID: string) {
-      const scriptCell = this.graphUserState.nodes[nodeUUID].scriptCells[cellOrder];
-      scriptCell.cellCode = cellCode;
-      scriptCell.cellType = cellType;
-      scriptCell.cellUUID = cellUUID;
-      scriptCell.cellOrder = cellOrder;
+    updateNodeScriptCellLocal(nodeUUID: string, cellCode: string, cellOrder: number, cellType: CellType, cellUUID: string) {
+      const newScriptCell: ScriptCell = this.graphUserState.nodes[nodeUUID].scriptCells[cellOrder];
+      newScriptCell.cellCode = cellCode;
+      newScriptCell.cellOrder = cellOrder;
+      newScriptCell.uuid = cellUUID;
+      newScriptCell.cellType = cellType;
+      this.graphUserState.nodes[nodeUUID].scriptCells[cellOrder] = newScriptCell;
     },
     updateNodeScriptCellsOrderLocal(nodeUUID: string, newScriptCellsArray: any) {
       this.$state.graphUserState.nodes[nodeUUID].scriptCells = newScriptCellsArray;

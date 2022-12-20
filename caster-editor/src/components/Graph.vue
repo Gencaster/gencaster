@@ -211,9 +211,10 @@ const transformData = (updateLocalState: boolean, updateServerState: boolean) =>
   }
 
   if (updateServerState) {
-    const nodesServer = transformNodes(props.graph.nodes);
-    const edgesServer = transformEdges(props.graph.edges);
-    const layoutsServer = transformLayout(props.graph.nodes);
+    // TODO: Is this a good way? Ask Manu
+    const nodesServer = JSON.parse(JSON.stringify(transformNodes(props.graph.nodes)));
+    const edgesServer = JSON.parse(JSON.stringify(transformEdges(props.graph.edges)));
+    const layoutsServer = JSON.parse(JSON.stringify(transformLayout(props.graph.nodes)));
     graphStore.updateGraphServer(nodesServer, edgesServer, layoutsServer);
   }
 
@@ -445,6 +446,7 @@ graphStore.$subscribe((mutation, state) => {
 $bus.$on("closeNodeEditor", () => interfaceStore.showNodePanel = false);
 $bus.$on("openNodeNameEdit", () => openNodeNameEdit());
 $bus.$on("refreshAll", () => refresh("all"));
+$bus.$on("compareState", () => compareGraphStates());
 
 // onMounted
 onMounted(() => {

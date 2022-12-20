@@ -61,7 +61,7 @@ const emitCodemirror = (eventType?: string, event?: any) => {
     const newCode = event;
 
     // mutate store local
-    graphStore.updateNodeScriptCellLocal(props.nodeUuid, newCode, props.cellData.cellOrder, props.cellData.cellType, props.cellData.uuid);
+    graphStore.updateNodeScriptCellLocal(props.nodeUuid, newCode, props.index, props.cellData.cellType, props.cellData.uuid);
   }
 };
 

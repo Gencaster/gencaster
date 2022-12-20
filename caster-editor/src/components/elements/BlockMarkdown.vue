@@ -44,7 +44,10 @@ const editorReady = () => {
 const editorChange = (api?: any, event?: any) => {
   editorJS.value?.save().then((outputData) => {
     const newCode = JSON.stringify(outputData);
-    graphStore.updateNodeScriptCellLocal(props.nodeUuid, newCode, props.cellData.cellOrder, props.cellData.cellType, props.cellData.uuid);
+
+    // mutate store local
+    // careful: props.index not necessarily the same as cellData.cellOrder
+    graphStore.updateNodeScriptCellLocal(props.nodeUuid, newCode, props.index, props.cellData.cellType, props.cellData.uuid);
   }).catch((error) => {
     console.log("Saving failed: ", error);
   });

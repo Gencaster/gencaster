@@ -176,7 +176,8 @@ const mutateCells = () => {
   });
 
   updateScriptCellsMutation(variables).then(() => {
-    console.log("Updated Scriptcells");
+    $bus.$emit("refreshAll");
+    // console.log("Updated Scriptcells");
   });
 };
 
