@@ -60,6 +60,9 @@ export const useGraphStore = defineStore({
       scriptCell.cellType = cellType;
       scriptCell.cellUUID = cellUUID;
       scriptCell.cellOrder = cellOrder;
+    },
+    updateNodeScriptCellsOrderLocal(nodeUUID: string, newScriptCellsArray: any) {
+      this.$state.graphUserState.nodes[nodeUUID].scriptCells = newScriptCellsArray;
     }
   }
 });

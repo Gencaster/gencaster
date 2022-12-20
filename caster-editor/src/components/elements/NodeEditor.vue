@@ -33,26 +33,29 @@
     <div class="blocks">
       <div v-for="(cell, index) in scriptCells" :key="cell.uuid">
         <div class="cell" :class="{ 'no-padding': addNoPaddingClass(cell.cellType) }">
-          <ElementsBlock :ref="el => cells.push(el)" :cell-data="cell" :node-uuid="nodeUuid" :index="index" class="cell-editor" />
+          <ElementsBlock
+            :ref="el => cells.push(el)" :cell-data="cell" :node-uuid="nodeUuid" :index="index"
+            class="cell-editor"
+          />
           <div class="scriptcell-tools">
             <div class="celltype">
               <p>{{ cell.cellType }}</p>
             </div>
             <div class="divider" />
             <div class="icon">
-              <img src="~/assets/icons/icon-trash.svg" alt="" @click="deleteScriptCell(cell.uuid)">
+              <img src="~/assets/icons/icon-trash.svg" alt="trash icon" @click="deleteScriptCell(cell.uuid)">
             </div>
             <div class="divider" />
             <div class="icon">
-              <img src="~/assets/icons/icon-play.svg" alt="" @click="playScriptCell(cell.uuid)">
+              <img src="~/assets/icons/icon-play.svg" alt="play icon" @click="playScriptCell(cell.uuid)">
             </div>
             <div class="divider" />
             <div class="icon">
-              <img src="~/assets/icons/icon-up.svg" alt="">
+              <img src="~/assets/icons/icon-up.svg" alt="arrow up icon" @click="moveScriptCell(cell.uuid, 'up')">
             </div>
             <div class="divider" />
             <div class="icon">
-              <img src="~/assets/icons/icon-down.svg" alt="">
+              <img src="~/assets/icons/icon-down.svg" alt="arrow down icon" @click="moveScriptCell(cell.uuid, 'down')">
             </div>
           </div>
         </div>
@@ -66,7 +69,8 @@
     <div v-if="showJSONData" class="json">
       <p>
         <br>
-        This is the graphUserState as in the local storage. Not all cell mutations might be commited yet. Save to see latest data.
+        This is the graphUserState as in the local storage. Not all cell mutations might be commited yet. Save to see
+        latest data.
       </p>
       <Codemirror
         v-model="JSONViewerData" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
@@ -123,6 +127,10 @@ const graphNodeData: GraphNode = computed(() => {
 
 const scriptCells = computed(() => {
   return graphNodeData.value.scriptCells as ScriptCell[];
+});
+
+scriptCells.value.forEach((scriptCell) => {
+  console.log(scriptCell.cellOrder);
 });
 
 const currentNodeName = computed(() => {
@@ -212,6 +220,48 @@ const playScriptCell = (scriptCellUuid: string) => {
     type: "warning",
     customClass: "messages-editor"
   });
+};
+
+const moveScriptCell = (scriptCellUuid: string, direction: string) => {
+  const selectedScriptCell: ScriptCell[] = [];
+  const newOrder: ScriptCell[] = [];
+
+  scriptCells.value.forEach((scriptCell) => {
+    if (scriptCell.uuid === scriptCellUuid)
+      selectedScriptCell.push(scriptCell);
+    else
+      newOrder.push(scriptCell);
+  });
+
+  if (selectedScriptCell[0] === undefined) {
+    ElMessage({
+      message: "Something went wrong changing the order",
+      type: "warning",
+      customClass: "messages-editor"
+    });
+    return;
+  }
+
+  const oldIndex = selectedScriptCell[0].cellOrder;
+
+  let newPosition = 0;
+
+  if (direction === "up") {
+    if (oldIndex > 0)
+      newPosition = oldIndex - 1;
+  }
+  else { // going down
+    newPosition = oldIndex + 1; // no need to check anything since it will be re indexed
+  }
+
+  newOrder.splice(newPosition, 0, selectedScriptCell[0]);
+
+  // recalculate index for all
+  newOrder.forEach((scriptCell, index) => {
+    scriptCell.cellOrder = index;
+  });
+
+  graphStore.updateNodeScriptCellsOrderLocal(props.nodeUuid, newOrder);
 };
 
 // Styling
