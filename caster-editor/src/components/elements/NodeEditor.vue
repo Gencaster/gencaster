@@ -44,7 +44,7 @@
             </div>
             <div class="divider" />
             <div class="icon">
-              <img src="~/assets/icons/icon-play.svg" alt="">
+              <img src="~/assets/icons/icon-play.svg" alt="" @click="playScriptCell(cell.uuid)">
             </div>
             <div class="divider" />
             <div class="icon">
@@ -77,6 +77,7 @@
 </template>
 
 <script setup lang="ts">
+import { ElMessage } from "element-plus";
 import { Codemirror } from "vue-codemirror";
 import { json } from "@codemirror/lang-json";
 import { computed, ref } from "vue";
@@ -202,6 +203,14 @@ const deleteScriptCell = (scriptCellUuid: string) => {
   deleteScriptCellMutation(variables).then(() => {
     console.log(`Deleted ScriptCell ${scriptCellUuid}`);
     $bus.$emit("refreshAll");
+  });
+};
+
+const playScriptCell = (scriptCellUuid: string) => {
+  ElMessage({
+    message: "Play not working yet. Sorry :)",
+    type: "warning",
+    customClass: "messages-editor"
   });
 };
 
