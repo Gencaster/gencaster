@@ -40,7 +40,7 @@
             </div>
             <div class="divider" />
             <div class="icon">
-              <img src="~/assets/icons/icon-trash.svg" alt="">
+              <img src="~/assets/icons/icon-trash.svg" alt="" @click="deleteScriptCell(cell.uuid)">
             </div>
             <div class="divider" />
             <div class="icon">
@@ -82,11 +82,8 @@ import { json } from "@codemirror/lang-json";
 import { computed, ref } from "vue";
 import type { Node as GraphNode } from "v-network-graph";
 
-// import type { Node } from "@/graphql/graphql";
-// import ElementsBlock from "@/components/elements/ElementsBlock.vue";
-
 import type { ScriptCell, ScriptCellInput } from "@/graphql/graphql";
-import { CellType, useCreateScriptCellMutation, useUpdateScriptCellsMutation } from "@/graphql/graphql";
+import { CellType, useCreateScriptCellMutation, useDeleteScriptCellMutation, useUpdateScriptCellsMutation } from "@/graphql/graphql";
 import { useGraphStore } from "@/stores/GraphStore";
 
 const props = defineProps({
@@ -113,6 +110,7 @@ const cells = ref([]); // TODO: add <typeof ElementsBlock> or what is needed (<I
 // mutations
 const { executeMutation: updateScriptCellsMutation } = useUpdateScriptCellsMutation();
 const { executeMutation: createScriptCellMutation } = useCreateScriptCellMutation();
+const { executeMutation: deleteScriptCellMutation } = useDeleteScriptCellMutation();
 
 // interface
 const showJSONData = ref(false);
@@ -193,6 +191,17 @@ const addScriptcell = (type: CellType, position: number) => {
       console.log("refresh only cells from that node");
       $bus.$emit("refreshAll");
     }
+  });
+};
+
+const deleteScriptCell = (scriptCellUuid: string) => {
+  const variables = {
+    scriptCellUuid
+  };
+
+  deleteScriptCellMutation(variables).then(() => {
+    console.log(`Deleted ScriptCell ${scriptCellUuid}`);
+    $bus.$emit("refreshAll");
   });
 };
 
