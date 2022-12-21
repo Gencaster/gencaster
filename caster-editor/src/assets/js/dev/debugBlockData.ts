@@ -16,27 +16,7 @@ const debugScriptCells: ScriptCell[] = [
   // Markdown
   {
     node: emptyNode,
-    cellCode: `{
-    "time" : 1670853882563,
-    "blocks" : [
-        {
-            "id" : "6E_VlpCZln",
-            "type" : "header",
-            "data" : {
-                "text" : "Markdown",
-                "level" : 2
-            }
-        },
-        {
-            "id" : "OZJfywswBs",
-            "type" : "paragraph",
-            "data" : {
-                "text" : "Hey, this is a little markdown."
-            }
-        }
-    ],
-    "version" : "2.26.0"
-}`,
+    cellCode: "This is a markdown string.",
     cellOrder: 0,
     cellType: CellType.Markdown,
     uuid: "51d31f9d-a94d-4edf-9aaf-105267b50130",
@@ -52,27 +32,7 @@ const debugScriptCells: ScriptCell[] = [
   // comment
   {
     node: emptyNode,
-    cellCode: `{
-    "time" : 1670853951122,
-    "blocks" : [
-        {
-            "id" : "lfuQKy6f3l",
-            "type" : "header",
-            "data" : {
-                "text" : "Comment",
-                "level" : 2
-            }
-        },
-        {
-            "id" : "OZJfywswBs",
-            "type" : "paragraph",
-            "data" : {
-                "text" : "Hey, this is a little comment."
-            }
-        }
-    ],
-    "version" : "2.26.0"
-}`,
+    cellCode: "This is a comment string.",
     cellOrder: 3,
     cellType: CellType.Comment,
     uuid: "1a4a9a65-f5c4-45d2-8ab1-ae392009ab1a",
