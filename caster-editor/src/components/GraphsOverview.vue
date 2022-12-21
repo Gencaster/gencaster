@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div v-if="graphsStore.isFetching" class="fetching-screen">
+    <div v-if="fetching" class="fetching-screen">
       <elementsLoading />
     </div>
     <div v-else>
-      <div v-if="graphsStore.graphs.length > 0">
+      <div v-if="data !== null">
         <h1>Select one of your Graphs</h1>
         <div class="demo-control-panel">
           <div>
             <br>
-            <div v-for="graph in graphsStore.graphs" :key="graph.uuid" class="graph-selection" :value="graph.uuid">
+            <div v-for="graph in data?.graphs" :key="graph.uuid" class="graph-selection" :value="graph.uuid">
               <NuxtLink class="graph" :to="`../graphs/${graph.uuid}`">
                 <div>
                   <p>{{ graph.name }}</p>
@@ -38,8 +38,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useGraphsStore } from "@/stores/GraphsStore";
-const graphsStore = useGraphsStore();
+import { useGetGraphsQuery } from "@/graphql/graphql";
+const { data, executeQuery, fetching, error } = await useGetGraphsQuery();
 
 const createNewGraph = () => {
   alert("tbd");
