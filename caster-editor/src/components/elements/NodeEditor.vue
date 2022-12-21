@@ -128,11 +128,6 @@ const graphNodeData: GraphNode = computed(() => {
 const scriptCells = computed(() => {
   return graphNodeData.value.scriptCells as ScriptCell[];
 });
-
-scriptCells.value.forEach((scriptCell) => {
-  console.log(scriptCell.cellOrder);
-});
-
 const currentNodeName = computed(() => {
   return graphNodeData.value.name;
 });

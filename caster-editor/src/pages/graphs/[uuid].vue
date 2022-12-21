@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts" setup>
+import type { Graph as GraphType } from "@/graphql/graphql";
 import { useGetGraphQuery } from "@/graphql/graphql";
 import { useGraphStore } from "@/stores/GraphStore";
 
@@ -25,5 +26,5 @@ graphStore.updateQuery(executeQuery);
 if (error.value)
   throw createError({ statusCode: 404, statusMessage: "Error Loading", fatal: true });
 
-const graph = computed(() => data.value?.graph);
+const graph = computed(() => data.value?.graph as GraphType);
 </script>
