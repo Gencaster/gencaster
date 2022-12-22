@@ -2,7 +2,7 @@
   <div class="node-editor-outer">
     <div class="title">
       <div class="left">
-        <p>{{ currentNodeName }}</p>
+        <p>{{ node?.name }}</p>
         <button class="unstyled" @click="openNodeNameEdit()">
           edit
         </button>
@@ -31,7 +31,7 @@
       </button>
     </div>
     <div class="blocks">
-      <div v-for="(cell, index) in scriptCells" :key="cell.uuid">
+      <div v-for="(cell, index) in node?.scriptCells" :key="cell.uuid">
         <div class="cell" :class="{ 'no-padding': addNoPaddingClass(cell.cellType) }">
           <ElementsBlock
             :ref="el => cells.push(el)" :cell-data="cell" :node-uuid="nodeUuid" :index="index"
@@ -121,19 +121,12 @@ const { executeMutation: deleteScriptCellMutation } = useDeleteScriptCellMutatio
 const showJSONData = ref(false);
 
 // Computed
-const graphNodeData: GraphNode = computed(() => {
-  return graphStore.graphUserState.nodes[props.nodeUuid];
-});
-
-const scriptCells = computed(() => {
-  return graphNodeData.value.scriptCells as ScriptCell[];
-});
-const currentNodeName = computed(() => {
-  return graphNodeData.value.name;
+const node = computed(() => {
+  return graphStore.graph.nodes.find(x => x.uuid === props.nodeUuid);
 });
 
 const JSONViewerData = computed(() => {
-  return JSON.stringify({ graphUserState: scriptCells.value }, null, 2);
+  return JSON.stringify({ graphUserState: node.value }, null, 2);
 });
 
 // Methods
@@ -159,14 +152,13 @@ const mutateCells = () => {
   };
 
   // set data
-  scriptCells.value.forEach((cell: ScriptCell) => {
+  node.value?.scriptCells.forEach((cell) => {
     const newCell: ScriptCellInput = {
       cellCode: cell.cellCode,
       cellOrder: cell.cellOrder,
       cellType: cell.cellType,
       uuid: cell.uuid
     };
-    variables.newCells.push(newCell); // TODO: Needs typed version
     console.log(cell.uuid);
   });
 
@@ -176,11 +168,15 @@ const mutateCells = () => {
   });
 };
 
-const addScriptcell = (type: CellType, position: number) => {
-  const positionEnd = scriptCells.value.length;
+const addScriptcell = (type: CellType, position: number | undefined) => {
+  if (node.value === undefined) {
+    console.log("You can not add a script cell if not seleced properly");
+    return;
+  }
+  const positionEnd = node.value.scriptCells.length;
 
   const variables = {
-    nodeUuid: props.nodeUuid,
+    nodeUuid: node.value.uuid,
     order: positionEnd,
     cellType: type
   };
@@ -188,7 +184,7 @@ const addScriptcell = (type: CellType, position: number) => {
   createScriptCellMutation(variables).then(() => {
     console.log("Added Scriptcell");
 
-    if (position !== -1) {
+    if (position === undefined) {
       console.log("todo: order new cell to certain position"); // TODO: Reorder Cells
     }
     else {
@@ -219,10 +215,10 @@ const playScriptCell = (scriptCellUuid: string) => {
 };
 
 const moveScriptCell = (scriptCellUuid: string, direction: string) => {
-  const selectedScriptCell: ScriptCell[] = [];
-  const newOrder: ScriptCell[] = [];
+  const selectedScriptCell: any = [];
+  const newOrder: any[] = [];
 
-  scriptCells.value.forEach((scriptCell) => {
+  node.value?.scriptCells.forEach((scriptCell) => {
     if (scriptCell.uuid === scriptCellUuid)
       selectedScriptCell.push(scriptCell);
     else
@@ -257,7 +253,7 @@ const moveScriptCell = (scriptCellUuid: string, direction: string) => {
     scriptCell.cellOrder = index;
   });
 
-  graphStore.updateNodeScriptCellsOrderLocal(props.nodeUuid, newOrder);
+  // graphStore.updateNodeScriptCellsOrderLocal(props.nodeUuid, newOrder);
 };
 
 // Styling

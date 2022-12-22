@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="graphsStore.isFetching" class="fetching-screen">
+    <div v-if="graphsStore.fetching" class="fetching-screen">
       <elementsLoading />
     </div>
     <div v-else>

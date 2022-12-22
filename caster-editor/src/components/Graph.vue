@@ -6,49 +6,47 @@
         <div class="level level-1">
           <div class="menu-items left">
             <el-radio-group v-model="menuStore.tab">
-              <el-radio-button label="edit">
+              <el-radio-button :label="Tab.Edit">
                 Build
               </el-radio-button>
-              <el-radio-button label="test">
+              <el-radio-button :label="Tab.Test">
                 Test
               </el-radio-button>
-              <!-- <el-radio-button label="dev">
-                Dev
-              </el-radio-button> -->
             </el-radio-group>
           </div>
           <div class="menu-items middle">
             <span>
-              {{ graph.name }}
+              {{ graphStore.graph.name }}
             </span>
           </div>
           <div class="menu-items right">
             <button class="unstyled state" @click="saveState()">
-              <div class="state-indicator" :class="{ saved: !graphStore.graphMapDiffers }" />
+              <!-- @todo -->
+              <div class="state-indicator" :class="{ saved: !true }" />
               Save
             </button>
 
-            <button class="unstyled" @click="exitEditing()">
+            <button class="unstyled" @click="exitWithoutSaving()">
               Exit
             </button>
           </div>
         </div>
         <div class="level level-2">
-          <div v-if="menuStore.tab === 'edit'" class="left">
+          <div v-if="menuStore.tab === Tab.Edit" class="left">
             <button class="unstyled" @click="addNode()">
               Add Node
             </button>
-            <button class="unstyled" :class="{ lighter: hideConnectionButton }" @click="addEdge()">
+            <button class="unstyled" :class="{ lighter: hideConnectionButton }" @click="createEdge()">
               Add Connection
             </button>
             <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeAny()">
               Remove
             </button>
-            <button class="unstyled" @click="refresh('all')">
+            <button class="unstyled" @click="graphStore.reloadFromServer()">
               Refresh
             </button>
           </div>
-          <div v-if="menuStore.tab === 'test'" />
+          <div v-if="menuStore.tab === Tab.Test" />
         </div>
       </div>
       <div class="menu-spacer" />
@@ -56,20 +54,26 @@
 
     <!-- Graph -->
     <v-network-graph
-      v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges" class="graph"
-      :nodes="graphStore.graphUserState.nodes" :edges="graphStore.graphUserState.edges" :configs="configs"
-      :layouts="graphStore.graphUserState.layouts" :event-handlers="eventHandlers"
+      ref="graph"
+      v-model:selected-nodes="selectedNodes"
+      v-model:selected-edges="selectedEdges"
+      class="graph"
+      :nodes="graphStore.nodes()"
+      :edges="graphStore.edges()"
+      :configs="configs"
+      :layouts="graphStore.layouts()"
+      :event-handlers="eventHandlers"
     />
 
     <!-- Node Content -->
     <div v-if="interfaceStore.showNodePanel" class="node-data">
-      <ElementsNodeEditor :node-uuid="currentNodeUUID" />
+      <ElementsNodeEditor :node-uuid="selectedNodes[0]" />
     </div>
 
     <div v-if="!interfaceStore.showNodePanel" class="stats">
       <p>
-        Nodes: {{ graph.nodes.length }} &nbsp;
-        Edges: {{ graph.edges.length }}
+        Nodes: {{ graphStore.graph.nodes.length }} &nbsp;
+        Edges: {{ graphStore.graph.edges.length }}
       </p>
     </div>
 
@@ -77,12 +81,12 @@
     <!-- Are you sure to delete? -->
     <el-dialog v-model="deleteDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
       <span>
-        Are you sure to delete Scene "{{ nodeToDeleteName }}"?
+        Are you sure to delete Scene "{{ graph?.nodes[selectedNodes[0]].name }}"?
       </span>
       <template #footer>
         <span class="dialog-footer">
           <el-button text bg @click="deleteDialogVisible = false">Cancel</el-button>
-          <el-button color="#FF0000" @click="removeNode()">
+          <el-button color="#FF0000" @click="deleteSelectedNodes()">
             Delete Node
           </el-button>
         </span>
@@ -103,6 +107,7 @@
         </span>
       </template>
     </el-dialog>
+
     <!-- Change name dialog -->
     <el-dialog v-model="renameNodeDialogVisible" width="25%" title="Rename Node" :show-close="false">
       <el-input v-model="renameNodeDialogName" placeholder="Please input" />
@@ -120,20 +125,13 @@
 
 <script lang="ts" setup>
 import { ElMessage } from "element-plus";
-import type { Node as GraphNode } from "v-network-graph";
+import type { EventHandlers as GraphEventHandlers, Instance as GraphInstance, Node as GraphNode } from "v-network-graph";
 import type { Ref } from "vue";
+import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import { transformEdges, transformLayout, transformNodes } from "@/tools/typeTransformers";
 import { GraphSettings } from "@/assets/js/graphSettings";
-import type { Graph, Scalars, ScriptCell } from "@/graphql/graphql";
-import {
-  useCreateEdgeMutation,
-  useCreateNodeMutation,
-  useDeleteEdgeMutation,
-  useDeleteNodeMutation,
-  useUpdateNodeMutation
-} from "@/graphql/graphql";
-import { useMenuStore } from "@/stores/MenuStore";
+import type { Scalars, ScriptCell } from "@/graphql/graphql";
+import { Tab, useMenuStore } from "@/stores/MenuStore";
 import { useGraphStore } from "@/stores/GraphStore";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 // Props
@@ -148,19 +146,17 @@ const router = useRouter();
 const menuStore = useMenuStore();
 const graphStore = useGraphStore();
 const interfaceStore = useInterfaceStore();
+const { graph: graphInStore } = storeToRefs(graphStore);
 
 interface GraphProps {
-  graph: Graph
   uuid: Scalars["UUID"]
-  fetching: boolean
 }
 
 // Data
-const currentNodeName = ref<string>("");
-const currentNodeUUID = ref<string>("");
+const graph = ref<GraphInstance>();
 const selectedNodeScriptCells: Ref<ScriptCell[]> = ref([]);
-const selectedNodes = ref<String[]>([]);
-const selectedEdges = ref<String[]>([]);
+const selectedNodes: Ref<string[]> = ref([]);
+const selectedEdges: Ref<string[]> = ref([]);
 const nodeInPanel = ref<GraphNode>();
 
 // Config
@@ -173,23 +169,13 @@ const renameNodeDialogVisible = ref(false);
 const renameNodeDialogName = ref("");
 const nodeToDeleteName = ref("");
 
-// mutations
-// create node
-const { executeMutation: createNodeMutation } = useCreateNodeMutation();
-// update node
-const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();
-// remove node
-const { executeMutation: removeNodeMutation } = useDeleteNodeMutation();
-// create edge
-const { executeMutation: createEdgeMutation } = useCreateEdgeMutation();
-// remove edge
-const { executeMutation: removeEdgeMutation } = useDeleteEdgeMutation();
-
 // Computed
 const hideConnectionButton = computed(() => {
-  if (selectedNodes.value.length !== 2)
-    return true;
-  else return false;
+  return selectedNodes.value.length !== 2;
+});
+
+const curSelectedNode = computed(() => {
+  return graphStore.graph.nodes.find(x => x.uuid === selectedNodes.value[0]);
 });
 
 const hideRemoveButton = computed(() => {
@@ -200,96 +186,28 @@ const hideRemoveButton = computed(() => {
   else return false;
 });
 
-// Methods
-const transformData = (updateLocalState: boolean, updateServerState: boolean) => {
-  // push to store
-  if (updateLocalState) {
-    const nodesLocal = transformNodes(props.graph.nodes);
-    const edgesLocal = transformEdges(props.graph.edges);
-    const layoutsLocal = transformLayout(props.graph.nodes);
-    graphStore.updateGraphLocal(nodesLocal, edgesLocal, layoutsLocal);
-  }
-
-  if (updateServerState) {
-    // TODO: Is this a good way? Ask Manu
-    const nodesServer = JSON.parse(JSON.stringify(transformNodes(props.graph.nodes)));
-    const edgesServer = JSON.parse(JSON.stringify(transformEdges(props.graph.edges)));
-    const layoutsServer = JSON.parse(JSON.stringify(transformLayout(props.graph.nodes)));
-    graphStore.updateGraphServer(nodesServer, edgesServer, layoutsServer);
-  }
-
-  console.log("transformed data");
-};
-
-const getNodeToDeleteName = () => {
-  const uuid = selectedNodes.value[0] as string;
-  const node = graphStore.graphUserState.nodes[uuid];
-  nodeToDeleteName.value = node.name as string;
-};
-
-const emptySelection = () => {
-  selectedEdges.value = [];
-  selectedNodes.value = [];
-};
-
-const refresh = (command: string) => {
-  switch (command) {
-    case "all":
-      if (graphStore.executeQuery !== undefined) {
-        graphStore?.executeQuery().then(() => {
-          transformData(true, true);
-          console.log("finished 'all' refresh");
-        });
-      }
-      break;
-
-    default:
-      break;
-  }
-};
-
-const addNode = () => {
-  const variables = {
+const addNode = async () => {
+  await graphStore.addNode({
     graphUuid: props.uuid,
-    name: graphStore.defaultNewNodeName,
-    color: graphStore.defaultNewNodeColor,
-    positionX: 0,
-    positionY: 0
-  };
-
-  createNodeMutation(variables).then(() => {
-    refresh("all");
-    console.log("Added node");
+    name: "new node",
+    color: "primary",
+    positionX: graph.value?.getPan().x,
+    positionY: graph.value?.getPan().y
   });
 };
-const removeNode = () => {
+
+const deleteSelectedNodes = async () => {
   deleteDialogVisible.value = false;
-  for (const nodeId of selectedNodes.value) {
-    const variables = {
-      nodeUuid: nodeId
-    };
-
-    removeNodeMutation(variables).then(() => {
-      refresh("all");
-      console.log("Removed node");
-    });
-  }
+  for (const nodeUuid of selectedNodes.value)
+    await graphStore.deleteNode(nodeUuid);
 };
 
-const removeEdge = () => {
-  for (const edgeId of selectedEdges.value) {
-    const variables = {
-      edgeUuid: edgeId
-    };
-
-    removeEdgeMutation(variables).then(() => {
-      refresh("all");
-      console.log("Removed edge");
-    });
-  }
+const deleteSelectedEdges = async () => {
+  for (const edgeUuid of selectedEdges.value)
+    await graphStore.deleteEdge(edgeUuid);
 };
 
-const addEdge = () => {
+const createEdge = async () => {
   if (selectedNodes.value.length !== 2) {
     ElMessage({
       message: "requires exactly 2 scenes selected.",
@@ -300,25 +218,14 @@ const addEdge = () => {
   }
   const [source, target] = selectedNodes.value;
 
-  const variables = {
-    nodeInUuid: source,
-    nodeOutUuid: target
-  };
-
-  createEdgeMutation(variables).then(() => {
-    refresh("all");
-    console.log("Added edge");
-  });
+  await graphStore.createEdge(source, target);
 };
 
-const exitEditing = () => {
-  if (graphStore.graphMapDiffers) {
-    exitDialogVisible.value = true;
-  }
-  else {
-    router.push({
-      path: "/graphs"
-    });
+const renameNodeFromDialog = async () => {
+  if (curSelectedNode.value?.name !== undefined) {
+    curSelectedNode.value.name = renameNodeDialogName.value;
+    graphStore.updateNode(curSelectedNode.value);
+    renameNodeDialogVisible.value = false;
   }
 };
 
@@ -334,11 +241,9 @@ const removeAny = () => {
   // TODO: needs to check if the async call is not buggy if looping through
   if ((selectedNodes.value.length === 1 && selectedEdges.value.length === 0)) {
     deleteDialogVisible.value = true;
-    getNodeToDeleteName();
-    // removeNode();
   }
   else if ((selectedNodes.value.length === 0 && selectedEdges.value.length === 1)) {
-    removeEdge();
+    deleteSelectedEdges();
   }
   else {
     ElMessage({
@@ -349,39 +254,9 @@ const removeAny = () => {
   }
 };
 
-const updateNode = (uuid: string, name: string | undefined, color: string, positionX: number, positionY: number) => {
-  const variables = {
-    nodeUuid: uuid,
-    name,
-    color,
-    positionX,
-    positionY
-  };
-  updateNodeMutation(variables).then(() => {
-    refresh("all");
-    console.log("Updated node");
-  });
-};
-
-const saveState = () => {
-  // update positions
-  for (const uuid in graphStore.graphUserState.nodes) { // TODO: This could let to errors if interface is usable while the loops go through
-    // get positions
-    const n = graphStore.graphUserState.nodes[uuid];
-    updateNode(uuid, n.name, n.color, graphStore.graphUserState.layouts.nodes[uuid].x, graphStore.graphUserState.layouts.nodes[uuid].y);
-  }
-};
-
-const setupNodeDataWindow = (node: string) => {
-  currentNodeName.value = graphStore.graphUserState.nodes[node].name as string;
-  currentNodeUUID.value = node;
-  selectedNodeScriptCells.value = graphStore.graphUserState.nodes[node].scriptCells;
-  nodeInPanel.value = graphStore.graphUserState.nodes[node];
-};
-
-const doubleClickedNode = (node: string) => {
+const openNodeEditor = (node: string) => {
   if (!interfaceStore.showNodePanel) {
-    setupNodeDataWindow(node);
+    nodeInPanel.value = graphStore.graph.nodes.find(x => x.uuid === selectedNodes.value[0]);
     interfaceStore.showNodePanel = true;
   }
   else {
@@ -393,63 +268,35 @@ const doubleClickedNode = (node: string) => {
   }
 };
 
-const nodeDraggedEnd = (node: string) => {
-  // const uuid = Object.entries(node);
-};
-
 const openNodeNameEdit = () => {
-  renameNodeDialogName.value = currentNodeName.value as string;
+  if (curSelectedNode.value === undefined) {
+    console.log("Can not rename a node without selection");
+    return;
+  }
+  renameNodeDialogName.value = curSelectedNode.value.name;
   renameNodeDialogVisible.value = true;
 };
 
-const renameNodeFromDialog = () => {
-  if (renameNodeDialogName.value === "") {
-    ElMessage({
-      message: "Node name can't be empty",
-      type: "error",
-      customClass: "messages-editor"
-    });
-    return;
-  }
-
-  const uuid = currentNodeUUID.value as string;
-  const node = graphStore.graphUserState.nodes[uuid];
-  currentNodeName.value = renameNodeDialogName.value;
-  updateNode(uuid, renameNodeDialogName.value, node.color, graphStore.graphUserState.layouts.nodes[uuid].x, graphStore.graphUserState.layouts.nodes[uuid].y);
-  renameNodeDialogVisible.value = false;
-};
-
-const eventHandlers = {
-  "node:dblclick": ({ node }: GraphNode) => {
-    doubleClickedNode(node);
+const eventHandlers: GraphEventHandlers = {
+  // see https://dash14.github.io/v-network-graph/reference/events.html#events-with-event-handlers
+  "node:dblclick": ({ node }) => {
+    openNodeEditor(node);
   },
-  "node:dragend": ({ node }: GraphNode) => {
-    nodeDraggedEnd(node);
+  "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
+    for (const p in dragEvent) {
+      const draggedNode = graphStore.graph.nodes.find(x => x.uuid === p);
+      if (draggedNode === undefined) {
+        console.log("Could not find dragged Node in our local store");
+        continue;
+      }
+      draggedNode.positionX = dragEvent[p].x;
+      draggedNode.positionY = dragEvent[p].y;
+      graphStore.updateNode(draggedNode);
+    }
   }
 };
-
-const compareGraphStates = () => {
-  if (JSON.stringify(graphStore.graphUserState) === JSON.stringify(graphStore.graphServerState))
-    return false;
-  else
-    return true;
-};
-
-graphStore.$subscribe((mutation, state) => {
-  graphStore.graphMapDiffers = compareGraphStates();
-  // console.log("mutated data");
-  // console.log(graphStore.graphMapDiffers);
-  console.log("Mutation:", mutation);
-});
 
 // Events
 $bus.$on("closeNodeEditor", () => interfaceStore.showNodePanel = false);
 $bus.$on("openNodeNameEdit", () => openNodeNameEdit());
-$bus.$on("refreshAll", () => refresh("all"));
-$bus.$on("compareState", () => compareGraphStates());
-
-// onMounted
-onMounted(() => {
-  transformData(true, true);
-});
 </script>

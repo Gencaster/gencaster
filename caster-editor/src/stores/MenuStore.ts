@@ -1,24 +1,13 @@
 import { defineStore } from "pinia";
+import type { Ref } from "vue";
 
-// TODO: Setup Typescript: https://pinia.vuejs.org/core-concepts/state.html#typescript
+export enum Tab {
+  Edit = "Edit",
+  Test = "Test"
+}
 
-export const useMenuStore = defineStore({
-  id: "MenuStore",
-  state: () => ({
-    count: 0,
-    tab: "edit",
+export const useMenuStore = defineStore("menu", () => {
+  const tab: Ref<Tab> = ref(Tab.Edit);
 
-    // savestates
-    nodesChanged: false, // if nodes have been moved around
-    blocksChanged: false // if blocks of a node has changed
-
-  }),
-  getters: {
-    doubleCount: state => state.count * 2
-  },
-  actions: {
-    increment() {
-      this.count++;
-    }
-  }
+  return { tab };
 });

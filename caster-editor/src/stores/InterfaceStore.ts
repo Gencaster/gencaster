@@ -1,14 +1,10 @@
 import { defineStore } from "pinia";
+import type { Ref } from "vue";
 
-// TODO: Setup Typescript: https://pinia.vuejs.org/core-concepts/state.html#typescript
+export const useInterfaceStore = defineStore("interface", () => {
+  const showNodePanel: Ref<boolean> = ref(false);
 
-export const useInterfaceStore = defineStore({
-  id: "InterfaceStore",
-  state: () => ({
-    // node menu
-    showNodePanel: false
-
-  }),
-  getters: {},
-  actions: {}
+  return {
+    showNodePanel
+  };
 });
