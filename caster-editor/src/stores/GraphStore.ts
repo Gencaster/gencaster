@@ -1,25 +1,23 @@
 import { defineStore } from "pinia";
 import type { Ref } from "vue";
 import type { Edge as GraphEdge, Edges as GraphEdges, Node as GraphNode, Nodes as GraphNodes } from "v-network-graph";
-import type { Exact, GetGraphQuery, NodeCreate } from "@/graphql/graphql";
+import type { GetGraphQuery, NodeCreate } from "@/graphql/graphql";
 import {
-  useCreateEdgeMutation, useCreateNodeMutation, useCreateScriptCellMutation,
+  useCreateEdgeMutation,
+  useCreateNodeMutation,
   useDeleteEdgeMutation,
   useDeleteNodeMutation,
-  useDeleteScriptCellMutation,
   useGetGraphQuery,
-  useUpdateNodeMutation,
-  useUpdateScriptCellsMutation
+  useUpdateNodeMutation
 } from "@/graphql/graphql";
 
 export const useGraphStore = defineStore("graph", () => {
   const graph: Ref<GetGraphQuery["graph"]> = ref({} as GetGraphQuery["graph"]);
   const fetching: Ref<boolean> = ref(true);
 
-  const { executeQuery: graphQuery } = useGetGraphQuery();
   async function getGraph(graphUuid: string) {
     console.log("Get/reload graph from server");
-    const { data, fetching: isFetching } = await graphQuery({ variables: { uuid: graphUuid } });
+    const { data, fetching: isFetching } = await useGetGraphQuery({ variables: { uuid: graphUuid } }).executeQuery();
     if (data.value?.graph)
       graph.value = data.value.graph;
     fetching.value = isFetching.value;
@@ -61,37 +59,12 @@ export const useGraphStore = defineStore("graph", () => {
   };
 
   const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();
-  const updateNode = async (node: GetGraphQuery["graph"]["nodes"][0]) => {
-    await updateNodeMutation({
+  const updateNodePosition = (node: GetGraphQuery["graph"]["nodes"][0]) => {
+    updateNodeMutation({
       nodeUuid: node.uuid,
       ...node
     });
-    await reloadFromServer();
-  };
-
-  const { executeMutation: createScriptCellMutation } = useCreateScriptCellMutation();
-  const createScriptCell = async (scriptCell: Exact<{ nodeUuid: any; order: number }>) => {
-    await createScriptCellMutation(scriptCell);
-    await reloadFromServer();
-  };
-
-  const { executeMutation: updateScriptCellsMutation } = useUpdateScriptCellsMutation();
-  const updateScriptCell = async (scriptCells: GetGraphQuery["graph"]["nodes"][0]["scriptCells"]) => {
-    await updateScriptCellsMutation({
-      newCells: scriptCells
-    }).then(() => {
-      console.log(`Updated script cells ${scriptCells.map(x => x.uuid).join(",")}`);
-    });
-    // @todo only reload the script cells of each node?
-    await reloadFromServer();
-  };
-
-  const { executeMutation: deleteScriptCellMutation } = useDeleteScriptCellMutation();
-  const deleteScriptCell = async (scriptCellUuid: any) => {
-    await deleteScriptCellMutation({ scriptCellUuid }).then(() =>
-      console.log(`Deleted script cell ${scriptCellUuid}`)
-    );
-    await reloadFromServer();
+    reloadFromServer();
   };
 
   // // watch an array
@@ -160,10 +133,7 @@ export const useGraphStore = defineStore("graph", () => {
     deleteNode,
     deleteEdge,
     createEdge,
-    updateNode,
-    createScriptCell,
-    updateScriptCell,
-    deleteScriptCell,
+    updateNodePosition,
     reloadFromServer
   };
 });

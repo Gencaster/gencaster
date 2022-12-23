@@ -2,7 +2,7 @@
   <div class="node-editor-outer">
     <div class="title">
       <div class="left">
-        <p>{{ node?.name }}</p>
+        <p>{{ node.name }}</p>
         <button class="unstyled" @click="renameNodeDialogVisible = true">
           edit
         </button>
@@ -17,21 +17,21 @@
       </div>
     </div>
     <div class="node-menu-bar">
-      <button @click="addScriptcell(CellType.Markdown)">
+      <button @click="addScriptCell(CellType.Markdown)">
         + Markdown
       </button>
-      <button @click="addScriptcell(CellType.Python)">
+      <button @click="addScriptCell(CellType.Python)">
         + Python
       </button>
-      <button @click="addScriptcell(CellType.Supercollider)">
+      <button @click="addScriptCell(CellType.Supercollider)">
         + Supercollider
       </button>
-      <button @click="addScriptcell(CellType.Comment)">
+      <button @click="addScriptCell(CellType.Comment)">
         + Comment
       </button>
     </div>
     <div class="blocks">
-      <div v-for="(cell, index) in node?.scriptCells" :key="cell.uuid">
+      <div v-for="(cell, index) in node.scriptCells" :key="cell.uuid">
         <div class="cell" :class="{ 'no-padding': addNoPaddingClass(cell.cellType) }">
           <ElementsBlock
             :ref="el => cells.push(el)" :cell-data="cell" :node-uuid="nodeUuid" :index="index"
@@ -101,9 +101,8 @@ import { computed, ref } from "vue";
 import type { Node as GraphNode } from "v-network-graph";
 
 import { storeToRefs } from "pinia";
-import type { ScriptCell, ScriptCellInput } from "@/graphql/graphql";
-import { CellType, useCreateScriptCellMutation, useDeleteScriptCellMutation, useUpdateScriptCellsMutation } from "@/graphql/graphql";
-import { useGraphStore } from "@/stores/GraphStore";
+import { useNodeStore } from "@/stores/NodeStore";
+import { CellType } from "@/graphql/graphql";
 
 const props = defineProps({
   dev: {
@@ -120,8 +119,8 @@ const props = defineProps({
 const { $bus } = useNuxtApp();
 
 // Store
-const graphStore = useGraphStore();
-const { graph } = storeToRefs(graphStore);
+const nodeStore = useNodeStore();
+const { node } = storeToRefs(nodeStore);
 
 // Variables
 const extensions = [json()];
@@ -131,20 +130,6 @@ const renameNodeDialogName = ref("");
 
 // interface
 const showJSONData = ref(false);
-
-// Computed
-// nodes list needs to be computed, see
-// https://stackoverflow.com/questions/71676111/vue-component-doesnt-update-after-state-changes-in-pinia-store#comment130405154_71677026
-
-const nodes = computed(() => {
-  console.log("Recalculate nodes");
-  return graph.value.nodes;
-});
-
-const node = computed(() => {
-  console.log("Recalculated node");
-  return nodes.value.find(x => x.uuid === props.nodeUuid);
-});
 
 const JSONViewerData = computed(() => {
   return JSON.stringify({ graphUserState: node.value }, null, 2);
@@ -166,7 +151,7 @@ const toggleShowJSONData = () => {
 const renameNodeFromDialog = async () => {
   if (node.value?.name !== undefined) {
     node.value.name = renameNodeDialogName.value;
-    graphStore.updateNode(node.value);
+    nodeStore.updateNode(node.value);
     renameNodeDialogVisible.value = false;
   }
 };
@@ -181,7 +166,7 @@ const mutateCells = () => {
   };
 
   // set data
-  node.value?.scriptCells.forEach((cell) => {
+  node.value.scriptCells.forEach((cell) => {
     const newCell: ScriptCellInput = {
       cellCode: cell.cellCode,
       cellOrder: cell.cellOrder,
@@ -196,7 +181,7 @@ const mutateCells = () => {
   });
 };
 
-const addScriptcell = (type: CellType, position: number | undefined = undefined) => {
+const addScriptCell = (type: CellType, position: number | undefined = undefined) => {
   if (node.value === undefined) {
     console.log("You can not add a script cell if not selected properly");
     return;
@@ -204,21 +189,14 @@ const addScriptcell = (type: CellType, position: number | undefined = undefined)
   // first transfer the current state to the server as otherwise
   // we will reload from the server which may delete edits we have
   // not synced to the server yet
-  graphStore.createScriptCell({
+  nodeStore.createScriptCell({
     nodeUuid: node.value.uuid,
     order: node.value.scriptCells.length // add to bottom
   });
 };
 
 const deleteScriptCell = (scriptCellUuid: string) => {
-  const variables = {
-    scriptCellUuid
-  };
-
-  deleteScriptCellMutation(variables).then(() => {
-    console.log(`Deleted ScriptCell ${scriptCellUuid}`);
-    $bus.$emit("refreshAll");
-  });
+  nodeStore.deleteScriptCell(scriptCellUuid);
 };
 
 const playScriptCell = (scriptCellUuid: string) => {
@@ -278,4 +256,8 @@ const addNoPaddingClass = (blockCellType: CellType) => {
   else
     return false;
 };
+
+onMounted(() => {
+  nodeStore.getNode(props.nodeUuid);
+});
 </script>

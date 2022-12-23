@@ -259,7 +259,7 @@ const eventHandlers: GraphEventHandlers = {
       }
       draggedNode.positionX = dragEvent[p].x;
       draggedNode.positionY = dragEvent[p].y;
-      graphStore.updateNode(draggedNode);
+      graphStore.updateNodePosition(draggedNode);
     }
   }
 };

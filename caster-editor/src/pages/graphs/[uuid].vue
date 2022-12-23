@@ -12,8 +12,8 @@ const graphStore = useGraphStore();
 const route = useRoute();
 const uuid = computed(() => String(route.params.uuid));
 
-async function getGraphData() {
-  await graphStore.getGraph(uuid.value);
+function getGraphData() {
+  graphStore.getGraph(uuid.value);
 }
 
 watch(uuid, getGraphData);
