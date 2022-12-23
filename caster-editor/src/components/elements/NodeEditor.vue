@@ -77,6 +77,19 @@
         :tab-size="2" :extensions="extensions" :disabled="true"
       />
     </div>
+
+    <!-- Change name dialog -->
+    <el-dialog v-model="renameNodeDialogVisible" width="25%" title="Rename Node" :show-close="false">
+      <el-input v-model="renameNodeDialogName" placeholder="Please input" />
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="renameNodeDialogVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="renameNodeFromDialog()">
+            Confirm
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -111,6 +124,8 @@ const graphStore = useGraphStore();
 // Variables
 const extensions = [json()];
 const cells = ref([]); // TODO: add <typeof ElementsBlock> or what is needed (<InstanceType?) to fix error above
+const renameNodeDialogVisible = ref(false);
+const renameNodeDialogName = ref("");
 
 // mutations
 const { executeMutation: updateScriptCellsMutation } = useUpdateScriptCellsMutation();
@@ -140,6 +155,14 @@ const closeNodeEditor = () => {
 
 const toggleShowJSONData = () => {
   showJSONData.value = !showJSONData.value;
+};
+
+const renameNodeFromDialog = async () => {
+  if (node.value?.name !== undefined) {
+    node.value.name = renameNodeDialogName.value;
+    graphStore.updateNode(node.value);
+    renameNodeDialogVisible.value = false;
+  }
 };
 
 const mutateCells = () => {

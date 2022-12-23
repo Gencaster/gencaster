@@ -107,19 +107,6 @@
         </span>
       </template>
     </el-dialog>
-
-    <!-- Change name dialog -->
-    <el-dialog v-model="renameNodeDialogVisible" width="25%" title="Rename Node" :show-close="false">
-      <el-input v-model="renameNodeDialogName" placeholder="Please input" />
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="renameNodeDialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="renameNodeFromDialog()">
-            Confirm
-          </el-button>
-        </span>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -165,8 +152,6 @@ const configs = GraphSettings.standard;
 // Interface
 const deleteDialogVisible = ref(false);
 const exitDialogVisible = ref(false);
-const renameNodeDialogVisible = ref(false);
-const renameNodeDialogName = ref("");
 const nodeToDeleteName = ref("");
 
 // Computed
@@ -221,14 +206,6 @@ const createEdge = async () => {
   await graphStore.createEdge(source, target);
 };
 
-const renameNodeFromDialog = async () => {
-  if (curSelectedNode.value?.name !== undefined) {
-    curSelectedNode.value.name = renameNodeDialogName.value;
-    graphStore.updateNode(curSelectedNode.value);
-    renameNodeDialogVisible.value = false;
-  }
-};
-
 const exitWithoutSaving = () => {
   router.push({
     path: "/graphs"
@@ -268,15 +245,6 @@ const openNodeEditor = (node: string) => {
   }
 };
 
-const openNodeNameEdit = () => {
-  if (curSelectedNode.value === undefined) {
-    console.log("Can not rename a node without selection");
-    return;
-  }
-  renameNodeDialogName.value = curSelectedNode.value.name;
-  renameNodeDialogVisible.value = true;
-};
-
 const eventHandlers: GraphEventHandlers = {
   // see https://dash14.github.io/v-network-graph/reference/events.html#events-with-event-handlers
   "node:dblclick": ({ node }) => {
@@ -298,5 +266,4 @@ const eventHandlers: GraphEventHandlers = {
 
 // Events
 $bus.$on("closeNodeEditor", () => interfaceStore.showNodePanel = false);
-$bus.$on("openNodeNameEdit", () => openNodeNameEdit());
 </script>
