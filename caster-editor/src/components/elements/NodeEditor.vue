@@ -3,7 +3,7 @@
     <div class="title">
       <div class="left">
         <p>{{ node?.name }}</p>
-        <button class="unstyled" @click="openNodeNameEdit()">
+        <button class="unstyled" @click="renameNodeDialogVisible = true">
           edit
         </button>
       </div>
@@ -17,16 +17,16 @@
       </div>
     </div>
     <div class="node-menu-bar">
-      <button @click="addScriptcell(CellType.Markdown, -1)">
+      <button @click="addScriptcell(CellType.Markdown)">
         + Markdown
       </button>
-      <button @click="addScriptcell(CellType.Python, -1)">
+      <button @click="addScriptcell(CellType.Python)">
         + Python
       </button>
-      <button @click="addScriptcell(CellType.Supercollider, -1)">
+      <button @click="addScriptcell(CellType.Supercollider)">
         + Supercollider
       </button>
-      <button @click="addScriptcell(CellType.Comment, -1)">
+      <button @click="addScriptcell(CellType.Comment)">
         + Comment
       </button>
     </div>
@@ -100,6 +100,7 @@ import { json } from "@codemirror/lang-json";
 import { computed, ref } from "vue";
 import type { Node as GraphNode } from "v-network-graph";
 
+import { storeToRefs } from "pinia";
 import type { ScriptCell, ScriptCellInput } from "@/graphql/graphql";
 import { CellType, useCreateScriptCellMutation, useDeleteScriptCellMutation, useUpdateScriptCellsMutation } from "@/graphql/graphql";
 import { useGraphStore } from "@/stores/GraphStore";
@@ -120,6 +121,7 @@ const { $bus } = useNuxtApp();
 
 // Store
 const graphStore = useGraphStore();
+const { graph } = storeToRefs(graphStore);
 
 // Variables
 const extensions = [json()];
@@ -127,17 +129,21 @@ const cells = ref([]); // TODO: add <typeof ElementsBlock> or what is needed (<I
 const renameNodeDialogVisible = ref(false);
 const renameNodeDialogName = ref("");
 
-// mutations
-const { executeMutation: updateScriptCellsMutation } = useUpdateScriptCellsMutation();
-const { executeMutation: createScriptCellMutation } = useCreateScriptCellMutation();
-const { executeMutation: deleteScriptCellMutation } = useDeleteScriptCellMutation();
-
 // interface
 const showJSONData = ref(false);
 
 // Computed
+// nodes list needs to be computed, see
+// https://stackoverflow.com/questions/71676111/vue-component-doesnt-update-after-state-changes-in-pinia-store#comment130405154_71677026
+
+const nodes = computed(() => {
+  console.log("Recalculate nodes");
+  return graph.value.nodes;
+});
+
 const node = computed(() => {
-  return graphStore.graph.nodes.find(x => x.uuid === props.nodeUuid);
+  console.log("Recalculated node");
+  return nodes.value.find(x => x.uuid === props.nodeUuid);
 });
 
 const JSONViewerData = computed(() => {
@@ -182,7 +188,6 @@ const mutateCells = () => {
       cellType: cell.cellType,
       uuid: cell.uuid
     };
-    console.log(cell.uuid);
   });
 
   updateScriptCellsMutation(variables).then(() => {
@@ -191,30 +196,17 @@ const mutateCells = () => {
   });
 };
 
-const addScriptcell = (type: CellType, position: number | undefined) => {
+const addScriptcell = (type: CellType, position: number | undefined = undefined) => {
   if (node.value === undefined) {
-    console.log("You can not add a script cell if not seleced properly");
+    console.log("You can not add a script cell if not selected properly");
     return;
   }
-  const positionEnd = node.value.scriptCells.length;
-
-  const variables = {
+  // first transfer the current state to the server as otherwise
+  // we will reload from the server which may delete edits we have
+  // not synced to the server yet
+  graphStore.createScriptCell({
     nodeUuid: node.value.uuid,
-    order: positionEnd,
-    cellType: type
-  };
-
-  createScriptCellMutation(variables).then(() => {
-    console.log("Added Scriptcell");
-
-    if (position === undefined) {
-      console.log("todo: order new cell to certain position"); // TODO: Reorder Cells
-    }
-    else {
-      // TODO: need to refresh cells and before mutate all changes otherwise it will get lost
-      console.log("refresh only cells from that node");
-      $bus.$emit("refreshAll");
-    }
+    order: node.value.scriptCells.length // add to bottom
   });
 };
 

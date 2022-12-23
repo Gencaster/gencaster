@@ -1,14 +1,15 @@
 import { defineStore } from "pinia";
 import type { Ref } from "vue";
 import type { Edge as GraphEdge, Edges as GraphEdges, Node as GraphNode, Nodes as GraphNodes } from "v-network-graph";
-import type { GetGraphQuery, NodeCreate } from "@/graphql/graphql";
+import type { Exact, GetGraphQuery, NodeCreate } from "@/graphql/graphql";
 import {
-  useCreateEdgeMutation,
-  useCreateNodeMutation,
+  useCreateEdgeMutation, useCreateNodeMutation, useCreateScriptCellMutation,
   useDeleteEdgeMutation,
   useDeleteNodeMutation,
+  useDeleteScriptCellMutation,
   useGetGraphQuery,
-  useUpdateNodeMutation
+  useUpdateNodeMutation,
+  useUpdateScriptCellsMutation
 } from "@/graphql/graphql";
 
 export const useGraphStore = defineStore("graph", () => {
@@ -65,6 +66,31 @@ export const useGraphStore = defineStore("graph", () => {
       nodeUuid: node.uuid,
       ...node
     });
+    await reloadFromServer();
+  };
+
+  const { executeMutation: createScriptCellMutation } = useCreateScriptCellMutation();
+  const createScriptCell = async (scriptCell: Exact<{ nodeUuid: any; order: number }>) => {
+    await createScriptCellMutation(scriptCell);
+    await reloadFromServer();
+  };
+
+  const { executeMutation: updateScriptCellsMutation } = useUpdateScriptCellsMutation();
+  const updateScriptCell = async (scriptCells: GetGraphQuery["graph"]["nodes"][0]["scriptCells"]) => {
+    await updateScriptCellsMutation({
+      newCells: scriptCells
+    }).then(() => {
+      console.log(`Updated script cells ${scriptCells.map(x => x.uuid).join(",")}`);
+    });
+    // @todo only reload the script cells of each node?
+    await reloadFromServer();
+  };
+
+  const { executeMutation: deleteScriptCellMutation } = useDeleteScriptCellMutation();
+  const deleteScriptCell = async (scriptCellUuid: any) => {
+    await deleteScriptCellMutation({ scriptCellUuid }).then(() =>
+      console.log(`Deleted script cell ${scriptCellUuid}`)
+    );
     await reloadFromServer();
   };
 
@@ -135,6 +161,9 @@ export const useGraphStore = defineStore("graph", () => {
     deleteEdge,
     createEdge,
     updateNode,
+    createScriptCell,
+    updateScriptCell,
+    deleteScriptCell,
     reloadFromServer
   };
 });
