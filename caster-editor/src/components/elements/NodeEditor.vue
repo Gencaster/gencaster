@@ -8,7 +8,7 @@
         </button>
       </div>
       <div class="right">
-        <button class="unstyled" @click="mutateCells()">
+        <button class="unstyled" @click="syncCellsWithServer()">
           Save Scene
         </button>
         <button class="unstyled" @click="closeNodeEditor()">
@@ -31,7 +31,7 @@
       </button>
     </div>
     <div class="blocks">
-      <div v-for="(cell, index) in node.scriptCells" :key="cell.uuid">
+      <div v-for="(cell, index) in node.scriptCells.sort(x => x.cellOrder)" :key="cell.uuid">
         <div class="cell" :class="{ 'no-padding': addNoPaddingClass(cell.cellType) }">
           <ElementsBlock
             :ref="el => cells.push(el)" :cell-data="cell" :node-uuid="nodeUuid" :index="index"
@@ -51,18 +51,18 @@
             </div>
             <div class="divider" />
             <div class="icon">
-              <img src="~/assets/icons/icon-up.svg" alt="arrow up icon" @click="moveScriptCell(cell.uuid, 'up')">
+              <img src="~/assets/icons/icon-up.svg" alt="arrow up icon" @click="moveScriptCell(cell.uuid, MoveDirection.up)">
             </div>
             <div class="divider" />
             <div class="icon">
-              <img src="~/assets/icons/icon-down.svg" alt="arrow down icon" @click="moveScriptCell(cell.uuid, 'down')">
+              <img src="~/assets/icons/icon-down.svg" alt="arrow down icon" @click="moveScriptCell(cell.uuid, MoveDirection.down)">
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="footer">
-      <button class="unstyled" @click="toggleShowJSONData()">
+      <button class="unstyled" @click="() => { showJSONData = !showJSONData }">
         JSON
       </button>
     </div>
@@ -98,11 +98,11 @@ import { ElMessage } from "element-plus";
 import { Codemirror } from "vue-codemirror";
 import { json } from "@codemirror/lang-json";
 import { computed, ref } from "vue";
-import type { Node as GraphNode } from "v-network-graph";
 
 import { storeToRefs } from "pinia";
 import { useNodeStore } from "@/stores/NodeStore";
 import { CellType } from "@/graphql/graphql";
+import { useGraphStore } from "@/stores/GraphStore";
 
 const props = defineProps({
   dev: {
@@ -115,12 +115,18 @@ const props = defineProps({
   }
 });
 
+enum MoveDirection {
+  up = "Up",
+  down = "Down"
+}
+
 // bus
 const { $bus } = useNuxtApp();
 
 // Store
 const nodeStore = useNodeStore();
 const { node } = storeToRefs(nodeStore);
+const graphStore = useGraphStore();
 
 // Variables
 const extensions = [json()];
@@ -135,50 +141,24 @@ const JSONViewerData = computed(() => {
   return JSON.stringify({ graphUserState: node.value }, null, 2);
 });
 
-// Methods
-const openNodeNameEdit = () => {
-  $bus.$emit("openNodeNameEdit");
-};
-
-const closeNodeEditor = () => {
-  $bus.$emit("closeNodeEditor");
-};
-
-const toggleShowJSONData = () => {
-  showJSONData.value = !showJSONData.value;
+const closeNodeEditor = async () => {
+  await $bus.$emit("closeNodeEditor");
 };
 
 const renameNodeFromDialog = async () => {
-  if (node.value?.name !== undefined) {
-    node.value.name = renameNodeDialogName.value;
-    nodeStore.updateNode(node.value);
-    renameNodeDialogVisible.value = false;
+  if (node.value === undefined) {
+    console.log("Need a valid node for rename");
+    return;
   }
+  node.value.name = renameNodeDialogName.value;
+  await nodeStore.updateNode(node.value);
+  // updates the name on the graph view as well
+  await graphStore.reloadFromServer();
+  renameNodeDialogVisible.value = false;
 };
 
-const mutateCells = () => {
-  // const variables: UpdateScriptCellsMutationVariables = {
-  //   newCells: ref<ScriptCellInput[]>([])
-  // };
-
-  const variables = { // TODO: Needs typed version
-    newCells: []
-  };
-
-  // set data
-  node.value.scriptCells.forEach((cell) => {
-    const newCell: ScriptCellInput = {
-      cellCode: cell.cellCode,
-      cellOrder: cell.cellOrder,
-      cellType: cell.cellType,
-      uuid: cell.uuid
-    };
-  });
-
-  updateScriptCellsMutation(variables).then(() => {
-    $bus.$emit("refreshAll");
-    // console.log("Updated Scriptcells");
-  });
+const syncCellsWithServer = async () => {
+  await nodeStore.updateScriptCells(node.value.scriptCells);
 };
 
 const addScriptCell = (type: CellType, position: number | undefined = undefined) => {
@@ -195,8 +175,8 @@ const addScriptCell = (type: CellType, position: number | undefined = undefined)
   });
 };
 
-const deleteScriptCell = (scriptCellUuid: string) => {
-  nodeStore.deleteScriptCell(scriptCellUuid);
+const deleteScriptCell = async (scriptCellUuid: string) => {
+  await nodeStore.deleteScriptCell(scriptCellUuid);
 };
 
 const playScriptCell = (scriptCellUuid: string) => {
@@ -207,7 +187,7 @@ const playScriptCell = (scriptCellUuid: string) => {
   });
 };
 
-const moveScriptCell = (scriptCellUuid: string, direction: string) => {
+const moveScriptCell = (scriptCellUuid: string, direction: MoveDirection) => {
   const selectedScriptCell: any = [];
   const newOrder: any[] = [];
 
@@ -231,7 +211,7 @@ const moveScriptCell = (scriptCellUuid: string, direction: string) => {
 
   let newPosition = 0;
 
-  if (direction === "up") {
+  if (direction === MoveDirection.up) {
     if (oldIndex > 0)
       newPosition = oldIndex - 1;
   }
@@ -251,10 +231,7 @@ const moveScriptCell = (scriptCellUuid: string, direction: string) => {
 
 // Styling
 const addNoPaddingClass = (blockCellType: CellType) => {
-  if (blockCellType === CellType.Markdown || blockCellType === CellType.Comment)
-    return true;
-  else
-    return false;
+  return blockCellType === CellType.Markdown || blockCellType === CellType.Comment;
 };
 
 onMounted(() => {
