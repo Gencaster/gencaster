@@ -6,14 +6,16 @@ import { useCreateScriptCellMutation, useDeleteScriptCellMutation, useGetNodeQue
 export const useNodeStore = defineStore("node", () => {
   const node: Ref<GetNodeQuery["node"]> = ref({} as GetNodeQuery["node"]);
   const fetching: Ref<boolean> = ref(true);
+  const uuid: Ref<string> = ref("");
 
-  async function getNode(uuid: string) {
-    console.log(`Get/reload node ${uuid} from server`);
-    const { data, fetching: isFetching } = await useGetNodeQuery({ variables: { uuid } }).executeQuery();
-    if (data.value?.node) {
+  const { executeQuery: getNodeQuery } = useGetNodeQuery({ variables: { uuid } });
+  async function getNode(nodeUuid: string) {
+    uuid.value = nodeUuid;
+    console.log(`Get/reload node ${uuid.value} from server`);
+    const { data, fetching: isFetching } = await getNodeQuery();
+    if (data.value?.node)
       node.value = data.value.node;
-      console.log("Node value is now", node.value);
-    }
+
     fetching.value = isFetching.value;
   }
 
