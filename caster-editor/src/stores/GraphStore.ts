@@ -14,10 +14,13 @@ import {
 export const useGraphStore = defineStore("graph", () => {
   const graph: Ref<GetGraphQuery["graph"]> = ref({} as GetGraphQuery["graph"]);
   const fetching: Ref<boolean> = ref(true);
+  const uuid: Ref<string> = ref("");
 
+  const { executeQuery: getGraphQuery } = useGetGraphQuery({ variables: { uuid } });
   async function getGraph(graphUuid: string) {
-    console.log("Get/reload graph from server");
-    const { data, fetching: isFetching } = await useGetGraphQuery({ variables: { uuid: graphUuid } }).executeQuery();
+    uuid.value = graphUuid;
+    console.log(`Get/reload graph ${uuid.value} from server`);
+    const { data, fetching: isFetching } = await getGraphQuery();
     if (data.value?.graph)
       graph.value = data.value.graph;
     fetching.value = isFetching.value;
@@ -59,12 +62,12 @@ export const useGraphStore = defineStore("graph", () => {
   };
 
   const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();
-  const updateNodePosition = (node: GetGraphQuery["graph"]["nodes"][0]) => {
-    updateNodeMutation({
+  const updateNodePosition = async (node: GetGraphQuery["graph"]["nodes"][0]) => {
+    await updateNodeMutation({
       nodeUuid: node.uuid,
       ...node
     });
-    reloadFromServer();
+    await reloadFromServer();
   };
 
   // // watch an array
