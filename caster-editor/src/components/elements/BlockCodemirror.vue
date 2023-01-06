@@ -1,20 +1,34 @@
 <template>
   <div class="block">
     <!-- python -->
-    <div v-if="editorType === CellType.Python" class="editor-python">
+    <div v-if="scriptCell?.cellType === CellType.Python" class="editor-python">
       <Codemirror
-        v-model="code" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
-        :tab-size="2" :extensions="extensions" @ready="codemirrorReady" @change="emitCodemirror('change', $event)"
-        @focus="emitCodemirror('focus', $event)" @blur="emitCodemirror('blur', $event)"
+        v-model="scriptCell.cellCode"
+        placeholder="Code goes here..."
+        :autofocus="false"
+        :indent-with-tab="true"
+        :tab-size="2"
+        :extensions="[python()]"
+        @ready="() => { domReady = true }"
+        @change="emitCodemirror('change', $event)"
+        @focus="emitCodemirror('focus', $event)"
+        @blur="emitCodemirror('blur', $event)"
       />
     </div>
 
     <!-- supercollider -->
-    <div v-if="editorType === CellType.Supercollider" class="editor-supercollider">
+    <div v-if="scriptCell?.cellType === CellType.Supercollider" class="editor-supercollider">
       <Codemirror
-        v-model="code" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
-        :tab-size="2" :extensions="extensions" @ready="codemirrorReady" @change="emitCodemirror('change', $event)"
-        @focus="emitCodemirror('focus', $event)" @blur="emitCodemirror('blur', $event)"
+        v-model="scriptCell.cellCode"
+        placeholder="Code goes here..."
+        :autofocus="false"
+        :indent-with-tab="true"
+        :tab-size="2"
+        :extensions="[python()]"
+        @ready="() => { domReady = true }"
+        @change="emitCodemirror('change', $event)"
+        @focus="emitCodemirror('focus', $event)"
+        @blur="emitCodemirror('blur', $event)"
       />
     </div>
   </div>
@@ -24,59 +38,30 @@
 // code editor
 import { Codemirror } from "vue-codemirror";
 import { python } from "@codemirror/lang-python";
-import { useGraphStore } from "@/stores/GraphStore";
+import type { Ref } from "vue";
+import { storeToRefs } from "pinia";
 import { CellType } from "@/graphql/graphql";
-import type { ScriptCell } from "@/graphql/graphql";
+import type { GetNodeQuery, ScriptCell } from "@/graphql/graphql";
+import { useNodeStore } from "~~/src/stores/NodeStore";
 const props = defineProps<BlockProps>();
 
 interface BlockProps {
-  cellData: ScriptCell
-  nodeUuid: string
+  scriptCellUuid: String
   index: number
 }
 
 // Store
-const graphStore = useGraphStore();
+const { scriptCellsModified, node } = storeToRefs(useNodeStore());
 
 // Variables
-const editorType = ref<string>(props.cellData.cellType);
-const code = ref<string>(props.cellData.cellCode);
-const extensions = ref<any>([]);
-const domReady = ref<boolean>(false);
-
-// methods
-const codemirrorReady = () => {
-  domReady.value = true;
-};
+const scriptCell = ref<GetNodeQuery["node"]["scriptCells"][0] | undefined>(node.value.scriptCells.find((x) => { return x.uuid === props.scriptCellUuid; }));
+const domReady: Ref<boolean> = ref(false);
 
 const emitCodemirror = (eventType?: string, event?: any) => {
   if (!domReady.value)
     return;
 
-  if (eventType === "change") {
-    // this is the original unmuted
-    // const original = props.cellData.cellCode;
-
-    // this is the new code
-    const newCode = event;
-
-    // mutate store local
-    graphStore.updateNodeScriptCellLocal(props.nodeUuid, newCode, props.index, props.cellData.cellType, props.cellData.uuid);
-  }
+  if (eventType === "change")
+    scriptCellsModified.value = true;
 };
-
-onMounted(() => {
-  switch (editorType.value) {
-    case CellType.Python:
-      extensions.value = [python()];
-      break;
-
-    case CellType.Supercollider:
-      extensions.value = [python()];
-      break;
-
-    default:
-      break;
-  }
-});
 </script>

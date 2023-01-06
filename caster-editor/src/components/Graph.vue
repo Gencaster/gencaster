@@ -67,6 +67,7 @@
 
     <!-- Node Content -->
     <div v-if="interfaceStore.showNodePanel" class="node-data">
+      <!-- @todo this can be nil? -->
       <ElementsNodeEditor :node-uuid="selectedNodes[0]" />
     </div>
 

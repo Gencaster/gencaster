@@ -16,9 +16,14 @@ export const useGraphStore = defineStore("graph", () => {
   const fetching: Ref<boolean> = ref(true);
   const uuid: Ref<string> = ref("");
 
-  const { executeQuery: getGraphQuery } = useGetGraphQuery({ variables: { uuid } });
+  const { executeQuery: getGraphQuery } = useGetGraphQuery({ variables: { uuid }, pause: true });
   async function getGraph(graphUuid: string) {
     uuid.value = graphUuid;
+    if (uuid.value === undefined) {
+      console.log("Graph UUID is undefined, this should not be!");
+      fetching.value = false;
+      return;
+    }
     console.log(`Get/reload graph ${uuid.value} from server`);
     const { data, fetching: isFetching } = await getGraphQuery();
     if (data.value?.graph)

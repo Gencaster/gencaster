@@ -1,10 +1,18 @@
 <template>
   <div>
-    <div v-if="cellData.cellType === CellType.Comment || cellData.cellType === CellType.Markdown ">
-      <ElementsBlockMarkdown :cell-data="cellData" :node-uuid="nodeUuid" :index="index" class="cell-editor" />
+    <div v-if="props.cellType === CellType.Comment || props.cellType === CellType.Markdown ">
+      <ElementsBlockMarkdown
+        :script-cell-uuid="props.scriptCellUuid"
+        :index="props.index"
+        class="cell-editor"
+      />
     </div>
-    <div v-if="cellData.cellType === CellType.Python || cellData.cellType === CellType.Supercollider ">
-      <ElementsBlockCodemirror :cell-data="cellData" :node-uuid="nodeUuid" :index="index" class="cell-editor" />
+    <div v-if="props.cellType === CellType.Python || props.cellType === CellType.Supercollider ">
+      <ElementsBlockCodemirror
+        :script-cell-uuid="props.scriptCellUuid"
+        :index="index"
+        class="cell-editor"
+      />
     </div>
   </div>
 </template>
@@ -16,8 +24,8 @@ import { CellType } from "@/graphql/graphql";
 const props = defineProps<BlockProps>();
 
 interface BlockProps {
-  cellData: ScriptCell
-  nodeUuid: string
+  scriptCellUuid: String
+  cellType: CellType
   index: number
 }
 </script>

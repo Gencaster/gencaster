@@ -16,6 +16,7 @@ function getGraphData() {
   graphStore.getGraph(uuid.value);
 }
 
+// how do we update the data?
 watch(uuid, getGraphData);
 
 getGraphData();

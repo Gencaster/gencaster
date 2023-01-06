@@ -1,5 +1,8 @@
 <template>
-  <div class="node-editor-outer">
+  <div v-if="fetching">
+    <ElementsLoading />
+  </div>
+  <div v-else class="node-editor-outer">
     <div class="title">
       <div class="left">
         <p>{{ node.name }}</p>
@@ -8,10 +11,10 @@
         </button>
       </div>
       <div class="right">
-        <button class="unstyled" @click="syncCellsWithServer()">
+        <button class="unstyled" :disabled="!scriptCellsModified" @click="syncCellsWithServer()">
           Save Scene
         </button>
-        <button class="unstyled" @click="closeNodeEditor()">
+        <button class="unstyled" @click="clickedClose()">
           Close
         </button>
       </div>
@@ -34,7 +37,9 @@
       <div v-for="(cell, index) in node.scriptCells.sort(x => x.cellOrder)" :key="cell.uuid">
         <div class="cell" :class="{ 'no-padding': addNoPaddingClass(cell.cellType) }">
           <ElementsBlock
-            :ref="el => cells.push(el)" :cell-data="cell" :node-uuid="nodeUuid" :index="index"
+            :script-cell-uuid="cell.uuid"
+            :cell-type="cell.cellType"
+            :index="index"
             class="cell-editor"
           />
           <div class="scriptcell-tools">
@@ -69,14 +74,36 @@
     <div v-if="showJSONData" class="json">
       <p>
         <br>
-        This is the graphUserState as in the local storage. Not all cell mutations might be commited yet. Save to see
+        This is the graphUserState as in the local storage. Not all cell mutations might be committed yet. Save to see
         latest data.
       </p>
       <Codemirror
         v-model="JSONViewerData" placeholder="Code goes here..." :autofocus="false" :indent-with-tab="true"
-        :tab-size="2" :extensions="extensions" :disabled="true"
+        :tab-size="2" :extensions="[json()]" :disabled="true"
       />
     </div>
+
+    <!-- Exit Page -->
+    <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
+      <span>
+        You have unsaved changes! <br>
+        Are you sure to exit without saving?
+      </span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button text bg @click="exitDialogVisible = false">Stop</el-button>
+          <el-button
+            color="#00ff00" text bg @click="async () => {
+              exitDialogVisible = false;
+              await syncCellsWithServer().then(async () => {
+                await closeEditor();
+              });
+            }"
+          >Save and exit</el-button>
+          <el-button color="#FF0000" @click="closeEditor()">Exit without saving</el-button>
+        </span>
+      </template>
+    </el-dialog>
 
     <!-- Change name dialog -->
     <el-dialog v-model="renameNodeDialogVisible" width="25%" title="Rename Node" :show-close="false">
@@ -97,6 +124,7 @@
 import { ElMessage } from "element-plus";
 import { Codemirror } from "vue-codemirror";
 import { json } from "@codemirror/lang-json";
+import type { Ref } from "vue";
 import { computed, ref } from "vue";
 
 import { storeToRefs } from "pinia";
@@ -125,14 +153,13 @@ const { $bus } = useNuxtApp();
 
 // Store
 const nodeStore = useNodeStore();
-const { node } = storeToRefs(nodeStore);
+const { node, fetching, scriptCellsModified } = storeToRefs(nodeStore);
 const graphStore = useGraphStore();
 
 // Variables
-const extensions = [json()];
-const cells = ref([]); // TODO: add <typeof ElementsBlock> or what is needed (<InstanceType?) to fix error above
 const renameNodeDialogVisible = ref(false);
 const renameNodeDialogName = ref("");
+const exitDialogVisible: Ref<boolean> = ref(false);
 
 // interface
 const showJSONData = ref(false);
@@ -141,8 +168,17 @@ const JSONViewerData = computed(() => {
   return JSON.stringify({ graphUserState: node.value }, null, 2);
 });
 
-const closeNodeEditor = async () => {
+const closeEditor = async () => {
+  // Graph view is responsible for removing us
   await $bus.$emit("closeNodeEditor");
+};
+
+const clickedClose = async () => {
+  if (scriptCellsModified.value) {
+    exitDialogVisible.value = true;
+    return;
+  }
+  await closeEditor();
 };
 
 const renameNodeFromDialog = async () => {
@@ -158,7 +194,10 @@ const renameNodeFromDialog = async () => {
 };
 
 const syncCellsWithServer = async () => {
-  await nodeStore.updateScriptCells(node.value.scriptCells);
+  await nodeStore.updateScriptCells(node.value.scriptCells).then(() => {
+    console.log("Updated cells on server successfully");
+    scriptCellsModified.value = false;
+  });
 };
 
 const addScriptCell = (type: CellType, position: number | undefined = undefined) => {
