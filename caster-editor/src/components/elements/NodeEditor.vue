@@ -194,10 +194,7 @@ const renameNodeFromDialog = async () => {
 };
 
 const syncCellsWithServer = async () => {
-  await nodeStore.updateScriptCells(node.value.scriptCells).then(() => {
-    console.log("Updated cells on server successfully");
-    scriptCellsModified.value = false;
-  });
+  await nodeStore.updateScriptCells(node.value.scriptCells);
 };
 
 const addScriptCell = (type: CellType, position: number | undefined = undefined) => {

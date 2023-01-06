@@ -52,6 +52,7 @@ export const useNodeStore = defineStore("node", () => {
       newCells: scriptCells
     }).then(() => {
       console.log(`Updated script cells ${scriptCells.map(x => x.uuid).join(",")}`);
+      scriptCellsModified.value = false;
     });
     await reloadFromServer();
   };
