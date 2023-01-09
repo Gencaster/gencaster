@@ -13,7 +13,8 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "lint:fix": "eslint . --fix",
-    "lint:ci": "eslint . --max-warnings 0"
+    "lint:ci": "eslint . --max-warnings 0",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@urql/vue": "^1.0.4",
@@ -24,6 +25,9 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^0.34.0",
+    "@graphql-codegen/cli": "^2.16.3",
+    "@graphql-codegen/typescript-operations": "^2.5.12",
     "@graphql-codegen/typescript-vue-urql": "^2.3.6",
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/jsdom": "^20.0.1",
