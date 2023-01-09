@@ -62,6 +62,7 @@ graphql-schema:
 	# assumes that you have docker running and a local setup for caster-editor
 	docker compose -f docker-compose.yml -f docker-compose.local.yml exec backend ./generate_graphql_schema.sh
 	cd caster-editor && yarn codegen
+	cd caster-front && npm run codegen
 	@echo "Sucessfully generated new schema in caster-editor/src/graphql/graphql.ts"
 
 test-backend: venv virtualenv
