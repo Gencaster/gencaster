@@ -170,3 +170,5 @@ CSRF_TRUSTED_ORIGINS = [
     "http://*.gencaster.org",
     "https://*.gencaster.org",
 ]
+
+STREAM_MAX_BEACON_SEC = 60
