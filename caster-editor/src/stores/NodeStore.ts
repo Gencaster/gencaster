@@ -19,11 +19,11 @@ export const useNodeStore = defineStore("node", () => {
       fetching.value = isFetching.value;
     }
     if (error.value)
-      console.log(`Error fetching node data of ${nodeUuid}`, error.value);
+      console.log(`Error fetching node data of ${uuid.value}`, error.value);
   }
 
   const reloadFromServer = async () => {
-    await getNode(node.value.uuid);
+    await getNode(uuid.value);
   };
 
   const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();

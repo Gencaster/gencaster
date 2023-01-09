@@ -66,12 +66,14 @@
     />
 
     <!-- Node Content -->
-    <div v-if="interfaceStore.showNodePanel" class="node-data">
+    <div v-if="showEditor" class="node-data">
       <!-- @todo this can be nil? -->
-      <ElementsNodeEditor :node-uuid="selectedNodes[0]" />
+      <ElementsNodeEditor
+        :node-uuid="selectedNodes[0]"
+      />
     </div>
 
-    <div v-if="!interfaceStore.showNodePanel" class="stats">
+    <div v-if="!showEditor" class="stats">
       <p>
         Nodes: {{ graphStore.graph.nodes.length }} &nbsp;
         Edges: {{ graphStore.graph.edges.length }}
@@ -117,6 +119,7 @@ import type { EventHandlers as GraphEventHandlers, Instance as GraphInstance, No
 import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
+import { useNodeStore } from "../stores/NodeStore";
 import { GraphSettings } from "@/assets/js/graphSettings";
 import type { Scalars, ScriptCell } from "@/graphql/graphql";
 import { Tab, useMenuStore } from "@/stores/MenuStore";
@@ -125,16 +128,16 @@ import { useInterfaceStore } from "@/stores/InterfaceStore";
 // Props
 const props = defineProps<GraphProps>();
 
-const { $bus } = useNuxtApp();
-
 // Composables
 const router = useRouter();
 
 // Store
 const menuStore = useMenuStore();
 const graphStore = useGraphStore();
-const interfaceStore = useInterfaceStore();
+const nodeStore = useNodeStore();
 const { graph: graphInStore } = storeToRefs(graphStore);
+const { scriptCellsModified } = storeToRefs(nodeStore);
+const { showEditor } = storeToRefs(useInterfaceStore());
 
 interface GraphProps {
   uuid: Scalars["UUID"]
@@ -145,7 +148,6 @@ const graph = ref<GraphInstance>();
 const selectedNodeScriptCells: Ref<ScriptCell[]> = ref([]);
 const selectedNodes: Ref<string[]> = ref([]);
 const selectedEdges: Ref<string[]> = ref([]);
-const nodeInPanel = ref<GraphNode>();
 
 // Config
 const configs = GraphSettings.standard;
@@ -232,18 +234,24 @@ const removeAny = () => {
   }
 };
 
-const openNodeEditor = (node: string) => {
-  if (!interfaceStore.showNodePanel) {
-    nodeInPanel.value = graphStore.graph.nodes.find(x => x.uuid === selectedNodes.value[0]);
-    interfaceStore.showNodePanel = true;
-  }
-  else {
+const openNodeEditor = async (node: string) => {
+  if (scriptCellsModified.value === true) {
     ElMessage({
-      message: "Close scene data first",
+      message: "Save or close node before opening a new one",
       type: "error",
       customClass: "messages-editor"
     });
+    return;
   }
+  showEditor.value = true;
+  // ui should display the loading animation
+  // so it is ok to first display the editor and then
+  // load the data
+  //
+  // we moved this from the node editor component to here
+  // because the destroy mechanism lead to some strange
+  // quirks when running async code
+  await nodeStore.getNode(selectedNodes.value[0]);
 };
 
 const eventHandlers: GraphEventHandlers = {
@@ -264,7 +272,4 @@ const eventHandlers: GraphEventHandlers = {
     }
   }
 };
-
-// Events
-$bus.$on("closeNodeEditor", () => interfaceStore.showNodePanel = false);
 </script>

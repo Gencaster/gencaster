@@ -34,7 +34,7 @@
       </button>
     </div>
     <div class="blocks">
-      <div v-for="(cell, index) in node.scriptCells.sort(x => x.cellOrder)" :key="cell.uuid">
+      <div v-for="(cell, index) in node.scriptCells" :key="cell.uuid">
         <div class="cell" :class="{ 'no-padding': addNoPaddingClass(cell.cellType) }">
           <ElementsBlock
             :script-cell-uuid="cell.uuid"
@@ -131,6 +131,7 @@ import { storeToRefs } from "pinia";
 import { useNodeStore } from "@/stores/NodeStore";
 import { CellType } from "@/graphql/graphql";
 import { useGraphStore } from "@/stores/GraphStore";
+import { useInterfaceStore } from "~~/src/stores/InterfaceStore";
 
 const props = defineProps({
   dev: {
@@ -148,13 +149,11 @@ enum MoveDirection {
   down = "Down"
 }
 
-// bus
-const { $bus } = useNuxtApp();
-
 // Store
 const nodeStore = useNodeStore();
 const { node, fetching, scriptCellsModified } = storeToRefs(nodeStore);
 const graphStore = useGraphStore();
+const { showEditor } = storeToRefs(useInterfaceStore());
 
 // Variables
 const renameNodeDialogVisible = ref(false);
@@ -169,8 +168,7 @@ const JSONViewerData = computed(() => {
 });
 
 const closeEditor = async () => {
-  // Graph view is responsible for removing us
-  await $bus.$emit("closeNodeEditor");
+  showEditor.value = false;
 };
 
 const clickedClose = async () => {
@@ -269,8 +267,4 @@ const moveScriptCell = (scriptCellUuid: string, direction: MoveDirection) => {
 const addNoPaddingClass = (blockCellType: CellType) => {
   return blockCellType === CellType.Markdown || blockCellType === CellType.Comment;
 };
-
-onMounted(() => {
-  nodeStore.getNode(props.nodeUuid);
-});
 </script>

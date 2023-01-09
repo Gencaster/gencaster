@@ -75,9 +75,4 @@ onMounted(() => {
       break;
   }
 });
-
-onBeforeUnmount(() => {
-  if (editorJS.value)
-    editorJS.value.destroy();
-});
 </script>
