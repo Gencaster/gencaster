@@ -149,6 +149,7 @@ export type NodeUpdate = {
 
 export type Query = {
   __typename?: 'Query';
+  getStream: Stream;
   graph: Graph;
   graphs: Array<Graph>;
   node: Node;
@@ -191,6 +192,15 @@ export type ScriptCellInput = {
   cellOrder?: InputMaybe<Scalars['Int']>;
   cellType?: InputMaybe<CellType>;
   uuid?: InputMaybe<Scalars['UUID']>;
+};
+
+export type Stream = {
+  __typename?: 'Stream';
+  active: Scalars['Boolean'];
+  createdDate: Scalars['DateTime'];
+  modifiedDate: Scalars['DateTime'];
+  streamPoint: StreamPoint;
+  uuid: Scalars['UUID'];
 };
 
 export type StreamPoint = {
@@ -325,6 +335,11 @@ export type UpdateScriptCellsMutationVariables = Exact<{
 
 
 export type UpdateScriptCellsMutation = { __typename?: 'Mutation', updateScriptCells?: any | null };
+
+export type GetStreamQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetStreamQuery = { __typename?: 'Query', getStream: { __typename?: 'Stream', active: boolean, modifiedDate: any, uuid: any, createdDate: any, streamPoint: { __typename?: 'StreamPoint', host: string, createdDate: any, janusInPort?: number | null, janusOutPort?: number | null, lastLive?: any | null, modifiedDate: any, port: number, useInput: boolean, uuid: any } } };
 
 
 export const MyQueryDocument = gql`
@@ -502,4 +517,29 @@ export const UpdateScriptCellsDocument = gql`
 
 export function useUpdateScriptCellsMutation() {
   return Urql.useMutation<UpdateScriptCellsMutation, UpdateScriptCellsMutationVariables>(UpdateScriptCellsDocument);
+};
+export const GetStreamDocument = gql`
+    query GetStream {
+  getStream {
+    active
+    modifiedDate
+    uuid
+    streamPoint {
+      host
+      createdDate
+      janusInPort
+      janusOutPort
+      lastLive
+      modifiedDate
+      port
+      useInput
+      uuid
+    }
+    createdDate
+  }
+}
+    `;
+
+export function useGetStreamQuery(options: Omit<Urql.UseQueryArgs<never, GetStreamQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetStreamQuery>({ query: GetStreamDocument, ...options });
 };

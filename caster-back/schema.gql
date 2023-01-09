@@ -88,6 +88,7 @@ input NodeUpdate {
 type Query {
   streamPoint(pk: ID): StreamPoint!
   streamPoints(filters: StreamPointFilter): [StreamPoint!]!
+  getStream: Stream!
   graphs: [Graph!]!
   graph(pk: ID): Graph!
   nodes: [Node!]!
@@ -107,6 +108,14 @@ input ScriptCellInput {
   cellType: CellType
   cellCode: String!
   cellOrder: Int
+}
+
+type Stream {
+  uuid: UUID!
+  createdDate: DateTime!
+  modifiedDate: DateTime!
+  active: Boolean!
+  streamPoint: StreamPoint!
 }
 
 type StreamPoint {

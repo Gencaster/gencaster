@@ -109,3 +109,23 @@ mutation deleteScriptCell($scriptCellUuid:UUID!) {
 mutation updateScriptCells($newCells: [ScriptCellInput!]!) {
   updateScriptCells(newCells: $newCells)
 }
+
+query GetStream {
+  getStream {
+    active
+    modifiedDate
+    uuid
+    streamPoint {
+      host
+      createdDate
+      janusInPort
+      janusOutPort
+      lastLive
+      modifiedDate
+      port
+      useInput
+      uuid
+    }
+    createdDate
+  }
+}

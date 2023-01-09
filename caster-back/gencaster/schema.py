@@ -11,6 +11,7 @@ from strawberry.types import Info
 from strawberry_django.fields.field import StrawberryDjangoField
 
 import story_graph.models as story_graph_models
+import stream.models as stream_models
 from story_graph.types import (
     EdgeInput,
     Graph,
@@ -20,7 +21,7 @@ from story_graph.types import (
     ScriptCell,
     ScriptCellInput,
 )
-from stream.types import StreamPoint
+from stream.types import Stream, StreamPoint
 
 
 class AuthStrawberryDjangoField(StrawberryDjangoField):
@@ -49,10 +50,15 @@ def _update_cells(new_cells: List[ScriptCellInput]):
             )
 
 
+async def get_stream():
+    return await stream_models.Stream.objects.aget_free_stream()
+
+
 @strawberry.type
 class Query:
     stream_point: StreamPoint = AuthStrawberryDjangoField()
     stream_points: List[StreamPoint] = AuthStrawberryDjangoField()
+    get_stream: Stream = strawberry.field(resolver=get_stream)
     graphs: List[Graph] = AuthStrawberryDjangoField()
     graph: Graph = AuthStrawberryDjangoField()
     nodes: List[Node] = AuthStrawberryDjangoField()
