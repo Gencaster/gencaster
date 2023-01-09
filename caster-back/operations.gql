@@ -129,3 +129,17 @@ query GetStream {
     createdDate
   }
 }
+
+query GetStreamPoints {
+  streamPoints {
+    createdDate
+    host
+    janusInPort
+    janusOutPort
+    lastLive
+    modifiedDate
+    port
+    useInput
+    uuid
+  }
+}

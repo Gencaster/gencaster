@@ -1,5 +1,9 @@
+from datetime import timedelta
+
 import strawberry
 import strawberry.django
+from django.conf import settings
+from django.utils import timezone
 from strawberry import auto
 
 from . import models
@@ -22,6 +26,13 @@ class StreamPoint:
     janus_in_port: auto
     janus_out_port: auto
     last_live: auto
+
+    @classmethod
+    def get_queryset(cls, auth, queryset, info):
+        return queryset.exclude(streams__active=True).filter(
+            last_live__gt=timezone.now()
+            - timedelta(seconds=settings.STREAM_MAX_BEACON_SEC)
+        )
 
 
 @strawberry.django.type(models.Stream)

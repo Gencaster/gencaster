@@ -341,6 +341,11 @@ export type GetStreamQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetStreamQuery = { __typename?: 'Query', getStream: { __typename?: 'Stream', active: boolean, modifiedDate: any, uuid: any, createdDate: any, streamPoint: { __typename?: 'StreamPoint', host: string, createdDate: any, janusInPort?: number | null, janusOutPort?: number | null, lastLive?: any | null, modifiedDate: any, port: number, useInput: boolean, uuid: any } } };
 
+export type GetStreamPointsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetStreamPointsQuery = { __typename?: 'Query', streamPoints: Array<{ __typename?: 'StreamPoint', createdDate: any, host: string, janusInPort?: number | null, janusOutPort?: number | null, lastLive?: any | null, modifiedDate: any, port: number, useInput: boolean, uuid: any }> };
+
 
 export const MyQueryDocument = gql`
     query MyQuery {
@@ -542,4 +547,23 @@ export const GetStreamDocument = gql`
 
 export function useGetStreamQuery(options: Omit<Urql.UseQueryArgs<never, GetStreamQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetStreamQuery>({ query: GetStreamDocument, ...options });
+};
+export const GetStreamPointsDocument = gql`
+    query GetStreamPoints {
+  streamPoints {
+    createdDate
+    host
+    janusInPort
+    janusOutPort
+    lastLive
+    modifiedDate
+    port
+    useInput
+    uuid
+  }
+}
+    `;
+
+export function useGetStreamPointsQuery(options: Omit<Urql.UseQueryArgs<never, GetStreamPointsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetStreamPointsQuery>({ query: GetStreamPointsDocument, ...options });
 };
