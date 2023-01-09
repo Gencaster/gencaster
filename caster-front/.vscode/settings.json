@@ -1,6 +1,10 @@
 {
   "prettier.enable": false,
   "editor.formatOnSave": false,
+  "recommendations": [
+    "Vue.volar",
+    "Vue.vscode-typescript-vue-plugin"
+  ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   }

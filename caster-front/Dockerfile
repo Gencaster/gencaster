@@ -4,9 +4,9 @@ FROM node:14-alpine
 WORKDIR /install
 
 ADD package.json .
-ADD yarn.lock .
+ADD package-lock.json .
 
-RUN yarn install --frozen-lockfile
+RUN npm install ci
 
 WORKDIR /root/caster-front
 
@@ -15,4 +15,4 @@ ENV HOST=0.0.0.0
 
 COPY . .
 
-CMD [ "yarn", "dev" ]
+CMD [ "npm", "run", "dev" ]
