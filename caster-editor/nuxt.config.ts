@@ -1,4 +1,14 @@
+const metaTitle = "Gencaster - Editor";
+
 export default defineNuxtConfig({
+
+  app: {
+    // pageTransition: { name: 'page', mode: 'out-in' },
+    head: {
+      title: metaTitle
+    }
+  },
+
   //   theme: {
   //     dark: true,
   //     colors: {
