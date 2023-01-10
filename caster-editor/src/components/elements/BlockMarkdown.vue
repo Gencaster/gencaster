@@ -19,6 +19,7 @@ import Header from "@editorjs/header"; // TODO: Fix Could not find a declaration
 import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { v4 as uuidv4 } from "uuid";
+import type { OutputData } from "@editorjs/editorjs";
 import { CellType } from "@/graphql/graphql";
 import type { GetNodeQuery, ScriptCell } from "@/graphql/graphql";
 import { useNodeStore } from "@/stores/NodeStore";
@@ -28,22 +29,6 @@ const props = defineProps<BlockProps>();
 interface BlockProps {
   scriptCellUuid: String
   index: number
-}
-
-interface Data {
-  text: string
-}
-
-interface Block {
-  id: string
-  type: string
-  data: Data
-}
-
-interface editorJsInterface {
-  time: number
-  blocks: Block[]
-  version: string
 }
 
 // Store
@@ -67,7 +52,7 @@ const editorChange = (api?: any, event?: any) => {
 onMounted(() => {
   const splitScriptCell = scriptCell.value?.cellCode.split(/\r\n|\r|\n/) || [];
 
-  const editorJSInitvalue: editorJsInterface = {
+  const editorJSInitvalue: OutputData = {
     time: Date.now(),
     blocks: [],
     version: "2.26.4"
