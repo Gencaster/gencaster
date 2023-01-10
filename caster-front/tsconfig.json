@@ -1,20 +1,14 @@
 {
-  "compilerOptions": {
-    "composite": true,
-    "emitDeclarationOnly": true,
-    "declaration": true,
-    "allowJs": true,
-    "declarationMap": true,
-    "checkJs": true,
-    "downlevelIteration": true,
-    "outDir": "dist",
-    "maxNodeModuleJsDepth": 100,
-    "skipLibCheck": false,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.config.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.vitest.json"
     }
-  }
+  ]
 }
