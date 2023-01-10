@@ -1,0 +1,181 @@
+// node-editor
+.node-editor-outer {
+  height: inherit;
+  widows: inherit;
+  padding: 5px 0px 15px 0px;
+  background-color: $mainWhite;
+  border: 1px solid $black;
+  overflow-y: scroll;
+
+  .title {
+    display: flex;
+    height: $menuHeight;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+
+    padding-left: 15px;
+    padding-right: 15px;
+
+    .left {
+      button {
+        color: $grey-dark;
+
+        &:hover {
+          font-style: italic;
+          background-color: transparent;
+        }
+      }
+    }
+
+    .right {
+      transform: translateX(8px);
+      text-decoration: underline;
+    }
+
+    .left,
+    .right {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .node-menu-bar {
+    display: flex;
+    align-items: center;
+    height: $menuHeight;
+    background-color: transparent;
+    margin-bottom: 20px;
+    border-bottom: 1px solid $grey;
+    border-top: 1px solid $grey;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    button {
+      border: 0;
+      margin: 0;
+      padding: 0;
+      background-color: transparent;
+      padding-left: 10px;
+      padding-right: 10px;
+      transform: translateX(-10px);
+
+      border-radius: 2px;
+      height: 24px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $grey-light;
+      }
+    }
+
+  }
+
+  .blocks {
+    display: block;
+    position: relative;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    .cell {
+      position: relative;
+      margin-bottom: 25px;
+      border-radius: 4px;
+      background-color: $grey-light;
+      padding: 20px 20px 15px 30px;
+      border: 1px solid $grey;
+
+      &.no-padding {
+        padding: 15px 0px 15px 65px;
+
+        .ce-block__content,
+        .ce-toolbar__content {
+          max-width: 1000px;
+          /* example value, adjust for your own use case */
+        }
+
+        .codex-editor__loader {
+          height: 38px !important;
+        }
+      }
+
+      .cell-type {
+        position: absolute;
+        top: 4px;
+        right: 8px;
+        color: $grey-dark;
+        font-style: italic;
+      }
+
+      &:hover {
+        .scriptcell-tools {
+          opacity: 1;
+        }
+      }
+
+      .scriptcell-tools {
+        display: flex;
+        align-items: center;
+        background-color: $grey-light;
+        position: absolute;
+        bottom: -12px;
+        right: 8px;
+        height: 32px;
+        border-radius: 4px;
+        border: 1px solid $grey;
+        opacity: 0;
+        transition: opacity .2s ease-in-out;
+
+
+        .divider {
+          height: 32px;
+          width: 1px;
+          background-color: $grey;
+        }
+
+        .celltype {
+          height: 32px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          pointer-events: none;
+
+          p {
+            margin: 0;
+            margin-left: 12px;
+            margin-right: 12px;
+            text-transform: lowercase;
+
+            &::first-letter {
+              text-transform: uppercase
+            }
+          }
+        }
+
+        .icon {
+          height: 32px;
+          width: 32px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+
+          &:hover {
+            background-color: $grey;
+          }
+
+          img {
+            height: 20px;
+            width: 20px;
+          }
+
+        }
+      }
+    }
+  }
+}

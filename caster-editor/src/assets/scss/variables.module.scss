@@ -1,4 +1,5 @@
 /* ============ Interface ============ */
+
 // spacing
 $globalPadding: 10px;
 $spacingXS: 0.25rem;
@@ -26,6 +27,7 @@ $grey-light: #F5F5F5;
 $grey-dark: #898989;
 $black: #000;
 $alertRed: #FF0000;
+$white: #ffffff;
 
 // paddings
 $paddingSidesDesktop: 15px;
@@ -43,3 +45,13 @@ $hoverColor: lightgrey;
 // transition
 // $transitionDefault: 300ms ease;
 // $transitionFast: 1750ms ease;
+
+:export {
+    greenLight: $green-light;
+    grey: $grey;
+    greyLight: $grey-light;
+    greyDark: $grey-dark;
+    black: $black;
+    alertRed: $alertRed;
+    white: $white;
+  }

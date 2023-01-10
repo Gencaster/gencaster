@@ -1,5 +1,5 @@
 import type { Edge as GraphEdge, Edges as GraphEdges, Node as GraphNode, Nodes as GraphNodes } from "v-network-graph";
-import type { Edge as StoryEdge, Node as StoryNode } from "../graphql/graphql";
+import type { Edge as StoryEdge, Node as StoryNode } from "@/graphql/graphql";
 
 export function transformEdges(edges: StoryEdge[]): GraphEdges {
   /*

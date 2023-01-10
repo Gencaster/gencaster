@@ -1,5 +1,4 @@
 import * as ElementPlus from "element-plus";
-// @ts-expect-error: Auto Imported by nuxt
 import { defineNuxtPlugin } from "#app";
 import "element-plus/dist/index.css";
 

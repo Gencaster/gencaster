@@ -1,13 +1,28 @@
-// https://v3.nuxtjs.org/api/configuration/nuxt.config
-// @ts-expect-error: Auto Imported by nuxt
+const metaTitle = "Gencaster - Editor";
+
 export default defineNuxtConfig({
-  title: "Gencaster - Editor",
+
+  app: {
+    // pageTransition: { name: 'page', mode: 'out-in' },
+    head: {
+      title: metaTitle
+    }
+  },
+
   //   theme: {
   //     dark: true,
   //     colors: {
   //       primary: '#ff0000',
   //     },
   //   },
+  // imports: {
+  //   autoImport: false
+  // },
+  modules: ["@pinia/nuxt"],
+  typescript: {
+    shim: false
+  },
+  ssr: false,
   css: ["assets/scss/main.scss", "v-network-graph/lib/style.css"],
   components: true,
   srcDir: "src/",

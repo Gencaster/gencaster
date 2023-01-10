@@ -2,5 +2,10 @@
     "python.analysis.typeCheckingMode": "basic",
     "cSpell.words": [
         "ssml"
-    ]
+    ],
+    "prettier.enable": false,
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
 }

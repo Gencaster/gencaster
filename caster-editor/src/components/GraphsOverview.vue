@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div v-if="fetching" class="fetching-screen">
+    <div v-if="graphsStore.fetching" class="fetching-screen">
       <elementsLoading />
     </div>
     <div v-else>
-      <div v-if="graphsData !== null">
+      <div v-if="graphsStore.graphs.length > 0">
         <h1>Select one of your Graphs</h1>
         <div class="demo-control-panel">
           <div>
             <br>
-            <div v-for="graph in graphsData.graphs" :key="graph.uuid" class="graph-selection" :value="graph.uuid">
+            <div v-for="graph in graphsStore.graphs" :key="graph.uuid" class="graph-selection" :value="graph.uuid">
               <NuxtLink class="graph" :to="`../graphs/${graph.uuid}`">
                 <div>
                   <p>{{ graph.name }}</p>
@@ -37,45 +37,11 @@
   </div>
 </template>
 
-<script lang="ts">
-import { useGetGraphsQuery } from "../graphql/graphql";
+<script lang="ts" setup>
+import { useGraphsStore } from "@/stores/GraphsStore";
+const graphsStore = useGraphsStore();
 
-export default {
-  name: "GraphsOverviewComponent",
-
-  data() {
-    return {
-      fetching: true,
-      result: null,
-      graphsData: {
-        graphs: [{
-          uuid: "",
-          name: ""
-        }]
-      }
-    };
-  },
-  mounted() {
-    this.initQuery();
-  },
-  methods: {
-    async initQuery() {
-      try {
-        const result = await useGetGraphsQuery();
-
-        this.result = result;
-        this.graphsData = result.data;
-        this.fetching = result.fetching;
-        this.error = result.error;
-      }
-      catch (error) {
-        console.log("not allowed");
-      }
-    },
-
-    createNewGraph() {
-      alert("tbd");
-    }
-  }
+const createNewGraph = () => {
+  alert("tbd");
 };
 </script>

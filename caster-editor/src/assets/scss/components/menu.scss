@@ -24,6 +24,12 @@
       width: 33%;
     }
 
+    &.level-2 {
+      .left, .middle, .right {
+        width: auto;
+      }
+    }
+
     .middle {
       width: 33%;
       display: flex;
