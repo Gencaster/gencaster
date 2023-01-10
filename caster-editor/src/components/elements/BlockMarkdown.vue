@@ -1,6 +1,5 @@
 <template>
   <div class="block">
-    {{}}
     <!-- markdown -->
     <div v-if="scriptCell?.cellType === CellType.Markdown" class="editor-markdown">
       <div ref="editorDom" />
@@ -18,7 +17,6 @@ import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header"; // TODO: Fix Could not find a declaration file for module '@editorjs/header'.
 import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
-import { v4 as uuidv4 } from "uuid";
 import type { OutputData } from "@editorjs/editorjs";
 import { CellType } from "@/graphql/graphql";
 import type { GetNodeQuery, ScriptCell } from "@/graphql/graphql";
@@ -60,7 +58,7 @@ onMounted(() => {
 
   splitScriptCell.forEach((string) => {
     editorJSInitvalue.blocks.push({
-      id: uuidv4(),
+      id: self.crypto.randomUUID(),
       type: "paragraph",
       data: {
         text: string
