@@ -91,16 +91,16 @@
       </span>
       <template #footer>
         <span class="dialog-footer">
-          <el-button text bg @click="exitDialogVisible = false">Stop</el-button>
+          <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
+          <el-button text bg @click="closeEditor()">Exit without saving</el-button>
           <el-button
-            color="#00ff00" text bg @click="async () => {
+            color="#ADFF00" @click="async () => {
               exitDialogVisible = false;
               await syncCellsWithServer().then(async () => {
                 await closeEditor();
               });
             }"
           >Save and exit</el-button>
-          <el-button color="#FF0000" @click="closeEditor()">Exit without saving</el-button>
         </span>
       </template>
     </el-dialog>

@@ -30,7 +30,6 @@
     "mitt": "^3.0.0",
     "pinia": "^2.0.28",
     "typescript": "^4.8.4",
-    "uuid": "^9.0.0",
     "v-network-graph": "^0.6.10",
     "vue-codemirror": "^6.1.1"
   },
