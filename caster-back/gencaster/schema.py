@@ -14,6 +14,7 @@ import story_graph.models as story_graph_models
 from story_graph.types import (
     EdgeInput,
     Graph,
+    NewScriptCellInput,
     Node,
     NodeCreate,
     NodeUpdate,
@@ -139,7 +140,10 @@ class Mutation:
 
     @strawberry.mutation
     async def add_script_cell(
-        self, info, node_uuid: uuid.UUID, order: int
+        self,
+        info,
+        node_uuid: uuid.UUID,
+        new_script_cell: NewScriptCellInput,
     ) -> ScriptCell:
         await graphql_check_authenticated(info)
         try:
@@ -148,7 +152,9 @@ class Mutation:
             )
             script_cell: story_graph_models.ScriptCell = (
                 await story_graph_models.ScriptCell.objects.acreate(
-                    cell_order=order,
+                    cell_order=new_script_cell.cell_order,
+                    cell_type=new_script_cell.cell_type,
+                    cell_code=new_script_cell.cell_code,
                     node=node,
                 )
             )

@@ -90,8 +90,8 @@ export type MutationAddNodeArgs = {
 
 
 export type MutationAddScriptCellArgs = {
+  newScriptCell: NewScriptCellInput;
   nodeUuid: Scalars['UUID'];
-  order: Scalars['Int'];
 };
 
 
@@ -117,6 +117,12 @@ export type MutationUpdateNodeArgs = {
 
 export type MutationUpdateScriptCellsArgs = {
   newCells: Array<ScriptCellInput>;
+};
+
+export type NewScriptCellInput = {
+  cellCode: Scalars['String'];
+  cellOrder?: InputMaybe<Scalars['Int']>;
+  cellType?: InputMaybe<CellType>;
 };
 
 export type Node = {
@@ -306,7 +312,7 @@ export type DeleteEdgeMutation = { __typename?: 'Mutation', deleteEdge?: any | n
 
 export type CreateScriptCellMutationVariables = Exact<{
   nodeUuid: Scalars['UUID'];
-  order: Scalars['Int'];
+  newScriptCell: NewScriptCellInput;
 }>;
 
 
@@ -472,8 +478,8 @@ export function useDeleteEdgeMutation() {
   return Urql.useMutation<DeleteEdgeMutation, DeleteEdgeMutationVariables>(DeleteEdgeDocument);
 };
 export const CreateScriptCellDocument = gql`
-    mutation createScriptCell($nodeUuid: UUID!, $order: Int!) {
-  addScriptCell(nodeUuid: $nodeUuid, order: $order) {
+    mutation createScriptCell($nodeUuid: UUID!, $newScriptCell: NewScriptCellInput!) {
+  addScriptCell(nodeUuid: $nodeUuid, newScriptCell: $newScriptCell) {
     cellOrder
     uuid
     cellType

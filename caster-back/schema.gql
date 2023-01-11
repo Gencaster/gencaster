@@ -53,9 +53,15 @@ type Mutation {
   addEdge(newEdge: EdgeInput!): Void
   deleteEdge(edgeUuid: UUID!): Void
   deleteNode(nodeUuid: UUID!): Void
-  addScriptCell(nodeUuid: UUID!, order: Int!): ScriptCell!
+  addScriptCell(nodeUuid: UUID!, newScriptCell: NewScriptCellInput!): ScriptCell!
   updateScriptCells(newCells: [ScriptCellInput!]!): Void
   deleteScriptCell(scriptCellUuid: UUID!): Void
+}
+
+input NewScriptCellInput {
+  cellType: CellType
+  cellCode: String!
+  cellOrder: Int
 }
 
 type Node {
