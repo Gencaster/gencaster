@@ -92,8 +92,8 @@ mutation deleteEdge($edgeUuid: UUID!) {
   deleteEdge(edgeUuid: $edgeUuid)
 }
 
-mutation createScriptCell($nodeUuid: UUID!, $order: Int!) {
-  addScriptCell(nodeUuid: $nodeUuid, order: $order) {
+mutation createScriptCell($nodeUuid: UUID!, $newScriptCell: NewScriptCellInput!) {
+  addScriptCell(nodeUuid: $nodeUuid, newScriptCell: $newScriptCell) {
     cellOrder
     uuid
     cellType

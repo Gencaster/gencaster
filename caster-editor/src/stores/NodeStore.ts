@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import type { Ref } from "vue";
-import type { Exact, GetNodeQuery, ScriptCellInput } from "../graphql/graphql";
+import type { Exact, GetNodeQuery, NewScriptCellInput, Scalars, ScriptCellInput } from "../graphql/graphql";
 import { useCreateScriptCellMutation, useDeleteScriptCellMutation, useGetNodeQuery, useUpdateNodeMutation, useUpdateScriptCellsMutation } from "../graphql/graphql";
 
 export const useNodeStore = defineStore("node", () => {
@@ -36,7 +36,7 @@ export const useNodeStore = defineStore("node", () => {
   };
 
   const { executeMutation: createScriptCellMutation } = useCreateScriptCellMutation();
-  const createScriptCell = async (scriptCell: Exact<{ nodeUuid: any; order: number }>) => {
+  const createScriptCell = async (scriptCell: Exact<{ nodeUuid: Scalars["UUID"]; newScriptCell: NewScriptCellInput }>) => {
     await createScriptCellMutation(scriptCell);
     await reloadFromServer();
   };

@@ -205,7 +205,12 @@ const addScriptCell = (type: CellType, position: number | undefined = undefined)
   // not synced to the server yet
   nodeStore.createScriptCell({
     nodeUuid: node.value.uuid,
-    order: node.value.scriptCells.length // add to bottom
+    newScriptCell: {
+      // add cell as last cell by searching for highest current cell order
+      cellOrder: Math.max(...node.value.scriptCells.map((x) => { return x.cellOrder; })) + 1,
+      cellCode: "",
+      cellType: type
+    }
   });
 };
 
