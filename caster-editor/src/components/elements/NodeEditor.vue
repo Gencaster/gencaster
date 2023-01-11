@@ -207,7 +207,7 @@ const addScriptCell = (type: CellType, position: number | undefined = undefined)
     nodeUuid: node.value.uuid,
     newScriptCell: {
       // add cell as last cell by searching for highest current cell order
-      cellOrder: Math.max(...node.value.scriptCells.map((x) => { return x.cellOrder; })) + 1,
+      cellOrder: node.value.scriptCells.length > 0 ? Math.max(...node.value.scriptCells.map((x) => { return x.cellOrder; })) + 1 : 0,
       cellCode: "",
       cellType: type
     }
