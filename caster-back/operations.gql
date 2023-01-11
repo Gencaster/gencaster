@@ -1,21 +1,3 @@
-query MyQuery {
-  graphs {
-    name
-  }
-}
-
-query testQuery {
-  graphs {
-    nodes {
-      name
-    }
-    edges {
-      uuid
-    }
-    name
-  }
-}
-
 query GetGraphs {
   graphs {
     uuid
