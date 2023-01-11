@@ -91,7 +91,7 @@
       </span>
       <template #footer>
         <span class="dialog-footer">
-          <!-- <el-button text bg @click="exitDialogVisible = false">Stop</el-button> -->
+          <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
           <el-button text bg @click="closeEditor()">Exit without saving</el-button>
           <el-button
             color="#ADFF00" @click="async () => {
