@@ -141,5 +141,7 @@ query GetStreamPoints {
     port
     useInput
     uuid
+    janusOutRoom
+    janusInRoom
   }
 }

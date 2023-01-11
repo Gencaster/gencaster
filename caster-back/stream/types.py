@@ -26,6 +26,8 @@ class StreamPoint:
     janus_in_port: auto
     janus_out_port: auto
     last_live: auto
+    janus_in_room: auto
+    janus_out_room: auto
 
     @classmethod
     def get_queryset(cls, auth, queryset, info):

@@ -208,7 +208,9 @@ export type StreamPoint = {
   createdDate: Scalars['DateTime'];
   host: Scalars['String'];
   janusInPort?: Maybe<Scalars['Int']>;
+  janusInRoom?: Maybe<Scalars['Int']>;
   janusOutPort?: Maybe<Scalars['Int']>;
+  janusOutRoom?: Maybe<Scalars['Int']>;
   lastLive?: Maybe<Scalars['DateTime']>;
   modifiedDate: Scalars['DateTime'];
   port: Scalars['Int'];
@@ -344,7 +346,7 @@ export type GetStreamQuery = { __typename?: 'Query', getStream: { __typename?: '
 export type GetStreamPointsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetStreamPointsQuery = { __typename?: 'Query', streamPoints: Array<{ __typename?: 'StreamPoint', createdDate: any, host: string, janusInPort?: number | null, janusOutPort?: number | null, lastLive?: any | null, modifiedDate: any, port: number, useInput: boolean, uuid: any }> };
+export type GetStreamPointsQuery = { __typename?: 'Query', streamPoints: Array<{ __typename?: 'StreamPoint', createdDate: any, host: string, janusInPort?: number | null, janusOutPort?: number | null, lastLive?: any | null, modifiedDate: any, port: number, useInput: boolean, uuid: any, janusOutRoom?: number | null, janusInRoom?: number | null }> };
 
 
 export const MyQueryDocument = gql`
@@ -560,6 +562,8 @@ export const GetStreamPointsDocument = gql`
     port
     useInput
     uuid
+    janusOutRoom
+    janusInRoom
   }
 }
     `;
