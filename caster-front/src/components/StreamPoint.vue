@@ -7,11 +7,18 @@ const props = defineProps<{
   uuid: String
 }>();
 
-const { streamPoints } = storeToRefs(useStreamPointStore());
+const { streamPoints, activeStreamPoint } = storeToRefs(useStreamPointStore());
 
 const streamPoint = ref(streamPoints.value.find(x => x.uuid === props.uuid));
+
+const setActive = () => {
+  if (streamPoint.value !== undefined)
+    activeStreamPoint.value = streamPoint.value;
+};
 </script>
 
 <template>
-  <h3>Stream Point {{ streamPoint?.port }}</h3>
+  <h3 @click="() => { setActive() }">
+    Stream Point {{ streamPoint?.port }}
+  </h3>
 </template>

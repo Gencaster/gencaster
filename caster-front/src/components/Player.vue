@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import type { Ref } from "vue";
-import { onMounted, onUpdated, ref } from "vue";
+import { ref, watch } from "vue";
+import { useStreamPointStore } from "@/stores/StreamPoints";
+
+const { activeStreamPoint, micActive, play } = storeToRefs(useStreamPointStore());
 
 let audioBridgeWebRtcUp = false;
 const { hostname, protocol } = window.location;
@@ -12,22 +15,30 @@ const server
 
 // @ts-expect-error: janus is an old library w/o es support
 const Janus = window.Janus;
-let mixertest: any = null;
+let audioBridge: any = null;
 let streaming: any = null;
+const streamingConnected: Ref<boolean> = ref(false);
+const audioBridgeConnected: Ref<boolean> = ref(false);
 
 const audioPlayer: any = ref(null);
 
 let janusInstance: any;
 
-const changeStream = () => {
-  console.log("Change stream");
-};
-
 const opaqueId = `GenCaster_${Janus.randomString(12)}`;
 const sendOpaqueId = `GenCasterSend_${Janus.randomString(12)}`;
 
+const switchAudioBridgeRoom = (roomId: number) => {
+  audioBridge.send({
+    message: {
+      request: audioBridgeConnected.value ? "changeroom" : "join",
+      room: roomId
+    }
+  });
+  audioBridgeConnected.value = true;
+};
+
 const makeJanusMicOffer = () => {
-  mixertest.createOffer({
+  audioBridge.createOffer({
     media: { video: false }, // This is an audio only room
     customizeSdp(jsep: any) {
       if (!jsep.sdp.includes("stereo=1")) {
@@ -39,12 +50,11 @@ const makeJanusMicOffer = () => {
       }
     },
     success(jsep: any) {
-      Janus.debug("Got SDP!", jsep);
       const publish = {
         request: "configure",
         muted: false
       };
-      mixertest.send({ message: publish, jsep });
+      audioBridge.send({ message: publish, jsep });
     },
     error(error: any) {
       Janus.error(`WebRTC error: ${error}`);
@@ -57,7 +67,7 @@ const setupJanusAudioBridge = () => {
     plugin: "janus.plugin.audiobridge",
     opaqueId: sendOpaqueId,
     success(pluginHandle: any) {
-      mixertest = pluginHandle;
+      audioBridge = pluginHandle;
       Janus.log("Audiobridge attached");
     },
     onmessage(msg: any, jsep: any) {
@@ -75,45 +85,32 @@ const setupJanusAudioBridge = () => {
           break;
       }
       if (jsep)
-        mixertest.handleRemoteJsep({ jsep });
+        audioBridge.handleRemoteJsep({ jsep });
     }
   });
 };
 
-const updateStreamsList = () => {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const that = this;
-  const body = { request: "list" };
-  console.log("Sending message:", body);
+const switchStream = (streamId: number) => {
   streaming.send({
-    message: body,
+    message: {
+      // on first connection we need to use the watch endpoint
+      request: streamingConnected.value ? "switch" : "watch",
+      id: streamId
+    }
+  });
+  streamingConnected.value = true;
+};
+
+const getJanusStreamPoints = () => {
+  streaming.send({
+    message: { request: "list" },
     success(result: any) {
       if (!result) {
-        alert("Got no response to our query for available streams");
+        console.log("Got no response to our query for available streams");
         return;
       }
-      if (result.list) {
-        const list = result.list;
-        console.log("Got a list of available streams");
-        console.log(list);
-        for (const mp in list) {
-          console.log(
-                `>> [${list[mp].id}] ${list[mp].description} (${list[mp].type})`
-          );
-        }
-        // start random one
-        if (list && list[0]) {
-          const randomStream = list[Math.floor(Math.random() * list.length)];
-          // alert(`Use stream ${randomStream.id}`);
-          const streamId = randomStream.id;
-          const body = {
-            request: "watch",
-            id: randomStream.id
-          };
-          console.log(body);
-          streaming.send({ message: body });
-        }
-      }
+      if (result.list)
+        console.log("Got a list of available streams", result.list);
     }
   });
 };
@@ -126,12 +123,9 @@ const setupJanusStreaming = () => {
     success: (pluginHandle: any) => {
       streaming = pluginHandle;
       console.log(`Plugin attached! (${streaming.getPlugin()}, id=${streaming.getId()})`);
-      // Setup streaming session
-      updateStreamsList();
     },
     error(error: any) {
       console.error("  -- Error attaching plugin... ", error);
-      alert(`Error attaching plugin... ${error}`);
     },
     iceState(state: any) {
       console.log(`ICE state changed to ${state}`);
@@ -139,10 +133,8 @@ const setupJanusStreaming = () => {
     webrtcState(on: any) {
       console.log(`Janus says our WebRTC PeerConnection is ${on ? "up" : "down"} now`);
     },
-    onmessage(msg: any, jsep: any) {
-      console.log(" ::: Got a message :::", msg);
+    onmessage(msg: any, jsep: RTCSessionDescription) {
       if (jsep) {
-        console.log("Handling SDP as well...", jsep);
         // eslint-disable-next-line unicorn/prefer-includes
         const stereo = jsep.sdp.indexOf("stereo=1") !== -1;
         // Offer from the plugin, let's answer
@@ -150,24 +142,23 @@ const setupJanusStreaming = () => {
           jsep,
           // We want recvonly audio/video and, if negotiated, datachannels
           media: { audioSend: false, videoSend: false, data: true },
-          customizeSdp(jsep: any) {
+          customizeSdp(jsep: RTCSessionDescription) {
             // eslint-disable-next-line unicorn/prefer-includes
             if (stereo && jsep.sdp.indexOf("stereo=1") === -1) {
               // Make sure that our offer contains stereo too
+              // @ts-expect-error: sdp seems readonly but we ignore it
               jsep.sdp = jsep.sdp.replace(
                 "useinbandfec=1",
                 "useinbandfec=1;stereo=1"
               );
             }
           },
-          success(jsep: any) {
-            console.log("Got SDP!", jsep);
+          success(jsep: RTCSessionDescription) {
             const body = { request: "start" };
             streaming.send({ message: body, jsep });
           },
           error(error: any) {
             console.error("WebRTC error:", error);
-            alert(`WebRTC error... ${error.message}`);
           }
         });
       }
@@ -192,7 +183,6 @@ const initJanus = () => {
         alert("Unfortunately, your devices doesn't seem to support WebRTC.");
         return;
       }
-      console.log("Something happened");
       janusInstance = new Janus({
         server,
         iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
@@ -208,24 +198,37 @@ const initJanus = () => {
   });
 };
 
-const startMicStreaming = () => {
-  console.log("Start mic streaming");
-  mixertest.send({
-    message: {
-      request: "join",
-      room: 1
-    }
-  });
-};
-
 const stopMicStreaming = () => {
   console.log("Stop mic streaming");
-  mixertest.send({
+  audioBridge.send({
     message: {
       request: "leave"
     }
   });
 };
+
+watch(activeStreamPoint, (newStreamPoint) => {
+  console.log("Change to stream", newStreamPoint);
+  if (newStreamPoint.janusOutRoom)
+    switchStream(newStreamPoint.janusOutRoom);
+  if (newStreamPoint.janusInRoom && micActive.value)
+    switchAudioBridgeRoom(newStreamPoint.janusInRoom);
+});
+
+watch(micActive, (micState) => {
+  console.log(`Change mic status to ${micState}`);
+  if (micState === false) {
+    stopMicStreaming();
+    return;
+  }
+  if (activeStreamPoint.value.janusInRoom)
+    switchAudioBridgeRoom(activeStreamPoint.value.janusInRoom);
+});
+
+watch(play, (playState) => {
+  console.log(`Change play status to ${playState}`);
+  playState ? audioPlayer.value.play() : audioPlayer.value.pause();
+});
 
 initJanus();
 </script>
@@ -234,14 +237,21 @@ initJanus();
   <h3>Player</h3>
 
   <audio ref="audioPlayer" controls />
-  <p>
-    <button @click="startMicStreaming()">
-      Start microphone
+
+  <div class="player-control">
+    <button :disabled="activeStreamPoint === null" @click="() => { play = true }">
+      Play
     </button>
-  </p>
-  <p>
-    <button @click="stopMicStreaming()">
-      Stop microphone
+    <button :disabled="activeStreamPoint === null" @click="() => { play = false }">
+      Pause
     </button>
-  </p>
+    <button @click="() => { micActive = !micActive }">
+      Change mic status
+    </button>
+  </div>
+
+  <div class="player-info">
+    <span>Currently on stream {{ activeStreamPoint.janusOutRoom }}</span><br>
+    <span>Mic is active: {{ micActive }}</span>
+  </div>
 </template>
