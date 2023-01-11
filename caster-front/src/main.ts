@@ -10,7 +10,7 @@ import "./assets/main.css";
 const app = createApp(App);
 
 app.use(urql, {
-  url: "http://127.0.0.1:8081/graphql",
+  url: import.meta.env.VITE_BACKEND_GRAPHQL_URL || "http://127.0.0.1:8081/graphql",
   requestPolicy: "network-only",
   fetchOptions: {
     credentials: "include"
