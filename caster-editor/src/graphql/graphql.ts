@@ -237,16 +237,6 @@ export type UuidFilterLookup = {
   startsWith?: InputMaybe<Scalars['UUID']>;
 };
 
-export type MyQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MyQueryQuery = { __typename?: 'Query', graphs: Array<{ __typename?: 'Graph', name: string }> };
-
-export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type TestQueryQuery = { __typename?: 'Query', graphs: Array<{ __typename?: 'Graph', name: string, nodes: Array<{ __typename?: 'Node', name: string }>, edges: Array<{ __typename?: 'Edge', uuid: any }> }> };
-
 export type GetGraphsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -333,34 +323,6 @@ export type UpdateScriptCellsMutationVariables = Exact<{
 export type UpdateScriptCellsMutation = { __typename?: 'Mutation', updateScriptCells?: any | null };
 
 
-export const MyQueryDocument = gql`
-    query MyQuery {
-  graphs {
-    name
-  }
-}
-    `;
-
-export function useMyQueryQuery(options: Omit<Urql.UseQueryArgs<never, MyQueryQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<MyQueryQuery>({ query: MyQueryDocument, ...options });
-};
-export const TestQueryDocument = gql`
-    query testQuery {
-  graphs {
-    nodes {
-      name
-    }
-    edges {
-      uuid
-    }
-    name
-  }
-}
-    `;
-
-export function useTestQueryQuery(options: Omit<Urql.UseQueryArgs<never, TestQueryQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<TestQueryQuery>({ query: TestQueryDocument, ...options });
-};
 export const GetGraphsDocument = gql`
     query GetGraphs {
   graphs {
