@@ -217,6 +217,16 @@ export type StreamPointFilter = {
   uuid?: InputMaybe<UuidFilterLookup>;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  count: Scalars['Int'];
+};
+
+
+export type SubscriptionCountArgs = {
+  target?: Scalars['Int'];
+};
+
 export type UuidFilterLookup = {
   contains?: InputMaybe<Scalars['UUID']>;
   endsWith?: InputMaybe<Scalars['UUID']>;
@@ -321,6 +331,11 @@ export type UpdateScriptCellsMutationVariables = Exact<{
 
 
 export type UpdateScriptCellsMutation = { __typename?: 'Mutation', updateScriptCells?: any | null };
+
+export type CountSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CountSubscriptionSubscription = { __typename?: 'Subscription', count: number };
 
 
 export const GetGraphsDocument = gql`
@@ -470,4 +485,13 @@ export const UpdateScriptCellsDocument = gql`
 
 export function useUpdateScriptCellsMutation() {
   return Urql.useMutation<UpdateScriptCellsMutation, UpdateScriptCellsMutationVariables>(UpdateScriptCellsDocument);
+};
+export const CountSubscriptionDocument = gql`
+    subscription CountSubscription {
+  count
+}
+    `;
+
+export function useCountSubscriptionSubscription<R = CountSubscriptionSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, CountSubscriptionSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<CountSubscriptionSubscription, R>) {
+  return Urql.useSubscription<CountSubscriptionSubscription, R, CountSubscriptionSubscriptionVariables>({ query: CountSubscriptionDocument, ...options }, handler);
 };

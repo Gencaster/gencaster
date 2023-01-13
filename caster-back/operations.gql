@@ -91,3 +91,7 @@ mutation deleteScriptCell($scriptCellUuid:UUID!) {
 mutation updateScriptCells($newCells: [ScriptCellInput!]!) {
   updateScriptCells(newCells: $newCells)
 }
+
+subscription CountSubscription {
+  count
+}

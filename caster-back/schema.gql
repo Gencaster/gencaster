@@ -132,6 +132,10 @@ input StreamPointFilter {
   janusInPort: IntFilterLookup
 }
 
+type Subscription {
+  count(target: Int! = 100): Int!
+}
+
 scalar UUID
 
 input UUIDFilterLookup {
