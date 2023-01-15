@@ -175,12 +175,20 @@ const hideRemoveButton = computed(() => {
 });
 
 const addNode = async () => {
+  if (!graph.value) {
+    console.error("can't add node since graph not defined", graph);
+    return;
+  }
+
+  const { height, width } = graph.value.getSizes();
+  const centerPosition = graph.value.translateFromDomToSvgCoordinates({ x: width / 2, y: height / 2 });
+
   await graphStore.addNode({
     graphUuid: props.uuid,
     name: "new node",
     color: "primary",
-    positionX: graph.value?.getPan().x,
-    positionY: graph.value?.getPan().y
+    positionX: centerPosition.x,
+    positionY: centerPosition.y
   });
 };
 
