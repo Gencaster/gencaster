@@ -23,6 +23,15 @@ class StreamPointManager(models.Manager["StreamPoint"]):
 
 
 class StreamPoint(models.Model):
+    """Stores metadata for each SuperCollider/Janus instance
+    and how we can interact with this instance.
+
+    Every SuperCollider instance that send a beacon to us
+    via the :ref:`OSC Server` will be a StreamPoint.
+    Consider ``last_live`` to filter out non-live from live
+    instances.
+    """
+
     objects = StreamPointManager()
 
     uuid = models.UUIDField(
@@ -173,6 +182,12 @@ class StreamManager(models.Manager):
 
 
 class Stream(models.Model):
+    """Assigns a :class:`~StreamPoint` to a user/client.
+    This allows us to see which streams are currently in use
+    and also by which user.
+    It also allows us to trace past streams.
+    """
+
     objects = StreamManager()
 
     uuid = models.UUIDField(
@@ -212,7 +227,19 @@ class Stream(models.Model):
 
 
 class StreamInstruction(models.Model):
+    """Instruction for a :class:`StreamPoint`, most likely to be
+    created from a :class:`~story_graph.models.ScriptCell`.
+    """
+
     class InstructionState(models.TextChoices):
+        """Possible states of our instruction.
+
+        .. seealso::
+
+            See also :ref:`OSC acknowledge message`.
+
+        """
+
         SUCCESS = "SUCCESS", _("SUCCESS")
         FAILURE = "FAILURE", _("FAILURE")
         READY = "READY", _("READY")
@@ -282,6 +309,12 @@ class StreamInstruction(models.Model):
 
 
 class AudioFile(models.Model):
+    """Represents a local audio file on the server.
+    As SuperCollider and Django are running on the same server we
+    can pass these files to the SuperCollider instances as they
+    are mounted within each service.
+    """
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -324,6 +357,10 @@ class AudioFile(models.Model):
 
 
 class TextToSpeech(models.Model):
+    """Handles the conversion of text to speech
+    by using external APIs.
+    """
+
     class VoiceNameChoices(models.TextChoices):
         """See `here <https://cloud.google.com/text-to-speech/docs/voices>`_.
 
@@ -382,8 +419,22 @@ class TextToSpeech(models.Model):
         voice_name: str = VoiceNameChoices.DE_STANDARD_D__MALE,
         force_new: bool = False,
     ) -> "TextToSpeech":
-        """Copied from
-        `google examples <https://cloud.google.com/text-to-speech/docs/libraries#client-libraries-install-python>`_
+        """
+        Creates a new instance for a given text by calling the Google Cloud.
+        We will not call the API if we find the exact same text in our database,
+        in which case we will return the object from the database.
+        This caching behavior can be controlled via ``force_new``.
+
+        .. seealso::
+
+            Copied from
+            `google examples <https://cloud.google.com/text-to-speech/docs/libraries#client-libraries-install-python>`_
+
+
+        :param ssml_text: SSML text to convert to audio
+        :param voice_name: Voice name to use
+        :param force_new: If new we will not search for existing objects
+            with the same text.
         """
         if not force_new:
             existing_text = cls.objects.filter(
