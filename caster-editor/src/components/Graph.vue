@@ -251,6 +251,9 @@ const openNodeEditor = async (node: string) => {
 
 const eventHandlers: GraphEventHandlers = {
   // see https://dash14.github.io/v-network-graph/reference/events.html#events-with-event-handlers
+  "view:load": () => {
+    graph.value?.fitToContents();
+  },
   "node:dblclick": ({ node }) => {
     openNodeEditor(node);
   },
