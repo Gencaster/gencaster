@@ -20,12 +20,6 @@
             </span>
           </div>
           <div class="menu-items right">
-            <button class="unstyled state" @click="saveState()">
-              <!-- @todo -->
-              <div class="state-indicator" :class="{ saved: !true }" />
-              Save
-            </button>
-
             <button class="unstyled" @click="exitWithoutSaving()">
               Exit
             </button>
@@ -115,13 +109,13 @@
 
 <script lang="ts" setup>
 import { ElMessage } from "element-plus";
-import type { EventHandlers as GraphEventHandlers, Instance as GraphInstance, Node as GraphNode } from "v-network-graph";
+import type { EventHandlers as GraphEventHandlers, Instance as GraphInstance } from "v-network-graph";
 import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
 import { useNodeStore } from "../stores/NodeStore";
 import { GraphSettings } from "@/assets/js/graphSettings";
-import type { Scalars, ScriptCell } from "@/graphql/graphql";
+import type { Scalars } from "@/graphql/graphql";
 import { Tab, useMenuStore } from "@/stores/MenuStore";
 import { useGraphStore } from "@/stores/GraphStore";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
@@ -135,7 +129,6 @@ const router = useRouter();
 const menuStore = useMenuStore();
 const graphStore = useGraphStore();
 const nodeStore = useNodeStore();
-const { graph: graphInStore } = storeToRefs(graphStore);
 const { scriptCellsModified } = storeToRefs(nodeStore);
 const { showEditor } = storeToRefs(useInterfaceStore());
 
@@ -145,7 +138,6 @@ interface GraphProps {
 
 // Data
 const graph = ref<GraphInstance>();
-const selectedNodeScriptCells: Ref<ScriptCell[]> = ref([]);
 const selectedNodes: Ref<string[]> = ref([]);
 const selectedEdges: Ref<string[]> = ref([]);
 
@@ -155,15 +147,10 @@ const configs = GraphSettings.standard;
 // Interface
 const deleteDialogVisible = ref(false);
 const exitDialogVisible = ref(false);
-const nodeToDeleteName = ref("");
 
 // Computed
 const hideConnectionButton = computed(() => {
   return selectedNodes.value.length !== 2;
-});
-
-const curSelectedNode = computed(() => {
-  return graphStore.graph.nodes.find(x => x.uuid === selectedNodes.value[0]);
 });
 
 const hideRemoveButton = computed(() => {
