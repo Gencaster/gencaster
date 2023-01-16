@@ -1,3 +1,10 @@
+"""
+Local development
+=================
+
+Switch to local sqlite database.
+"""
+
 from .dev import *  # noqa
 
 DATABASES = {
