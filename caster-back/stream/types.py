@@ -6,6 +6,7 @@ import strawberry.django
 from django.conf import settings
 from django.utils import timezone
 from strawberry import auto
+from strawberry.file_uploads import Upload
 
 from . import models
 
@@ -46,6 +47,20 @@ class Stream:
     modified_date: auto
     active: auto
     stream_point: "StreamPoint"
+
+
+@strawberry.django.type(models.AudioFile)
+class AudioFile:
+    uuid: auto
+    file: auto
+    description: auto
+
+
+@strawberry.input
+class AddAudioFile:
+    file: Upload
+    description: str
+    file_name: str
 
 
 @strawberry.django.type(models.StreamInstruction)

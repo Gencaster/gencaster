@@ -19,12 +19,14 @@ import strawberry
 import strawberry.django
 from asgiref.sync import sync_to_async
 from django.core.exceptions import PermissionDenied
+from django.core.files import File
 from django.db import transaction
 from django.http.request import HttpRequest
 from strawberry.types import Info
 from strawberry_django.fields.field import StrawberryDjangoField
 
 import story_graph.models as story_graph_models
+import stream.models as stream_models
 import stream.models as stream_models
 from story_graph.engine import Engine
 from story_graph.types import (
@@ -39,7 +41,7 @@ from story_graph.types import (
     ScriptCellInput,
 )
 from stream.exceptions import NoStreamAvailable
-from stream.types import StreamInfo, StreamPoint
+from stream.types import StreamInfo, AddAudioFile, AudioFile, StreamPoint
 
 from .distributor import GenCasterChannel, GraphQLWSConsumerInjector
 
@@ -87,6 +89,8 @@ class Query:
     graph: Graph = AuthStrawberryDjangoField()
     nodes: List[Node] = AuthStrawberryDjangoField()
     node: Node = AuthStrawberryDjangoField()
+    audio_files: List[AudioFile] = AuthStrawberryDjangoField()
+    audio_file: AudioFile = AuthStrawberryDjangoField()
 
 
 @strawberry.type
@@ -372,6 +376,16 @@ class Subscription:
         if not graph:
             print("could not find graph!")
             return
+
+    @strawberry.mutation
+    async def add_audio_file(self, info, new_audio_file: AddAudioFile) -> AudioFile:
+        audio_file = await stream_models.AudioFile.objects.acreate(
+            file=File(new_audio_file.file, name=new_audio_file.file_name),
+            description=new_audio_file.description,
+        )
+        print(audio_file)
+
+        return audio_file
 
         engine = Engine(
             graph=graph,
