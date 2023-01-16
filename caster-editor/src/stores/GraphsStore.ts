@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import type { Ref } from "vue";
-import type { GetGraphsQuery } from "../graphql/graphql";
-import { useGetGraphsQuery } from "../graphql/graphql";
+import type { GetGraphsQuery } from "@/graphql/graphql";
+import { useGetGraphsQuery } from "@/graphql/graphql";
 
 export const useGraphsStore = defineStore("graphs", () => {
   const graphs: Ref< GetGraphsQuery["graphs"] > = ref([]);

@@ -113,7 +113,7 @@ import type { EventHandlers as GraphEventHandlers, Instance as GraphInstance } f
 import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
-import { useNodeStore } from "../stores/NodeStore";
+import { useNodeStore } from "@/stores/NodeStore";
 import { GraphSettings } from "@/assets/js/graphSettings";
 import type { Scalars } from "@/graphql/graphql";
 import { Tab, useMenuStore } from "@/stores/MenuStore";
