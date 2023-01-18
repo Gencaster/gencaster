@@ -131,6 +131,7 @@ import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useNodeStore } from "@/stores/NodeStore";
 import { CellType } from "@/graphql/graphql";
+import type { ScriptCell } from "@/graphql/graphql";
 import { useGraphStore } from "@/stores/GraphStore";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 
@@ -222,14 +223,14 @@ const moveScriptCell = async (scriptCellUuid: string, direction: MoveDirection) 
     return;
   }
 
-  const selectedScriptCell: any = [];
-  const newOrder: any[] = [];
+  const selectedScriptCell: Array<ScriptCell> = [];
+  const newOrder: Array<ScriptCell> = [];
 
   node.value?.scriptCells.forEach((scriptCell) => {
     if (scriptCell.uuid === scriptCellUuid)
-      selectedScriptCell.push(scriptCell);
+      selectedScriptCell.push(scriptCell as ScriptCell);
     else
-      newOrder.push(scriptCell);
+      newOrder.push(scriptCell as ScriptCell);
   });
 
   if (selectedScriptCell[0] === undefined) {
