@@ -36,12 +36,7 @@
     <div class="blocks">
       <div v-for="(cell, index) in node.scriptCells" :key="cell.uuid">
         <div class="cell" :class="{ 'no-padding': addNoPaddingClass(cell.cellType) }">
-          <ElementsBlock
-            :script-cell-uuid="cell.uuid"
-            :cell-type="cell.cellType"
-            :index="index"
-            class="cell-editor"
-          />
+          <ElementsBlock :script-cell-uuid="cell.uuid" :cell-type="cell.cellType" :index="index" class="cell-editor" />
           <div class="scriptcell-tools">
             <div class="celltype">
               <p>{{ cell.cellType }}</p>
@@ -56,11 +51,17 @@
             </div>
             <div class="divider" />
             <div class="icon">
-              <img src="~/assets/icons/icon-up.svg" alt="arrow up icon" @click="moveScriptCell(cell.uuid, MoveDirection.up)">
+              <img
+                src="~/assets/icons/icon-up.svg" alt="arrow up icon"
+                @click="moveScriptCell(cell.uuid, MoveDirection.up)"
+              >
             </div>
             <div class="divider" />
             <div class="icon">
-              <img src="~/assets/icons/icon-down.svg" alt="arrow down icon" @click="moveScriptCell(cell.uuid, MoveDirection.down)">
+              <img
+                src="~/assets/icons/icon-down.svg" alt="arrow down icon"
+                @click="moveScriptCell(cell.uuid, MoveDirection.down)"
+              >
             </div>
           </div>
         </div>
@@ -226,7 +227,12 @@ const playScriptCell = (scriptCellUuid: string) => {
   });
 };
 
-const moveScriptCell = (scriptCellUuid: string, direction: MoveDirection) => {
+const moveScriptCell = async (scriptCellUuid: string, direction: MoveDirection) => {
+  if (node.value === undefined) {
+    console.log("Need a valid node for scriptcells");
+    return;
+  }
+
   const selectedScriptCell: any = [];
   const newOrder: any[] = [];
 
@@ -265,7 +271,9 @@ const moveScriptCell = (scriptCellUuid: string, direction: MoveDirection) => {
     scriptCell.cellOrder = index;
   });
 
-  // graphStore.updateNodeScriptCellsOrderLocal(props.nodeUuid, newOrder);
+  // commit to store if different
+  if (JSON.stringify(newOrder) !== JSON.stringify(node.value?.scriptCells))
+    await nodeStore.updateScriptCells(newOrder);
 };
 
 // Styling
