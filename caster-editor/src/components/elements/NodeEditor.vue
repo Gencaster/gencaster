@@ -87,13 +87,13 @@
     <!-- Exit Page -->
     <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
       <span>
-        You have unsaved changes! <br>
+        Unsaved changes in the editor! <br>
         Are you sure to exit without saving?
       </span>
       <template #footer>
         <span class="dialog-footer">
           <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
-          <el-button text bg @click="closeEditor()">Exit without saving</el-button>
+          <el-button text bg @click="closeEditor()">Close without saving</el-button>
           <el-button
             color="#ADFF00" @click="async () => {
               exitDialogVisible = false;
@@ -101,7 +101,7 @@
                 await closeEditor();
               });
             }"
-          >Save and exit</el-button>
+          >Save and Close</el-button>
         </span>
       </template>
     </el-dialog>

@@ -232,7 +232,7 @@ const removeSelection = () => {
 const openNodeEditor = async (node: string) => {
   if (scriptCellsModified.value === true) {
     ElMessage({
-      message: "Save or close node before opening a new one",
+      message: "Save or close scene before switching to another.",
       type: "error",
       customClass: "messages-editor"
     });
