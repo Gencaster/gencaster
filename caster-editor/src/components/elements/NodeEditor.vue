@@ -132,18 +132,7 @@ import { storeToRefs } from "pinia";
 import { useNodeStore } from "@/stores/NodeStore";
 import { CellType } from "@/graphql/graphql";
 import { useGraphStore } from "@/stores/GraphStore";
-import { useInterfaceStore } from "~~/src/stores/InterfaceStore";
-
-const props = defineProps({
-  dev: {
-    type: Boolean,
-    default: false
-  },
-  nodeUuid: {
-    required: true,
-    type: String
-  }
-});
+import { useInterfaceStore } from "@/stores/InterfaceStore";
 
 enum MoveDirection {
   up = "Up",
