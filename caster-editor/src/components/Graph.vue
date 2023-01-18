@@ -33,7 +33,7 @@
             <button class="unstyled" :class="{ lighter: hideConnectionButton }" @click="createEdge()">
               Add Connection
             </button>
-            <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeAny()">
+            <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeSelection()">
               Remove
             </button>
             <button class="unstyled" @click="graphStore.reloadFromServer()">
@@ -78,7 +78,7 @@
     <!-- Are you sure to delete? -->
     <el-dialog v-model="deleteDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
       <span>
-        Are you sure to delete Scene "{{ graph?.nodes[selectedNodes[0]].name }}"?
+        Are you sure to delete Scene "{{ graph?.nodes[selectedNodes[0]]?.name || '' }}"?
       </span>
       <template #footer>
         <span class="dialog-footer">
@@ -210,7 +210,7 @@ const exitWithoutSaving = () => {
   });
 };
 
-const removeAny = () => {
+const removeSelection = () => {
   // check if only one type is selected
   // right now we only allow one element deletion
   // TODO: needs to check if the async call is not buggy if looping through
