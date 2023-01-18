@@ -244,8 +244,14 @@ const moveScriptCell = async (scriptCellUuid: string, direction: MoveDirection) 
 
   const oldIndex = selectedScriptCell[0].cellOrder;
 
-  let newPosition = 0;
+  // catch if nothing changes
+  if (direction === MoveDirection.up && oldIndex === 0)
+    return;
 
+  if (direction === MoveDirection.down && oldIndex === node.value?.scriptCells.length - 1)
+    return;
+
+  let newPosition = 0;
   if (direction === MoveDirection.up) {
     if (oldIndex > 0)
       newPosition = oldIndex - 1;
@@ -261,9 +267,8 @@ const moveScriptCell = async (scriptCellUuid: string, direction: MoveDirection) 
     scriptCell.cellOrder = index;
   });
 
-  // commit to store if different
-  if (JSON.stringify(newOrder) !== JSON.stringify(node.value?.scriptCells))
-    await nodeStore.updateScriptCells(newOrder);
+  // commit to store
+  await nodeStore.updateScriptCells(newOrder);
 };
 
 // Styling
