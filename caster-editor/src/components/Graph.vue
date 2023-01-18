@@ -105,6 +105,7 @@ import type { EventHandlers as GraphEventHandlers, Instance as GraphInstance } f
 import type { Ref } from "vue";
 import { computed, nextTick } from "vue";
 import { storeToRefs } from "pinia";
+import { gsap } from "gsap";
 import { useNodeStore } from "@/stores/NodeStore";
 import { GraphSettings } from "@/assets/js/graphSettings";
 import type { Scalars } from "@/graphql/graphql";
@@ -253,9 +254,32 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
     y: aimPos.y - clickPos.y
   };
 
-  // animate
+  const progress = {
+    absolute: 0
+  };
 
-  graph.value.panBy(moveBy);
+  let prevProgress = 0;
+
+  const moveGraph = () => {
+    const delta = progress.absolute - prevProgress;
+    const shift = {
+      x: moveBy.x * delta,
+      y: moveBy.y * delta
+    };
+
+    graph.value?.panBy(shift);
+    prevProgress = progress.absolute;
+  };
+
+  // animate
+  gsap.to(progress, {
+    absolute: 1,
+    duration: 0.4,
+    ease: "power3.inOut",
+    onUpdate: () => {
+      moveGraph();
+    }
+  });
 };
 
 const openNodeEditor = async (node: string) => {
