@@ -64,12 +64,11 @@ onMounted(() => {
     scriptCellsModified.value = true;
     const markdown = editor.value?.getMarkdown() || "";
     scriptCell.value.cellCode = markdown;
-    console.log(scriptCell.value.cellType, markdown);
   });
 });
 
-// onUnmounted(() => {
-//   if (editor.value)
-//     editor.value.destroy();
-// });
+onUnmounted(() => {
+  if (editor.value)
+    editor.value.destroy();
+});
 </script>

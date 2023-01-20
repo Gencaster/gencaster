@@ -26,6 +26,10 @@ export const useNodeStore = defineStore("node", () => {
     await getNode(uuid.value);
   };
 
+  const empty = () => {
+    node.value = {} as GetNodeQuery["node"];
+  };
+
   const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();
   const updateNode = async (node: GetNodeQuery["node"]) => {
     await updateNodeMutation({
@@ -70,6 +74,7 @@ export const useNodeStore = defineStore("node", () => {
     node,
     fetching,
     scriptCellsModified,
+    empty,
     getNode,
     reloadFromServer,
     updateNode,
