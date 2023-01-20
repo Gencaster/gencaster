@@ -13,20 +13,14 @@
 </template>
 
 <script lang="ts" setup>
-// import EditorJS from "@editorjs/editorjs";
-// import Header from "@editorjs/header"; // TODO: Fix Could not find a declaration file for module '@editorjs/header'.
-
 // Docs : https://github.com/nhn/tui.editor/tree/master/docs/en
 // Custom Markdown Commands: https://github.com/nhn/tui.editor/blob/master/docs/en/plugin.md
 import "@toast-ui/editor/dist/toastui-editor.css"; // Editor's Style
 import Editor from "@toast-ui/editor";
-import type EditorOptions from "@toast-ui/editor";
+import type { EditorOptions, Editor as EditorType } from "@toast-ui/editor";
 
-// markdown commands
 import { storeToRefs } from "pinia";
-import FemaleVoice from "@/assets/js/markdown/femalevoice";
 
-// import type { OutputData } from "@editorjs/editorjs";
 import { CellType } from "@/graphql/graphql";
 import type { GetNodeQuery } from "@/graphql/graphql";
 import { useNodeStore } from "@/stores/NodeStore";
@@ -43,7 +37,6 @@ const { scriptCellsModified, node } = storeToRefs(useNodeStore());
 
 // Variables
 const scriptCell = ref<GetNodeQuery["node"]["scriptCells"][0] | undefined>(node.value.scriptCells.find((x) => { return x.uuid === props.scriptCellUuid; }));
-// const editorJS = ref<EditorJS>();
 const editorDom = ref<HTMLElement>();
 
 // const editorChange = (api?: any, event?: any) => {
@@ -55,85 +48,23 @@ const editorDom = ref<HTMLElement>();
 //       scriptCell.value.cellCode = outputData.blocks.map((x) => { return x.data.text as string; }).join("\n");
 //   });
 // };
+const editor = ref<EditorType>();
 
 onMounted(() => {
-  let editor;
-
-  const myCustomEl = document.createElement("span");
-
-  // female voice button
-  myCustomEl.textContent = "👩";
-  myCustomEl.style = "cursor: pointer;";
-  myCustomEl.addEventListener("click", () => {
-    editor.exec("myCommand");
-  });
-
-  // female voice plugin
-
   const options: EditorOptions = {
     el: editorDom.value as HTMLElement,
     height: "auto",
-    // initialEditType: "markdown",
+    initialEditType: "markdown",
     usageStatistics: false,
     initialValue: scriptCell.value?.cellCode,
-    previewStyle: "vertical",
+    previewStyle: "tab",
     placeholder: "Please enter text.",
-    toolbarItems: [
-      [{
-        name: "myItem",
-        tooltip: "myItem",
-        el: myCustomEl
-      }],
-      [{
-        name: "voicetype",
-        tooltip: "Female voice",
-        command: "{female}",
-        text: "F",
-        className: "toastui-editor-toolbar-icons",
-        style: { backgroundImage: "none", color: "blue" }
-      }]
-    ],
-    plugins: [FemaleVoice]
+    toolbarItems: [],
+    hideModeSwitch: true,
+    autofocus: false
 
   };
 
-  editor = new Editor(options);
-
-  // const editorJSInitvalue: OutputData = {
-  //   time: Date.now(),
-  //   blocks: [],
-  //   version: "2.26.4"
-  // };
-
-  // splitScriptCell.forEach((string) => {
-  //   editorJSInitvalue.blocks.push({
-  //     id: self.crypto.randomUUID(),
-  //     type: "paragraph",
-  //     data: {
-  //       text: string
-  //     }
-  //   });
-  // });
-
-  // editorJS.value = new EditorJS({
-  //   holder: editorDom.value,
-  //   minHeight: 0,
-  //   data: editorJSInitvalue,
-  //   tools: {
-  //     header: Header
-  //   },
-  //   onChange: editorChange
-  // });
-
-  // custom setup for types
-  // switch (scriptCell.value?.cellCode) {
-  //   case CellType.Comment:
-  //     break;
-
-  //   case CellType.Markdown:
-  //     break;
-  //   default:
-  //     break;
-  // }
+  editor.value = new Editor(options);
 });
 </script>

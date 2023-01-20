@@ -91,17 +91,16 @@
       border: 1px solid $grey;
 
       &.no-padding {
-        padding: 20px 20px 15px 30px;
+        padding: 0px 0px 0px 0px;
+      }
 
-        // .ce-block__content,
-        // .ce-toolbar__content {
-        //   max-width: 1000px;
-        //   /* example value, adjust for your own use case */
-        // }
 
-        // .codex-editor__loader {
-        //   height: 38px !important;
-        // }
+.toastui-editor-defaultUI {
+  border: none;
+}
+
+      .toastui-editor-toolbar{
+        display: none;
       }
 
       .cell-type {
