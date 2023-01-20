@@ -20,6 +20,7 @@
     "@graphql-codegen/typescript-urql": "^3.7.0",
     "@nuxtjs/composition-api": "^0.33.1",
     "@pinia/nuxt": "^0.4.6",
+    "@toast-ui/editor": "^3.2.1",
     "@urql/vue": "^1.0.2",
     "codemirror": "^6.0.1",
     "codemirror-formatting": "^1.0.0",

@@ -2,14 +2,12 @@
   <div class="block">
     <!-- markdown -->
     <div v-if="scriptCell?.cellType === CellType.Markdown" class="editor-markdown">
-      <p>This is markdown</p>
-      <!-- <div ref="editorDom" /> -->
+      <div id="editor" ref="editorDom" />
     </div>
 
     <!-- comment -->
     <div v-if="scriptCell?.cellType === CellType.Comment" class="editor-comment">
-      <p>This is a comment</p>
-      <!-- <div ref="editorDom" /> -->
+      <div ref="editorDom" />
     </div>
   </div>
 </template>
@@ -18,7 +16,16 @@
 // import EditorJS from "@editorjs/editorjs";
 // import Header from "@editorjs/header"; // TODO: Fix Could not find a declaration file for module '@editorjs/header'.
 
+// Docs : https://github.com/nhn/tui.editor/tree/master/docs/en
+// Custom Markdown Commands: https://github.com/nhn/tui.editor/blob/master/docs/en/plugin.md
+import "@toast-ui/editor/dist/toastui-editor.css"; // Editor's Style
+import Editor from "@toast-ui/editor";
+import type EditorOptions from "@toast-ui/editor";
+
+// markdown commands
 import { storeToRefs } from "pinia";
+import FemaleVoice from "@/assets/js/markdown/femalevoice";
+
 // import type { OutputData } from "@editorjs/editorjs";
 import { CellType } from "@/graphql/graphql";
 import type { GetNodeQuery } from "@/graphql/graphql";
@@ -50,7 +57,47 @@ const editorDom = ref<HTMLElement>();
 // };
 
 onMounted(() => {
-  const splitScriptCell = scriptCell.value?.cellCode.split(/\r\n|\r|\n/) || [];
+  let editor;
+
+  const myCustomEl = document.createElement("span");
+
+  // female voice button
+  myCustomEl.textContent = "👩";
+  myCustomEl.style = "cursor: pointer;";
+  myCustomEl.addEventListener("click", () => {
+    editor.exec("myCommand");
+  });
+
+  // female voice plugin
+
+  const options: EditorOptions = {
+    el: editorDom.value as HTMLElement,
+    height: "auto",
+    // initialEditType: "markdown",
+    usageStatistics: false,
+    initialValue: scriptCell.value?.cellCode,
+    previewStyle: "vertical",
+    placeholder: "Please enter text.",
+    toolbarItems: [
+      [{
+        name: "myItem",
+        tooltip: "myItem",
+        el: myCustomEl
+      }],
+      [{
+        name: "voicetype",
+        tooltip: "Female voice",
+        command: "{female}",
+        text: "F",
+        className: "toastui-editor-toolbar-icons",
+        style: { backgroundImage: "none", color: "blue" }
+      }]
+    ],
+    plugins: [FemaleVoice]
+
+  };
+
+  editor = new Editor(options);
 
   // const editorJSInitvalue: OutputData = {
   //   time: Date.now(),
