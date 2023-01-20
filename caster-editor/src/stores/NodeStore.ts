@@ -45,6 +45,7 @@ export const useNodeStore = defineStore("node", () => {
   const updateScriptCells = async (scriptCells: Array<ScriptCellInput>) => {
     for (const cell of scriptCells) {
       // @ts-expect-error: somehow the object has __typename which the API does not like
+      // TODO: this is because of the GraphQL settings. It passes a hard coded scriptcell with __typename
       delete cell.__typename;
     }
 

@@ -2,7 +2,7 @@
   <div class="block">
     <!-- markdown -->
     <div v-if="scriptCell?.cellType === CellType.Markdown" class="editor-markdown">
-      <div id="editor" ref="editorDom" />
+      <div ref="editorDom" />
     </div>
 
     <!-- comment -->
@@ -38,16 +38,6 @@ const { scriptCellsModified, node } = storeToRefs(useNodeStore());
 // Variables
 const scriptCell = ref<GetNodeQuery["node"]["scriptCells"][0] | undefined>(node.value.scriptCells.find((x) => { return x.uuid === props.scriptCellUuid; }));
 const editorDom = ref<HTMLElement>();
-
-// const editorChange = (api?: any, event?: any) => {
-//   scriptCellsModified.value = true;
-//   editorJS.value?.save().then((outputData) => {
-//     console.log(outputData);
-
-//     if (scriptCell.value !== undefined)
-//       scriptCell.value.cellCode = outputData.blocks.map((x) => { return x.data.text as string; }).join("\n");
-//   });
-// };
 const editor = ref<EditorType>();
 
 onMounted(() => {
@@ -58,7 +48,6 @@ onMounted(() => {
     usageStatistics: false,
     initialValue: scriptCell.value?.cellCode,
     previewStyle: "tab",
-    placeholder: "Please enter text.",
     toolbarItems: [],
     hideModeSwitch: true,
     autofocus: false
@@ -66,5 +55,21 @@ onMounted(() => {
   };
 
   editor.value = new Editor(options);
+
+  // add events
+  editor.value.on("change", () => {
+    if (scriptCell.value === undefined)
+      return;
+
+    scriptCellsModified.value = true;
+    const markdown = editor.value?.getMarkdown() || "";
+    scriptCell.value.cellCode = markdown;
+    console.log(scriptCell.value.cellType, markdown);
+  });
 });
+
+// onUnmounted(() => {
+//   if (editor.value)
+//     editor.value.destroy();
+// });
 </script>
