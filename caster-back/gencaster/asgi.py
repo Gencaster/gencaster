@@ -30,7 +30,7 @@ websocket_urlpatterns = [
 
 application = ProtocolTypeRouter(
     {
-        "http": URLRouter([re_path("^", django_asgi_app)]),
+        "http": URLRouter([re_path("^", django_asgi_app)]),  # type: ignore
         "websocket": URLRouter(websocket_urlpatterns),
     }
 )
