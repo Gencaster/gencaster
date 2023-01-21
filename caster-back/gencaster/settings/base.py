@@ -170,3 +170,5 @@ CSRF_TRUSTED_ORIGINS = [
     "http://*.gencaster.org",
     "https://*.gencaster.org",
 ]
+
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
