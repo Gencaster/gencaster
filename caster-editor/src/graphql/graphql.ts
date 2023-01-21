@@ -165,17 +165,17 @@ export type Query = {
 
 
 export type QueryGraphArgs = {
-  pk?: InputMaybe<Scalars['ID']>;
+  pk: Scalars['ID'];
 };
 
 
 export type QueryNodeArgs = {
-  pk?: InputMaybe<Scalars['ID']>;
+  pk: Scalars['ID'];
 };
 
 
 export type QueryStreamPointArgs = {
-  pk?: InputMaybe<Scalars['ID']>;
+  pk: Scalars['ID'];
 };
 
 
@@ -220,11 +220,17 @@ export type StreamPointFilter = {
 export type Subscription = {
   __typename?: 'Subscription';
   count: Scalars['Int'];
+  graph: Graph;
 };
 
 
 export type SubscriptionCountArgs = {
   target?: Scalars['Int'];
+};
+
+
+export type SubscriptionGraphArgs = {
+  graphUuid: Scalars['UUID'];
 };
 
 export type UuidFilterLookup = {
@@ -251,13 +257,6 @@ export type GetGraphsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetGraphsQuery = { __typename?: 'Query', graphs: Array<{ __typename?: 'Graph', uuid: any, name: string }> };
-
-export type GetGraphQueryVariables = Exact<{
-  uuid?: InputMaybe<Scalars['ID']>;
-}>;
-
-
-export type GetGraphQuery = { __typename?: 'Query', graph: { __typename?: 'Graph', name: string, uuid: any, edges: Array<{ __typename?: 'Edge', uuid: any, outNode: { __typename?: 'Node', uuid: any }, inNode: { __typename?: 'Node', uuid: any } }>, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, positionX: number, positionY: number, color: string, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> }> } };
 
 export type GetNodeQueryVariables = Exact<{
   nodeUuid: Scalars['ID'];
@@ -337,6 +336,13 @@ export type CountSubscriptionSubscriptionVariables = Exact<{ [key: string]: neve
 
 export type CountSubscriptionSubscription = { __typename?: 'Subscription', count: number };
 
+export type GraphSubscriptionVariables = Exact<{
+  uuid: Scalars['UUID'];
+}>;
+
+
+export type GraphSubscription = { __typename?: 'Subscription', graph: { __typename?: 'Graph', name: string, uuid: any, edges: Array<{ __typename?: 'Edge', uuid: any, outNode: { __typename?: 'Node', uuid: any }, inNode: { __typename?: 'Node', uuid: any } }>, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, positionX: number, positionY: number, color: string, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> }> } };
+
 
 export const GetGraphsDocument = gql`
     query GetGraphs {
@@ -349,40 +355,6 @@ export const GetGraphsDocument = gql`
 
 export function useGetGraphsQuery(options: Omit<Urql.UseQueryArgs<never, GetGraphsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetGraphsQuery>({ query: GetGraphsDocument, ...options });
-};
-export const GetGraphDocument = gql`
-    query getGraph($uuid: ID) {
-  graph(pk: $uuid) {
-    name
-    uuid
-    edges {
-      uuid
-      outNode {
-        uuid
-      }
-      inNode {
-        uuid
-      }
-    }
-    nodes {
-      name
-      uuid
-      scriptCells {
-        cellCode
-        cellOrder
-        cellType
-        uuid
-      }
-      positionX
-      positionY
-      color
-    }
-  }
-}
-    `;
-
-export function useGetGraphQuery(options: Omit<Urql.UseQueryArgs<never, GetGraphQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<GetGraphQuery>({ query: GetGraphDocument, ...options });
 };
 export const GetNodeDocument = gql`
     query getNode($nodeUuid: ID!) {
@@ -494,4 +466,38 @@ export const CountSubscriptionDocument = gql`
 
 export function useCountSubscriptionSubscription<R = CountSubscriptionSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, CountSubscriptionSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<CountSubscriptionSubscription, R>) {
   return Urql.useSubscription<CountSubscriptionSubscription, R, CountSubscriptionSubscriptionVariables>({ query: CountSubscriptionDocument, ...options }, handler);
+};
+export const GraphDocument = gql`
+    subscription graph($uuid: UUID!) {
+  graph(graphUuid: $uuid) {
+    name
+    uuid
+    edges {
+      uuid
+      outNode {
+        uuid
+      }
+      inNode {
+        uuid
+      }
+    }
+    nodes {
+      name
+      uuid
+      scriptCells {
+        cellCode
+        cellOrder
+        cellType
+        uuid
+      }
+      positionX
+      positionY
+      color
+    }
+  }
+}
+    `;
+
+export function useGraphSubscription<R = GraphSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, GraphSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<GraphSubscription, R>) {
+  return Urql.useSubscription<GraphSubscription, R, GraphSubscriptionVariables>({ query: GraphDocument, ...options }, handler);
 };

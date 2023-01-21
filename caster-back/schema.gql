@@ -92,12 +92,12 @@ input NodeUpdate {
 }
 
 type Query {
-  streamPoint(pk: ID): StreamPoint!
+  streamPoint(pk: ID!): StreamPoint!
   streamPoints(filters: StreamPointFilter): [StreamPoint!]!
   graphs: [Graph!]!
-  graph(pk: ID): Graph!
+  graph(pk: ID!): Graph!
   nodes: [Node!]!
-  node(pk: ID): Node!
+  node(pk: ID!): Node!
 }
 
 type ScriptCell {
@@ -134,6 +134,7 @@ input StreamPointFilter {
 
 type Subscription {
   count(target: Int! = 100): Int!
+  graph(graphUuid: UUID!): Graph!
 }
 
 scalar UUID
