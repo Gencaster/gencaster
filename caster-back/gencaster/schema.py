@@ -24,7 +24,7 @@ from story_graph.types import (
 )
 from stream.types import StreamPoint
 
-from .distributor import GenCasterChannel, GraphUpdateMessage
+from .distributor import GenCasterChannel
 
 
 class AuthStrawberryDjangoField(StrawberryDjangoField):
@@ -208,13 +208,6 @@ class Mutation:
             uuid=script_cell_uuid
         ).adelete()
         return
-
-    @strawberry.mutation
-    async def test_something(self, info: Info, graph_uuid: uuid.UUID) -> None:
-        print(info.context.channel_layer)
-        await GenCasterChannel.send_message(
-            layer=info.context.channel_layer, message=GraphUpdateMessage(graph_uuid)
-        )
 
 
 @strawberry.type
