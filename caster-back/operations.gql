@@ -5,22 +5,6 @@ query GetGraphs {
   }
 }
 
-query getNode($nodeUuid: ID!) {
-  node(pk: $nodeUuid) {
-    color
-    name
-    positionX
-    positionY
-    scriptCells {
-      cellCode
-      cellOrder
-      cellType
-      uuid
-    }
-    uuid
-  }
-}
-
 mutation createEdge($nodeInUuid:UUID!, $nodeOutUuid:UUID!) {
   addEdge(newEdge: {nodeInUuid: $nodeInUuid, nodeOutUuid: $nodeOutUuid})
 }
@@ -93,5 +77,21 @@ subscription graph($uuid: UUID!) {
       positionY
       color
     }
+  }
+}
+
+subscription node($uuid: UUID!) {
+  node(nodeUuid: $uuid) {
+    color
+    name
+    positionX
+    positionY
+    scriptCells {
+      cellCode
+      cellOrder
+      cellType
+      uuid
+    }
+    uuid
   }
 }

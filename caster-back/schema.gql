@@ -135,6 +135,7 @@ input StreamPointFilter {
 type Subscription {
   count(target: Int! = 100): Int!
   graph(graphUuid: UUID!): Graph!
+  node(nodeUuid: UUID!): Node!
 }
 
 scalar UUID
