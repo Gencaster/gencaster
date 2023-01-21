@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!graphStore.fetching" class="edit-page">
+  <div v-if="graphStore.graph" class="edit-page">
     <Graph :uuid="uuid" />
   </div>
 </template>
@@ -13,10 +13,10 @@ const route = useRoute();
 const uuid = computed(() => String(route.params.uuid));
 
 function getGraphData() {
-  graphStore.getGraph(uuid.value);
+  console.log("Should change graph uuid now!");
+  graphStore.uuid = uuid.value;
 }
 
-// how do we update the data?
 watch(uuid, getGraphData);
 
 getGraphData();

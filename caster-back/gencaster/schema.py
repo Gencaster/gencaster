@@ -10,8 +10,10 @@ page available under the `/graphql` endpoint of
 the running backend.
 """
 
+import asyncio
+import logging
 import uuid
-from typing import List
+from typing import AsyncGenerator, List
 
 import strawberry
 import strawberry.django
@@ -34,6 +36,10 @@ from story_graph.types import (
     ScriptCellInput,
 )
 from stream.types import StreamPoint
+
+from .distributor import GenCasterChannel
+
+log = logging.getLogger(__name__)
 
 
 class AuthStrawberryDjangoField(StrawberryDjangoField):
@@ -106,6 +112,11 @@ class Mutation:
 
         await sync_to_async(node.save)()
 
+        await GenCasterChannel.send_graph_update(
+            layer=info.context.channel_layer,
+            graph_uuid=graph.uuid,
+        )
+
         return None
 
     @strawberry.mutation
@@ -115,13 +126,25 @@ class Mutation:
         """
         await graphql_check_authenticated(info)
 
-        node = await story_graph_models.Node.objects.aget(uuid=node_update.uuid)
+        node = await story_graph_models.Node.objects.select_related("graph").aget(
+            uuid=node_update.uuid
+        )
 
         for field in ["position_x", "position_y", "color", "name"]:
             if new_value := getattr(node_update, field):
                 setattr(node, field, new_value)
 
         await sync_to_async(node.save)()
+
+        await GenCasterChannel.send_graph_update(
+            layer=info.context.channel_layer,
+            graph_uuid=node.graph.uuid,
+        )
+
+        await GenCasterChannel.send_node_update(
+            layer=info.context.channel_layer,
+            node_uuid=node.uuid,
+        )
 
         return None
 
@@ -133,7 +156,7 @@ class Mutation:
         """
         await graphql_check_authenticated(info)
         in_node: story_graph_models.Node = await sync_to_async(
-            story_graph_models.Node.objects.get
+            story_graph_models.Node.objects.select_related("graph").get
         )(uuid=new_edge.node_in_uuid)
         out_node: story_graph_models.Node = await sync_to_async(
             story_graph_models.Node.objects.get
@@ -144,6 +167,10 @@ class Mutation:
             in_node=in_node,
             out_node=out_node,
         )
+        await GenCasterChannel.send_graph_update(
+            layer=info.context.channel_layer,
+            graph_uuid=in_node.graph.uuid,
+        )
         return None
 
     @strawberry.mutation
@@ -151,12 +178,16 @@ class Mutation:
         """Deletes a given :class:`~story_graph.models.Edge`."""
         await graphql_check_authenticated(info)
         try:
-            edge = await sync_to_async(story_graph_models.Edge.objects.get)(
-                uuid=edge_uuid
-            )
+            edge: story_graph_models.Edge = await sync_to_async(
+                story_graph_models.Edge.objects.select_related("in_node__graph").get
+            )(uuid=edge_uuid)
             await sync_to_async(edge.delete)()
         except Exception:
             raise Exception(f"Could not delete edge {edge_uuid}")
+        await GenCasterChannel.send_graph_update(
+            layer=info.context.channel_layer,
+            graph_uuid=edge.in_node.graph.uuid,
+        )
         return None
 
     @strawberry.mutation
@@ -164,12 +195,23 @@ class Mutation:
         """Deletes a given :class:`~story_graph.models.Node`."""
         await graphql_check_authenticated(info)
         try:
-            node = await sync_to_async(story_graph_models.Node.objects.get)(
-                uuid=node_uuid
-            )
+            node: story_graph_models.Node = await sync_to_async(
+                story_graph_models.Node.objects.select_related("graph").get
+            )(uuid=node_uuid)
             await sync_to_async(node.delete)()
         except Exception:
             raise Exception(f"Could delete node {node_uuid}")
+
+        await GenCasterChannel.send_graph_update(
+            layer=info.context.channel_layer,
+            graph_uuid=node.graph.uuid,
+        )
+
+        await GenCasterChannel.send_node_update(
+            layer=info.context.channel_layer,
+            node_uuid=node.uuid,
+        )
+
         return None
 
     @strawberry.mutation
@@ -197,6 +239,12 @@ class Mutation:
             )
         except Exception as e:
             raise Exception(f"Could not create node: {e}")
+
+        await GenCasterChannel.send_node_update(
+            layer=info.context.channel_layer,
+            node_uuid=node_uuid,
+        )
+
         return ScriptCell(
             uuid=script_cell.uuid,
             node=script_cell.node,
@@ -211,18 +259,75 @@ class Mutation:
         await graphql_check_authenticated(info)
         await sync_to_async(_update_cells)(new_cells)
 
+        script_cell_uuids = [x.uuid for x in new_cells]
+        async for node in story_graph_models.Node.objects.filter(
+            script_cells__uuid__in=script_cell_uuids
+        ):
+            await GenCasterChannel.send_node_update(
+                layer=info.context.channel_layer,
+                node_uuid=node.uuid,
+            )
+
     @strawberry.mutation
     async def delete_script_cell(self, info, script_cell_uuid: uuid.UUID) -> None:
         """Deletes a given :class:`~story_graph.models.ScriptCell`."""
         await graphql_check_authenticated(info)
 
+        # first get the node before the cell is deleted
+        node = await story_graph_models.Node.objects.filter(
+            script_cells__uuid=script_cell_uuid
+        ).afirst()
+
         await story_graph_models.ScriptCell.objects.filter(
             uuid=script_cell_uuid
         ).adelete()
-        return
+
+        if node:
+            await GenCasterChannel.send_node_update(
+                layer=info.context.channel_layer,
+                node_uuid=node.uuid,
+            )
+
+
+@strawberry.type
+class Subscription:
+    @strawberry.subscription
+    async def count(self, target: int = 100) -> AsyncGenerator[int, None]:
+        for i in range(target):
+            yield i
+            await asyncio.sleep(0.5)
+
+    @strawberry.subscription
+    async def graph(
+        self,
+        info: Info,
+        graph_uuid: uuid.UUID,
+    ) -> AsyncGenerator[Graph, None]:
+        graph = await story_graph_models.Graph.objects.aget(uuid=graph_uuid)
+        yield graph  # type: ignore
+
+        async for graph_update in GenCasterChannel.receive_graph_updates(
+            info.context.ws, graph_uuid
+        ):
+            yield await story_graph_models.Graph.objects.aget(uuid=graph_update.uuid)  # type: ignore
+
+    @strawberry.subscription
+    async def node(
+        self,
+        info: Info,
+        node_uuid: uuid.UUID,
+    ) -> AsyncGenerator[Node, None]:
+        node = await story_graph_models.Node.objects.aget(uuid=node_uuid)
+        yield node  # type: ignore
+
+        async for node_update in GenCasterChannel.receive_node_updates(
+            info.context.ws, node_uuid
+        ):
+            yield await story_graph_models.Node.objects.aget(uuid=node_update.uuid)  # type: ignore
 
 
 schema = strawberry.Schema(
     query=Query,
     mutation=Mutation,
+    subscription=Subscription,
 )
