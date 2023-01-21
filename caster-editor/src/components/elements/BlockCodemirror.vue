@@ -42,7 +42,7 @@ import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { CellType } from "@/graphql/graphql";
 import type { GetNodeQuery, ScriptCell } from "@/graphql/graphql";
-import { useNodeStore } from "~~/src/stores/NodeStore";
+import { useNodeStore } from "@/stores/NodeStore";
 const props = defineProps<BlockProps>();
 
 interface BlockProps {

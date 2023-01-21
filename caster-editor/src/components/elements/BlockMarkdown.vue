@@ -13,13 +13,16 @@
 </template>
 
 <script lang="ts" setup>
-import EditorJS from "@editorjs/editorjs";
-import Header from "@editorjs/header"; // TODO: Fix Could not find a declaration file for module '@editorjs/header'.
-import type { Ref } from "vue";
+// Docs : https://github.com/nhn/tui.editor/tree/master/docs/en
+// Custom Markdown Commands: https://github.com/nhn/tui.editor/blob/master/docs/en/plugin.md
+import "@toast-ui/editor/dist/toastui-editor.css"; // Editor's Style
+import Editor from "@toast-ui/editor";
+import type { EditorOptions, Editor as EditorType } from "@toast-ui/editor";
+
 import { storeToRefs } from "pinia";
-import type { OutputData } from "@editorjs/editorjs";
+
 import { CellType } from "@/graphql/graphql";
-import type { GetNodeQuery, ScriptCell } from "@/graphql/graphql";
+import type { GetNodeQuery } from "@/graphql/graphql";
 import { useNodeStore } from "@/stores/NodeStore";
 
 const props = defineProps<BlockProps>();
@@ -34,57 +37,38 @@ const { scriptCellsModified, node } = storeToRefs(useNodeStore());
 
 // Variables
 const scriptCell = ref<GetNodeQuery["node"]["scriptCells"][0] | undefined>(node.value.scriptCells.find((x) => { return x.uuid === props.scriptCellUuid; }));
-const editorJS = ref<EditorJS>();
 const editorDom = ref<HTMLElement>();
-
-const editorChange = (api?: any, event?: any) => {
-  scriptCellsModified.value = true;
-  editorJS.value?.save().then((outputData) => {
-    console.log(outputData);
-
-    if (scriptCell.value !== undefined)
-      scriptCell.value.cellCode = outputData.blocks.map((x) => { return x.data.text as string; }).join("\n");
-  });
-};
+const editor = ref<EditorType>();
 
 onMounted(() => {
-  const splitScriptCell = scriptCell.value?.cellCode.split(/\r\n|\r|\n/) || [];
+  const options: EditorOptions = {
+    el: editorDom.value as HTMLElement,
+    height: "auto",
+    initialEditType: "markdown",
+    usageStatistics: false,
+    initialValue: scriptCell.value?.cellCode,
+    previewStyle: "tab",
+    toolbarItems: [],
+    hideModeSwitch: true,
+    autofocus: false
 
-  const editorJSInitvalue: OutputData = {
-    time: Date.now(),
-    blocks: [],
-    version: "2.26.4"
   };
 
-  splitScriptCell.forEach((string) => {
-    editorJSInitvalue.blocks.push({
-      id: self.crypto.randomUUID(),
-      type: "paragraph",
-      data: {
-        text: string
-      }
-    });
+  editor.value = new Editor(options);
+
+  // add events
+  editor.value.on("change", () => {
+    if (scriptCell.value === undefined)
+      return;
+
+    scriptCellsModified.value = true;
+    const markdown = editor.value?.getMarkdown() || "";
+    scriptCell.value.cellCode = markdown;
   });
+});
 
-  editorJS.value = new EditorJS({
-    holder: editorDom.value,
-    minHeight: 0,
-    data: editorJSInitvalue,
-    tools: {
-      header: Header
-    },
-    onChange: editorChange
-  });
-
-  // custom setup for types
-  // switch (scriptCell.value?.cellCode) {
-  //   case CellType.Comment:
-  //     break;
-
-  //   case CellType.Markdown:
-  //     break;
-  //   default:
-  //     break;
-  // }
+onUnmounted(() => {
+  if (editor.value)
+    editor.value.destroy();
 });
 </script>

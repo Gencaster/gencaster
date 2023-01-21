@@ -36,12 +36,7 @@
     <div class="blocks">
       <div v-for="(cell, index) in node.scriptCells" :key="cell.uuid">
         <div class="cell" :class="{ 'no-padding': addNoPaddingClass(cell.cellType) }">
-          <ElementsBlock
-            :script-cell-uuid="cell.uuid"
-            :cell-type="cell.cellType"
-            :index="index"
-            class="cell-editor"
-          />
+          <ElementsBlock :script-cell-uuid="cell.uuid" :cell-type="cell.cellType" :index="index" class="cell-editor" />
           <div class="scriptcell-tools">
             <div class="celltype">
               <p>{{ cell.cellType }}</p>
@@ -56,11 +51,17 @@
             </div>
             <div class="divider" />
             <div class="icon">
-              <img src="~/assets/icons/icon-up.svg" alt="arrow up icon" @click="moveScriptCell(cell.uuid, MoveDirection.up)">
+              <img
+                src="~/assets/icons/icon-up.svg" alt="arrow up icon"
+                @click="moveScriptCell(cell.uuid, MoveDirection.up)"
+              >
             </div>
             <div class="divider" />
             <div class="icon">
-              <img src="~/assets/icons/icon-down.svg" alt="arrow down icon" @click="moveScriptCell(cell.uuid, MoveDirection.down)">
+              <img
+                src="~/assets/icons/icon-down.svg" alt="arrow down icon"
+                @click="moveScriptCell(cell.uuid, MoveDirection.down)"
+              >
             </div>
           </div>
         </div>
@@ -86,13 +87,13 @@
     <!-- Exit Page -->
     <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
       <span>
-        You have unsaved changes! <br>
+        Unsaved changes in the editor! <br>
         Are you sure to exit without saving?
       </span>
       <template #footer>
         <span class="dialog-footer">
           <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
-          <el-button text bg @click="closeEditor()">Exit without saving</el-button>
+          <el-button text bg @click="closeEditor()">Close without saving</el-button>
           <el-button
             color="#ADFF00" @click="async () => {
               exitDialogVisible = false;
@@ -100,7 +101,7 @@
                 await closeEditor();
               });
             }"
-          >Save and exit</el-button>
+          >Save and Close</el-button>
         </span>
       </template>
     </el-dialog>
@@ -130,19 +131,9 @@ import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useNodeStore } from "@/stores/NodeStore";
 import { CellType } from "@/graphql/graphql";
+import type { ScriptCell } from "@/graphql/graphql";
 import { useGraphStore } from "@/stores/GraphStore";
-import { useInterfaceStore } from "~~/src/stores/InterfaceStore";
-
-const props = defineProps({
-  dev: {
-    type: Boolean,
-    default: false
-  },
-  nodeUuid: {
-    required: true,
-    type: String
-  }
-});
+import { useInterfaceStore } from "@/stores/InterfaceStore";
 
 enum MoveDirection {
   up = "Up",
@@ -226,15 +217,20 @@ const playScriptCell = (scriptCellUuid: string) => {
   });
 };
 
-const moveScriptCell = (scriptCellUuid: string, direction: MoveDirection) => {
-  const selectedScriptCell: any = [];
-  const newOrder: any[] = [];
+const moveScriptCell = async (scriptCellUuid: string, direction: MoveDirection) => {
+  if (node.value === undefined) {
+    console.log("Need a valid node for scriptcells");
+    return;
+  }
+
+  const selectedScriptCell: Array<ScriptCell> = [];
+  const newOrder: Array<ScriptCell> = [];
 
   node.value?.scriptCells.forEach((scriptCell) => {
     if (scriptCell.uuid === scriptCellUuid)
-      selectedScriptCell.push(scriptCell);
+      selectedScriptCell.push(scriptCell as ScriptCell);
     else
-      newOrder.push(scriptCell);
+      newOrder.push(scriptCell as ScriptCell);
   });
 
   if (selectedScriptCell[0] === undefined) {
@@ -248,8 +244,14 @@ const moveScriptCell = (scriptCellUuid: string, direction: MoveDirection) => {
 
   const oldIndex = selectedScriptCell[0].cellOrder;
 
-  let newPosition = 0;
+  // catch if nothing changes
+  if (direction === MoveDirection.up && oldIndex === 0)
+    return;
 
+  if (direction === MoveDirection.down && oldIndex === node.value?.scriptCells.length - 1)
+    return;
+
+  let newPosition = 0;
   if (direction === MoveDirection.up) {
     if (oldIndex > 0)
       newPosition = oldIndex - 1;
@@ -265,11 +267,16 @@ const moveScriptCell = (scriptCellUuid: string, direction: MoveDirection) => {
     scriptCell.cellOrder = index;
   });
 
-  // graphStore.updateNodeScriptCellsOrderLocal(props.nodeUuid, newOrder);
+  // commit to store
+  await nodeStore.updateScriptCells(newOrder);
 };
 
 // Styling
 const addNoPaddingClass = (blockCellType: CellType) => {
   return blockCellType === CellType.Markdown || blockCellType === CellType.Comment;
 };
+
+onUnmounted(() => {
+  nodeStore.empty();
+});
 </script>

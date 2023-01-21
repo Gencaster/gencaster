@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import type { Ref } from "vue";
-import type { Exact, GetNodeQuery, NewScriptCellInput, Scalars, ScriptCellInput } from "../graphql/graphql";
-import { useCreateScriptCellMutation, useDeleteScriptCellMutation, useGetNodeQuery, useUpdateNodeMutation, useUpdateScriptCellsMutation } from "../graphql/graphql";
+import type { Exact, GetNodeQuery, NewScriptCellInput, Scalars, ScriptCellInput } from "@/graphql/graphql";
+import { useCreateScriptCellMutation, useDeleteScriptCellMutation, useGetNodeQuery, useUpdateNodeMutation, useUpdateScriptCellsMutation } from "@/graphql/graphql";
 
 export const useNodeStore = defineStore("node", () => {
   const node: Ref<GetNodeQuery["node"]> = ref({} as GetNodeQuery["node"]);
@@ -26,6 +26,10 @@ export const useNodeStore = defineStore("node", () => {
     await getNode(uuid.value);
   };
 
+  const empty = () => {
+    node.value = {} as GetNodeQuery["node"];
+  };
+
   const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();
   const updateNode = async (node: GetNodeQuery["node"]) => {
     await updateNodeMutation({
@@ -45,6 +49,7 @@ export const useNodeStore = defineStore("node", () => {
   const updateScriptCells = async (scriptCells: Array<ScriptCellInput>) => {
     for (const cell of scriptCells) {
       // @ts-expect-error: somehow the object has __typename which the API does not like
+      // TODO: this is because of the GraphQL settings. It passes a hard coded scriptcell with __typename
       delete cell.__typename;
     }
 
@@ -69,6 +74,7 @@ export const useNodeStore = defineStore("node", () => {
     node,
     fetching,
     scriptCellsModified,
+    empty,
     getNode,
     reloadFromServer,
     updateNode,
