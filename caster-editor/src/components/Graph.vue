@@ -48,23 +48,15 @@
 
     <!-- Graph -->
     <v-network-graph
-      ref="graph"
-      v-model:selected-nodes="selectedNodes"
-      v-model:selected-edges="selectedEdges"
-      class="graph"
-      :nodes="graphStore.nodes()"
-      :edges="graphStore.edges()"
-      :configs="configs"
-      :layouts="graphStore.layouts()"
-      :event-handlers="eventHandlers"
+      ref="graph" v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges"
+      class="graph" :nodes="graphStore.nodes()" :edges="graphStore.edges()" :configs="configs"
+      :layouts="graphStore.layouts()" :event-handlers="eventHandlers"
     />
 
     <!-- Node Content -->
-    <div v-if="showEditor" class="node-data">
+    <div v-if="showEditor" ref="editorDom" class="node-data">
       <!-- @todo this can be nil? -->
-      <ElementsNodeEditor
-        :node-uuid="selectedNodes[0]"
-      />
+      <ElementsNodeEditor :node-uuid="selectedNodes[0]" />
     </div>
 
     <div v-if="!showEditor" class="stats">
@@ -111,16 +103,21 @@
 import { ElMessage } from "element-plus";
 import type { EventHandlers as GraphEventHandlers, Instance as GraphInstance } from "v-network-graph";
 import type { Ref } from "vue";
+import { computed, nextTick } from "vue";
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
+import { gsap } from "gsap";
 import { useNodeStore } from "@/stores/NodeStore";
 import { GraphSettings } from "@/assets/js/graphSettings";
 import type { Scalars } from "@/graphql/graphql";
 import { Tab, useMenuStore } from "@/stores/MenuStore";
 import { useGraphStore } from "@/stores/GraphStore";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
+
 // Props
 const props = defineProps<GraphProps>();
+
+// Html
+const editorDom = ref<HTMLElement>();
 
 // Composables
 const router = useRouter();
@@ -229,6 +226,62 @@ const removeSelection = () => {
   }
 };
 
+const centerClickLeftToEditor = (event: MouseEvent) => {
+  if (!graph.value)
+    return;
+
+  // get click position
+  const clickPos = {
+    x: event.offsetX,
+    y: event.offsetY
+  };
+
+  // get canvas size
+  const { height: gHeight, width: gWidth } = graph.value.getSizes();
+
+  // get editor width
+  const editorWidth = editorDom.value?.offsetWidth || 0;
+
+  // screen aim
+  const aimPos = {
+    x: (gWidth - editorWidth) / 2,
+    y: gHeight / 2
+  };
+
+  // move by
+  const moveBy = {
+    x: aimPos.x - clickPos.x,
+    y: aimPos.y - clickPos.y
+  };
+
+  const progress = {
+    absolute: 0
+  };
+
+  let prevProgress = 0;
+
+  const moveGraph = () => {
+    const delta = progress.absolute - prevProgress;
+    const shift = {
+      x: moveBy.x * delta,
+      y: moveBy.y * delta
+    };
+
+    graph.value?.panBy(shift);
+    prevProgress = progress.absolute;
+  };
+
+  // animate
+  gsap.to(progress, {
+    absolute: 1,
+    duration: 0.4,
+    ease: "power3.inOut",
+    onUpdate: () => {
+      moveGraph();
+    }
+  });
+};
+
 const openNodeEditor = async (node: string) => {
   if (scriptCellsModified.value === true) {
     ElMessage({
@@ -239,6 +292,8 @@ const openNodeEditor = async (node: string) => {
     return;
   }
   showEditor.value = true;
+  // TODO:  display the loading animation
+
   // ui should display the loading animation
   // so it is ok to first display the editor and then
   // load the data
@@ -246,6 +301,7 @@ const openNodeEditor = async (node: string) => {
   // we moved this from the node editor component to here
   // because the destroy mechanism lead to some strange
   // quirks when running async code
+
   await nodeStore.getNode(selectedNodes.value[0]);
 };
 
@@ -254,8 +310,10 @@ const eventHandlers: GraphEventHandlers = {
   "view:load": () => {
     graph.value?.fitToContents();
   },
-  "node:dblclick": ({ node }) => {
+  "node:dblclick": async ({ node, event }) => {
     openNodeEditor(node);
+    await nextTick();
+    centerClickLeftToEditor(event);
   },
   "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
     for (const p in dragEvent) {

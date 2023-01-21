@@ -91,17 +91,7 @@
       border: 1px solid $grey;
 
       &.no-padding {
-        padding: 15px 0px 15px 65px;
-
-        .ce-block__content,
-        .ce-toolbar__content {
-          max-width: 1000px;
-          /* example value, adjust for your own use case */
-        }
-
-        .codex-editor__loader {
-          height: 38px !important;
-        }
+        padding: 0px 0px 0px 0px;
       }
 
       .cell-type {
@@ -130,7 +120,7 @@
         border: 1px solid $grey;
         opacity: 0;
         transition: opacity .2s ease-in-out;
-
+        z-index: 999;
 
         .divider {
           height: 32px;

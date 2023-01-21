@@ -275,4 +275,8 @@ const moveScriptCell = async (scriptCellUuid: string, direction: MoveDirection) 
 const addNoPaddingClass = (blockCellType: CellType) => {
   return blockCellType === CellType.Markdown || blockCellType === CellType.Comment;
 };
+
+onUnmounted(() => {
+  nodeStore.empty();
+});
 </script>
