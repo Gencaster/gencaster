@@ -18,7 +18,7 @@ from .schema import schema
 class SchemaTestCase(TestCase):
     @staticmethod
     def get_login_context(is_authenticated=True):
-        m = mock.MagicMock()
+        m = mock.AsyncMock()
         m.request.user.is_authenticated = is_authenticated
         return m
 
