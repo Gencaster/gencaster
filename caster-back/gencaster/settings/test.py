@@ -1,3 +1,10 @@
+"""
+Test
+====
+
+Settings to run tests in by using local sqlite database.
+"""
+
 from .base import *  # noqa
 
 DEBUG = True

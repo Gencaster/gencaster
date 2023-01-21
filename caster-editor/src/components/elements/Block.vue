@@ -18,9 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { ScriptCell } from "@/graphql/graphql";
 import { CellType } from "@/graphql/graphql";
-
 const props = defineProps<BlockProps>();
 
 interface BlockProps {

@@ -1,6 +1,6 @@
 class MalformedOscMessage(Exception):
-    pass
+    """OSC message has wrong layout."""
 
 
 class OscBackendAuthException(Exception):
-    pass
+    """Authentication failed."""

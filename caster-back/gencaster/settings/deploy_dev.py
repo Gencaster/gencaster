@@ -1,3 +1,10 @@
+"""
+Deploy Dev
+==========
+
+Settings for deploying "*production*" dev environment on the server via Docker.
+"""
+
 from .base import *  # noqa
 
 CSRF_TRUSTED_ORIGINS = [

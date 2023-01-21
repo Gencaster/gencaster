@@ -1,6 +1,7 @@
 {
     "python.analysis.typeCheckingMode": "basic",
     "cSpell.words": [
+        "pythonosc",
         "ssml"
     ],
     "prettier.enable": false,

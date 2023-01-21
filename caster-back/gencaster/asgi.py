@@ -1,3 +1,6 @@
+"""
+ASGI config for gencaster project.
+"""
 import os
 
 from channels.routing import ProtocolTypeRouter, URLRouter

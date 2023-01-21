@@ -1,3 +1,8 @@
+"""
+Models
+======
+"""
+
 import uuid
 from typing import Optional
 
@@ -8,6 +13,19 @@ from stream.models import StreamPoint
 
 
 class Graph(models.Model):
+    """A collection of :class:`~Node` and :class:`~Edge`.
+    This can be considered a score as well as a program as it
+    has an entry point as a :class:`~Node` and can jump to any
+    other :class:`~Node`, also allowing for recursive loops/cycles.
+
+    Each node can be considered a little program on its own which can consist
+    of multiple :class:`~ScriptCell` which can be coded in a variety of
+    languages which can control the frontend and the audio (by e.g. speaking
+    on the stream) or setting a background music.
+
+    The story graph is a core concept and can be edited with a native editor.
+    """
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -36,6 +54,10 @@ class Graph(models.Model):
 
 
 class Node(models.Model):
+    """
+    A node.
+    """
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -82,6 +104,16 @@ class Node(models.Model):
 
 
 class Edge(models.Model):
+    """Connects two :class:`~Node` with each other.
+
+    .. todo::
+
+        With a script we can also jump to any other node
+        so it is not clear how to use this.
+        Maybe take a look at visual programming languages
+        such as MSP or Scratch how they handle this?
+    """
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -114,7 +146,14 @@ class Edge(models.Model):
 
 
 class ScriptCell(models.Model):
+    """Stores a script which can be executed
+    with our :class:`~story_graph.engine.Engine` on a
+    :class:`~stream.models.Stream`.
+    """
+
     class CellType(models.TextChoices):
+        """Choice of foobar"""
+
         MARKDOWN = ["markdown", _("Markdown")]
         PYTHON = ["python", _("Python")]
         SUPERCOLLIDER = ["supercollider", _("SuperCollider")]
@@ -160,6 +199,14 @@ class ScriptCell(models.Model):
 
 
 class GraphSession(models.Model):
+    """A stroy session.
+
+    .. todo::
+
+        Do we need this?
+
+    """
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,

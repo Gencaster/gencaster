@@ -1,3 +1,15 @@
+"""
+Schema
+======
+
+Here we define all the endpoints for GraphQL.
+
+For a specific details of the types consider the
+`GraphiQL <https://github.com/graphql/graphiql>`_
+page available under the `/graphql` endpoint of
+the running backend.
+"""
+
 import asyncio
 import logging
 import uuid
@@ -31,6 +43,8 @@ log = logging.getLogger(__name__)
 
 
 class AuthStrawberryDjangoField(StrawberryDjangoField):
+    """Allows us to restrict certain actions to logged in users."""
+
     def resolver(self, info: Info, source, **kwargs):
         request: HttpRequest = info.context.request
         if not request.user.is_authenticated:
@@ -38,9 +52,12 @@ class AuthStrawberryDjangoField(StrawberryDjangoField):
         return super().resolver(info, source, **kwargs)
 
 
-# this would be better a decorator but strawberry is not nice in these regards, see
-# https://stackoverflow.com/a/72796313/3475778
 async def graphql_check_authenticated(info: Info):
+    """Helper function to determine if we are loggin in an async manner.
+
+    This would be better a decorator but strawberry is not nice in these regards, see
+    `Stack Overflow <https://stackoverflow.com/a/72796313/3475778>`_.
+    """
     auth = await sync_to_async(lambda: info.context.request.user.is_authenticated)()
     if auth is False:
         raise PermissionDenied()
@@ -58,6 +75,8 @@ def _update_cells(new_cells: List[ScriptCellInput]):
 
 @strawberry.type
 class Query:
+    """Queries for GenCaster."""
+
     stream_point: StreamPoint = AuthStrawberryDjangoField()
     stream_points: List[StreamPoint] = AuthStrawberryDjangoField()
     graphs: List[Graph] = AuthStrawberryDjangoField()
@@ -68,8 +87,14 @@ class Query:
 
 @strawberry.type
 class Mutation:
+    """Mutations for GenCaster via GraphQL."""
+
     @strawberry.mutation
     async def add_node(self, info: Info, new_node: NodeCreate) -> None:
+        """Creates a new :class:`~story_graph.models.Node` in a given
+        ~class:`~story_graph.models.Graph`.
+        Although it creates a new node with UUID we don't hand it back yet.
+        """
         await graphql_check_authenticated(info)
 
         graph = await sync_to_async(story_graph_models.Graph.objects.get)(
@@ -96,6 +121,9 @@ class Mutation:
 
     @strawberry.mutation
     async def update_node(self, info: Info, node_update: NodeUpdate) -> None:
+        """Updates a given :class:`~story_graph.models.Node` which can be used
+        for renaming or moving it across the canvas.
+        """
         await graphql_check_authenticated(info)
 
         node = await story_graph_models.Node.objects.select_related("graph").aget(
@@ -122,6 +150,10 @@ class Mutation:
 
     @strawberry.mutation
     async def add_edge(self, info: Info, new_edge: EdgeInput) -> None:
+        """Creates a :class:`~story_graph.models.Edge` for a given
+        :class:`~story_graph.models.Graph`.
+        It does not return the created edge.
+        """
         await graphql_check_authenticated(info)
         in_node: story_graph_models.Node = await sync_to_async(
             story_graph_models.Node.objects.select_related("graph").get
@@ -143,6 +175,7 @@ class Mutation:
 
     @strawberry.mutation
     async def delete_edge(self, info, edge_uuid: uuid.UUID) -> None:
+        """Deletes a given :class:`~story_graph.models.Edge`."""
         await graphql_check_authenticated(info)
         try:
             edge: story_graph_models.Edge = await sync_to_async(
@@ -159,6 +192,7 @@ class Mutation:
 
     @strawberry.mutation
     async def delete_node(self, info, node_uuid: uuid.UUID) -> None:
+        """Deletes a given :class:`~story_graph.models.Node`."""
         await graphql_check_authenticated(info)
         try:
             node: story_graph_models.Node = await sync_to_async(
@@ -187,6 +221,9 @@ class Mutation:
         node_uuid: uuid.UUID,
         new_script_cell: NewScriptCellInput,
     ) -> ScriptCell:
+        """Creates a new :class:`~story_graph.models.ScriptCell` for a given
+        :class:`~story_graph.models.Edge` and returns this cell.
+        """
         await graphql_check_authenticated(info)
         try:
             node: story_graph_models.Node = await story_graph_models.Node.objects.aget(
@@ -218,6 +255,7 @@ class Mutation:
 
     @strawberry.mutation
     async def update_script_cells(self, info, new_cells: List[ScriptCellInput]) -> None:
+        """Updates a given :class:`~story_graph.models.ScriptCell` to change its content."""
         await graphql_check_authenticated(info)
         await sync_to_async(_update_cells)(new_cells)
 
@@ -232,6 +270,7 @@ class Mutation:
 
     @strawberry.mutation
     async def delete_script_cell(self, info, script_cell_uuid: uuid.UUID) -> None:
+        """Deletes a given :class:`~story_graph.models.ScriptCell`."""
         await graphql_check_authenticated(info)
 
         # first get the node before the cell is deleted

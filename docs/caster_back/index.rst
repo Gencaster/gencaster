@@ -5,4 +5,4 @@ A service which handles data storage and coordination of SuperCollider streams w
 
 .. toctree::
 
-    api.rst
+    api/index.rst

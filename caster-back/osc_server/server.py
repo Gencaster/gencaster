@@ -1,3 +1,10 @@
+"""
+Server
+======
+
+A naive server to receive OSC messages from SuperCollider.
+"""
+
 import logging
 import os
 from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -24,6 +31,30 @@ log = logging.getLogger(__name__)
 
 
 class OSCServer:
+    """
+    Uses pythonosc to map the routes
+
+    .. list-table:: Routes
+        :header-rows: 1
+
+        * - route
+          - method
+          - message
+
+        * - `/beacon`
+          - :func:`~OSCServer.beacon_handler`
+          - :ref:`OSC beacon message`
+
+        * - `/acknowledge_handler`
+          - :func:`~OSCServer.acknowledge_handler`
+          - :ref:`OSC acknowledge message`
+
+        * - `/remote/action`
+          - :func:`~OSCServer.remote_action_handler`
+          - :ref:`OSC remote action message`
+
+    """
+
     def __init__(self):
         self._dispatcher: Optional[Dispatcher] = None
         self.mapper: Dict[str, Callable[[Tuple[str, int], str, List[Any]], None]] = {
@@ -51,7 +82,10 @@ class OSCServer:
     def beacon_handler(
         self, client_address: Tuple[str, int], address: str, *osc_args: List[Any]
     ) -> None:
-        beacon_message = SCBeaconMessage.form_osc_args(*osc_args)
+        """Accepts a beacon from SuperCollider and creates a
+        :class:`~StreamPoint` from it so it gets discovered by the backend.
+        """
+        beacon_message = SCBeaconMessage.from_osc_args(*osc_args)
 
         point: StreamPoint
         point, created = StreamPoint.objects.get_or_create(
@@ -77,7 +111,10 @@ class OSCServer:
     def acknowledge_handler(
         self, client_address: Tuple[str, int], address: str, *osc_args: List[Any]
     ) -> None:
-        ack_message = SCAcknowledgeMessage.form_osc_args(*osc_args)
+        """Acknowledges a message and updates its associated
+        :class:`~story_graph.models.StreamInstruction`.
+        """
+        ack_message = SCAcknowledgeMessage.from_osc_args(*osc_args)
 
         try:
             stream_instruction: StreamInstruction = StreamInstruction.objects.get(
@@ -97,7 +134,12 @@ class OSCServer:
     def remote_action_handler(
         self, client_address: Tuple[str, int], address: str, *osc_args: List[Any]
     ) -> None:
-        remote_message = RemoteActionMessage.form_osc_args(*osc_args)
+        """Remote actions are used to trigger actions on a SuperCollider instance
+        and can be send in form of a :class:`~stream.models.StreamInstruction`
+        or raw from a local running SuperCollider instance which
+        can be used to live code the SuperCollider instances managed by GenCaster.
+        """
+        remote_message = RemoteActionMessage.from_osc_args(*osc_args)
 
         stream_points = StreamPoint.objects.free_stream_points().filter()
         if remote_message.target:

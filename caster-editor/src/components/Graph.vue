@@ -20,12 +20,6 @@
             </span>
           </div>
           <div class="menu-items right">
-            <button class="unstyled state" @click="saveState()">
-              <!-- @todo -->
-              <div class="state-indicator" :class="{ saved: !true }" />
-              Save
-            </button>
-
             <button class="unstyled" @click="exitWithoutSaving()">
               Exit
             </button>
@@ -39,7 +33,7 @@
             <button class="unstyled" :class="{ lighter: hideConnectionButton }" @click="createEdge()">
               Add Connection
             </button>
-            <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeAny()">
+            <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeSelection()">
               Remove
             </button>
             <button class="unstyled" @click="graphStore.reloadFromServer()">
@@ -54,23 +48,15 @@
 
     <!-- Graph -->
     <v-network-graph
-      ref="graph"
-      v-model:selected-nodes="selectedNodes"
-      v-model:selected-edges="selectedEdges"
-      class="graph"
-      :nodes="graphStore.nodes()"
-      :edges="graphStore.edges()"
-      :configs="configs"
-      :layouts="graphStore.layouts()"
-      :event-handlers="eventHandlers"
+      ref="graph" v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges"
+      class="graph" :nodes="graphStore.nodes()" :edges="graphStore.edges()" :configs="configs"
+      :layouts="graphStore.layouts()" :event-handlers="eventHandlers"
     />
 
     <!-- Node Content -->
-    <div v-if="showEditor" class="node-data">
+    <div v-if="showEditor" ref="editorDom" class="node-data">
       <!-- @todo this can be nil? -->
-      <ElementsNodeEditor
-        :node-uuid="selectedNodes[0]"
-      />
+      <ElementsNodeEditor :node-uuid="selectedNodes[0]" />
     </div>
 
     <div v-if="!showEditor" class="stats">
@@ -115,18 +101,23 @@
 
 <script lang="ts" setup>
 import { ElMessage } from "element-plus";
-import type { EventHandlers as GraphEventHandlers, Instance as GraphInstance, Node as GraphNode } from "v-network-graph";
+import type { EventHandlers as GraphEventHandlers, Instance as GraphInstance } from "v-network-graph";
 import type { Ref } from "vue";
+import { computed, nextTick } from "vue";
 import { storeToRefs } from "pinia";
-import { computed } from "vue";
-import { useNodeStore } from "../stores/NodeStore";
+import { gsap } from "gsap";
+import { useNodeStore } from "@/stores/NodeStore";
 import { GraphSettings } from "@/assets/js/graphSettings";
-import type { Scalars, ScriptCell } from "@/graphql/graphql";
+import type { Scalars } from "@/graphql/graphql";
 import { Tab, useMenuStore } from "@/stores/MenuStore";
 import { useGraphStore } from "@/stores/GraphStore";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
+
 // Props
 const props = defineProps<GraphProps>();
+
+// Html
+const editorDom = ref<HTMLElement>();
 
 // Composables
 const router = useRouter();
@@ -145,7 +136,6 @@ interface GraphProps {
 
 // Data
 const graph = ref<GraphInstance>();
-const selectedNodeScriptCells: Ref<ScriptCell[]> = ref([]);
 const selectedNodes: Ref<string[]> = ref([]);
 const selectedEdges: Ref<string[]> = ref([]);
 
@@ -155,7 +145,6 @@ const configs = GraphSettings.standard;
 // Interface
 const deleteDialogVisible = ref(false);
 const exitDialogVisible = ref(false);
-const nodeToDeleteName = ref("");
 
 // Computed
 const hideConnectionButton = computed(() => {
@@ -175,12 +164,20 @@ const hideRemoveButton = computed(() => {
 });
 
 const addNode = async () => {
+  if (!graph.value) {
+    console.error("can't add node since graph not defined", graph);
+    return;
+  }
+
+  const { height, width } = graph.value.getSizes();
+  const centerPosition = graph.value.translateFromDomToSvgCoordinates({ x: width / 2, y: height / 2 });
+
   await graphStore.addNode({
     graphUuid: props.uuid,
     name: "new node",
     color: "primary",
-    positionX: graph.value?.getPan().x,
-    positionY: graph.value?.getPan().y
+    positionX: centerPosition.x,
+    positionY: centerPosition.y
   });
 };
 
@@ -216,7 +213,7 @@ const exitWithoutSaving = () => {
   });
 };
 
-const removeAny = () => {
+const removeSelection = () => {
   // check if only one type is selected
   // right now we only allow one element deletion
   // TODO: needs to check if the async call is not buggy if looping through
@@ -235,10 +232,66 @@ const removeAny = () => {
   }
 };
 
+const centerClickLeftToEditor = (event: MouseEvent) => {
+  if (!graph.value)
+    return;
+
+  // get click position
+  const clickPos = {
+    x: event.offsetX,
+    y: event.offsetY
+  };
+
+  // get canvas size
+  const { height: gHeight, width: gWidth } = graph.value.getSizes();
+
+  // get editor width
+  const editorWidth = editorDom.value?.offsetWidth || 0;
+
+  // screen aim
+  const aimPos = {
+    x: (gWidth - editorWidth) / 2,
+    y: gHeight / 2
+  };
+
+  // move by
+  const moveBy = {
+    x: aimPos.x - clickPos.x,
+    y: aimPos.y - clickPos.y
+  };
+
+  const progress = {
+    absolute: 0
+  };
+
+  let prevProgress = 0;
+
+  const moveGraph = () => {
+    const delta = progress.absolute - prevProgress;
+    const shift = {
+      x: moveBy.x * delta,
+      y: moveBy.y * delta
+    };
+
+    graph.value?.panBy(shift);
+    prevProgress = progress.absolute;
+  };
+
+  // animate
+  gsap.to(progress, {
+    absolute: 1,
+    duration: 0.4,
+    ease: "power3.inOut",
+    onUpdate: () => {
+      moveGraph();
+    }
+  });
+};
+
 const openNodeEditor = async (node: string) => {
   if (scriptCellsModified.value === true) {
     ElMessage({
-      message: "Save or close node before opening a new one",
+      message: "Save or close scene before switching to another.",
       type: "error",
       customClass: "messages-editor"
     });
@@ -250,8 +303,13 @@ const openNodeEditor = async (node: string) => {
 
 const eventHandlers: GraphEventHandlers = {
   // see https://dash14.github.io/v-network-graph/reference/events.html#events-with-event-handlers
-  "node:dblclick": ({ node }) => {
+  "view:load": () => {
+    graph.value?.fitToContents();
+  },
+  "node:dblclick": async ({ node, event }) => {
     openNodeEditor(node);
+    await nextTick();
+    centerClickLeftToEditor(event);
   },
   "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
     for (const p in dragEvent) {

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import type { Ref } from "vue";
-import type { Exact, NewScriptCellInput, Scalars, ScriptCellInput } from "../graphql/graphql";
-import { useCreateScriptCellMutation, useDeleteScriptCellMutation, useNodeSubscription, useUpdateNodeMutation, useUpdateScriptCellsMutation } from "../graphql/graphql";
+import type { Exact, NewScriptCellInput, Scalars, ScriptCellInput } from "@/graphql/graphql";
+import { useCreateScriptCellMutation, useDeleteScriptCellMutation, useNodeSubscription, useUpdateNodeMutation, useUpdateScriptCellsMutation } from "@/graphql/graphql";
 
 export const useNodeStore = defineStore("node", () => {
   const uuid: Ref<string> = ref("");
@@ -26,6 +26,7 @@ export const useNodeStore = defineStore("node", () => {
   const updateScriptCells = async (scriptCells: Array<ScriptCellInput>) => {
     for (const cell of scriptCells) {
       // @ts-expect-error: somehow the object has __typename which the API does not like
+      // TODO: this is because of the GraphQL settings. It passes a hard coded scriptcell with __typename
       delete cell.__typename;
     }
 
