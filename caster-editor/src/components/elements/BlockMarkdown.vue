@@ -19,7 +19,7 @@ import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import type { OutputData } from "@editorjs/editorjs";
 import { CellType } from "@/graphql/graphql";
-import type { GetNodeQuery, ScriptCell } from "@/graphql/graphql";
+import type { NodeSubscription, ScriptCell } from "@/graphql/graphql";
 import { useNodeStore } from "@/stores/NodeStore";
 
 const props = defineProps<BlockProps>();
@@ -33,7 +33,7 @@ interface BlockProps {
 const { scriptCellsModified, node } = storeToRefs(useNodeStore());
 
 // Variables
-const scriptCell = ref<GetNodeQuery["node"]["scriptCells"][0] | undefined>(node.value.scriptCells.find((x) => { return x.uuid === props.scriptCellUuid; }));
+const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(node.value?.node.scriptCells.find((x) => { return x.uuid === props.scriptCellUuid; }));
 const editorJS = ref<EditorJS>();
 const editorDom = ref<HTMLElement>();
 

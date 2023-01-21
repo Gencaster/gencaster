@@ -1,11 +1,11 @@
 <template>
-  <div v-if="fetching">
+  <div v-if="!node?.node">
     <ElementsLoading />
   </div>
   <div v-else class="node-editor-outer">
     <div class="title">
       <div class="left">
-        <p>{{ node.name }}</p>
+        <p>{{ node.node.name }}</p>
         <button class="unstyled" @click="renameNodeDialogVisible = true">
           edit
         </button>
@@ -34,7 +34,7 @@
       </button>
     </div>
     <div class="blocks">
-      <div v-for="(cell, index) in node.scriptCells" :key="cell.uuid">
+      <div v-for="(cell, index) in node.node.scriptCells" :key="cell.uuid">
         <div class="cell" :class="{ 'no-padding': addNoPaddingClass(cell.cellType) }">
           <ElementsBlock
             :script-cell-uuid="cell.uuid"
@@ -151,7 +151,7 @@ enum MoveDirection {
 
 // Store
 const nodeStore = useNodeStore();
-const { node, fetching, scriptCellsModified } = storeToRefs(nodeStore);
+const { node, scriptCellsModified } = storeToRefs(nodeStore);
 const graphStore = useGraphStore();
 const { showEditor } = storeToRefs(useInterfaceStore());
 
@@ -184,13 +184,14 @@ const renameNodeFromDialog = async () => {
     console.log("Need a valid node for rename");
     return;
   }
-  node.value.name = renameNodeDialogName.value;
+  node.value.node.name = renameNodeDialogName.value;
   await nodeStore.updateNode(node.value);
   renameNodeDialogVisible.value = false;
 };
 
 const syncCellsWithServer = async () => {
-  await nodeStore.updateScriptCells(node.value.scriptCells);
+  if (node.value?.node !== undefined)
+    await nodeStore.updateScriptCells(node.value.node.scriptCells);
 };
 
 const addScriptCell = (type: CellType, position: number | undefined = undefined) => {
@@ -202,10 +203,10 @@ const addScriptCell = (type: CellType, position: number | undefined = undefined)
   // we will reload from the server which may delete edits we have
   // not synced to the server yet
   nodeStore.createScriptCell({
-    nodeUuid: node.value.uuid,
+    nodeUuid: node.value.node.uuid,
     newScriptCell: {
       // add cell as last cell by searching for highest current cell order
-      cellOrder: node.value.scriptCells.length > 0 ? Math.max(...node.value.scriptCells.map((x) => { return x.cellOrder; })) + 1 : 0,
+      cellOrder: node.value.node.scriptCells.length > 0 ? Math.max(...node.value.node.scriptCells.map((x) => { return x.cellOrder; })) + 1 : 0,
       cellCode: "",
       cellType: type
     }
@@ -228,7 +229,7 @@ const moveScriptCell = (scriptCellUuid: string, direction: MoveDirection) => {
   const selectedScriptCell: any = [];
   const newOrder: any[] = [];
 
-  node.value?.scriptCells.forEach((scriptCell) => {
+  node.value?.node.scriptCells.forEach((scriptCell) => {
     if (scriptCell.uuid === scriptCellUuid)
       selectedScriptCell.push(scriptCell);
     else

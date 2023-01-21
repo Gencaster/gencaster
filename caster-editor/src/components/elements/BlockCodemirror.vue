@@ -41,7 +41,7 @@ import { python } from "@codemirror/lang-python";
 import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { CellType } from "@/graphql/graphql";
-import type { GetNodeQuery, ScriptCell } from "@/graphql/graphql";
+import type { NodeSubscription, ScriptCell } from "@/graphql/graphql";
 import { useNodeStore } from "~~/src/stores/NodeStore";
 const props = defineProps<BlockProps>();
 
@@ -54,7 +54,7 @@ interface BlockProps {
 const { scriptCellsModified, node } = storeToRefs(useNodeStore());
 
 // Variables
-const scriptCell = ref<GetNodeQuery["node"]["scriptCells"][0] | undefined>(node.value.scriptCells.find((x) => { return x.uuid === props.scriptCellUuid; }));
+const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(node.value?.node.scriptCells.find((x) => { return x.uuid === props.scriptCellUuid; }));
 const domReady: Ref<boolean> = ref(false);
 
 const emitCodemirror = (eventType?: string, event?: any) => {

@@ -136,7 +136,7 @@ const menuStore = useMenuStore();
 const graphStore = useGraphStore();
 const nodeStore = useNodeStore();
 const { graph: graphInStore } = storeToRefs(graphStore);
-const { scriptCellsModified } = storeToRefs(nodeStore);
+const { scriptCellsModified, uuid: nodeUuid } = storeToRefs(nodeStore);
 const { showEditor } = storeToRefs(useInterfaceStore());
 
 interface GraphProps {
@@ -245,14 +245,7 @@ const openNodeEditor = async (node: string) => {
     return;
   }
   showEditor.value = true;
-  // ui should display the loading animation
-  // so it is ok to first display the editor and then
-  // load the data
-  //
-  // we moved this from the node editor component to here
-  // because the destroy mechanism lead to some strange
-  // quirks when running async code
-  await nodeStore.getNode(selectedNodes.value[0]);
+  nodeUuid.value = selectedNodes.value[0];
 };
 
 const eventHandlers: GraphEventHandlers = {
