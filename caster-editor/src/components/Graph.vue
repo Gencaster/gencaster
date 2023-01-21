@@ -1,101 +1,26 @@
 <template>
-  <div class="index-page">
-    <!-- Menu -->
-    <div>
-      <div class="menu menu-edit">
-        <div class="level level-1">
-          <div class="menu-items left">
-            <el-radio-group v-model="menuStore.tab">
-              <el-radio-button :label="Tab.Edit">
-                Build
-              </el-radio-button>
-              <el-radio-button :label="Tab.Test">
-                Test
-              </el-radio-button>
-            </el-radio-group>
-          </div>
-          <div class="menu-items middle">
-            <span>
-              {{ graphStore.graph.name }}
-            </span>
-          </div>
-          <div class="menu-items right">
-            <button class="unstyled" @click="exitWithoutSaving()">
-              Exit
-            </button>
-          </div>
-        </div>
-        <div class="level level-2">
-          <div v-if="menuStore.tab === Tab.Edit" class="left">
-            <button class="unstyled" @click="addNode()">
-              Add Node
-            </button>
-            <button class="unstyled" :class="{ lighter: hideConnectionButton }" @click="createEdge()">
-              Add Connection
-            </button>
-            <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeSelection()">
-              Remove
-            </button>
-            <button class="unstyled" @click="graphStore.reloadFromServer()">
-              Refresh
-            </button>
-          </div>
-          <div v-if="menuStore.tab === Tab.Test" />
-        </div>
-      </div>
-      <div class="menu-spacer" />
-    </div>
+  <!-- Menu -->
+  <Menu :graph="graph" :uuid="uuid" :selected-nodes="selectedNodes" :selected-edges="selectedEdges" />
 
-    <!-- Graph -->
-    <v-network-graph
-      ref="graph" v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges"
-      class="graph" :nodes="graphStore.nodes()" :edges="graphStore.edges()" :configs="configs"
-      :layouts="graphStore.layouts()" :event-handlers="eventHandlers"
-    />
+  <!-- Graph -->
+  <v-network-graph
+    ref="graph" v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges"
+    class="graph" :nodes="graphStore.nodes()" :edges="graphStore.edges()" :configs="configs"
+    :layouts="graphStore.layouts()" :event-handlers="eventHandlers"
+  />
 
-    <!-- Node Content -->
-    <div v-if="showEditor" ref="editorDom" class="node-data">
-      <!-- @todo this can be nil? -->
-      <ElementsNodeEditor :node-uuid="selectedNodes[0]" />
-    </div>
+  <!-- Node Editor -->
+  <div v-if="showEditor" ref="editorDom" class="node-data">
+    <!-- TODO: this can be nil? -->
+    <NodeEditor :node-uuid="selectedNodes[0]" />
+  </div>
 
-    <div v-if="!showEditor" class="stats">
-      <p>
-        Nodes: {{ graphStore.graph.nodes.length }} &nbsp;
-        Edges: {{ graphStore.graph.edges.length }}
-      </p>
-    </div>
-
-    <!-- Dialogs -->
-    <!-- Are you sure to delete? -->
-    <el-dialog v-model="deleteDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
-      <span>
-        Are you sure to delete Scene "{{ graph?.nodes[selectedNodes[0]]?.name || '' }}"?
-      </span>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button text bg @click="deleteDialogVisible = false">Cancel</el-button>
-          <el-button color="#FF0000" @click="deleteSelectedNodes()">
-            Delete Node
-          </el-button>
-        </span>
-      </template>
-    </el-dialog>
-
-    <!-- Exit Page -->
-    <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
-      <span>
-        Are you sure to exit without saving? <br> Some of your changes might get lost.
-      </span>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
-          <el-button color="#FF0000" @click="exitWithoutSaving()">
-            Exit
-          </el-button>
-        </span>
-      </template>
-    </el-dialog>
+  <!-- Other Interface -->
+  <div v-if="!showEditor" class="stats">
+    <p>
+      Nodes: {{ graphStore.graph.nodes.length }} &nbsp;
+      Edges: {{ graphStore.graph.edges.length }}
+    </p>
   </div>
 </template>
 
@@ -103,13 +28,12 @@
 import { ElMessage } from "element-plus";
 import type { EventHandlers as GraphEventHandlers, Instance as GraphInstance } from "v-network-graph";
 import type { Ref } from "vue";
-import { computed, nextTick } from "vue";
+import { nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
 import { useNodeStore } from "@/stores/NodeStore";
 import { GraphSettings } from "@/assets/js/graphSettings";
 import type { Scalars } from "@/graphql/graphql";
-import { Tab, useMenuStore } from "@/stores/MenuStore";
 import { useGraphStore } from "@/stores/GraphStore";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 
@@ -123,7 +47,6 @@ const editorDom = ref<HTMLElement>();
 const router = useRouter();
 
 // Store
-const menuStore = useMenuStore();
 const graphStore = useGraphStore();
 const nodeStore = useNodeStore();
 const { scriptCellsModified } = storeToRefs(nodeStore);
@@ -135,97 +58,14 @@ interface GraphProps {
 
 // Data
 const graph = ref<GraphInstance>();
+
 const selectedNodes: Ref<string[]> = ref([]);
 const selectedEdges: Ref<string[]> = ref([]);
 
 // Config
 const configs = GraphSettings.standard;
 
-// Interface
-const deleteDialogVisible = ref(false);
-const exitDialogVisible = ref(false);
-
-// Computed
-const hideConnectionButton = computed(() => {
-  return selectedNodes.value.length !== 2;
-});
-
-const hideRemoveButton = computed(() => {
-  if ((selectedNodes.value.length === 0 && selectedEdges.value.length === 0) || (selectedNodes.value.length === 0 && selectedEdges.value.length === 0))
-    return true;
-  else if ((selectedNodes.value.length > 1 || selectedEdges.value.length > 1))
-    return true;
-  else return false;
-});
-
-const addNode = async () => {
-  if (!graph.value) {
-    console.error("can't add node since graph not defined", graph);
-    return;
-  }
-
-  const { height, width } = graph.value.getSizes();
-  const centerPosition = graph.value.translateFromDomToSvgCoordinates({ x: width / 2, y: height / 2 });
-
-  await graphStore.addNode({
-    graphUuid: props.uuid,
-    name: "new node",
-    color: "primary",
-    positionX: centerPosition.x,
-    positionY: centerPosition.y
-  });
-};
-
-const deleteSelectedNodes = async () => {
-  deleteDialogVisible.value = false;
-  for (const nodeUuid of selectedNodes.value)
-    await graphStore.deleteNode(nodeUuid);
-};
-
-const deleteSelectedEdges = async () => {
-  for (const edgeUuid of selectedEdges.value)
-    await graphStore.deleteEdge(edgeUuid);
-};
-
-const createEdge = async () => {
-  if (selectedNodes.value.length !== 2) {
-    ElMessage({
-      message: "requires exactly 2 scenes selected.",
-      type: "error",
-      customClass: "messages-editor"
-    });
-    return;
-  }
-  const [source, target] = selectedNodes.value;
-
-  await graphStore.createEdge(source, target);
-};
-
-const exitWithoutSaving = () => {
-  router.push({
-    path: "/graphs"
-  });
-};
-
-const removeSelection = () => {
-  // check if only one type is selected
-  // right now we only allow one element deletion
-  // TODO: needs to check if the async call is not buggy if looping through
-  if ((selectedNodes.value.length === 1 && selectedEdges.value.length === 0)) {
-    deleteDialogVisible.value = true;
-  }
-  else if ((selectedNodes.value.length === 0 && selectedEdges.value.length === 1)) {
-    deleteSelectedEdges();
-  }
-  else {
-    ElMessage({
-      message: "Please select max one scene or one connection.",
-      type: "error",
-      customClass: "messages-editor"
-    });
-  }
-};
-
+// Graph Manipulations
 const centerClickLeftToEditor = (event: MouseEvent) => {
   if (!graph.value)
     return;
