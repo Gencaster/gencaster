@@ -16,7 +16,7 @@
           </div>
           <div class="menu-items middle">
             <span>
-              {{ graphStore.graph.name }}
+              {{ graphInStore?.graph.name }}
             </span>
           </div>
           <div class="menu-items right">
@@ -75,8 +75,8 @@
 
     <div v-if="!showEditor" class="stats">
       <p>
-        Nodes: {{ graphStore.graph.nodes.length }} &nbsp;
-        Edges: {{ graphStore.graph.edges.length }}
+        Nodes: {{ graphInStore?.graph.nodes.length }} &nbsp;
+        Edges: {{ graphInStore?.graph.edges.length }}
       </p>
     </div>
 
@@ -84,7 +84,7 @@
     <!-- Are you sure to delete? -->
     <el-dialog v-model="deleteDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
       <span>
-        Are you sure to delete Scene "{{ graph?.nodes[selectedNodes[0]].name }}"?
+        Are you sure to delete Scene "{{ (graph?.nodes[selectedNodes[0]] || { name: "deleted" }).name }}"?
       </span>
       <template #footer>
         <span class="dialog-footer">
@@ -163,7 +163,7 @@ const hideConnectionButton = computed(() => {
 });
 
 const curSelectedNode = computed(() => {
-  return graphStore.graph.nodes.find(x => x.uuid === selectedNodes.value[0]);
+  return graphInStore.value?.graph?.nodes.find(x => x.uuid === selectedNodes.value[0]);
 });
 
 const hideRemoveButton = computed(() => {
@@ -186,7 +186,8 @@ const addNode = async () => {
 
 const deleteSelectedNodes = async () => {
   deleteDialogVisible.value = false;
-  for (const nodeUuid of selectedNodes.value)
+  // work on a copy to not get into problems
+  for (const nodeUuid of [...selectedNodes.value])
     await graphStore.deleteNode(nodeUuid);
 };
 
@@ -261,7 +262,7 @@ const eventHandlers: GraphEventHandlers = {
   },
   "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
     for (const p in dragEvent) {
-      const draggedNode = graphStore.graph.nodes.find(x => x.uuid === p);
+      const draggedNode = graphInStore.value?.graph.nodes.find(x => x.uuid === p);
       if (draggedNode === undefined) {
         console.log("Could not find dragged Node in our local store");
         continue;

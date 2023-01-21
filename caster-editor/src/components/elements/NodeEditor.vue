@@ -186,8 +186,6 @@ const renameNodeFromDialog = async () => {
   }
   node.value.name = renameNodeDialogName.value;
   await nodeStore.updateNode(node.value);
-  // updates the name on the graph view as well
-  await graphStore.reloadFromServer();
   renameNodeDialogVisible.value = false;
 };
 
