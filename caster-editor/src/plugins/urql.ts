@@ -4,8 +4,6 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 import { defineNuxtPlugin } from "#app";
 import { useRuntimeConfig } from "#imports";
 
-const subscriptionClient = new SubscriptionClient("ws://127.0.0.1:8081/graphql", { reconnect: true });
-
 export default defineNuxtPlugin((nuxtApp: any) => {
   const config = useRuntimeConfig();
 
@@ -14,7 +12,7 @@ export default defineNuxtPlugin((nuxtApp: any) => {
     exchanges: [
       ...defaultExchanges,
       subscriptionExchange({
-        forwardSubscription: operation => subscriptionClient.request(operation)
+        forwardSubscription: operation => new SubscriptionClient(config.public.BACKEND_GRAPHQL_URL.replaceAll("https", "wss").replaceAll("http", "ws"), { reconnect: true }).request(operation)
       })
     ],
     requestPolicy: "network-only",
