@@ -18,8 +18,8 @@
   <!-- Other Interface -->
   <div v-if="!showEditor" class="stats">
     <p>
-      Nodes: {{ graphStore.graph.nodes.length }} &nbsp;
-      Edges: {{ graphStore.graph.edges.length }}
+      Nodes: {{ graphInStore?.graph.nodes.length }} &nbsp;
+      Edges: {{ graphInStore?.graph.edges.length }}
     </p>
   </div>
 </template>
@@ -49,7 +49,8 @@ const router = useRouter();
 // Store
 const graphStore = useGraphStore();
 const nodeStore = useNodeStore();
-const { scriptCellsModified } = storeToRefs(nodeStore);
+const { graph: graphInStore } = storeToRefs(graphStore);
+const { scriptCellsModified, uuid: nodeUuid } = storeToRefs(nodeStore);
 const { showEditor } = storeToRefs(useInterfaceStore());
 
 interface GraphProps {
@@ -132,17 +133,7 @@ const openNodeEditor = async (node: string) => {
     return;
   }
   showEditor.value = true;
-  // TODO:  display the loading animation
-
-  // ui should display the loading animation
-  // so it is ok to first display the editor and then
-  // load the data
-  //
-  // we moved this from the node editor component to here
-  // because the destroy mechanism lead to some strange
-  // quirks when running async code
-
-  await nodeStore.getNode(selectedNodes.value[0]);
+  nodeUuid.value = selectedNodes.value[0];
 };
 
 const eventHandlers: GraphEventHandlers = {
@@ -157,7 +148,7 @@ const eventHandlers: GraphEventHandlers = {
   },
   "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
     for (const p in dragEvent) {
-      const draggedNode = graphStore.graph.nodes.find(x => x.uuid === p);
+      const draggedNode = graphInStore.value?.graph.nodes.find(x => x.uuid === p);
       if (draggedNode === undefined) {
         console.log("Could not find dragged Node in our local store");
         continue;

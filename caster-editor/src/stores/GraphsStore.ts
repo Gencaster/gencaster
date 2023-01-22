@@ -9,8 +9,8 @@ export const useGraphsStore = defineStore("graphs", () => {
 
   async function getGraphs() {
     const { data, fetching: isFetching, error } = await useGetGraphsQuery();
-    if (error)
-      console.log(`Could not fetch graphs: ${error.value}`);
+    if (error.value)
+      console.log("Could not fetch graphs", error);
     fetching.value = isFetching.value;
     if (data.value)
       graphs.value = data.value.graphs;

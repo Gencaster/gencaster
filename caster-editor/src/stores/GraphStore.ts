@@ -1,45 +1,25 @@
 import { defineStore } from "pinia";
 import type { Ref } from "vue";
 import type { Edge as GraphEdge, Edges as GraphEdges, Node as GraphNode, Nodes as GraphNodes } from "v-network-graph";
-import type { GetGraphQuery, NodeCreate } from "@/graphql/graphql";
+import type { GraphSubscription, NodeCreate } from "@/graphql/graphql";
 import {
   useCreateEdgeMutation,
   useCreateNodeMutation,
   useDeleteEdgeMutation,
   useDeleteNodeMutation,
-  useGetGraphQuery,
+  useGraphSubscription,
   useUpdateNodeMutation
 } from "@/graphql/graphql";
 
 export const useGraphStore = defineStore("graph", () => {
-  const graph: Ref<GetGraphQuery["graph"]> = ref({} as GetGraphQuery["graph"]);
-  const fetching: Ref<boolean> = ref(true);
   const uuid: Ref<string> = ref("");
 
-  const { executeQuery: getGraphQuery } = useGetGraphQuery({ variables: { uuid }, pause: true });
-  async function getGraph(graphUuid: string) {
-    uuid.value = graphUuid;
-    if (uuid.value === undefined) {
-      console.log("Graph UUID is undefined, this should not be!");
-      fetching.value = false;
-      return;
-    }
-    console.log(`Get/reload graph ${uuid.value} from server`);
-    const { data, fetching: isFetching } = await getGraphQuery();
-    if (data.value?.graph)
-      graph.value = data.value.graph;
-    fetching.value = isFetching.value;
-  }
-
-  const reloadFromServer = async () => {
-    await getGraph(graph.value.uuid);
-  };
+  const { data: graph, error, fetching } = useGraphSubscription({ variables: { uuid }, pause: false });
 
   // data operations
   const { executeMutation: createNodeMutation } = useCreateNodeMutation();
   const addNode = async (nodeVariables: NodeCreate) => {
     await createNodeMutation(nodeVariables);
-    await reloadFromServer();
   };
 
   const { executeMutation: deleteNodeMutation } = useDeleteNodeMutation();
@@ -47,7 +27,6 @@ export const useGraphStore = defineStore("graph", () => {
     await deleteNodeMutation({ nodeUuid }).then(async () => {
       console.log(`Deleted node ${nodeUuid}`);
     });
-    await reloadFromServer();
   };
 
   const { executeMutation: deleteEdgeMutation } = useDeleteEdgeMutation();
@@ -55,7 +34,6 @@ export const useGraphStore = defineStore("graph", () => {
     await deleteEdgeMutation({ edgeUuid }).then(() => {
       console.log(`Deleted edge ${edgeUuid}`);
     });
-    await reloadFromServer();
   };
 
   const { executeMutation: createEdgeMutation } = useCreateEdgeMutation();
@@ -63,27 +41,16 @@ export const useGraphStore = defineStore("graph", () => {
     await createEdgeMutation({ nodeInUuid, nodeOutUuid }).then((result) => {
       console.log(`Created new edge ${result.data?.addEdge}`);
     });
-    await reloadFromServer();
   };
 
   const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();
-  const updateNodePosition = async (node: GetGraphQuery["graph"]["nodes"][0]) => {
+  const updateNodePosition = async (node: GraphSubscription["graph"]["nodes"][0]) => {
+    // @todo use an input type in the gql backend
     await updateNodeMutation({
       nodeUuid: node.uuid,
       ...node
     });
-    await reloadFromServer();
   };
-
-  // // watch an array
-  // watch(() => graph.value.nodes, (v) => {
-  //   console.log(`New len is ${v}`);
-  //   for (let i = 0; i < v.length; i++) {
-  //     watch(() => graph.value.nodes[i], () => {
-  //       console.log(`Changed node ${i}`);
-  //     }, { deep: true });
-  //   }
-  // }, { deep: false });
 
   /*
     transforms the edges, nodes and layout from our StoryGraph model to
@@ -92,7 +59,7 @@ export const useGraphStore = defineStore("graph", () => {
   */
   function nodes(): GraphNodes {
     const n: GraphNodes = {};
-    graph.value.nodes.forEach((node) => {
+    graph.value?.graph.nodes.forEach((node) => {
       const graphNode: GraphNode = {
         name: node.name,
         color: node.color,
@@ -105,7 +72,7 @@ export const useGraphStore = defineStore("graph", () => {
 
   function edges(): GraphEdges {
     const e: GraphEdges = {};
-    graph.value.edges.forEach((edge) => {
+    graph.value?.graph.edges.forEach((edge) => {
       const graphEdge: GraphEdge = {
         source: edge.inNode.uuid,
         target: edge.outNode.uuid
@@ -117,7 +84,7 @@ export const useGraphStore = defineStore("graph", () => {
 
   function layouts(): GraphNodes {
     const n: GraphNodes = {};
-    graph.value.nodes.forEach((node) => {
+    graph.value?.graph.nodes.forEach((node) => {
       const graphNode: GraphNode = {
         x: node.positionX,
         y: node.positionY
@@ -132,8 +99,9 @@ export const useGraphStore = defineStore("graph", () => {
 
   return {
     graph,
-    getGraph,
+    uuid,
     nodes,
+    error,
     edges,
     layouts,
     fetching,
@@ -141,7 +109,6 @@ export const useGraphStore = defineStore("graph", () => {
     deleteNode,
     deleteEdge,
     createEdge,
-    updateNodePosition,
-    reloadFromServer
+    updateNodePosition
   };
 });

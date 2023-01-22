@@ -5,51 +5,6 @@ query GetGraphs {
   }
 }
 
-query getGraph($uuid: ID) {
-  graph(pk: $uuid) {
-    name
-    uuid
-    edges {
-      uuid
-      outNode {
-        uuid
-      }
-      inNode {
-        uuid
-      }
-    }
-    nodes {
-      name
-      uuid
-      scriptCells {
-        cellCode
-        cellOrder
-        cellType
-        uuid
-      }
-      positionX
-      positionY
-      color
-    }
-  }
-}
-
-query getNode($nodeUuid: ID!) {
-  node(pk: $nodeUuid) {
-    color
-    name
-    positionX
-    positionY
-    scriptCells {
-      cellCode
-      cellOrder
-      cellType
-      uuid
-    }
-    uuid
-  }
-}
-
 mutation createEdge($nodeInUuid:UUID!, $nodeOutUuid:UUID!) {
   addEdge(newEdge: {nodeInUuid: $nodeInUuid, nodeOutUuid: $nodeOutUuid})
 }
@@ -90,4 +45,53 @@ mutation deleteScriptCell($scriptCellUuid:UUID!) {
 # script cells get updated according to the uuid field
 mutation updateScriptCells($newCells: [ScriptCellInput!]!) {
   updateScriptCells(newCells: $newCells)
+}
+
+subscription CountSubscription {
+  count
+}
+
+subscription graph($uuid: UUID!) {
+  graph(graphUuid: $uuid) {
+    name
+    uuid
+    edges {
+      uuid
+      outNode {
+        uuid
+      }
+      inNode {
+        uuid
+      }
+    }
+    nodes {
+      name
+      uuid
+      scriptCells {
+        cellCode
+        cellOrder
+        cellType
+        uuid
+      }
+      positionX
+      positionY
+      color
+    }
+  }
+}
+
+subscription node($uuid: UUID!) {
+  node(nodeUuid: $uuid) {
+    color
+    name
+    positionX
+    positionY
+    scriptCells {
+      cellCode
+      cellOrder
+      cellType
+      uuid
+    }
+    uuid
+  }
 }
