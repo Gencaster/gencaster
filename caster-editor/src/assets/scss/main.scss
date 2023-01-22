@@ -1,6 +1,6 @@
 // globals
 @import 'reset';
-@import 'variables';
+@import 'variables.module';
 @import 'mixins';
 @import 'typography';
 @import 'general';
@@ -16,3 +16,5 @@
 // components
 @import 'components/elements';
 @import 'components/menu';
+@import 'components/blockeditor';
+@import 'components/block';

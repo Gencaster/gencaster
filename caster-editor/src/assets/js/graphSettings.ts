@@ -1,4 +1,5 @@
 import * as vNG from "v-network-graph";
+import * as variables from "@/assets/scss/variables.module.scss";
 
 const GraphSettings = {
   standard: vNG.defineConfigs({
@@ -8,28 +9,28 @@ const GraphSettings = {
         type: "circle",
         radius: 16,
         strokeWidth: 0,
-        color: "#CDCDCD"
+        color: variables.grey
       },
       hover: {
         type: "circle",
         radius: 16,
         strokeWidth: 0,
-        color: "#ADFF00"
+        color: variables.greenLight
       },
       selected: {
         type: "circle",
         radius: 16,
         strokeWidth: 0,
-        color: "#ADFF00"
+        color: variables.greenLight
       },
       label: {
         fontSize: 15,
         fontFamily: "arial",
-        color: "#000000",
+        color: variables.black,
         margin: 4,
         background: {
           visible: true,
-          color: "#ffffff",
+          color: variables.white,
           padding: {
             vertical: 1,
             horizontal: 4
@@ -37,36 +38,42 @@ const GraphSettings = {
           borderRadius: 2
         }
       },
-      focusring: { visible: false }
+      focusring: { visible: false },
+      zOrder: {
+        enabled: true, // whether the z-order control is enable or not. default: false
+        bringToFrontOnHover: true, // whether to bring to front on hover.    default: true
+        bringToFrontOnSelected: true // whether to bring to front on selected. default: true
+      }
     },
     edge: {
       selectable: true,
       normal: {
         width: 3,
         color: "black",
-        dasharray: "0",
-        linecap: "butt",
+        dasharray: 0,
+        animationSpeed: 5,
+        linecap: "square",
         animate: false
       },
       hover: {
         width: 4,
-        color: "black",
+        color: variables.greenLight,
         dasharray: "0",
-        linecap: "butt",
+        linecap: "square",
         animate: false
       },
       selected: {
         width: 3,
-        color: "#ADFF00",
+        color: variables.greenLight,
         dasharray: "0",
-        linecap: "butt",
+        linecap: "square",
         animate: false
       },
       gap: 5,
-      type: "straight",
-      // type: "curve",
+      // type: "straight",
+      type: "curve",
       // gap: 40,
-      margin: 2,
+      margin: 8,
       marker: {
         source: {
           type: "none",
@@ -84,6 +91,11 @@ const GraphSettings = {
           units: "strokeWidth",
           color: null
         }
+      },
+      zOrder: {
+        enabled: true, // whether the z-order control is enable or not. default: false
+        bringToFrontOnHover: true, // whether to bring to front on hover.    default: true
+        bringToFrontOnSelected: true // whether to bring to front on selected. default: true
       }
     },
     view: {

@@ -1,3 +1,9 @@
+"""
+Types
+=====
+
+"""
+
 import uuid
 from typing import List, Optional
 
@@ -83,6 +89,14 @@ class ScriptCell:
 @strawberry.django.input(models.ScriptCell)
 class ScriptCellInput:
     uuid: auto
+    cell_type: CellType  # type: ignore
+    cell_code: auto
+    cell_order: auto
+
+
+@strawberry.django.input(models.ScriptCell)
+class NewScriptCellInput:
+    # same as ScriptCellInput but on creation we hand out the UUID
     cell_type: CellType  # type: ignore
     cell_code: auto
     cell_order: auto

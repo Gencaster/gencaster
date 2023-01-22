@@ -1,3 +1,9 @@
+"""
+Engine
+======
+
+"""
+
 import asyncio
 import logging
 
@@ -12,16 +18,26 @@ log = logging.getLogger(__name__)
 
 
 class Engine:
+    """An engine executes a :class:`~story_graph.models.Graph` on a
+    :class:`~stream.models.StreamPoint`, therefore
+    iterating through the nodes and executing each.
+    This is written in a purely async manner so we can handle many streams at once.
+    """
+
     def __init__(self, graph: Graph, streaming_point: StreamPoint) -> None:
         self.graph: Graph = graph
         self.streaming_point: StreamPoint = streaming_point
         self._current_node: Node
 
     def execute_markdown_code(self, cell_code: str):
+        """Runs the code of a markdown cell by parsing its content with the
+        :class:`~story_graph.markdown_parser.GencasterRenderer`.
+        """
         ssml_text = md_to_ssml(cell_code)
         self.streaming_point.speak_on_stream(ssml_text)
 
     async def execute_sc_code(self, cell_code: str):
+        """Executes a SuperCollider code cell"""
         instruction = await sync_to_async(self.streaming_point.send_raw_instruction)(
             cell_code
         )
@@ -34,6 +50,7 @@ class Engine:
         print("Could not finish")
 
     async def execute_node(self, node: Node):
+        """Executes a node."""
         script_cell: ScriptCell
         async for script_cell in node.script_cells.all():  # type: ignore
             cell_type = script_cell.cell_type
@@ -51,6 +68,7 @@ class Engine:
                 log.error(f"Occured invalid/unknown CellType {cell_type}")
 
     async def start(self):
+        """Starts the execution of the engine."""
         if new_node := await self.graph.get_entry_node():
             self._current_node = new_node
         else:

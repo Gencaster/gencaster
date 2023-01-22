@@ -1,15 +1,12 @@
 """
 ASGI config for gencaster project.
-
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/3.1/howto/deployment/asgi/
 """
-
 import os
 
+from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
+from django.urls import re_path
+from strawberry.channels import GraphQLWSConsumer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gencaster.settings.dev")
 
@@ -20,4 +17,23 @@ if not os.environ.get("SUPERCOLLIDER_HOST") or os.environ.get("SUPERCOLLIDER_POR
 
 print(f"### STARTING SERVER WITH {os.environ['DJANGO_SETTINGS_MODULE']} ###")
 
-application = get_asgi_application()
+django_asgi_app = get_asgi_application()
+
+
+from .schema import schema
+
+websocket_urlpatterns = [
+    re_path(
+        r"graphql",
+        GraphQLWSConsumer.as_asgi(
+            schema=schema,
+        ),
+    ),
+]
+
+application = ProtocolTypeRouter(
+    {
+        "http": URLRouter([re_path("^", django_asgi_app)]),  # type: ignore
+        "websocket": URLRouter(websocket_urlpatterns),
+    }
+)

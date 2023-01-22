@@ -12,25 +12,35 @@
     "lint:ci": "eslint . --max-warnings 0"
   },
   "dependencies": {
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/lang-python": "^6.1.0",
     "@element-plus/icons-vue": "^2.0.10",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-operations": "^2.5.3",
     "@graphql-codegen/typescript-urql": "^3.7.0",
     "@nuxtjs/composition-api": "^0.33.1",
-    "@tiptap/starter-kit": "^2.0.0-beta.202",
-    "@tiptap/vue-3": "^2.0.0-beta.202",
+    "@pinia/nuxt": "^0.4.6",
+    "@toast-ui/editor": "^3.2.1",
     "@urql/vue": "^1.0.2",
+    "codemirror": "^6.0.1",
+    "codemirror-formatting": "^1.0.0",
     "element-plus": "^2.2.19",
     "graphql": "^16.6.0",
+    "gsap": "^3.11.4",
+    "mitt": "^3.0.0",
+    "pinia": "^2.0.28",
+    "subscriptions-transport-ws": "^0.11.0",
     "typescript": "^4.8.4",
-    "v-network-graph": "^0.6.10"
+    "v-network-graph": "^0.6.10",
+    "vue-codemirror": "^6.1.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.29.4",
     "@graphql-codegen/cli": "^2.13.1",
     "@graphql-codegen/typescript-vue-urql": "^2.3.3",
+    "@nuxt/types": "2.13.2",
     "eslint": "^8.27.0",
-    "nuxt": "^3.0.0-rc.14",
+    "nuxt": "^3.0.0",
     "sass": "^1.55.0",
     "sass-loader": "10"
   }

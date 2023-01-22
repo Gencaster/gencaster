@@ -1,22 +1,23 @@
-<script lang="ts">
-export default {
-  name: "UuidWrapper",
-
-  data() {
-    return {};
-  },
-  computed: {
-    uuid() {
-      return this.$route.params.uuid;
-    }
-  },
-  mounted() {},
-  methods: {}
-};
-</script>
-
 <template>
-  <div class="edit-page">
+  <div v-if="graphStore.graph" class="edit-page">
     <Graph :uuid="uuid" />
   </div>
 </template>
+
+<script lang="ts" setup>
+import { useGraphStore } from "@/stores/GraphStore";
+
+const graphStore = useGraphStore();
+
+const route = useRoute();
+const uuid = computed(() => String(route.params.uuid));
+
+function getGraphData() {
+  console.log("Should change graph uuid now!");
+  graphStore.uuid = uuid.value;
+}
+
+watch(uuid, getGraphData);
+
+getGraphData();
+</script>

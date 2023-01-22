@@ -1,70 +1,7 @@
-query MyQuery {
-  graphs {
-    name
-  }
-}
-
-query testQuery {
-  graphs {
-    nodes {
-      name
-    }
-    edges {
-      uuid
-    }
-    name
-  }
-}
-
 query GetGraphs {
   graphs {
     uuid
     name
-  }
-}
-
-query getGraph($uuid: ID) {
-  graph(pk: $uuid) {
-    name
-    uuid
-    edges {
-      uuid
-      outNode {
-        uuid
-      }
-      inNode {
-        uuid
-      }
-    }
-    nodes {
-      name
-      uuid
-      scriptCells {
-        cellCode
-        cellOrder
-        cellType
-        uuid
-      }
-      positionX
-      positionY
-      color
-    }
-  }
-}
-
-query getNode($nodeUuid: ID!) {
-  node(pk: $nodeUuid) {
-    color
-    name
-    positionX
-    positionY
-    scriptCells {
-      cellCode
-      cellOrder
-      cellType
-      uuid
-    }
-    uuid
   }
 }
 
@@ -92,8 +29,8 @@ mutation deleteEdge($edgeUuid: UUID!) {
   deleteEdge(edgeUuid: $edgeUuid)
 }
 
-mutation createScriptCell($nodeUuid: UUID!, $order: Int!) {
-  addScriptCell(nodeUuid: $nodeUuid, order: $order) {
+mutation createScriptCell($nodeUuid: UUID!, $newScriptCell: NewScriptCellInput!) {
+  addScriptCell(nodeUuid: $nodeUuid, newScriptCell: $newScriptCell) {
     cellOrder
     uuid
     cellType
@@ -110,38 +47,51 @@ mutation updateScriptCells($newCells: [ScriptCellInput!]!) {
   updateScriptCells(newCells: $newCells)
 }
 
-query GetStream {
-  getStream {
-    active
-    modifiedDate
+subscription CountSubscription {
+  count
+}
+
+subscription graph($uuid: UUID!) {
+  graph(graphUuid: $uuid) {
+    name
     uuid
-    streamPoint {
-      host
-      createdDate
-      janusInPort
-      janusOutPort
-      lastLive
-      modifiedDate
-      port
-      useInput
+    edges {
       uuid
+      outNode {
+        uuid
+      }
+      inNode {
+        uuid
+      }
     }
-    createdDate
+    nodes {
+      name
+      uuid
+      scriptCells {
+        cellCode
+        cellOrder
+        cellType
+        uuid
+      }
+      positionX
+      positionY
+      color
+    }
   }
 }
 
-query GetStreamPoints {
-  streamPoints {
-    createdDate
-    host
-    janusInPort
-    janusOutPort
-    lastLive
-    modifiedDate
-    port
-    useInput
+subscription node($uuid: UUID!) {
+  node(nodeUuid: $uuid) {
+    color
+    name
+    positionX
+    positionY
+    scriptCells {
+      cellCode
+      cellOrder
+      cellType
+      uuid
+    }
     uuid
-    janusOutRoom
-    janusInRoom
   }
 }

@@ -90,8 +90,8 @@ export type MutationAddNodeArgs = {
 
 
 export type MutationAddScriptCellArgs = {
+  newScriptCell: NewScriptCellInput;
   nodeUuid: Scalars['UUID'];
-  order: Scalars['Int'];
 };
 
 
@@ -117,6 +117,12 @@ export type MutationUpdateNodeArgs = {
 
 export type MutationUpdateScriptCellsArgs = {
   newCells: Array<ScriptCellInput>;
+};
+
+export type NewScriptCellInput = {
+  cellCode: Scalars['String'];
+  cellOrder?: InputMaybe<Scalars['Int']>;
+  cellType?: InputMaybe<CellType>;
 };
 
 export type Node = {
@@ -160,17 +166,17 @@ export type Query = {
 
 
 export type QueryGraphArgs = {
-  pk?: InputMaybe<Scalars['ID']>;
+  pk: Scalars['ID'];
 };
 
 
 export type QueryNodeArgs = {
-  pk?: InputMaybe<Scalars['ID']>;
+  pk: Scalars['ID'];
 };
 
 
 export type QueryStreamPointArgs = {
-  pk?: InputMaybe<Scalars['ID']>;
+  pk: Scalars['ID'];
 };
 
 
@@ -223,6 +229,28 @@ export type StreamPointFilter = {
   uuid?: InputMaybe<UuidFilterLookup>;
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  count: Scalars['Int'];
+  graph: Graph;
+  node: Node;
+};
+
+
+export type SubscriptionCountArgs = {
+  target?: Scalars['Int'];
+};
+
+
+export type SubscriptionGraphArgs = {
+  graphUuid: Scalars['UUID'];
+};
+
+
+export type SubscriptionNodeArgs = {
+  nodeUuid: Scalars['UUID'];
+};
+
 export type UuidFilterLookup = {
   contains?: InputMaybe<Scalars['UUID']>;
   endsWith?: InputMaybe<Scalars['UUID']>;
@@ -243,34 +271,10 @@ export type UuidFilterLookup = {
   startsWith?: InputMaybe<Scalars['UUID']>;
 };
 
-export type MyQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MyQueryQuery = { __typename?: 'Query', graphs: Array<{ __typename?: 'Graph', name: string }> };
-
-export type TestQueryQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type TestQueryQuery = { __typename?: 'Query', graphs: Array<{ __typename?: 'Graph', name: string, nodes: Array<{ __typename?: 'Node', name: string }>, edges: Array<{ __typename?: 'Edge', uuid: any }> }> };
-
 export type GetGraphsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetGraphsQuery = { __typename?: 'Query', graphs: Array<{ __typename?: 'Graph', uuid: any, name: string }> };
-
-export type GetGraphQueryVariables = Exact<{
-  uuid?: InputMaybe<Scalars['ID']>;
-}>;
-
-
-export type GetGraphQuery = { __typename?: 'Query', graph: { __typename?: 'Graph', name: string, uuid: any, edges: Array<{ __typename?: 'Edge', uuid: any, outNode: { __typename?: 'Node', uuid: any }, inNode: { __typename?: 'Node', uuid: any } }>, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, positionX: number, positionY: number, color: string, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> }> } };
-
-export type GetNodeQueryVariables = Exact<{
-  nodeUuid: Scalars['ID'];
-}>;
-
-
-export type GetNodeQuery = { __typename?: 'Query', node: { __typename?: 'Node', color: string, name: string, positionX: number, positionY: number, uuid: any, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> } };
 
 export type CreateEdgeMutationVariables = Exact<{
   nodeInUuid: Scalars['UUID'];
@@ -318,7 +322,7 @@ export type DeleteEdgeMutation = { __typename?: 'Mutation', deleteEdge?: any | n
 
 export type CreateScriptCellMutationVariables = Exact<{
   nodeUuid: Scalars['UUID'];
-  order: Scalars['Int'];
+  newScriptCell: NewScriptCellInput;
 }>;
 
 
@@ -338,45 +342,26 @@ export type UpdateScriptCellsMutationVariables = Exact<{
 
 export type UpdateScriptCellsMutation = { __typename?: 'Mutation', updateScriptCells?: any | null };
 
-export type GetStreamQueryVariables = Exact<{ [key: string]: never; }>;
+export type CountSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetStreamQuery = { __typename?: 'Query', getStream: { __typename?: 'Stream', active: boolean, modifiedDate: any, uuid: any, createdDate: any, streamPoint: { __typename?: 'StreamPoint', host: string, createdDate: any, janusInPort?: number | null, janusOutPort?: number | null, lastLive?: any | null, modifiedDate: any, port: number, useInput: boolean, uuid: any } } };
+export type CountSubscriptionSubscription = { __typename?: 'Subscription', count: number };
 
-export type GetStreamPointsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GraphSubscriptionVariables = Exact<{
+  uuid: Scalars['UUID'];
+}>;
 
 
-export type GetStreamPointsQuery = { __typename?: 'Query', streamPoints: Array<{ __typename?: 'StreamPoint', createdDate: any, host: string, janusInPort?: number | null, janusOutPort?: number | null, lastLive?: any | null, modifiedDate: any, port: number, useInput: boolean, uuid: any, janusOutRoom?: number | null, janusInRoom?: number | null }> };
+export type GraphSubscription = { __typename?: 'Subscription', graph: { __typename?: 'Graph', name: string, uuid: any, edges: Array<{ __typename?: 'Edge', uuid: any, outNode: { __typename?: 'Node', uuid: any }, inNode: { __typename?: 'Node', uuid: any } }>, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, positionX: number, positionY: number, color: string, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> }> } };
+
+export type NodeSubscriptionVariables = Exact<{
+  uuid: Scalars['UUID'];
+}>;
 
 
-export const MyQueryDocument = gql`
-    query MyQuery {
-  graphs {
-    name
-  }
-}
-    `;
+export type NodeSubscription = { __typename?: 'Subscription', node: { __typename?: 'Node', color: string, name: string, positionX: number, positionY: number, uuid: any, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> } };
 
-export function useMyQueryQuery(options: Omit<Urql.UseQueryArgs<never, MyQueryQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<MyQueryQuery>({ query: MyQueryDocument, ...options });
-};
-export const TestQueryDocument = gql`
-    query testQuery {
-  graphs {
-    nodes {
-      name
-    }
-    edges {
-      uuid
-    }
-    name
-  }
-}
-    `;
 
-export function useTestQueryQuery(options: Omit<Urql.UseQueryArgs<never, TestQueryQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<TestQueryQuery>({ query: TestQueryDocument, ...options });
-};
 export const GetGraphsDocument = gql`
     query GetGraphs {
   graphs {
@@ -388,61 +373,6 @@ export const GetGraphsDocument = gql`
 
 export function useGetGraphsQuery(options: Omit<Urql.UseQueryArgs<never, GetGraphsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetGraphsQuery>({ query: GetGraphsDocument, ...options });
-};
-export const GetGraphDocument = gql`
-    query getGraph($uuid: ID) {
-  graph(pk: $uuid) {
-    name
-    uuid
-    edges {
-      uuid
-      outNode {
-        uuid
-      }
-      inNode {
-        uuid
-      }
-    }
-    nodes {
-      name
-      uuid
-      scriptCells {
-        cellCode
-        cellOrder
-        cellType
-        uuid
-      }
-      positionX
-      positionY
-      color
-    }
-  }
-}
-    `;
-
-export function useGetGraphQuery(options: Omit<Urql.UseQueryArgs<never, GetGraphQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<GetGraphQuery>({ query: GetGraphDocument, ...options });
-};
-export const GetNodeDocument = gql`
-    query getNode($nodeUuid: ID!) {
-  node(pk: $nodeUuid) {
-    color
-    name
-    positionX
-    positionY
-    scriptCells {
-      cellCode
-      cellOrder
-      cellType
-      uuid
-    }
-    uuid
-  }
-}
-    `;
-
-export function useGetNodeQuery(options: Omit<Urql.UseQueryArgs<never, GetNodeQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<GetNodeQuery>({ query: GetNodeDocument, ...options });
 };
 export const CreateEdgeDocument = gql`
     mutation createEdge($nodeInUuid: UUID!, $nodeOutUuid: UUID!) {
@@ -494,8 +424,8 @@ export function useDeleteEdgeMutation() {
   return Urql.useMutation<DeleteEdgeMutation, DeleteEdgeMutationVariables>(DeleteEdgeDocument);
 };
 export const CreateScriptCellDocument = gql`
-    mutation createScriptCell($nodeUuid: UUID!, $order: Int!) {
-  addScriptCell(nodeUuid: $nodeUuid, order: $order) {
+    mutation createScriptCell($nodeUuid: UUID!, $newScriptCell: NewScriptCellInput!) {
+  addScriptCell(nodeUuid: $nodeUuid, newScriptCell: $newScriptCell) {
     cellOrder
     uuid
     cellType
@@ -525,49 +455,67 @@ export const UpdateScriptCellsDocument = gql`
 export function useUpdateScriptCellsMutation() {
   return Urql.useMutation<UpdateScriptCellsMutation, UpdateScriptCellsMutationVariables>(UpdateScriptCellsDocument);
 };
-export const GetStreamDocument = gql`
-    query GetStream {
-  getStream {
-    active
-    modifiedDate
+export const CountSubscriptionDocument = gql`
+    subscription CountSubscription {
+  count
+}
+    `;
+
+export function useCountSubscriptionSubscription<R = CountSubscriptionSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, CountSubscriptionSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<CountSubscriptionSubscription, R>) {
+  return Urql.useSubscription<CountSubscriptionSubscription, R, CountSubscriptionSubscriptionVariables>({ query: CountSubscriptionDocument, ...options }, handler);
+};
+export const GraphDocument = gql`
+    subscription graph($uuid: UUID!) {
+  graph(graphUuid: $uuid) {
+    name
     uuid
-    streamPoint {
-      host
-      createdDate
-      janusInPort
-      janusOutPort
-      lastLive
-      modifiedDate
-      port
-      useInput
+    edges {
+      uuid
+      outNode {
+        uuid
+      }
+      inNode {
+        uuid
+      }
+    }
+    nodes {
+      name
+      uuid
+      scriptCells {
+        cellCode
+        cellOrder
+        cellType
+        uuid
+      }
+      positionX
+      positionY
+      color
+    }
+  }
+}
+    `;
+
+export function useGraphSubscription<R = GraphSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, GraphSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<GraphSubscription, R>) {
+  return Urql.useSubscription<GraphSubscription, R, GraphSubscriptionVariables>({ query: GraphDocument, ...options }, handler);
+};
+export const NodeDocument = gql`
+    subscription node($uuid: UUID!) {
+  node(nodeUuid: $uuid) {
+    color
+    name
+    positionX
+    positionY
+    scriptCells {
+      cellCode
+      cellOrder
+      cellType
       uuid
     }
-    createdDate
-  }
-}
-    `;
-
-export function useGetStreamQuery(options: Omit<Urql.UseQueryArgs<never, GetStreamQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<GetStreamQuery>({ query: GetStreamDocument, ...options });
-};
-export const GetStreamPointsDocument = gql`
-    query GetStreamPoints {
-  streamPoints {
-    createdDate
-    host
-    janusInPort
-    janusOutPort
-    lastLive
-    modifiedDate
-    port
-    useInput
     uuid
-    janusOutRoom
-    janusInRoom
   }
 }
     `;
 
-export function useGetStreamPointsQuery(options: Omit<Urql.UseQueryArgs<never, GetStreamPointsQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<GetStreamPointsQuery>({ query: GetStreamPointsDocument, ...options });
+export function useNodeSubscription<R = NodeSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, NodeSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<NodeSubscription, R>) {
+  return Urql.useSubscription<NodeSubscription, R, NodeSubscriptionVariables>({ query: NodeDocument, ...options }, handler);
 };

@@ -1,3 +1,10 @@
+"""
+Development
+===========
+
+Configures settings to allow access from local node environments.
+"""
+
 from .base import *  # noqa
 
 DEBUG = True

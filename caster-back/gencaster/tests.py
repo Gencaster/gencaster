@@ -18,7 +18,7 @@ from .schema import schema
 class SchemaTestCase(TestCase):
     @staticmethod
     def get_login_context(is_authenticated=True):
-        m = mock.MagicMock()
+        m = mock.AsyncMock()
         m.request.user.is_authenticated = is_authenticated
         return m
 
@@ -219,8 +219,8 @@ class SchemaTestCase(TestCase):
         self.assertGreaterEqual(len(resp.errors), 1)  # type: ignore
 
     CREATE_SCRIPT_CELL = """
-    mutation createScriptCell($nodeUuid: UUID!, $order: Int!) {
-        addScriptCell(nodeUuid: $nodeUuid, order: $order) {
+    mutation createScriptCell($nodeUuid: UUID!, $newScriptCell: NewScriptCellInput!) {
+        addScriptCell(nodeUuid: $nodeUuid, newScriptCell: $newScriptCell) {
             cellOrder
             uuid
             cellType
@@ -228,6 +228,12 @@ class SchemaTestCase(TestCase):
         }
     }
     """
+
+    NEW_SCRIPT_CELL_TEMPLATE = {
+        "cellType": "PYTHON",
+        "cellCode": "something",
+        "cellOrder": 10,
+    }
 
     @async_to_sync
     async def test_add_script_cell(self):
@@ -237,8 +243,7 @@ class SchemaTestCase(TestCase):
             self.CREATE_SCRIPT_CELL,
             variable_values={
                 "nodeUuid": str(node.uuid),
-                "order": 100,
-                "cellType": "MARKDOWN",
+                "newScriptCell": self.NEW_SCRIPT_CELL_TEMPLATE,
             },
             context_value=self.get_login_context(),
         )
@@ -254,8 +259,7 @@ class SchemaTestCase(TestCase):
             self.CREATE_SCRIPT_CELL,
             variable_values={
                 "nodeUuid": str(node.uuid),
-                "order": 100,
-                "cellType": "MARKDOWN",
+                "newScriptCell": self.NEW_SCRIPT_CELL_TEMPLATE,
             },
         )
 
@@ -267,8 +271,7 @@ class SchemaTestCase(TestCase):
             self.CREATE_SCRIPT_CELL,
             variable_values={
                 "nodeUuid": str(uuid.uuid4()),
-                "order": 100,
-                "cellType": "MARKDOWN",
+                "newScriptCell": self.NEW_SCRIPT_CELL_TEMPLATE,
             },
             context_value=self.get_login_context(),
         )

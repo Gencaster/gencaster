@@ -13,9 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+from dataclasses import dataclass
+
+from channels.layers import BaseChannelLayer, get_channel_layer
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.http import HttpRequest
 from django.shortcuts import HttpResponse
 from django.urls import path
 from django.utils.decorators import method_decorator
@@ -25,6 +30,11 @@ from strawberry.django.views import AsyncGraphQLView
 from .schema import schema
 
 admin.site.site_header = "GenCaster admin"
+
+
+@dataclass
+class Context:
+    channel_layer: BaseChannelLayer
 
 
 class CorsAsyncGraphQLView(AsyncGraphQLView):
@@ -39,6 +49,13 @@ class CorsAsyncGraphQLView(AsyncGraphQLView):
         if request.method.lower() == "options":
             return HttpResponse()
         return await super().dispatch(request, *args, **kwargs)
+
+    async def get_context(
+        self, request: HttpRequest, response: HttpResponse
+    ) -> Context:
+        context: Context = await super().get_context(request, response)
+        context.channel_layer = get_channel_layer()  # type: ignore
+        return context
 
 
 urlpatterns = (

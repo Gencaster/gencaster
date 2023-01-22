@@ -53,9 +53,15 @@ type Mutation {
   addEdge(newEdge: EdgeInput!): Void
   deleteEdge(edgeUuid: UUID!): Void
   deleteNode(nodeUuid: UUID!): Void
-  addScriptCell(nodeUuid: UUID!, order: Int!): ScriptCell!
+  addScriptCell(nodeUuid: UUID!, newScriptCell: NewScriptCellInput!): ScriptCell!
   updateScriptCells(newCells: [ScriptCellInput!]!): Void
   deleteScriptCell(scriptCellUuid: UUID!): Void
+}
+
+input NewScriptCellInput {
+  cellType: CellType
+  cellCode: String!
+  cellOrder: Int
 }
 
 type Node {
@@ -86,13 +92,13 @@ input NodeUpdate {
 }
 
 type Query {
-  streamPoint(pk: ID): StreamPoint!
+  streamPoint(pk: ID!): StreamPoint!
   streamPoints(filters: StreamPointFilter): [StreamPoint!]!
   getStream: Stream!
   graphs: [Graph!]!
-  graph(pk: ID): Graph!
+  graph(pk: ID!): Graph!
   nodes: [Node!]!
-  node(pk: ID): Node!
+  node(pk: ID!): Node!
 }
 
 type ScriptCell {
@@ -135,6 +141,12 @@ type StreamPoint {
 input StreamPointFilter {
   uuid: UUIDFilterLookup
   janusInPort: IntFilterLookup
+}
+
+type Subscription {
+  count(target: Int! = 100): Int!
+  graph(graphUuid: UUID!): Graph!
+  node(nodeUuid: UUID!): Node!
 }
 
 scalar UUID

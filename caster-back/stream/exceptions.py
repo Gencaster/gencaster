@@ -1,2 +1,2 @@
 class NoStreamAvailable(Exception):
-    pass
+    """No stream available"""

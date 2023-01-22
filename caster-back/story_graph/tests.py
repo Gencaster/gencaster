@@ -1,3 +1,5 @@
+import random
+
 from django.db.utils import IntegrityError
 from django.test import TransactionTestCase
 from mistletoe import Document
@@ -122,3 +124,29 @@ class ScriptCellTestCase(TransactionTestCase):
         cell_a = self.get_script_cell(node=node, cell_order=10)
         cell_b = self.get_script_cell(node=node, cell_order=10)
         self.assertEqual(cell_a.cell_order, cell_b.cell_order)
+
+    def test_script_cells_in_order_sequential(self):
+        node = NodeTestCase.get_node()
+        mixer.cycle(count=5).blend(
+            ScriptCell,
+            node=node,
+            # create cell order in sequence
+            cell_order=mixer.sequence(lambda x: x),
+        )
+        db_cell_order = list(
+            ScriptCell.objects.filter(node=node).all().values_list("cell_order")
+        )
+        self.assertEqual(db_cell_order, sorted(db_cell_order))
+
+    def test_script_cells_in_order_random(self):
+        node = NodeTestCase.get_node()
+        mixer.cycle(count=5).blend(
+            ScriptCell,
+            node=node,
+            # create random order
+            cell_order=mixer.sequence(lambda x: random.randint(0, 1000)),
+        )
+        db_cell_order = list(
+            ScriptCell.objects.filter(node=node).all().values_list("cell_order")
+        )
+        self.assertEqual(db_cell_order, sorted(db_cell_order))

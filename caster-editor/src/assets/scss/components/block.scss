@@ -1,0 +1,28 @@
+// block
+
+.editor-comment,
+.editor-markdown {
+
+  .toastui-editor-defaultUI {
+    border: none;
+
+    .toastui-editor  {
+      min-height: 60px !important;
+    }
+
+
+
+    .placeholder {
+      .ProseMirror-trailingBreak {
+        display: none;
+      }
+    }
+  }
+
+
+
+  /* Hiding the nav bar*/
+  .toastui-editor-toolbar {
+    display: none;
+  }
+}

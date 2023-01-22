@@ -5,12 +5,4 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: "LandingComponent",
-  data() {
-    return {};
-  },
-  mounted() {},
-  methods: {}
-};
 </script>

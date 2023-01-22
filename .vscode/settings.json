@@ -1,6 +1,12 @@
 {
     "python.analysis.typeCheckingMode": "basic",
     "cSpell.words": [
+        "pythonosc",
         "ssml"
-    ]
+    ],
+    "prettier.enable": false,
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
 }
