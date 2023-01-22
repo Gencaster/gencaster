@@ -247,7 +247,7 @@ const moveScriptCell = async (scriptCellUuid: string, direction: MoveDirection) 
   if (direction === MoveDirection.up && oldIndex === 0)
     return;
 
-  if (direction === MoveDirection.down && oldIndex === node.value?.scriptCells.length - 1)
+  if (direction === MoveDirection.down && oldIndex === node.value?.node.scriptCells.length - 1)
     return;
 
   let newPosition = 0;

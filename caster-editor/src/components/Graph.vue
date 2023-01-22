@@ -10,8 +10,7 @@
   />
 
   <!-- Node Editor -->
-  <div v-if="showEditor" ref="editorDom" class="node-data">
-    <!-- TODO: this can be nil? -->
+  <div v-if="showEditor && selectedNodes.length > 0" ref="editorDom" class="node-data">
     <NodeEditor :node-uuid="selectedNodes[0]" />
   </div>
 
@@ -42,9 +41,6 @@ const props = defineProps<GraphProps>();
 
 // Html
 const editorDom = ref<HTMLElement>();
-
-// Composables
-const router = useRouter();
 
 // Store
 const graphStore = useGraphStore();

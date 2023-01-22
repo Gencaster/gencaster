@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import type { Ref } from "vue";
-import type { Exact, NewScriptCellInput, Scalars, ScriptCellInput } from "@/graphql/graphql";
+import type { Exact, GraphSubscription, NewScriptCellInput, Scalars, ScriptCellInput } from "@/graphql/graphql";
 import { useCreateScriptCellMutation, useDeleteScriptCellMutation, useNodeSubscription, useUpdateNodeMutation, useUpdateScriptCellsMutation } from "@/graphql/graphql";
 
 export const useNodeStore = defineStore("node", () => {
@@ -10,7 +10,7 @@ export const useNodeStore = defineStore("node", () => {
   const { data: node, error, fetching } = useNodeSubscription({ variables: { uuid }, pause: false });
 
   const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();
-  const updateNode = async (node: GetNodeQuery["node"]) => {
+  const updateNode = async (node: GraphSubscription["graph"]["nodes"][0]) => {
     await updateNodeMutation({
       nodeUuid: node.uuid,
       ...node
@@ -45,12 +45,19 @@ export const useNodeStore = defineStore("node", () => {
     );
   };
 
+  const empty = () => {
+    // TODO: empty the store somehow so the old scriptcells are not visible when opening another node editor
+    // below code is not working anymore
+    // node.value = {} as GetNodeQuery["node"];
+  };
+
   return {
     node,
     fetching,
     error,
     uuid,
     scriptCellsModified,
+    empty,
     updateNode,
     createScriptCell,
     updateScriptCells,

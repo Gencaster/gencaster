@@ -14,7 +14,7 @@
         </div>
         <div class="menu-items middle">
           <span>
-            {{ graphStore.graph.name }}
+            {{ graphInStore?.graph.name }}
           </span>
         </div>
         <div class="menu-items right">
@@ -38,47 +38,48 @@
             Refresh
           </button>
         </div>
-        <div v-if="menuStore.tab === Tab.Test" />
+        <div v-if="menuStore.tab === Tab.Play" />
       </div>
     </div>
     <div class="menu-spacer" />
+
+    <!-- Dialogs -->
+    <!-- Are you sure to delete? -->
+    <el-dialog v-model="deleteDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
+      <span>
+        Are you sure to delete Scene "{{ (graph?.nodes[selectedNodes[0]] || { name: "deleted" }).name }}"?
+      </span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button text bg @click="deleteDialogVisible = false">Cancel</el-button>
+          <el-button color="#FF0000" @click="deleteSelectedNodes()">
+            Delete Node
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <!-- Exit Page -->
+    <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
+      <span>
+        Are you sure to exit without saving? <br> Some of your changes might get lost.
+      </span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
+          <el-button color="#FF0000" @click="exitWithoutSaving()">
+            Exit
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
-
-  <!-- Dialogs -->
-  <!-- Are you sure to delete? -->
-  <el-dialog v-model="deleteDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
-    <span>
-      Are you sure to delete Scene "{{ graph?.nodes[selectedNodes[0]]?.name || '' }}"?
-    </span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button text bg @click="deleteDialogVisible = false">Cancel</el-button>
-        <el-button color="#FF0000" @click="deleteSelectedNodes()">
-          Delete Node
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
-
-  <!-- Exit Page -->
-  <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
-    <span>
-      Are you sure to exit without saving? <br> Some of your changes might get lost.
-    </span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
-        <el-button color="#FF0000" @click="exitWithoutSaving()">
-          Exit
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
 </template>
 
 <script lang="ts" setup>
 import { ElMessage } from "element-plus";
 import type { Instance as GraphInstance } from "v-network-graph";
+import { storeToRefs } from "pinia";
 import { Tab, useMenuStore } from "@/stores/MenuStore";
 import { useGraphStore } from "@/stores/GraphStore";
 import type { Scalars } from "@/graphql/graphql";
@@ -96,6 +97,7 @@ interface MenuProps {
 // Store
 const menuStore = useMenuStore();
 const graphStore = useGraphStore();
+const { graph: graphInStore } = storeToRefs(graphStore);
 
 // Composables
 const router = useRouter();
@@ -157,7 +159,8 @@ const createEdge = async () => {
 
 const deleteSelectedNodes = async () => {
   deleteDialogVisible.value = false;
-  for (const nodeUuid of props.selectedNodes)
+  // work on a copy to not get into problems
+  for (const nodeUuid of [...props.selectedNodes])
     await graphStore.deleteNode(nodeUuid);
 };
 
