@@ -18,12 +18,12 @@ jobs:
           cache: "yarn"
           cache-dependency-path: |
             caster-editor/yarn.lock
-            caster-front/yarn.lock
       - run: yarn install --immutable --immutable-cache --check-cache
         working-directory: caster-editor
-      - run: yarn install --immutable --immutable-cache --check-cache
+      - run: npm ci
         working-directory: caster-front
       - uses: pre-commit/action@v2.0.3
+      - run: cd caster-front && npm run type-check
 
   build-docs:
     needs: ["pre-commit"]
