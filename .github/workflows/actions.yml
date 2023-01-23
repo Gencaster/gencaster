@@ -24,6 +24,8 @@ jobs:
       - run: yarn install --immutable --immutable-cache --check-cache
         working-directory: caster-front
       - uses: pre-commit/action@v2.0.3
+      - run: yarn type-check
+        working-directory: caster-editor
 
   build-docs:
     needs: ["pre-commit"]
