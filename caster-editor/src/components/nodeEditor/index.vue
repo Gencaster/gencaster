@@ -219,6 +219,11 @@ const playScriptCell = (scriptCellUuid: string) => {
   });
 };
 
+/**
+ * Manages the scriptcell array.
+ * get() Returns the current one from the store
+ * set() Updates it and also resets the orders
+ */
 const scriptCellList = computed({
   get() {
     if (node.value)
@@ -226,7 +231,7 @@ const scriptCellList = computed({
     else
       return [];
   },
-  async set(value) {
+  set(value) {
     if (node.value === undefined) {
       console.log("Need a valid node for scriptcells");
       return;
@@ -242,7 +247,11 @@ const scriptCellList = computed({
     newOrder.forEach((scriptCell, index) => {
       scriptCell.cellOrder = index;
     });
+
+    // update local store with newOrder
     node.value.node.scriptCells = newOrder;
+
+    // set the state to modified
     scriptCellsModified.value = true;
   }
 });
