@@ -21,6 +21,8 @@ DATABASES = {
     }
 }
 
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
+
 INSTALLED_APPS += [
     "debug_toolbar",
     "django_extensions",  # used for generating model image graphs

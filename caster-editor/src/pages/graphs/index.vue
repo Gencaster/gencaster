@@ -1,3 +1,3 @@
 <template>
-  <GraphsOverview class="gen-template graphs-overview-page" />
+  <GraphsOverview class="graphs-overview-page" />
 </template>
