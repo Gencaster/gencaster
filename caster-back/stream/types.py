@@ -1,4 +1,5 @@
 from datetime import timedelta
+from typing import Optional
 
 import strawberry
 import strawberry.django
@@ -30,8 +31,9 @@ class StreamPoint:
     janus_out_room: auto
 
     @classmethod
-    def get_queryset(cls, auth, queryset, info):
-        return queryset.exclude(streams__active=True).filter(
+    def get_queryset(cls, queryset, info):
+        # .exclude(streams__active=True)
+        return queryset.filter(
             last_live__gt=timezone.now()
             - timedelta(seconds=settings.STREAM_MAX_BEACON_SEC)
         )
@@ -44,3 +46,19 @@ class Stream:
     modified_date: auto
     active: auto
     stream_point: "StreamPoint"
+
+
+@strawberry.django.type(models.StreamInstruction)
+class StreamInstruction:
+    uuid: auto
+    created_date: auto
+    modified_date: auto
+    instruction_text: auto
+    state: auto
+    return_value: auto
+
+
+@strawberry.type
+class StreamInfo:
+    stream: Stream
+    stream_instruction: Optional[StreamInstruction]

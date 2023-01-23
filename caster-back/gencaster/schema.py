@@ -21,11 +21,13 @@ from asgiref.sync import sync_to_async
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http.request import HttpRequest
+from strawberry.channels import GraphQLWSConsumer
 from strawberry.types import Info
 from strawberry_django.fields.field import StrawberryDjangoField
 
 import story_graph.models as story_graph_models
 import stream.models as stream_models
+from story_graph.engine import Engine
 from story_graph.types import (
     EdgeInput,
     Graph,
@@ -36,7 +38,7 @@ from story_graph.types import (
     ScriptCell,
     ScriptCellInput,
 )
-from stream.types import Stream, StreamPoint
+from stream.types import Stream, StreamInfo, StreamPoint
 
 from .distributor import GenCasterChannel
 
@@ -330,6 +332,32 @@ class Subscription:
             info.context.ws, node_uuid
         ):
             yield await story_graph_models.Node.objects.aget(uuid=node_update.uuid)  # type: ignore
+
+    @strawberry.subscription
+    async def stream_info(
+        self,
+        info: Info,
+    ) -> AsyncGenerator[StreamInfo, None]:
+        consumer: GraphQLWSConsumer = info.context.ws
+        # @todo needs to remove stream upon disconnect
+        stream = await stream_models.Stream.objects.aget_free_stream()
+
+        graph = await story_graph_models.Graph.objects.filter(name="sc").afirst()
+
+        if not graph:
+            print("could not find graph!")
+            return
+
+        engine = Engine(
+            graph=graph,
+            streaming_point=stream.stream_point,
+        )
+
+        async for instruction in engine.start(max_steps=int(10e4)):
+            yield StreamInfo(
+                stream=stream,  # type: ignore
+                stream_instruction=instruction,  # type: ignore
+            )
 
 
 schema = strawberry.Schema(

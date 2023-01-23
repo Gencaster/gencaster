@@ -95,3 +95,51 @@ subscription node($uuid: UUID!) {
     uuid
   }
 }
+
+subscription stream {
+  streamInfo {
+    stream {
+      active
+      createdDate
+      modifiedDate
+      streamPoint {
+        createdDate
+        host
+        janusInPort
+        janusInRoom
+        janusOutPort
+        janusOutRoom
+        lastLive
+        modifiedDate
+        port
+        uuid
+        useInput
+      }
+      uuid
+    }
+    streamInstruction {
+      createdDate
+      instructionText
+      modifiedDate
+      returnValue
+      state
+      uuid
+    }
+  }
+}
+
+query streamPoints {
+  streamPoints {
+    createdDate
+    host
+    janusInPort
+    janusInRoom
+    janusOutPort
+    janusOutRoom
+    lastLive
+    modifiedDate
+    port
+    useInput
+    uuid
+  }
+}
