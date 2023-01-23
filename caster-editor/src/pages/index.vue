@@ -1,3 +1,3 @@
 <template>
-  <Landing class="gen-template index-page" />
+  <Landing class="index-page" />
 </template>
