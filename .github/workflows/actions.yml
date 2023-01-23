@@ -6,28 +6,8 @@ on:
     branches: [main]
 
 jobs:
-  pre-commit:
-    name: "Run pre-commit"
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "14"
-          cache: "yarn"
-          cache-dependency-path: |
-            caster-editor/yarn.lock
-            caster-front/yarn.lock
-      - run: yarn install --immutable --immutable-cache --check-cache
-        working-directory: caster-editor
-      - run: yarn install --immutable --immutable-cache --check-cache
-        working-directory: caster-front
-      - uses: pre-commit/action@v2.0.3
-
-  build-docs:
-    needs: ["pre-commit"]
-    name: "Build documentation"
+  backend:
+    name: "Check backend"
     runs-on: ubuntu-20.04
     steps:
       - run: sudo apt-get install --yes graphviz
@@ -40,29 +20,13 @@ jobs:
             caster-back/setup.cfg
             caster-back/requirements*.txt
             ./requirements-docs.txt
-      - run: pip3 install -r requirements-docs.txt
-      - run: make -C docs html
-      # - uses: actions/upload-artifact@v2
-      #   if: success() || failure()
-      #   with:
-      #     name: docs
-      #     path: |
-      #       docs/_build/html
-
-  run-tests:
-    needs: ["pre-commit"]
-    name: "Run tests"
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v3
+            ./requirements-dev.txt
+      - run: pip3 install -r requirements-dev.txt
+      - uses: pre-commit/action@v3.0.0
         with:
-          python-version: "3.8"
-          cache: "pip"
-          cache-dependency-path: |
-            caster-back/setup.cfg
-            caster-back/requirements*.txt
+          extra_args: --files caster-back/* --files *.* --files docs/* --files caster/sound*
       - run: ./caster-back/run_tests.sh
+        name: "Run tests"
       - uses: 5monkeys/cobertura-action@master
         if: success() || failure()
         with:
@@ -76,10 +40,38 @@ jobs:
           name: Test reporting
           path: caster-back/mypy-tests.xml,caster-back/tests.xml
           reporter: java-junit
+      - run: make -C docs html
+        name: "Build documentation"
+      # - uses: actions/upload-artifact@v2
+      #   if: success() || failure()
+      #   with:
+      #     name: docs
+      #     path: |
+      #       docs/_build/html
+
+  editor:
+    name: "Check Editor"
+    runs-on: "ubuntu-20.04"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "14"
+          cache: "yarn"
+          cache-dependency-path: |
+            caster-editor/yarn.lock
+      - run: yarn install --immutable --immutable-cache --check-cache
+        working-directory: caster-editor
+      - uses: pre-commit/action@v2.0.3
+        with:
+          extra_args: --files caster-editor/*
+      - run: yarn type-check
+        working-directory: caster-editor
+        name: "Run type checks"
 
   deploy-dev:
     if: success() && github.ref == 'refs/heads/main' # only deploy main
-    needs: ["run-tests"]
+    needs: ["editor", "backend"]
     name: Deploy dev
     runs-on: ubuntu-20.04
     steps:
