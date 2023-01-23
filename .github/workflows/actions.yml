@@ -23,7 +23,8 @@ jobs:
       - run: npm ci
         working-directory: caster-front
       - uses: pre-commit/action@v2.0.3
-      - run: cd caster-front && npm run type-check
+      - run: npm run type-check
+        working-directory: caster-front
 
   build-docs:
     needs: ["pre-commit"]
