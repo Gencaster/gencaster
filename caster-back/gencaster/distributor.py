@@ -3,13 +3,13 @@ import uuid
 from dataclasses import asdict, dataclass, field
 from typing import AsyncGenerator, List, Union
 
-from channels.layers import InMemoryChannelLayer
+from channels_redis.core import RedisChannelLayer
 from strawberry.channels import GraphQLWSConsumer
 
 log = logging.getLogger(__name__)
 
 
-def uuid_to_group(u: uuid.UUID) -> str:
+def uuid_to_group(u: Union[uuid.UUID, str]) -> str:
     """Channel group names are not allow
     to have ``-``, so we replace them with ``_``.
     """
@@ -34,21 +34,21 @@ class GenCasterChannel:
         pass
 
     @staticmethod
-    async def send_graph_update(layer: InMemoryChannelLayer, graph_uuid: uuid.UUID):
+    async def send_graph_update(layer: RedisChannelLayer, graph_uuid: uuid.UUID):
         return await GenCasterChannel.send_message(
             layer=layer,
-            message=GraphUpdateMessage(uuid=graph_uuid),
+            message=GraphUpdateMessage(uuid=str(graph_uuid)),
         )
 
     @staticmethod
-    async def send_node_update(layer: InMemoryChannelLayer, node_uuid: uuid.UUID):
+    async def send_node_update(layer: RedisChannelLayer, node_uuid: uuid.UUID):
         return await GenCasterChannel.send_message(
-            layer=layer, message=NodeUpdateMessage(uuid=node_uuid)
+            layer=layer, message=NodeUpdateMessage(uuid=str(node_uuid))
         )
 
     @staticmethod
     async def send_message(
-        layer: InMemoryChannelLayer,
+        layer: RedisChannelLayer,
         message: Union["GraphUpdateMessage", "NodeUpdateMessage"],
     ):
         for channel in message.channels:
@@ -85,7 +85,8 @@ class GenCasterChannel:
 
 @dataclass
 class GraphUpdateMessage:
-    uuid: uuid.UUID
+    # we can not transfer an UUID via redis so we encode it as string early
+    uuid: str
     type: str = GenCasterChannel.GRAPH_UPDATE_TYPE
     additional_channels: List[str] = field(default_factory=list)
 
@@ -96,7 +97,7 @@ class GraphUpdateMessage:
 
 @dataclass
 class NodeUpdateMessage:
-    uuid: uuid.UUID
+    uuid: str
     type: str = GenCasterChannel.NODE_UPDATE_TYPE
     additional_channels: List[str] = field(default_factory=list)
 

@@ -3,7 +3,7 @@ import type { Ref } from "vue";
 
 export enum Tab {
   Edit = "Edit",
-  Test = "Test"
+  Play = "Play"
 }
 
 export const useMenuStore = defineStore("menu", () => {

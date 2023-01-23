@@ -24,15 +24,9 @@ if ! [ -z "$DEVELOPMENT" ]; then
         # --header "Access-Control-Allow-Headers:Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control" \
         # --header "Access-Control-Allow-Credentials:true"
 else
-    echo "Starting gunicorn server";
-    gunicorn \
+    echo "Starting uvicorn production server";
+    uvicorn \
         gencaster.asgi:application \
-        -k uvicorn.workers.UvicornWorker \
-        -c gencaster/gunicorn.conf.py \
-        --reload \
-        # --header "Access-Control-Allow-Origin:dev.gencaster.org,editor.dev.gencaster.org" \
-        # --header "Access-Control-Allow-Methods:OPTIONS, GET, POST" \
-        # --header "Access-Control-Allow-Headers:Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control" \
-        # --header "Access-Control-Allow-Credentials:true"
-        --capture-output;
+        --host 0.0.0.0 \
+        --port 8000
 fi

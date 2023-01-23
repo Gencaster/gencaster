@@ -15,6 +15,7 @@ Service | Folder | Port | Comment
 `frontend` | `caster-front` | `3000` | Nuxt frontend for user interaction
 `sound` | `caster-sound` | `57120`, `8088` | SuperCollider server which can be listened to via WebRTC.
 `database` | | `5432` | A postgres database.
+`redis` | | | In memory database to distribute messages in our backend
 
 ## Documentation
 

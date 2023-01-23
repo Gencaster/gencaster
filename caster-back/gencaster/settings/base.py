@@ -166,6 +166,11 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.gencaster.org",
 ]
 
-CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
-
-STREAM_MAX_BEACON_SEC = 60
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
+}
