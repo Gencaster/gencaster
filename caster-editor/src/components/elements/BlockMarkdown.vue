@@ -37,7 +37,6 @@ const { scriptCellsModified, node } = storeToRefs(useNodeStore());
 
 // Variables
 const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(node.value?.node.scriptCells.find((x) => { return x.uuid === props.scriptCellUuid; }));
-const editorJS = ref<EditorJS>();
 const editorDom = ref<HTMLElement>();
 const editor = ref<EditorType>();
 

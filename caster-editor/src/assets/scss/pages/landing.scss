@@ -1,3 +1,21 @@
 // index page
 .index-page {
+    padding: 10px 15px 10px 15px;
+
+    p {
+        line-height: 125%;
+        margin: 0;
+    }
+
+    .login-wrapper {
+        margin-top: $globalPadding;
+
+        .el-form {
+            display: flex;
+
+            .el-form-item {
+                margin-right: $globalPadding;
+            }
+        }
+    }
 }

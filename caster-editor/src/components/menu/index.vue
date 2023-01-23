@@ -34,7 +34,7 @@
           <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeSelection()">
             Remove
           </button>
-          <button class="unstyled" @click="graphStore.reloadFromServer()">
+          <button class="unstyled">
             Refresh
           </button>
         </div>
