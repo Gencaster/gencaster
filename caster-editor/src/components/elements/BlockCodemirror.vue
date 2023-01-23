@@ -9,6 +9,7 @@
         :indent-with-tab="true"
         :tab-size="2"
         :extensions="[python()]"
+        :disable="dragging"
         @ready="() => { domReady = true }"
         @change="emitCodemirror('change', $event)"
         @focus="emitCodemirror('focus', $event)"
@@ -25,6 +26,7 @@
         :indent-with-tab="true"
         :tab-size="2"
         :extensions="[python()]"
+        :disable="dragging"
         @ready="() => { domReady = true }"
         @change="emitCodemirror('change', $event)"
         @focus="emitCodemirror('focus', $event)"
@@ -48,6 +50,7 @@ const props = defineProps<BlockProps>();
 interface BlockProps {
   scriptCellUuid: String
   index: number
+  dragging: boolean
 }
 
 // Store
