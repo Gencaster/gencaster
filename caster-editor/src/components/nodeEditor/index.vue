@@ -33,40 +33,42 @@
         + Comment
       </button>
     </div>
+
     <div class="blocks">
-      <div v-for="(cell, index) in node.node.scriptCells" :key="cell.uuid">
-        <div class="cell" :class="{ 'no-padding': addNoPaddingClass(cell.cellType) }">
-          <ElementsBlock :script-cell-uuid="cell.uuid" :cell-type="cell.cellType" :index="index" class="cell-editor" />
-          <div class="scriptcell-tools">
-            <div class="celltype">
-              <p>{{ cell.cellType }}</p>
-            </div>
-            <div class="divider" />
-            <div class="icon">
-              <img src="~/assets/icons/icon-trash.svg" alt="trash icon" @click="deleteScriptCell(cell.uuid)">
-            </div>
-            <div class="divider" />
-            <div class="icon">
-              <img src="~/assets/icons/icon-play.svg" alt="play icon" @click="playScriptCell(cell.uuid)">
-            </div>
-            <div class="divider" />
-            <div class="icon">
-              <img
-                src="~/assets/icons/icon-up.svg" alt="arrow up icon"
-                @click="moveScriptCell(cell.uuid, MoveDirection.up)"
-              >
-            </div>
-            <div class="divider" />
-            <div class="icon">
-              <img
-                src="~/assets/icons/icon-down.svg" alt="arrow down icon"
-                @click="moveScriptCell(cell.uuid, MoveDirection.down)"
-              >
+      <draggable
+        v-model="scriptCellList" item-key="uuid" handle=".handle"
+        @start="dragging = true" @end="dragging = false"
+      >
+        <template #item="{ element }">
+          <div :class="{ 'no-padding': addNoPaddingClass(element.cellType) }">
+            <div class="cell" :class="{ dragging }">
+              <ElementsBlock
+                :script-cell-uuid="element.uuid" :cell-type="element.cellType" :index="element.cellOrder"
+                :dragging="dragging"
+              />
+              <div class="scriptcell-tools">
+                <div class="celltype">
+                  <p>{{ element.cellType }}</p>
+                </div>
+                <div class="divider" />
+                <div class="icon">
+                  <img src="~/assets/icons/icon-trash.svg" alt="trash icon" @click="deleteScriptCell(element.uuid)">
+                </div>
+                <div class="divider" />
+                <div class="icon">
+                  <img src="~/assets/icons/icon-play.svg" alt="play icon" @click="playScriptCell(element.uuid)">
+                </div>
+                <div class="divider" />
+                <div class="icon handle">
+                  <img src="~/assets/icons/icon-drag.svg" alt="drag icon">
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </draggable>
     </div>
+
     <div class="footer">
       <button class="unstyled" @click="() => { showJSONData = !showJSONData }">
         JSON
@@ -132,7 +134,6 @@ import { storeToRefs } from "pinia";
 import { useNodeStore } from "@/stores/NodeStore";
 import { CellType } from "@/graphql/graphql";
 import type { ScriptCell } from "@/graphql/graphql";
-import { useGraphStore } from "@/stores/GraphStore";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 
 enum MoveDirection {
@@ -143,13 +144,15 @@ enum MoveDirection {
 // Store
 const nodeStore = useNodeStore();
 const { node, scriptCellsModified } = storeToRefs(nodeStore);
-const graphStore = useGraphStore();
 const { showEditor } = storeToRefs(useInterfaceStore());
 
 // Variables
 const renameNodeDialogVisible = ref(false);
 const renameNodeDialogName = ref("");
 const exitDialogVisible: Ref<boolean> = ref(false);
+
+// Drag
+const dragging = ref(false);
 
 // interface
 const showJSONData = ref(false);
@@ -215,6 +218,34 @@ const playScriptCell = (scriptCellUuid: string) => {
     customClass: "messages-editor"
   });
 };
+
+const scriptCellList = computed({
+  get() {
+    if (node.value)
+      return node.value.node?.scriptCells;
+    else
+      return [];
+  },
+  async set(value) {
+    if (node.value === undefined) {
+      console.log("Need a valid node for scriptcells");
+      return;
+    }
+
+    const newOrder: Array<ScriptCell> = [];
+
+    value.forEach((scriptCell) => {
+      newOrder.push(scriptCell as ScriptCell);
+    });
+
+    // recalculate index for all
+    newOrder.forEach((scriptCell, index) => {
+      scriptCell.cellOrder = index;
+    });
+    node.value.node.scriptCells = newOrder;
+    scriptCellsModified.value = true;
+  }
+});
 
 const moveScriptCell = async (scriptCellUuid: string, direction: MoveDirection) => {
   if (node.value === undefined) {

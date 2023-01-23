@@ -82,6 +82,7 @@
     padding-left: 15px;
     padding-right: 15px;
 
+
     .cell {
       position: relative;
       margin-bottom: 25px;
@@ -89,6 +90,18 @@
       background-color: $grey-light;
       padding: 20px 20px 15px 30px;
       border: 1px solid $grey;
+
+      &.dragging {
+        pointer-events: none;
+        cursor: grabbing !important;
+
+        .editor-python,
+        .editor-supercollider {
+          .cm-scroller {
+            overflow-x: hidden; // hides the scrollbar on drag
+          }
+        }
+      }
 
       &.no-padding {
         padding: 0px 0px 0px 0px;

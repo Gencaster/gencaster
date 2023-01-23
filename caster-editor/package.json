@@ -32,7 +32,8 @@
     "subscriptions-transport-ws": "^0.11.0",
     "typescript": "^4.8.4",
     "v-network-graph": "^0.6.10",
-    "vue-codemirror": "^6.1.1"
+    "vue-codemirror": "^6.1.1",
+    "vuedraggable": "4.1.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.29.4",
