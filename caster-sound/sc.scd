@@ -4,10 +4,10 @@ g.postServerInfo();
 
 g.startServer();
 
-OSCFunc.trace(true, true);
+// OSCFunc.trace(true, true);
 
 s.waitForBoot({
-    Ndef(\chordTest, {
+    Ndef(\test, {
         var delay;
         var speed = 0.5;
         var pitches = [60, 67, 65, 69] + (g.synthPort%16);
