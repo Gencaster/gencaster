@@ -23,9 +23,13 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { useGraphsStore } from "@/stores/GraphsStore";
-
 import * as variables from "@/assets/scss/variables.module.scss";
-const { fetching, graphs } = storeToRefs(useGraphsStore());
+
+// Store
+const { graphs } = storeToRefs(useGraphsStore());
+
+// Composables
+const router = useRouter();
 
 const form = ref<HTMLElement>();
 
@@ -57,15 +61,14 @@ const rules = ref({
   ]
 });
 
+watch(graphs, () => {
+  // reroute if data incoming
+  router.push({
+    path: "/graphs"
+  });
+});
+
 const onSubmit = () => {
   console.log("submit");
 };
-
-const checkLogin = () => {
-  console.log("check");
-};
-
-onMounted(() => {
-  checkLogin();
-});
 </script>
