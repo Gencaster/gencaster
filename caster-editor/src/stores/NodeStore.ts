@@ -45,19 +45,12 @@ export const useNodeStore = defineStore("node", () => {
     );
   };
 
-  const empty = () => {
-    // TODO: empty the store somehow so the old scriptcells are not visible when opening another node editor
-    // below code is not working anymore
-    // node.value = {} as GetNodeQuery["node"];
-  };
-
   return {
     node,
     fetching,
     error,
     uuid,
     scriptCellsModified,
-    empty,
     updateNode,
     createScriptCell,
     updateScriptCells,

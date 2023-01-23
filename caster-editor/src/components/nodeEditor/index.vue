@@ -176,7 +176,7 @@ const renameNodeFromDialog = async () => {
     return;
   }
   node.value.node.name = renameNodeDialogName.value;
-  await nodeStore.updateNode(node.value);
+  await nodeStore.updateNode(node.value.node);
   renameNodeDialogVisible.value = false;
 };
 
@@ -276,6 +276,6 @@ const addNoPaddingClass = (blockCellType: CellType) => {
 };
 
 onUnmounted(() => {
-  nodeStore.empty();
+  node.value = undefined;
 });
 </script>
