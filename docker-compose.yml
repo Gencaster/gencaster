@@ -12,6 +12,12 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
 
+  redis:
+    image: redis:7.0-alpine
+    platform: linux/amd64
+    env_file:
+      - vars.env
+
   backend:
     build: caster-back
     platform: linux/amd64
@@ -20,6 +26,7 @@ services:
       - .secrets.env
     depends_on:
       - database
+      - redis
 
   osc_backend:
     build: caster-back
