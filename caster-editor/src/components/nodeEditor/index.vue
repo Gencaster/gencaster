@@ -176,7 +176,7 @@ const renameNodeFromDialog = async () => {
     return;
   }
   node.value.node.name = renameNodeDialogName.value;
-  await nodeStore.updateNode(node.value);
+  await nodeStore.updateNode(node.value.node);
   renameNodeDialogVisible.value = false;
 };
 
@@ -247,7 +247,7 @@ const moveScriptCell = async (scriptCellUuid: string, direction: MoveDirection) 
   if (direction === MoveDirection.up && oldIndex === 0)
     return;
 
-  if (direction === MoveDirection.down && oldIndex === node.value?.scriptCells.length - 1)
+  if (direction === MoveDirection.down && oldIndex === node.value?.node.scriptCells.length - 1)
     return;
 
   let newPosition = 0;
@@ -276,6 +276,6 @@ const addNoPaddingClass = (blockCellType: CellType) => {
 };
 
 onUnmounted(() => {
-  nodeStore.empty();
+  node.value = undefined;
 });
 </script>
