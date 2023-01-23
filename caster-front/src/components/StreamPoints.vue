@@ -9,7 +9,7 @@ const { streamPoints } = storeToRefs(useStreamPointStore());
 <template>
   <h2>Stream Points</h2>
   <ul>
-    <li v-for="streamPoint in streamPoints" :key="streamPoint.uuid">
+    <li v-for="streamPoint in streamPoints?.streamPoints" :key="streamPoint.uuid">
       <StreamPoint
         :uuid="streamPoint.uuid"
       />

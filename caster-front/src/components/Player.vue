@@ -4,7 +4,7 @@ import type { Ref } from "vue";
 import { ref, watch } from "vue";
 import { useStreamPointStore } from "@/stores/StreamPoints";
 
-const { activeStreamPoint, micActive, play } = storeToRefs(useStreamPointStore());
+const { activeStreamPoint, micActive, play, streamInfo } = storeToRefs(useStreamPointStore());
 
 let audioBridgeWebRtcUp = false;
 const { hostname, protocol } = window.location;
@@ -251,7 +251,13 @@ initJanus();
   </div>
 
   <div class="player-info">
-    <span>Currently on stream {{ activeStreamPoint.janusOutRoom }}</span><br>
+    <span>Currently on stream {{ activeStreamPoint.port }} (Janus ID {{ activeStreamPoint.janusOutRoom }})</span><br>
     <span>Mic is active: {{ micActive }}</span>
+  </div>
+
+  <div class="stream-info">
+    <span>Assigned stream {{ streamInfo?.streamInfo.stream.streamPoint.port }}</span><br>
+    <span>Current instruction</span><br>
+    <span style="font-family: monospace;">{{ streamInfo?.streamInfo.streamInstruction?.instructionText }}</span>
   </div>
 </template>

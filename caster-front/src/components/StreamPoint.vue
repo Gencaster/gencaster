@@ -9,7 +9,7 @@ const props = defineProps<{
 
 const { streamPoints, activeStreamPoint } = storeToRefs(useStreamPointStore());
 
-const streamPoint = ref(streamPoints.value.find(x => x.uuid === props.uuid));
+const streamPoint = ref(streamPoints.value?.streamPoints.find(x => x.uuid === props.uuid));
 
 const setActive = () => {
   if (streamPoint.value !== undefined)
