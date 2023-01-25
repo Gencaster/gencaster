@@ -22,7 +22,7 @@ import type { EditorOptions, Editor as EditorType } from "@toast-ui/editor";
 import { storeToRefs } from "pinia";
 
 import { CellType } from "@/graphql/graphql";
-import type { NodeSubscription, ScriptCell } from "@/graphql/graphql";
+import type { NodeSubscription } from "@/graphql/graphql";
 import { useNodeStore } from "@/stores/NodeStore";
 
 const props = defineProps<BlockProps>();
@@ -30,6 +30,7 @@ const props = defineProps<BlockProps>();
 interface BlockProps {
   scriptCellUuid: String
   index: number
+  dragging: boolean
 }
 
 // Store

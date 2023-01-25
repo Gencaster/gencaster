@@ -34,6 +34,7 @@
           <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeSelection()">
             Remove
           </button>
+           <!-- TODO: Rewrite a reloadfromserver function -->
           <button class="unstyled">
             Refresh
           </button>
