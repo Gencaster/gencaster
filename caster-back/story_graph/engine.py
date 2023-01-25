@@ -84,7 +84,7 @@ class Engine:
             log.debug(f"Currently running node {self._current_node}")
             if (
                 new_node := await Node.objects.filter(
-                    out_edges__out_node=self._current_node
+                    in_edges__in_node=self._current_node
                 )
                 .order_by("?")
                 .afirst()
