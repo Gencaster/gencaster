@@ -1,23 +1,21 @@
 <template>
-  <div v-if="graphStore.graph" class="edit-page">
-    <Graph :uuid="uuid" />
+  <div v-if="graph" class="edit-page">
+    <Graph :uuid="routeUUID" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { useGraphStore } from "@/stores/GraphStore";
+import { storeToRefs } from "pinia";
+const nuxtApp = useNuxtApp();
 
-const graphStore = useGraphStore();
+// store
+const graphStore = nuxtApp.graphStore;
+const { graph, uuid } = storeToRefs(graphStore);
 
+// get route
 const route = useRoute();
-const uuid = computed(() => String(route.params.uuid));
+const routeUUID = computed(() => String(route.params.uuid));
 
-function getGraphData() {
-  console.log("Should change graph uuid now!");
-  graphStore.uuid = uuid.value;
-}
-
-watch(uuid, getGraphData);
-
-getGraphData();
+// set uuid
+uuid.value = routeUUID.value;
 </script>

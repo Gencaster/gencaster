@@ -39,9 +39,12 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { useGraphsStore } from "@/stores/GraphsStore";
+const nuxtApp = useNuxtApp();
 
-const { fetching, graphs } = storeToRefs(useGraphsStore());
+// store
+const graphsStore = nuxtApp.graphsStore;
+
+const { fetching, graphs } = storeToRefs(graphsStore);
 
 const createNewGraph = () => {
   alert("tbd");
