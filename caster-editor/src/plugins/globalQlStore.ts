@@ -3,6 +3,8 @@ import { defineNuxtPlugin } from "#app";
 import { useMenuStore } from "@/stores/MenuStore";
 import { useGraphStore } from "@/stores/GraphStore";
 import { useGraphsStore } from "@/stores/GraphsStore";
+import { useInterfaceStore } from "@/stores/InterfaceStore";
+import { useNodeStore } from "@/stores/NodeStore";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const pinia = createPinia();
@@ -20,5 +22,13 @@ export default defineNuxtPlugin((nuxtApp) => {
     // menu store
     const menuStore = useMenuStore();
     nuxtApp.menuStore = menuStore;
+
+    // interface store
+    const interfaceStore = useInterfaceStore();
+    nuxtApp.interfaceStore = interfaceStore;
+
+    // node store
+    const nodeStore = useNodeStore();
+    nuxtApp.nodeStore = nodeStore;
   });
 });

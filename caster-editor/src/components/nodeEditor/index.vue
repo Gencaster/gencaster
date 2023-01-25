@@ -134,17 +134,19 @@ import { storeToRefs } from "pinia";
 import { useNodeStore } from "@/stores/NodeStore";
 import { CellType } from "@/graphql/graphql";
 import type { ScriptCell } from "@/graphql/graphql";
-import { useInterfaceStore } from "@/stores/InterfaceStore";
 
 enum MoveDirection {
   up = "Up",
   down = "Down"
 }
 
+const nuxtApp = useNuxtApp();
+
 // Store
-const nodeStore = useNodeStore();
+const nodeStore = nuxtApp.nodeStore;
+const interfaceStore = nuxtApp.interfaceStore;
 const { node, scriptCellsModified } = storeToRefs(nodeStore);
-const { showEditor } = storeToRefs(useInterfaceStore());
+const { showEditor } = storeToRefs(interfaceStore);
 
 // Variables
 const renameNodeDialogVisible = ref(false);
@@ -315,7 +317,7 @@ const addNoPaddingClass = (blockCellType: CellType) => {
   return blockCellType === CellType.Markdown || blockCellType === CellType.Comment;
 };
 
-onUnmounted(() => {
-  node.value = undefined;
-});
+// onUnmounted(() => {
+//   node.value = undefined;
+// });
 </script>

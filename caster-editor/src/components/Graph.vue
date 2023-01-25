@@ -30,28 +30,30 @@ import type { Ref } from "vue";
 import { nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
-import { useNodeStore } from "@/stores/NodeStore";
 import { GraphSettings } from "@/assets/js/graphSettings";
 import type { Scalars } from "@/graphql/graphql";
-import { useGraphStore } from "@/stores/GraphStore";
-import { useInterfaceStore } from "@/stores/InterfaceStore";
 
 // Props
 const props = defineProps<GraphProps>();
+
+interface GraphProps {
+  uuid: Scalars["UUID"]
+}
+
+const nuxtApp = useNuxtApp();
 
 // Html
 const editorDom = ref<HTMLElement>();
 
 // Store
-const graphStore = useGraphStore();
-const nodeStore = useNodeStore();
+const graphStore = nuxtApp.graphStore;
 const { graph: graphInStore } = storeToRefs(graphStore);
-const { scriptCellsModified, uuid: nodeUuid } = storeToRefs(nodeStore);
-const { showEditor } = storeToRefs(useInterfaceStore());
 
-interface GraphProps {
-  uuid: Scalars["UUID"]
-}
+const nodeStore = nuxtApp.nodeStore;
+const { scriptCellsModified, uuid: nodeUuid } = storeToRefs(nodeStore);
+
+const interfaceStore = nuxtApp.interfaceStore;
+const { showEditor } = storeToRefs(interfaceStore);
 
 // Data
 const graph = ref<GraphInstance>();

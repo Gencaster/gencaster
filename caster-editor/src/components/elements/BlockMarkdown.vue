@@ -33,8 +33,11 @@ interface BlockProps {
   dragging: boolean
 }
 
+const nuxtApp = useNuxtApp();
+
 // Store
-const { scriptCellsModified, node } = storeToRefs(useNodeStore());
+const nodeStore = nuxtApp.nodeStore;
+const { scriptCellsModified, node } = storeToRefs(nodeStore);
 
 // Variables
 const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(node.value?.node.scriptCells.find((x) => { return x.uuid === props.scriptCellUuid; }));
