@@ -22,6 +22,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
+import { useNuxtApp } from "#app";
 import * as variables from "@/assets/scss/variables.module.scss";
 const nuxtApp = useNuxtApp();
 

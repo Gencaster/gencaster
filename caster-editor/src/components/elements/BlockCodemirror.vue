@@ -44,6 +44,7 @@ import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { CellType } from "@/graphql/graphql";
 import type { NodeSubscription, ScriptCell } from "@/graphql/graphql";
+import { useNuxtApp } from "#app";
 
 const props = defineProps<BlockProps>();
 interface BlockProps {

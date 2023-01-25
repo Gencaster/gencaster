@@ -18,12 +18,10 @@
 import "@toast-ui/editor/dist/toastui-editor.css"; // Editor's Style
 import Editor from "@toast-ui/editor";
 import type { EditorOptions, Editor as EditorType } from "@toast-ui/editor";
-
 import { storeToRefs } from "pinia";
-
+import { useNuxtApp } from "#app";
 import { CellType } from "@/graphql/graphql";
 import type { NodeSubscription } from "@/graphql/graphql";
-import { useNodeStore } from "@/stores/NodeStore";
 
 const props = defineProps<BlockProps>();
 

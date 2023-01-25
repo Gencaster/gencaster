@@ -129,9 +129,8 @@ import { Codemirror } from "vue-codemirror";
 import { json } from "@codemirror/lang-json";
 import type { Ref } from "vue";
 import { computed, ref } from "vue";
-
 import { storeToRefs } from "pinia";
-import { useNodeStore } from "@/stores/NodeStore";
+import { useNuxtApp } from "#app";
 import { CellType } from "@/graphql/graphql";
 import type { ScriptCell } from "@/graphql/graphql";
 

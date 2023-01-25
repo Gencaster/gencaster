@@ -30,6 +30,7 @@ import type { Ref } from "vue";
 import { nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
+import { useNuxtApp } from "#app";
 import { GraphSettings } from "@/assets/js/graphSettings";
 import type { Scalars } from "@/graphql/graphql";
 

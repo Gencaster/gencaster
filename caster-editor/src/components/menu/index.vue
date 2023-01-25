@@ -83,6 +83,7 @@ import { ElMessage } from "element-plus";
 import type { Instance as GraphInstance } from "v-network-graph";
 import type { Scalars } from "@/graphql/graphql";
 import { Tab } from "@/stores/MenuStore";
+import { useNuxtApp } from "#app";
 
 // Props
 const props = defineProps<MenuProps>();
