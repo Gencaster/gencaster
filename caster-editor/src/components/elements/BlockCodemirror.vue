@@ -44,20 +44,23 @@ import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { CellType } from "@/graphql/graphql";
 import type { NodeSubscription, ScriptCell } from "@/graphql/graphql";
-import { useNodeStore } from "@/stores/NodeStore";
-const props = defineProps<BlockProps>();
+import { useNuxtApp } from "#app";
 
+const props = defineProps<BlockProps>();
 interface BlockProps {
   scriptCellUuid: String
   index: number
   dragging: boolean
 }
 
+const nuxtApp = useNuxtApp();
+
 // Store
-const { scriptCellsModified, node } = storeToRefs(useNodeStore());
+const nodeStore = nuxtApp.nodeStore;
+const { scriptCellsModified, node } = storeToRefs(nodeStore);
 
 // Variables
-const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(node.value?.node.scriptCells.find((x) => { return x.uuid === props.scriptCellUuid; }));
+const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(node.value?.node.scriptCells.find((x: ScriptCell) => { return x.uuid === props.scriptCellUuid; }));
 const domReady: Ref<boolean> = ref(false);
 
 const emitCodemirror = (eventType?: string, event?: any) => {

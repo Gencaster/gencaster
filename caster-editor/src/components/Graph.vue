@@ -30,28 +30,32 @@ import type { Ref } from "vue";
 import { nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
-import { useNodeStore } from "@/stores/NodeStore";
+import { Script } from "@zhead/schema";
+import { useNuxtApp } from "#app";
 import { GraphSettings } from "@/assets/js/graphSettings";
-import type { Scalars } from "@/graphql/graphql";
-import { useGraphStore } from "@/stores/GraphStore";
-import { useInterfaceStore } from "@/stores/InterfaceStore";
+import type { Scalars, ScriptCell } from "@/graphql/graphql";
 
 // Props
 const props = defineProps<GraphProps>();
+
+interface GraphProps {
+  uuid: Scalars["UUID"]
+}
+
+const nuxtApp = useNuxtApp();
 
 // Html
 const editorDom = ref<HTMLElement>();
 
 // Store
-const graphStore = useGraphStore();
-const nodeStore = useNodeStore();
+const graphStore = nuxtApp.graphStore;
 const { graph: graphInStore } = storeToRefs(graphStore);
-const { scriptCellsModified, uuid: nodeUuid } = storeToRefs(nodeStore);
-const { showEditor } = storeToRefs(useInterfaceStore());
 
-interface GraphProps {
-  uuid: Scalars["UUID"]
-}
+const nodeStore = nuxtApp.nodeStore;
+const { scriptCellsModified, uuid: nodeUuid } = storeToRefs(nodeStore);
+
+const interfaceStore = nuxtApp.interfaceStore;
+const { showEditor } = storeToRefs(interfaceStore);
 
 // Data
 const graph = ref<GraphInstance>();
@@ -144,7 +148,7 @@ const eventHandlers: GraphEventHandlers = {
   },
   "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
     for (const p in dragEvent) {
-      const draggedNode = graphInStore.value?.graph.nodes.find(x => x.uuid === p);
+      const draggedNode = graphInStore.value?.graph.nodes.find((x: ScriptCell) => x.uuid === p);
       if (draggedNode === undefined) {
         console.log("Could not find dragged Node in our local store");
         continue;

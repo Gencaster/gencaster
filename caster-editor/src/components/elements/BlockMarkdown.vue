@@ -18,12 +18,10 @@
 import "@toast-ui/editor/dist/toastui-editor.css"; // Editor's Style
 import Editor from "@toast-ui/editor";
 import type { EditorOptions, Editor as EditorType } from "@toast-ui/editor";
-
 import { storeToRefs } from "pinia";
-
+import { useNuxtApp } from "#app";
 import { CellType } from "@/graphql/graphql";
-import type { NodeSubscription } from "@/graphql/graphql";
-import { useNodeStore } from "@/stores/NodeStore";
+import type { NodeSubscription, ScriptCell } from "@/graphql/graphql";
 
 const props = defineProps<BlockProps>();
 
@@ -33,11 +31,14 @@ interface BlockProps {
   dragging: boolean
 }
 
+const nuxtApp = useNuxtApp();
+
 // Store
-const { scriptCellsModified, node } = storeToRefs(useNodeStore());
+const nodeStore = nuxtApp.nodeStore;
+const { scriptCellsModified, node } = storeToRefs(nodeStore);
 
 // Variables
-const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(node.value?.node.scriptCells.find((x) => { return x.uuid === props.scriptCellUuid; }));
+const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(node.value?.node.scriptCells.find((x: ScriptCell) => { return x.uuid === props.scriptCellUuid; }));
 const editorDom = ref<HTMLElement>();
 const editor = ref<EditorType>();
 
