@@ -18,7 +18,7 @@ export type Scalars = {
   Void: any;
 };
 
-/** An enumeration. */
+/** Choice of foobar */
 export enum CellType {
   Comment = 'COMMENT',
   Markdown = 'MARKDOWN',
@@ -66,55 +66,86 @@ export type IntFilterLookup = {
   startsWith?: InputMaybe<Scalars['Int']>;
 };
 
+/** Mutations for GenCaster via GraphQL. */
 export type Mutation = {
   __typename?: 'Mutation';
+  /**
+   * Creates a :class:`~story_graph.models.Edge` for a given
+   * :class:`~story_graph.models.Graph`.
+   * It does not return the created edge.
+   */
   addEdge?: Maybe<Scalars['Void']>;
+  /**
+   * Creates a new :class:`~story_graph.models.Node` in a given
+   * ~class:`~story_graph.models.Graph`.
+   * Although it creates a new node with UUID we don't hand it back yet.
+   */
   addNode?: Maybe<Scalars['Void']>;
+  /**
+   * Creates a new :class:`~story_graph.models.ScriptCell` for a given
+   * :class:`~story_graph.models.Edge` and returns this cell.
+   */
   addScriptCell: ScriptCell;
+  /** Deletes a given :class:`~story_graph.models.Edge`. */
   deleteEdge?: Maybe<Scalars['Void']>;
+  /** Deletes a given :class:`~story_graph.models.Node`. */
   deleteNode?: Maybe<Scalars['Void']>;
+  /** Deletes a given :class:`~story_graph.models.ScriptCell`. */
   deleteScriptCell?: Maybe<Scalars['Void']>;
+  /**
+   * Updates a given :class:`~story_graph.models.Node` which can be used
+   * for renaming or moving it across the canvas.
+   */
   updateNode?: Maybe<Scalars['Void']>;
+  /** Updates a given :class:`~story_graph.models.ScriptCell` to change its content. */
   updateScriptCells?: Maybe<Scalars['Void']>;
 };
 
 
+/** Mutations for GenCaster via GraphQL. */
 export type MutationAddEdgeArgs = {
   newEdge: EdgeInput;
 };
 
 
+/** Mutations for GenCaster via GraphQL. */
 export type MutationAddNodeArgs = {
   newNode: NodeCreate;
 };
 
 
+/** Mutations for GenCaster via GraphQL. */
 export type MutationAddScriptCellArgs = {
   newScriptCell: NewScriptCellInput;
   nodeUuid: Scalars['UUID'];
 };
 
 
+/** Mutations for GenCaster via GraphQL. */
 export type MutationDeleteEdgeArgs = {
   edgeUuid: Scalars['UUID'];
 };
 
 
+/** Mutations for GenCaster via GraphQL. */
 export type MutationDeleteNodeArgs = {
   nodeUuid: Scalars['UUID'];
 };
 
 
+/** Mutations for GenCaster via GraphQL. */
 export type MutationDeleteScriptCellArgs = {
   scriptCellUuid: Scalars['UUID'];
 };
 
 
+/** Mutations for GenCaster via GraphQL. */
 export type MutationUpdateNodeArgs = {
   nodeUpdate: NodeUpdate;
 };
 
 
+/** Mutations for GenCaster via GraphQL. */
 export type MutationUpdateScriptCellsArgs = {
   newCells: Array<ScriptCellInput>;
 };
@@ -153,6 +184,7 @@ export type NodeUpdate = {
   uuid: Scalars['UUID'];
 };
 
+/** Queries for GenCaster. */
 export type Query = {
   __typename?: 'Query';
   getStream: Stream;
@@ -165,21 +197,25 @@ export type Query = {
 };
 
 
+/** Queries for GenCaster. */
 export type QueryGraphArgs = {
   pk: Scalars['ID'];
 };
 
 
+/** Queries for GenCaster. */
 export type QueryNodeArgs = {
   pk: Scalars['ID'];
 };
 
 
+/** Queries for GenCaster. */
 export type QueryStreamPointArgs = {
   pk: Scalars['ID'];
 };
 
 
+/** Queries for GenCaster. */
 export type QueryStreamPointsArgs = {
   filters?: InputMaybe<StreamPointFilter>;
 };
@@ -209,6 +245,22 @@ export type Stream = {
   uuid: Scalars['UUID'];
 };
 
+export type StreamInfo = {
+  __typename?: 'StreamInfo';
+  stream: Stream;
+  streamInstruction?: Maybe<StreamInstruction>;
+};
+
+export type StreamInstruction = {
+  __typename?: 'StreamInstruction';
+  createdDate: Scalars['DateTime'];
+  instructionText: Scalars['String'];
+  modifiedDate: Scalars['DateTime'];
+  returnValue: Scalars['String'];
+  state: Scalars['String'];
+  uuid: Scalars['UUID'];
+};
+
 export type StreamPoint = {
   __typename?: 'StreamPoint';
   createdDate: Scalars['DateTime'];
@@ -234,6 +286,7 @@ export type Subscription = {
   count: Scalars['Int'];
   graph: Graph;
   node: Node;
+  streamInfo: StreamInfo;
 };
 
 
@@ -360,6 +413,16 @@ export type NodeSubscriptionVariables = Exact<{
 
 
 export type NodeSubscription = { __typename?: 'Subscription', node: { __typename?: 'Node', color: string, name: string, positionX: number, positionY: number, uuid: any, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> } };
+
+export type StreamSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StreamSubscription = { __typename?: 'Subscription', streamInfo: { __typename?: 'StreamInfo', stream: { __typename?: 'Stream', active: boolean, createdDate: any, modifiedDate: any, uuid: any, streamPoint: { __typename?: 'StreamPoint', createdDate: any, host: string, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null, lastLive?: any | null, modifiedDate: any, port: number, uuid: any, useInput: boolean } }, streamInstruction?: { __typename?: 'StreamInstruction', createdDate: any, instructionText: string, modifiedDate: any, returnValue: string, state: string, uuid: any } | null } };
+
+export type StreamPointsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StreamPointsQuery = { __typename?: 'Query', streamPoints: Array<{ __typename?: 'StreamPoint', createdDate: any, host: string, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null, lastLive?: any | null, modifiedDate: any, port: number, useInput: boolean, uuid: any }> };
 
 
 export const GetGraphsDocument = gql`
@@ -518,4 +581,62 @@ export const NodeDocument = gql`
 
 export function useNodeSubscription<R = NodeSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, NodeSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<NodeSubscription, R>) {
   return Urql.useSubscription<NodeSubscription, R, NodeSubscriptionVariables>({ query: NodeDocument, ...options }, handler);
+};
+export const StreamDocument = gql`
+    subscription stream {
+  streamInfo {
+    stream {
+      active
+      createdDate
+      modifiedDate
+      streamPoint {
+        createdDate
+        host
+        janusInPort
+        janusInRoom
+        janusOutPort
+        janusOutRoom
+        lastLive
+        modifiedDate
+        port
+        uuid
+        useInput
+      }
+      uuid
+    }
+    streamInstruction {
+      createdDate
+      instructionText
+      modifiedDate
+      returnValue
+      state
+      uuid
+    }
+  }
+}
+    `;
+
+export function useStreamSubscription<R = StreamSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, StreamSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<StreamSubscription, R>) {
+  return Urql.useSubscription<StreamSubscription, R, StreamSubscriptionVariables>({ query: StreamDocument, ...options }, handler);
+};
+export const StreamPointsDocument = gql`
+    query streamPoints {
+  streamPoints {
+    createdDate
+    host
+    janusInPort
+    janusInRoom
+    janusOutPort
+    janusOutRoom
+    lastLive
+    modifiedDate
+    port
+    useInput
+    uuid
+  }
+}
+    `;
+
+export function useStreamPointsQuery(options: Omit<Urql.UseQueryArgs<never, StreamPointsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<StreamPointsQuery>({ query: StreamPointsDocument, ...options });
 };
