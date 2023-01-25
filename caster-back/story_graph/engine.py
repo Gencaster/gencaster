@@ -77,7 +77,9 @@ class Engine:
         if new_node := await self.graph.get_entry_node():
             self._current_node = new_node
         else:
-            print("Could not find entry node :/")
+            log.error(
+                f"Could not find entry node on {self.graph} for {self.streaming_point}"
+            )
             return
 
         for _ in range(max_steps):
@@ -93,5 +95,11 @@ class Engine:
                 async for instruction in self.execute_node(self._current_node):
                     yield instruction
             else:
-                print("Got nowhere to go?")
+                log.error(
+                    f"Ran into a dead end on {self.graph} on {self._current_node} - reset"
+                )
+                # back off a bit!
+                await asyncio.sleep(30)
+                if new_node := await self.graph.get_entry_node():
+                    self._current_node = new_node
             await asyncio.sleep(0.5)
