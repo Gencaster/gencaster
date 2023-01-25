@@ -1,7 +1,15 @@
+"""
+Distributor
+===========
+
+A collection of async messaging tools which is used by our GraphQL schema.
+
+"""
+
 import logging
 import uuid
 from dataclasses import asdict, dataclass, field
-from typing import AsyncGenerator, List, Union
+from typing import AsyncGenerator, Awaitable, Callable, List, Optional, Union
 
 from channels_redis.core import RedisChannelLayer
 from strawberry.channels import GraphQLWSConsumer
@@ -18,6 +26,26 @@ def uuid_to_group(u: Union[uuid.UUID, str]) -> str:
 
 class MissingChannelLayer(Exception):
     pass
+
+
+class GraphQLWSConsumerInjector(GraphQLWSConsumer):
+    """Allows us to inject callbacks on e.g. a disconnect.
+
+    .. todo::
+
+        This can be made obsolete via
+        https://github.com/strawberry-graphql/strawberry/pull/2430
+
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.disconnect_callback: Optional[Callable[[], Awaitable[None]]] = None
+        super().__init__(*args, **kwargs)
+
+    async def websocket_disconnect(self, message):
+        if self.disconnect_callback:
+            await self.disconnect_callback()
+        return await super().websocket_disconnect(message)
 
 
 class GenCasterChannel:

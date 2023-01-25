@@ -21,7 +21,6 @@ from asgiref.sync import sync_to_async
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.http.request import HttpRequest
-from strawberry.channels import GraphQLWSConsumer
 from strawberry.types import Info
 from strawberry_django.fields.field import StrawberryDjangoField
 
@@ -40,7 +39,7 @@ from story_graph.types import (
 )
 from stream.types import Stream, StreamInfo, StreamPoint
 
-from .distributor import GenCasterChannel
+from .distributor import GenCasterChannel, GraphQLWSConsumerInjector
 
 log = logging.getLogger(__name__)
 
@@ -338,8 +337,7 @@ class Subscription:
         self,
         info: Info,
     ) -> AsyncGenerator[StreamInfo, None]:
-        consumer: GraphQLWSConsumer = info.context.ws
-        # @todo needs to remove stream upon disconnect
+        consumer: GraphQLWSConsumerInjector = info.context.ws
         stream = await stream_models.Stream.objects.aget_free_stream()
 
         graph = await story_graph_models.Graph.objects.filter(name="sc").afirst()
@@ -352,6 +350,12 @@ class Subscription:
             graph=graph,
             streaming_point=stream.stream_point,
         )
+
+        async def cleanup():
+            stream.active = False
+            await sync_to_async(stream.save)()
+
+        consumer.disconnect_callback = cleanup
 
         async for instruction in engine.start(max_steps=int(10e4)):
             yield StreamInfo(

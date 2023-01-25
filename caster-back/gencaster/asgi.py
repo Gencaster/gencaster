@@ -6,7 +6,8 @@ import os
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 from django.urls import re_path
-from strawberry.channels import GraphQLWSConsumer
+
+from .distributor import GraphQLWSConsumerInjector
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gencaster.settings.dev")
 
@@ -25,7 +26,7 @@ from .schema import schema
 websocket_urlpatterns = [
     re_path(
         r"graphql",
-        GraphQLWSConsumer.as_asgi(
+        GraphQLWSConsumerInjector.as_asgi(
             schema=schema,
         ),
     ),
