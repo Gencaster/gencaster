@@ -340,7 +340,7 @@ class Subscription:
         consumer: GraphQLWSConsumerInjector = info.context.ws
         stream = await stream_models.Stream.objects.aget_free_stream()
 
-        graph = await story_graph_models.Graph.objects.filter(name="sc").afirst()
+        graph = await story_graph_models.Graph.objects.order_by("?").afirst()
 
         if not graph:
             print("could not find graph!")
