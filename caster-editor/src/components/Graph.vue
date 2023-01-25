@@ -30,9 +30,10 @@ import type { Ref } from "vue";
 import { nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
+import { Script } from "@zhead/schema";
 import { useNuxtApp } from "#app";
 import { GraphSettings } from "@/assets/js/graphSettings";
-import type { Scalars } from "@/graphql/graphql";
+import type { Scalars, ScriptCell } from "@/graphql/graphql";
 
 // Props
 const props = defineProps<GraphProps>();
@@ -147,7 +148,7 @@ const eventHandlers: GraphEventHandlers = {
   },
   "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
     for (const p in dragEvent) {
-      const draggedNode = graphInStore.value?.graph.nodes.find(x => x.uuid === p);
+      const draggedNode = graphInStore.value?.graph.nodes.find((x: ScriptCell) => x.uuid === p);
       if (draggedNode === undefined) {
         console.log("Could not find dragged Node in our local store");
         continue;

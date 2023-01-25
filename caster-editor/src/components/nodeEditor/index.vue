@@ -201,7 +201,7 @@ const addScriptCell = (type: CellType, position: number | undefined = undefined)
     nodeUuid: node.value.node.uuid,
     newScriptCell: {
       // add cell as last cell by searching for highest current cell order
-      cellOrder: node.value.node.scriptCells.length > 0 ? Math.max(...node.value.node.scriptCells.map((x) => { return x.cellOrder; })) + 1 : 0,
+      cellOrder: node.value.node.scriptCells.length > 0 ? Math.max(...node.value.node.scriptCells.map((x: ScriptCell) => { return x.cellOrder; })) + 1 : 0,
       cellCode: "",
       cellType: type
     }
@@ -240,8 +240,8 @@ const scriptCellList = computed({
 
     const newOrder: Array<ScriptCell> = [];
 
-    value.forEach((scriptCell) => {
-      newOrder.push(scriptCell as ScriptCell);
+    value.forEach((scriptCell: ScriptCell) => {
+      newOrder.push(scriptCell);
     });
 
     // recalculate index for all
@@ -266,11 +266,11 @@ const moveScriptCell = async (scriptCellUuid: string, direction: MoveDirection) 
   const selectedScriptCell: Array<ScriptCell> = [];
   const newOrder: Array<ScriptCell> = [];
 
-  node.value?.node.scriptCells.forEach((scriptCell) => {
+  node.value?.node.scriptCells.forEach((scriptCell: ScriptCell) => {
     if (scriptCell.uuid === scriptCellUuid)
-      selectedScriptCell.push(scriptCell as ScriptCell);
+      selectedScriptCell.push(scriptCell);
     else
-      newOrder.push(scriptCell as ScriptCell);
+      newOrder.push(scriptCell);
   });
 
   if (selectedScriptCell[0] === undefined) {
