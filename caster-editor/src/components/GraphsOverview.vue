@@ -43,7 +43,6 @@ const nuxtApp = useNuxtApp();
 
 // store
 const graphsStore = nuxtApp.graphsStore;
-
 const { fetching, graphs } = storeToRefs(graphsStore);
 
 const createNewGraph = () => {

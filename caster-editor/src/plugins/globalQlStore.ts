@@ -1,5 +1,6 @@
 import { createPinia } from "pinia";
 import { defineNuxtPlugin } from "#app";
+import { useMenuStore } from "@/stores/MenuStore";
 import { useGraphStore } from "@/stores/GraphStore";
 import { useGraphsStore } from "@/stores/GraphsStore";
 
@@ -15,5 +16,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     // graph store
     const graphStore = useGraphStore();
     nuxtApp.graphStore = graphStore;
+
+    // menu store
+    const menuStore = useMenuStore();
+    nuxtApp.menuStore = menuStore;
   });
 });
