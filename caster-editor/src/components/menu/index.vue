@@ -25,13 +25,13 @@
       </div>
       <div class="level level-2">
         <div v-if="menuStore.tab === Tab.Edit" class="left">
-          <button class="unstyled" @click="addNode()">
+          <button class="add-node-btn unstyled" @click="addNode()">
             Add Node
           </button>
-          <button class="unstyled" :class="{ lighter: hideConnectionButton }" @click="createEdge()">
+          <button class="add-connection-btn  unstyled" :class="{ lighter: hideConnectionButton }" @click="createEdge()">
             Add Connection
           </button>
-          <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeSelection()">
+          <button class="remove-btn unstyled" :class="{ lighter: hideRemoveButton }" @click="removeSelection()">
             Remove
           </button>
           <!-- TODO: Rewrite a reloadfromserver function -->
@@ -53,7 +53,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button text bg @click="deleteDialogVisible = false">Cancel</el-button>
-          <el-button color="#FF0000" @click="deleteSelectedNodes()">
+          <el-button class="dialog-delete-node-btn" color="#FF0000" @click="deleteSelectedNodes()">
             Delete Node
           </el-button>
         </span>

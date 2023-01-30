@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:ci": "eslint . --max-warnings 0",
-    "type-check": "vue-tsc --noEmit -p tsconfig.json --composite false"
+    "type-check": "vue-tsc --noEmit -p tsconfig.json --composite false",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@codemirror/lang-json": "^6.0.1",
@@ -40,6 +41,7 @@
     "@graphql-codegen/cli": "^2.13.1",
     "@graphql-codegen/typescript-vue-urql": "^2.3.3",
     "@nuxt/types": "2.13.2",
+    "cypress": "^12.4.1",
     "eslint": "^8.27.0",
     "nuxt": "^3.0.0",
     "sass": "^1.55.0",
