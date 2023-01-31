@@ -62,6 +62,7 @@ const { scriptCellsModified, node } = storeToRefs(nodeStore);
 // Variables
 const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(node.value?.node.scriptCells.find((x: ScriptCell) => { return x.uuid === props.scriptCellUuid; }));
 const domReady: Ref<boolean> = ref(false);
+const originalValue = ref<string>("");
 
 const emitCodemirror = (eventType?: string, event?: any) => {
   if (!domReady.value)
@@ -70,4 +71,9 @@ const emitCodemirror = (eventType?: string, event?: any) => {
   if (eventType === "change")
     scriptCellsModified.value = true;
 };
+
+onMounted(() => {
+  if (scriptCell.value)
+    originalValue.value = scriptCell.value.cellCode;
+});
 </script>

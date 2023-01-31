@@ -41,6 +41,7 @@ const { scriptCellsModified, node } = storeToRefs(nodeStore);
 const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(node.value?.node.scriptCells.find((x: ScriptCell) => { return x.uuid === props.scriptCellUuid; }));
 const editorDom = ref<HTMLElement>();
 const editor = ref<EditorType>();
+const originalValue = ref<string>("");
 
 onMounted(() => {
   const options: EditorOptions = {
@@ -63,10 +64,14 @@ onMounted(() => {
     if (scriptCell.value === undefined)
       return;
 
-    scriptCellsModified.value = true;
     const markdown = editor.value?.getMarkdown() || "";
+
+    scriptCellsModified.value = true;
     scriptCell.value.cellCode = markdown;
   });
+
+  // save originalValue
+  originalValue.value = editor.value?.getMarkdown();
 });
 
 onUnmounted(() => {
