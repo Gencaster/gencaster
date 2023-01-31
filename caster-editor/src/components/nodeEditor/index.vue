@@ -36,8 +36,8 @@
 
     <div class="blocks">
       <draggable
-        v-model="scriptCellList" item-key="uuid" handle=".handle"
-        @start="dragging = true" @end="dragging = false"
+        v-model="scriptCellList" item-key="uuid" handle=".handle" @start="dragging = true"
+        @end="dragging = false"
       >
         <template #item="{ element }">
           <div :class="{ 'no-padding': addNoPaddingClass(element.cellType) }">
@@ -95,7 +95,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
-          <el-button text bg @click="closeEditor()">Close without saving</el-button>
+          <el-button text bg @click="closeWithoutSaving()">Close without saving</el-button>
           <el-button
             color="#ADFF00" @click="async () => {
               exitDialogVisible = false;
@@ -144,7 +144,7 @@ const nuxtApp = useNuxtApp();
 // Store
 const nodeStore = nuxtApp.nodeStore;
 const interfaceStore = nuxtApp.interfaceStore;
-const { node, scriptCellsModified } = storeToRefs(nodeStore);
+const { node, scriptCellsModified, uuid: nodeUuid } = storeToRefs(nodeStore);
 const { showEditor } = storeToRefs(interfaceStore);
 
 // Variables
@@ -163,7 +163,13 @@ const JSONViewerData = computed(() => {
 });
 
 const closeEditor = async () => {
+  nodeUuid.value = "";
   showEditor.value = false;
+};
+
+const closeWithoutSaving = async () => {
+  scriptCellsModified.value = false;
+  closeEditor();
 };
 
 const clickedClose = async () => {
