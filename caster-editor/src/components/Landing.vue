@@ -27,8 +27,8 @@ import * as variables from "@/assets/scss/variables.module.scss";
 const nuxtApp = useNuxtApp();
 
 // Store
-const graphStore = nuxtApp.graphStore;
-const { graphs } = storeToRefs(graphStore);
+const graphsStore = nuxtApp.graphsStore;
+const { graphs } = storeToRefs(graphsStore);
 
 // Composables
 const router = useRouter();
