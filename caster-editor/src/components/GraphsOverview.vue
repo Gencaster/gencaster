@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="fetching" class="fetching-screen">
-      <elementsLoading />
+      <ElementsLoading />
     </div>
     <div v-else>
       <div v-if="graphs.length > 0">
@@ -39,7 +39,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import elementsLoading from "@/components/elements/Loading.vue";
+import ElementsLoading from "@/components/elements/Loading.vue";
 import { useNuxtApp } from "#app";
 const nuxtApp = useNuxtApp();
 

@@ -130,6 +130,8 @@ import { json } from "@codemirror/lang-json";
 import type { Ref } from "vue";
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
+import ElementsLoading from "@/components/elements/Loading.vue";
+import ElementsBlock from "@/components/elements/Block.vue";
 import { useNuxtApp } from "#app";
 import { CellType } from "@/graphql/graphql";
 import type { ScriptCell } from "@/graphql/graphql";

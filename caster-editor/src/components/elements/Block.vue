@@ -16,6 +16,8 @@
 </template>
 
 <script lang="ts" setup>
+import ElementsBlockMarkdown from "@/components/elements/BlockMarkdown.vue";
+import ElementsBlockCodemirror from "@/components/elements/BlockCodemirror.vue";
 import { CellType } from "@/graphql/graphql";
 const props = defineProps<BlockProps>();
 

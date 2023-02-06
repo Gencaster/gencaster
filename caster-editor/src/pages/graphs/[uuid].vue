@@ -6,6 +6,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
+import Graph from "@/components/Graph.vue";
 import { useNuxtApp } from "#app";
 const nuxtApp = useNuxtApp();
 
