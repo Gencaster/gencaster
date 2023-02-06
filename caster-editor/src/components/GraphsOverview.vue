@@ -39,6 +39,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
+import elementsLoading from "@/components/elements/Loading.vue";
 import { useNuxtApp } from "#app";
 const nuxtApp = useNuxtApp();
 

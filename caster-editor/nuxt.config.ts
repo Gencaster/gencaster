@@ -18,14 +18,14 @@ export default defineNuxtConfig({
   // imports: {
   //   autoImport: false
   // },
-  // modules: ["@pinia/nuxt"],
+  modules: ["nuxt-vitest"],
   telemetry: false,
   typescript: {
     shim: false
   },
   ssr: false,
   css: ["assets/scss/main.scss", "v-network-graph/lib/style.css"],
-  components: true,
+  components: false,
   srcDir: "src/",
   runtimeConfig: {
     public: {

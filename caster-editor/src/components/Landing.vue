@@ -11,7 +11,7 @@
           <el-input v-model="model.password" placeholder="Password" type="password" />
         </el-form-item>
         <el-form-item>
-          <el-button :color="variables.greenLight" class="login-button" native-type="submit" @click="onSubmit">
+          <el-button ref="submitBtn" :color="variables.greenLight" class="login-button" native-type="submit" @click="onSubmit">
             Login
           </el-button>
         </el-form-item>
@@ -27,8 +27,8 @@ import * as variables from "@/assets/scss/variables.module.scss";
 const nuxtApp = useNuxtApp();
 
 // Store
-const graphStore = nuxtApp.graphStore;
-const { graphs } = storeToRefs(graphStore);
+const graphsStore = nuxtApp.graphsStore;
+const { graphs } = storeToRefs(graphsStore);
 
 // Composables
 const router = useRouter();
