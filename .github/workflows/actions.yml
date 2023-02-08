@@ -57,15 +57,15 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "14"
-          cache: "yarn"
+          cache: "npm"
           cache-dependency-path: |
-            caster-editor/yarn.lock
-      - run: yarn install --immutable --immutable-cache --check-cache
+            caster-editor/package-lock.json
+      - run: npm ci
         working-directory: caster-editor
       - uses: pre-commit/action@v2.0.3
         with:
           extra_args: --files caster-editor/*
-      - run: yarn type-check
+      - run: npm run type-check
         working-directory: caster-editor
         name: "Run type checks"
 

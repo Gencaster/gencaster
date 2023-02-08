@@ -1,7 +1,7 @@
 import * as vNG from "v-network-graph";
-import * as variables from "@/assets/scss/variables.module.scss";
+import variables from "@/assets/scss/variables.module.scss";
 
-const GraphSettings = {
+export const GraphSettings = {
   standard: vNG.defineConfigs({
     node: {
       selectable: true,
@@ -9,19 +9,19 @@ const GraphSettings = {
         type: "circle",
         radius: 16,
         strokeWidth: 0,
-        color: variables.grey
+        color: variables.grey,
       },
       hover: {
         type: "circle",
         radius: 16,
         strokeWidth: 0,
-        color: variables.greenLight
+        color: variables.greenLight,
       },
       selected: {
         type: "circle",
         radius: 16,
         strokeWidth: 0,
-        color: variables.greenLight
+        color: variables.greenLight,
       },
       label: {
         fontSize: 15,
@@ -33,17 +33,17 @@ const GraphSettings = {
           color: variables.white,
           padding: {
             vertical: 1,
-            horizontal: 4
+            horizontal: 4,
           },
-          borderRadius: 2
-        }
+          borderRadius: 2,
+        },
       },
       focusring: { visible: false },
       zOrder: {
         enabled: true, // whether the z-order control is enable or not. default: false
         bringToFrontOnHover: true, // whether to bring to front on hover.    default: true
-        bringToFrontOnSelected: true // whether to bring to front on selected. default: true
-      }
+        bringToFrontOnSelected: true, // whether to bring to front on selected. default: true
+      },
     },
     edge: {
       selectable: true,
@@ -53,21 +53,21 @@ const GraphSettings = {
         dasharray: 0,
         animationSpeed: 5,
         linecap: "square",
-        animate: false
+        animate: false,
       },
       hover: {
         width: 4,
         color: variables.greenLight,
         dasharray: "0",
         linecap: "square",
-        animate: false
+        animate: false,
       },
       selected: {
         width: 3,
         color: variables.greenLight,
         dasharray: "0",
         linecap: "square",
-        animate: false
+        animate: false,
       },
       gap: 5,
       // type: "straight",
@@ -81,7 +81,7 @@ const GraphSettings = {
           height: 4,
           margin: -1,
           units: "strokeWidth",
-          color: null
+          color: null,
         },
         target: {
           type: "arrow",
@@ -89,14 +89,14 @@ const GraphSettings = {
           height: 6,
           margin: -1,
           units: "strokeWidth",
-          color: null
-        }
+          color: null,
+        },
       },
       zOrder: {
         enabled: true, // whether the z-order control is enable or not. default: false
         bringToFrontOnHover: true, // whether to bring to front on hover.    default: true
-        bringToFrontOnSelected: true // whether to bring to front on selected. default: true
-      }
+        bringToFrontOnSelected: true, // whether to bring to front on selected. default: true
+      },
     },
     view: {
       grid: {
@@ -106,17 +106,15 @@ const GraphSettings = {
         line: {
           color: "#F5F5F5",
           width: 1,
-          dasharray: 0
+          dasharray: 0,
         },
         thick: {
           color: "#F5F5F5",
           width: 1,
-          dasharray: 0
-        }
-      }
+          dasharray: 0,
+        },
+      },
       // layoutHandler: new vNG.GridLayout({ grid: 30 })
-    }
-  })
+    },
+  }),
 };
-
-export { GraphSettings };

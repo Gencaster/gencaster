@@ -18,20 +18,37 @@
           </span>
         </div>
         <div class="menu-items right">
-          <button class="unstyled" @click="exitWithoutSaving()">
+          <button
+            class="unstyled"
+            @click="exitWithoutSaving()"
+          >
             Exit
           </button>
         </div>
       </div>
       <div class="level level-2">
-        <div v-if="menuStore.tab === Tab.Edit" class="left">
-          <button class="unstyled" @click="addNode()">
+        <div
+          v-if="menuStore.tab === Tab.Edit"
+          class="left"
+        >
+          <button
+            class="unstyled"
+            @click="addNode()"
+          >
             Add Node
           </button>
-          <button class="unstyled" :class="{ lighter: hideConnectionButton }" @click="createEdge()">
+          <button
+            class="unstyled"
+            :class="{ lighter: hideConnectionButton }"
+            @click="createEdge()"
+          >
             Add Connection
           </button>
-          <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeSelection()">
+          <button
+            class="unstyled"
+            :class="{ lighter: hideRemoveButton }"
+            @click="removeSelection()"
+          >
             Remove
           </button>
           <!-- TODO: Rewrite a reloadfromserver function -->
@@ -46,60 +63,91 @@
 
     <!-- Dialogs -->
     <!-- Are you sure to delete? -->
-    <el-dialog v-model="deleteDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
+    <ElDialog
+      v-model="deleteDialogVisible"
+      title="Careful"
+      width="25%"
+      center
+      lock-scroll
+      :show-close="false"
+    >
       <span>
-        Are you sure to delete Scene "{{ (graph?.nodes[selectedNodes[0]] || { name: "deleted" }).name }}"?
+        Are you sure to delete Scene "{{
+          (graph?.nodes[selectedNodes[0]] || { name: "deleted" }).name
+        }}"?
       </span>
       <template #footer>
         <span class="dialog-footer">
-          <el-button text bg @click="deleteDialogVisible = false">Cancel</el-button>
-          <el-button color="#FF0000" @click="deleteSelectedNodes()">
+          <el-button
+            text
+            bg
+            @click="deleteDialogVisible = false"
+          >Cancel</el-button>
+          <el-button
+            color="#FF0000"
+            @click="deleteSelectedNodes()"
+          >
             Delete Node
           </el-button>
         </span>
       </template>
-    </el-dialog>
+    </ElDialog>
 
     <!-- Exit Page -->
-    <el-dialog v-model="exitDialogVisible" title="Careful" width="25%" center lock-scroll :show-close="false">
+    <ElDialog
+      v-model="exitDialogVisible"
+      title="Careful"
+      width="25%"
+      center
+      lock-scroll
+      :show-close="false"
+    >
       <span>
-        Are you sure to exit without saving? <br> Some of your changes might get lost.
+        Are you sure to exit without saving? <br>
+        Some of your changes might get lost.
       </span>
       <template #footer>
         <span class="dialog-footer">
-          <el-button text bg @click="exitDialogVisible = false">Cancel</el-button>
-          <el-button color="#FF0000" @click="exitWithoutSaving()">
+          <el-button
+            text
+            bg
+            @click="exitDialogVisible = false"
+          >Cancel</el-button>
+          <el-button
+            color="#FF0000"
+            @click="exitWithoutSaving()"
+          >
             Exit
           </el-button>
         </span>
       </template>
-    </el-dialog>
+    </ElDialog>
   </div>
 </template>
 
 <script lang="ts" setup>
+export interface MenuProps {
+  graph?: GraphInstance;
+  uuid: Scalars["UUID"];
+  selectedNodes: string[];
+  selectedEdges: string[];
+}
+
 import { storeToRefs } from "pinia";
-import { ElMessage } from "element-plus";
 import type { Instance as GraphInstance } from "v-network-graph";
-import type { Scalars } from "@/graphql/graphql";
-import { Tab } from "@/stores/MenuStore";
-import { useNuxtApp } from "#app";
+import type { Scalars } from "@/graphql";
+import { ElMessage } from "element-plus";
+import { Tab, useMenuStore } from "@/stores/MenuStore";
+import { useRouter } from "vue-router";
+import { computed, ref } from "vue";
+import { useGraphStore } from "@/stores/GraphStore";
 
 // Props
 const props = defineProps<MenuProps>();
 
-const nuxtApp = useNuxtApp();
-
-interface MenuProps {
-  graph?: GraphInstance
-  uuid: Scalars["UUID"]
-  selectedNodes: string[]
-  selectedEdges: string[]
-}
-
 // Store
-const menuStore = nuxtApp.menuStore;
-const graphStore = nuxtApp.graphStore;
+const menuStore = useMenuStore();
+const graphStore = useGraphStore();
 const { graph: graphInStore } = storeToRefs(graphStore);
 
 // Composables
@@ -111,9 +159,12 @@ const hideConnectionButton = computed(() => {
 });
 
 const hideRemoveButton = computed(() => {
-  if ((props.selectedNodes.length === 0 && props.selectedEdges.length === 0) || (props.selectedNodes.length === 0 && props.selectedEdges.length === 0))
+  if (
+    (props.selectedNodes.length === 0 && props.selectedEdges.length === 0) ||
+    (props.selectedNodes.length === 0 && props.selectedEdges.length === 0)
+  )
     return true;
-  else if ((props.selectedNodes.length > 1 || props.selectedEdges.length > 1))
+  else if (props.selectedNodes.length > 1 || props.selectedEdges.length > 1)
     return true;
   else return false;
 });
@@ -124,7 +175,7 @@ const exitDialogVisible = ref(false);
 
 const exitWithoutSaving = () => {
   router.push({
-    path: "/graphs"
+    path: "/graphs",
   });
 };
 
@@ -136,14 +187,17 @@ const addNode = async () => {
   }
 
   const { height, width } = props.graph.getSizes();
-  const centerPosition = props.graph.translateFromDomToSvgCoordinates({ x: width / 2, y: height / 2 });
+  const centerPosition = props.graph.translateFromDomToSvgCoordinates({
+    x: width / 2,
+    y: height / 2,
+  });
 
   await graphStore.addNode({
     graphUuid: props.uuid,
     name: "new node",
     color: "primary",
     positionX: centerPosition.x,
-    positionY: centerPosition.y
+    positionY: centerPosition.y,
   });
 };
 
@@ -152,7 +206,7 @@ const createEdge = async () => {
     ElMessage({
       message: "requires exactly 2 scenes selected.",
       type: "error",
-      customClass: "messages-editor"
+      customClass: "messages-editor",
     });
     return;
   }
@@ -176,17 +230,18 @@ const removeSelection = () => {
   // check if only one type is selected
   // right now we only allow one element deletion
   // TODO: needs to check if the async call is not buggy if looping through
-  if ((props.selectedNodes.length === 1 && props.selectedEdges.length === 0)) {
+  if (props.selectedNodes.length === 1 && props.selectedEdges.length === 0) {
     deleteDialogVisible.value = true;
-  }
-  else if ((props.selectedNodes.length === 0 && props.selectedEdges.length === 1)) {
+  } else if (
+    props.selectedNodes.length === 0 &&
+    props.selectedEdges.length === 1
+  ) {
     deleteSelectedEdges();
-  }
-  else {
+  } else {
     ElMessage({
       message: "Please select max one scene or one connection.",
       type: "error",
-      customClass: "messages-editor"
+      customClass: "messages-editor",
     });
   }
 };

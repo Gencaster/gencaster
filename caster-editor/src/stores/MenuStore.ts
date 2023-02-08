@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import type { Ref } from "vue";
+import { type Ref, ref } from "vue";
 
 export enum Tab {
   Edit = "Edit",
-  Play = "Play"
+  Play = "Play",
 }
 
 export const useMenuStore = defineStore("menu", () => {

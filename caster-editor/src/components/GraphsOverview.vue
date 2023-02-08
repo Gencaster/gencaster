@@ -1,7 +1,10 @@
 <template>
   <div>
-    <div v-if="fetching" class="fetching-screen">
-      <elementsLoading />
+    <div
+      v-if="fetching"
+      class="fetching-screen"
+    >
+      <Loading />
     </div>
     <div v-else>
       <div v-if="graphs.length > 0">
@@ -9,18 +12,29 @@
         <div class="demo-control-panel">
           <div>
             <br>
-            <div v-for="graph in graphs" :key="graph.uuid" class="graph-selection" :value="graph.uuid">
-              <NuxtLink class="graph" :to="`../graphs/${graph.uuid}`">
+            <div
+              v-for="graph in graphs"
+              :key="graph.uuid"
+              class="graph-selection"
+              :value="graph.uuid"
+            >
+              <router-link
+                class="graph"
+                :to="{ name: 'graph', params: { uuid: graph.uuid } }"
+              >
                 <div>
                   <p>{{ graph.name }}</p>
                 </div>
                 <div>
                   <p>{{ graph.uuid }}</p>
                 </div>
-              </NuxtLink>
+              </router-link>
             </div>
             <div class="graph-selection">
-              <div class="graph new-one" @click="createNewGraph()">
+              <div
+                class="graph new-one"
+                @click="createNewGraph()"
+              >
                 <div>
                   <p>+</p>
                 </div>
@@ -39,12 +53,11 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { useNuxtApp } from "#app";
-const nuxtApp = useNuxtApp();
+import { useGraphsStore } from "../stores/GraphsStore";
+import Loading from "./elements/Loading.vue";
 
 // store
-const graphsStore = nuxtApp.graphsStore;
-const { fetching, graphs } = storeToRefs(graphsStore);
+const { fetching, graphs } = storeToRefs(useGraphsStore());
 
 const createNewGraph = () => {
   alert("tbd");

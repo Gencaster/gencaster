@@ -1,7 +1,10 @@
 <template>
   <div class="block">
     <!-- python -->
-    <div v-if="scriptCell?.cellType === CellType.Python" class="editor-python">
+    <div
+      v-if="scriptCell?.cellType === CellType.Python"
+      class="editor-python"
+    >
       <Codemirror
         v-model="scriptCell.cellCode"
         placeholder="Code goes here..."
@@ -10,15 +13,22 @@
         :tab-size="2"
         :extensions="[python()]"
         :disable="dragging"
-        @ready="() => { domReady = true }"
-        @change="emitCodemirror('change', $event)"
-        @focus="emitCodemirror('focus', $event)"
-        @blur="emitCodemirror('blur', $event)"
+        @ready="
+          () => {
+            domReady = true;
+          }
+        "
+        @change="emitCodemirror('change')"
+        @focus="emitCodemirror('focus')"
+        @blur="emitCodemirror('blur')"
       />
     </div>
 
     <!-- supercollider -->
-    <div v-if="scriptCell?.cellType === CellType.Supercollider" class="editor-supercollider">
+    <div
+      v-if="scriptCell?.cellType === CellType.Supercollider"
+      class="editor-supercollider"
+    >
       <Codemirror
         v-model="scriptCell.cellCode"
         placeholder="Code goes here..."
@@ -27,10 +37,14 @@
         :tab-size="2"
         :extensions="[python()]"
         :disable="dragging"
-        @ready="() => { domReady = true }"
-        @change="emitCodemirror('change', $event)"
-        @focus="emitCodemirror('focus', $event)"
-        @blur="emitCodemirror('blur', $event)"
+        @ready="
+          () => {
+            domReady = true;
+          }
+        "
+        @change="emitCodemirror('change')"
+        @focus="emitCodemirror('focus')"
+        @blur="emitCodemirror('blur')"
       />
     </div>
   </div>
@@ -38,36 +52,38 @@
 
 <script lang="ts" setup>
 // code editor
-import { Codemirror } from "vue-codemirror";
-import { python } from "@codemirror/lang-python";
-import type { Ref } from "vue";
-import { storeToRefs } from "pinia";
-import { CellType } from "@/graphql/graphql";
-import type { NodeSubscription, ScriptCell } from "@/graphql/graphql";
-import { useNuxtApp } from "#app";
-
-const props = defineProps<BlockProps>();
-interface BlockProps {
-  scriptCellUuid: String
-  index: number
-  dragging: boolean
+export interface BlockProps {
+  scriptCellUuid: String;
+  index: number;
+  dragging: boolean;
 }
 
-const nuxtApp = useNuxtApp();
+import { Codemirror } from "vue-codemirror";
+import { python } from "@codemirror/lang-python";
+import { ref } from "vue";
+import type { Ref } from "vue";
+import { storeToRefs } from "pinia";
+import { CellType } from "@/graphql";
+import type { NodeSubscription } from "@/graphql";
+import { useNodeStore } from "@/stores/NodeStore";
+
+const props = defineProps<BlockProps>();
 
 // Store
-const nodeStore = nuxtApp.nodeStore;
+const nodeStore = useNodeStore();
 const { scriptCellsModified, node } = storeToRefs(nodeStore);
 
 // Variables
-const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(node.value?.node.scriptCells.find((x: ScriptCell) => { return x.uuid === props.scriptCellUuid; }));
+const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(
+  node.value?.node.scriptCells.find((x) => {
+    return x.uuid === props.scriptCellUuid;
+  })
+);
 const domReady: Ref<boolean> = ref(false);
 
-const emitCodemirror = (eventType?: string, event?: any) => {
-  if (!domReady.value)
-    return;
+const emitCodemirror = (eventType?: string) => {
+  if (!domReady.value) return;
 
-  if (eventType === "change")
-    scriptCellsModified.value = true;
+  if (eventType === "change") scriptCellsModified.value = true;
 };
 </script>

@@ -1,64 +1,89 @@
+<!-- eslint-disable vue/no-v-model-argument -->
 <template>
-  <!-- Menu -->
-  <Menu :graph="graph" :uuid="uuid" :selected-nodes="selectedNodes" :selected-edges="selectedEdges" />
+  <div>
+    <!-- Menu -->
+    <Menu
+      :graph="graph"
+      :uuid="uuid"
+      :selected-nodes="selectedNodes"
+      :selected-edges="selectedEdges"
+    />
 
-  <!-- Graph -->
-  <v-network-graph
-    ref="graph" v-model:selected-nodes="selectedNodes" v-model:selected-edges="selectedEdges"
-    class="graph" :nodes="graphStore.nodes()" :edges="graphStore.edges()" :configs="configs"
-    :layouts="graphStore.layouts()" :event-handlers="eventHandlers"
-  />
+    <!-- Graph -->
+    <v-network-graph
+      ref="graph"
+      v-model:selected-nodes="selectedNodes"
+      v-model:selected-edges="selectedEdges"
+      class="graph"
+      :nodes="graphStore.nodes()"
+      :edges="graphStore.edges()"
+      :configs="configs"
+      :layouts="graphStore.layouts()"
+      :event-handlers="eventHandlers"
+    />
 
-  <!-- Node Editor -->
-  <div v-if="showEditor && selectedNodes.length > 0" ref="editorDom" class="node-data">
-    <NodeEditor :node-uuid="selectedNodes[0]" />
-  </div>
+    <!-- Node Editor -->
+    <div
+      v-if="showEditor && selectedNodes.length > 0"
+      ref="editorDom"
+      class="node-data"
+    >
+      <NodeEditor />
+    </div>
 
-  <!-- Other Interface -->
-  <div v-if="!showEditor" class="stats">
-    <p>
-      Nodes: {{ graphInStore?.graph.nodes.length }} &nbsp;
-      Edges: {{ graphInStore?.graph.edges.length }}
-    </p>
+    <!-- Other Interface -->
+    <div
+      v-if="!showEditor"
+      class="stats"
+    >
+      <p>
+        Nodes: {{ graphInStore?.graph.nodes.length }} &nbsp; Edges:
+        {{ graphInStore?.graph.edges.length }}
+      </p>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+export interface GraphProps {
+  uuid: Scalars["UUID"];
+}
+
 import { ElMessage } from "element-plus";
-import type { EventHandlers as GraphEventHandlers, Instance as GraphInstance } from "v-network-graph";
+import type {
+  EventHandlers as GraphEventHandlers,
+  Instance as GraphInstance,
+} from "v-network-graph";
+import { ref } from "vue";
 import type { Ref } from "vue";
 import { nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
-import { Script } from "@zhead/schema";
-import { useNuxtApp } from "#app";
 import { GraphSettings } from "@/assets/js/graphSettings";
-import type { Scalars, ScriptCell } from "@/graphql/graphql";
+import type { Scalars } from "@/graphql";
+import { useGraphStore } from "@/stores/GraphStore";
+import { useInterfaceStore } from "@/stores/InterfaceStore";
+import { useNodeStore } from "@/stores/NodeStore";
+import Menu from "./Menu.vue";
+import NodeEditor from "./NodeEditor.vue";
 
-// Props
-const props = defineProps<GraphProps>();
-
-interface GraphProps {
-  uuid: Scalars["UUID"]
-}
-
-const nuxtApp = useNuxtApp();
+defineProps<GraphProps>();
 
 // Html
-const editorDom = ref<HTMLElement>();
+const editorDom: Ref<HTMLElement | undefined> = ref(undefined);
 
 // Store
-const graphStore = nuxtApp.graphStore;
+const graphStore = useGraphStore();
 const { graph: graphInStore } = storeToRefs(graphStore);
 
-const nodeStore = nuxtApp.nodeStore;
+const nodeStore = useNodeStore();
 const { scriptCellsModified, uuid: nodeUuid } = storeToRefs(nodeStore);
 
-const interfaceStore = nuxtApp.interfaceStore;
+const interfaceStore = useInterfaceStore();
 const { showEditor } = storeToRefs(interfaceStore);
 
 // Data
-const graph = ref<GraphInstance>();
+const graph: Ref<GraphInstance | undefined> = ref();
 
 const selectedNodes: Ref<string[]> = ref([]);
 const selectedEdges: Ref<string[]> = ref([]);
@@ -68,13 +93,12 @@ const configs = GraphSettings.standard;
 
 // Graph Manipulations
 const centerClickLeftToEditor = (event: MouseEvent) => {
-  if (!graph.value)
-    return;
+  if (!graph.value) return;
 
   // get click position
   const clickPos = {
     x: event.offsetX,
-    y: event.offsetY
+    y: event.offsetY,
   };
 
   // get canvas size
@@ -86,17 +110,17 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
   // screen aim
   const aimPos = {
     x: (gWidth - editorWidth) / 2,
-    y: gHeight / 2
+    y: gHeight / 2,
   };
 
   // move by
   const moveBy = {
     x: aimPos.x - clickPos.x,
-    y: aimPos.y - clickPos.y
+    y: aimPos.y - clickPos.y,
   };
 
   const progress = {
-    absolute: 0
+    absolute: 0,
   };
 
   let prevProgress = 0;
@@ -105,7 +129,7 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
     const delta = progress.absolute - prevProgress;
     const shift = {
       x: moveBy.x * delta,
-      y: moveBy.y * delta
+      y: moveBy.y * delta,
     };
 
     graph.value?.panBy(shift);
@@ -119,21 +143,22 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
     ease: "power3.inOut",
     onUpdate: () => {
       moveGraph();
-    }
+    },
   });
 };
 
-const openNodeEditor = async (node: string) => {
+const openNodeEditor = async () => {
   if (scriptCellsModified.value === true) {
     ElMessage({
       message: "Save or close scene before switching to another.",
       type: "error",
-      customClass: "messages-editor"
+      customClass: "messages-editor",
     });
     return;
   }
   showEditor.value = true;
   nodeUuid.value = selectedNodes.value[0];
+  console.log(`Do something to ${selectedNodes.value[0]}`);
 };
 
 const eventHandlers: GraphEventHandlers = {
@@ -141,14 +166,17 @@ const eventHandlers: GraphEventHandlers = {
   "view:load": () => {
     graph.value?.fitToContents();
   },
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   "node:dblclick": async ({ node, event }) => {
-    openNodeEditor(node);
+    openNodeEditor();
     await nextTick();
     centerClickLeftToEditor(event);
   },
   "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
     for (const p in dragEvent) {
-      const draggedNode = graphInStore.value?.graph.nodes.find((x: ScriptCell) => x.uuid === p);
+      const draggedNode = graphInStore.value?.graph.nodes.find(
+        (x) => x.uuid === p
+      );
       if (draggedNode === undefined) {
         console.log("Could not find dragged Node in our local store");
         continue;
@@ -157,6 +185,6 @@ const eventHandlers: GraphEventHandlers = {
       draggedNode.positionY = dragEvent[p].y;
       graphStore.updateNodePosition(draggedNode);
     }
-  }
+  },
 };
 </script>
