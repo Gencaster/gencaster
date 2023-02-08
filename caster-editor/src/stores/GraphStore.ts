@@ -100,11 +100,11 @@ export const useGraphStore = defineStore("graph", () => {
   return {
     graph,
     uuid,
-    nodes,
     error,
+    fetching,
+    nodes,
     edges,
     layouts,
-    fetching,
     addNode,
     deleteNode,
     deleteEdge,

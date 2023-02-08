@@ -129,22 +129,23 @@ import { Codemirror } from "vue-codemirror";
 import { json } from "@codemirror/lang-json";
 import type { Ref } from "vue";
 import { computed, ref } from "vue";
-
 import { storeToRefs } from "pinia";
-import { useNodeStore } from "@/stores/NodeStore";
+import { useNuxtApp } from "#app";
 import { CellType } from "@/graphql/graphql";
 import type { ScriptCell } from "@/graphql/graphql";
-import { useInterfaceStore } from "@/stores/InterfaceStore";
 
 enum MoveDirection {
   up = "Up",
   down = "Down"
 }
 
+const nuxtApp = useNuxtApp();
+
 // Store
-const nodeStore = useNodeStore();
+const nodeStore = nuxtApp.nodeStore;
+const interfaceStore = nuxtApp.interfaceStore;
 const { node, scriptCellsModified } = storeToRefs(nodeStore);
-const { showEditor } = storeToRefs(useInterfaceStore());
+const { showEditor } = storeToRefs(interfaceStore);
 
 // Variables
 const renameNodeDialogVisible = ref(false);
@@ -200,7 +201,7 @@ const addScriptCell = (type: CellType, position: number | undefined = undefined)
     nodeUuid: node.value.node.uuid,
     newScriptCell: {
       // add cell as last cell by searching for highest current cell order
-      cellOrder: node.value.node.scriptCells.length > 0 ? Math.max(...node.value.node.scriptCells.map((x) => { return x.cellOrder; })) + 1 : 0,
+      cellOrder: node.value.node.scriptCells.length > 0 ? Math.max(...node.value.node.scriptCells.map((x: ScriptCell) => { return x.cellOrder; })) + 1 : 0,
       cellCode: "",
       cellType: type
     }
@@ -239,8 +240,8 @@ const scriptCellList = computed({
 
     const newOrder: Array<ScriptCell> = [];
 
-    value.forEach((scriptCell) => {
-      newOrder.push(scriptCell as ScriptCell);
+    value.forEach((scriptCell: ScriptCell) => {
+      newOrder.push(scriptCell);
     });
 
     // recalculate index for all
@@ -265,11 +266,11 @@ const moveScriptCell = async (scriptCellUuid: string, direction: MoveDirection) 
   const selectedScriptCell: Array<ScriptCell> = [];
   const newOrder: Array<ScriptCell> = [];
 
-  node.value?.node.scriptCells.forEach((scriptCell) => {
+  node.value?.node.scriptCells.forEach((scriptCell: ScriptCell) => {
     if (scriptCell.uuid === scriptCellUuid)
-      selectedScriptCell.push(scriptCell as ScriptCell);
+      selectedScriptCell.push(scriptCell);
     else
-      newOrder.push(scriptCell as ScriptCell);
+      newOrder.push(scriptCell);
   });
 
   if (selectedScriptCell[0] === undefined) {
@@ -315,7 +316,7 @@ const addNoPaddingClass = (blockCellType: CellType) => {
   return blockCellType === CellType.Markdown || blockCellType === CellType.Comment;
 };
 
-onUnmounted(() => {
-  node.value = undefined;
-});
+// onUnmounted(() => {
+//   node.value = undefined;
+// });
 </script>

@@ -34,7 +34,7 @@
           <button class="unstyled" :class="{ lighter: hideRemoveButton }" @click="removeSelection()">
             Remove
           </button>
-           <!-- TODO: Rewrite a reloadfromserver function -->
+          <!-- TODO: Rewrite a reloadfromserver function -->
           <button class="unstyled">
             Refresh
           </button>
@@ -78,15 +78,17 @@
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from "pinia";
 import { ElMessage } from "element-plus";
 import type { Instance as GraphInstance } from "v-network-graph";
-import { storeToRefs } from "pinia";
-import { Tab, useMenuStore } from "@/stores/MenuStore";
-import { useGraphStore } from "@/stores/GraphStore";
 import type { Scalars } from "@/graphql/graphql";
+import { Tab } from "@/stores/MenuStore";
+import { useNuxtApp } from "#app";
 
 // Props
 const props = defineProps<MenuProps>();
+
+const nuxtApp = useNuxtApp();
 
 interface MenuProps {
   graph?: GraphInstance
@@ -96,8 +98,8 @@ interface MenuProps {
 }
 
 // Store
-const menuStore = useMenuStore();
-const graphStore = useGraphStore();
+const menuStore = nuxtApp.menuStore;
+const graphStore = nuxtApp.graphStore;
 const { graph: graphInStore } = storeToRefs(graphStore);
 
 // Composables

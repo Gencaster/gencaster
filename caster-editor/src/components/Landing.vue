@@ -22,11 +22,13 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import { useGraphsStore } from "@/stores/GraphsStore";
+import { useNuxtApp } from "#app";
 import * as variables from "@/assets/scss/variables.module.scss";
+const nuxtApp = useNuxtApp();
 
 // Store
-const { graphs } = storeToRefs(useGraphsStore());
+const graphsStore = nuxtApp.graphsStore;
+const { graphs } = storeToRefs(graphsStore);
 
 // Composables
 const router = useRouter();
