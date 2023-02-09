@@ -1,0 +1,167 @@
+{
+    "type": "data",
+    "id": "1",
+    "payload": {
+        "data": {
+            "graph": {
+                "name": "sc",
+                "uuid": "b611fdaf-331f-4853-b10f-f593e181f115",
+                "edges": [
+                    {
+                        "uuid": "43ade9bc-ee9d-4996-92b8-703e68be0c51",
+                        "outNode": {
+                            "uuid": "7648f668-6e93-409d-a759-e8b82aaf44c5"
+                        },
+                        "inNode": {
+                            "uuid": "b13251d0-f34d-4b47-b2e4-784464ec2d61"
+                        }
+                    },
+                    {
+                        "uuid": "fbb9ef05-cbf4-455b-99ad-8083250fd5ce",
+                        "outNode": {
+                            "uuid": "42efbed6-0f3f-41f3-b674-a1000c8789e8"
+                        },
+                        "inNode": {
+                            "uuid": "7648f668-6e93-409d-a759-e8b82aaf44c5"
+                        }
+                    },
+                    {
+                        "uuid": "07592d53-87c2-4555-a31c-519c3d2d49e6",
+                        "outNode": {
+                            "uuid": "abf535ad-3a58-4c20-b9d1-d80f4d9f578c"
+                        },
+                        "inNode": {
+                            "uuid": "7648f668-6e93-409d-a759-e8b82aaf44c5"
+                        }
+                    },
+                    {
+                        "uuid": "c34c9913-c76a-4ec6-afcd-5b4cad697eb1",
+                        "outNode": {
+                            "uuid": "b13251d0-f34d-4b47-b2e4-784464ec2d61"
+                        },
+                        "inNode": {
+                            "uuid": "abf535ad-3a58-4c20-b9d1-d80f4d9f578c"
+                        }
+                    },
+                    {
+                        "uuid": "1c7302c7-ce54-4567-a2c4-378a8e4ea1ce",
+                        "outNode": {
+                            "uuid": "cde74653-e346-40c5-8f28-0ecbc31d296e"
+                        },
+                        "inNode": {
+                            "uuid": "1e375721-7a5c-48c8-a643-e6100234c31b"
+                        }
+                    },
+                    {
+                        "uuid": "408f8a11-eca7-4b86-9c24-1afb126604cb",
+                        "outNode": {
+                            "uuid": "b13251d0-f34d-4b47-b2e4-784464ec2d61"
+                        },
+                        "inNode": {
+                            "uuid": "42efbed6-0f3f-41f3-b674-a1000c8789e8"
+                        }
+                    }
+                ],
+                "nodes": [
+                    {
+                        "name": "world",
+                        "uuid": "b13251d0-f34d-4b47-b2e4-784464ec2d61",
+                        "scriptCells": [
+                            {
+                                "cellCode": "Ndef(\\mic, {SoundIn.ar(0) * 4.0}).play;",
+                                "cellOrder": 0,
+                                "cellType": "SUPERCOLLIDER",
+                                "uuid": "3614faf1-d796-402f-9967-6d1018ab8f62"
+                            }
+                        ],
+                        "positionX": -44.04079875534729,
+                        "positionY": -18.0332803143692,
+                        "color": "primary"
+                    },
+                    {
+                        "name": "foobar",
+                        "uuid": "7648f668-6e93-409d-a759-e8b82aaf44c5",
+                        "scriptCells": [
+                            {
+                                "cellCode": "Ndef(\\hi, {SinOsc.ar(1000.0)*0.3}).play;\n10.0.sleep;",
+                                "cellOrder": 0,
+                                "cellType": "SUPERCOLLIDER",
+                                "uuid": "f6b7eeaf-d7b1-4b89-8d48-e0a6bf851858"
+                            }
+                        ],
+                        "positionX": -23.417566721887532,
+                        "positionY": 0.11793429062615601,
+                        "color": "primary"
+                    },
+                    {
+                        "name": "new node",
+                        "uuid": "73fb5caa-bd1d-4ee4-b794-9654f4200bb0",
+                        "scriptCells": [],
+                        "positionX": -30.85206368993527,
+                        "positionY": 70.14998721080379,
+                        "color": "primary"
+                    },
+                    {
+                        "name": "new node",
+                        "uuid": "abf535ad-3a58-4c20-b9d1-d80f4d9f578c",
+                        "scriptCells": [
+                            {
+                                "cellCode": "2.0.wait;",
+                                "cellOrder": 0,
+                                "cellType": "SUPERCOLLIDER",
+                                "uuid": "281c03de-efa0-4d77-8f4f-cfafe458626f"
+                            },
+                            {
+                                "cellCode": "",
+                                "cellOrder": 1,
+                                "cellType": "MARKDOWN",
+                                "uuid": "b6752750-e62d-495f-90d3-f4a6a7ff57ca"
+                            }
+                        ],
+                        "positionX": 72.97727632354344,
+                        "positionY": -51.90026287794812,
+                        "color": "primary"
+                    },
+                    {
+                        "name": "new node",
+                        "uuid": "cde74653-e346-40c5-8f28-0ecbc31d296e",
+                        "scriptCells": [],
+                        "positionX": 78.80160967249054,
+                        "positionY": 98.2195833064032,
+                        "color": "primary"
+                    },
+                    {
+                        "name": "please rename",
+                        "uuid": "1e375721-7a5c-48c8-a643-e6100234c31b",
+                        "scriptCells": [
+                            {
+                                "cellCode": "",
+                                "cellOrder": 0,
+                                "cellType": "MARKDOWN",
+                                "uuid": "0c755315-fd24-484f-9037-0b2f4363295b"
+                            }
+                        ],
+                        "positionX": 17.959210734298686,
+                        "positionY": -10.007152097888104,
+                        "color": "primary"
+                    },
+                    {
+                        "name": "hello",
+                        "uuid": "42efbed6-0f3f-41f3-b674-a1000c8789e8",
+                        "scriptCells": [
+                            {
+                                "cellCode": "Ndef(\\hi, {SinOsc.ar(4900.0)*0.2}).play;",
+                                "cellOrder": 0,
+                                "cellType": "SUPERCOLLIDER",
+                                "uuid": "6bc48450-f734-4785-8b78-9bef4c11e9e1"
+                            }
+                        ],
+                        "positionX": -37.20457586225256,
+                        "positionY": -132.40732831799386,
+                        "color": "primary"
+                    }
+                ]
+            }
+        }
+    }
+}

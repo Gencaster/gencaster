@@ -51,7 +51,7 @@ import { useGraphsStore } from "@/stores/GraphsStore";
 const { graphs } = storeToRefs(useGraphsStore());
 const router = useRouter();
 
-const form: Ref<HTMLElement> = ref<HTMLElement>(new HTMLElement());
+const form: Ref<HTMLElement | undefined> = ref(undefined);
 
 interface LoginModel {
   username: string;
