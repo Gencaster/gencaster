@@ -26,9 +26,8 @@
     <div
       v-if="showEditor && selectedNodes.length > 0"
       ref="editorDom"
-      class="node-data"
     >
-      <NodeEditor />
+      <NodeEditor class="node-data" />
     </div>
 
     <!-- Other Interface -->

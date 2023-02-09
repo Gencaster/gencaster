@@ -195,6 +195,7 @@
           <span class="dialog-footer">
             <ElButton @click="renameNodeDialogVisible = false">Cancel</ElButton>
             <ElButton
+              color="#ADFF00"
               type="primary"
               @click="renameNodeFromDialog()"
             >

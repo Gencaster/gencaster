@@ -27,7 +27,7 @@ export const GraphSettings = {
         fontSize: 15,
         fontFamily: "arial",
         color: variables.black,
-        margin: 4,
+        margin: 5,
         background: {
           visible: true,
           color: variables.white,
