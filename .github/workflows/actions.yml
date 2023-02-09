@@ -52,11 +52,12 @@ jobs:
   editor:
     name: "Check Editor"
     runs-on: "ubuntu-20.04"
+    container: cypress/browsers:node16.16.0-chrome107-ff107
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "16"
           cache: "npm"
           cache-dependency-path: |
             caster-editor/package-lock.json
@@ -68,6 +69,13 @@ jobs:
       - run: npm run type-check
         working-directory: caster-editor
         name: "Run type checks"
+      - name: Cypress run
+        uses: cypress-io/github-action@v5.x.x # use the explicit version number
+        # working-directory: caster-editor
+        with:
+          # Specify Browser since container image is compile with Firefox
+          browser: firefox
+          working-directory: caster-editor
 
   deploy-dev:
     if: success() && github.ref == 'refs/heads/main' # only deploy main
