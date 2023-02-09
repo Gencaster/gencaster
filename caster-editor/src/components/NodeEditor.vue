@@ -50,6 +50,7 @@
 
       <div class="blocks">
         <draggable
+          v-if="nodeDataReady"
           v-model="scriptCellList"
           item-key="uuid"
           handle=".handle"
@@ -102,7 +103,10 @@
         </draggable>
       </div>
 
-      <div class="footer">
+      <div
+        v-if="nodeDataReady"
+        class="footer"
+      >
         <button
           class="unstyled"
           @click="
@@ -231,7 +235,7 @@ enum MoveDirection {
 
 // Store
 const nodeStore = useNodeStore();
-const { node, scriptCellsModified, stale } = storeToRefs(nodeStore);
+const { node, scriptCellsModified, stale, nodeDataReady } = storeToRefs(nodeStore);
 const { showEditor } = storeToRefs(useInterfaceStore());
 
 // Variables
@@ -250,12 +254,15 @@ const JSONViewerData = computed(() => {
 });
 
 const closeEditor = async () => {
+  // nodeUuid.value = undefined
+  // node.value = undefined;
   showEditor.value = false;
 };
 
 const clickedClose = async () => {
   if (scriptCellsModified.value) {
     exitDialogVisible.value = true;
+
     return;
   }
   await closeEditor();

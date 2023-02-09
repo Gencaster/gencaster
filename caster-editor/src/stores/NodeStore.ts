@@ -20,13 +20,16 @@ export const useNodeStore = defineStore("node", () => {
   const scriptCellsModified: Ref<boolean> = ref(false);
 
   const pauseSubscription = computed(() => {return uuid.value === undefined});
-
+  
   const {
     data: node,
     error,
     fetching,
     stale,
   } = useNodeSubscription({ variables: { uuid }, pause: pauseSubscription });
+  
+  const nodeDataReady = computed(() => {return uuid.value === node.value?.node.uuid});
+
 
   const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();
   const updateNode = async (node: GraphSubscription["graph"]["nodes"][0]) => {
@@ -85,5 +88,6 @@ export const useNodeStore = defineStore("node", () => {
     createScriptCell,
     updateScriptCells,
     deleteScriptCell,
+    nodeDataReady,
   };
 });

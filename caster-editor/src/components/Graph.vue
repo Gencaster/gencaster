@@ -11,6 +11,7 @@
 
     <!-- Graph -->
     <v-network-graph
+      v-if="graphDataReady"
       ref="graph"
       v-model:selected-nodes="selectedNodes"
       v-model:selected-edges="selectedEdges"
@@ -48,7 +49,6 @@ export interface GraphProps {
   uuid: Scalars["UUID"];
 }
 
-import { ElMessage } from "element-plus";
 import type {
   EventHandlers as GraphEventHandlers,
   Instance as GraphInstance,
@@ -73,10 +73,10 @@ const editorDom: Ref<HTMLElement | undefined> = ref(undefined);
 
 // Store
 const graphStore = useGraphStore();
-const { graph: graphInStore } = storeToRefs(graphStore);
+const { graph: graphInStore, graphDataReady } = storeToRefs(graphStore);
 
 const nodeStore = useNodeStore();
-const { scriptCellsModified, uuid: nodeUuid } = storeToRefs(nodeStore);
+const { uuid: nodeUuid } = storeToRefs(nodeStore);
 
 const interfaceStore = useInterfaceStore();
 const { showEditor } = storeToRefs(interfaceStore);
@@ -147,14 +147,6 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
 };
 
 const openNodeEditor = async () => {
-  if (scriptCellsModified.value === true) {
-    ElMessage({
-      message: "Save or close scene before switching to another.",
-      type: "error",
-      customClass: "messages-editor",
-    });
-    return;
-  }
   showEditor.value = true;
   nodeUuid.value = selectedNodes.value[0];
   console.log(`Do something to ${selectedNodes.value[0]}`);

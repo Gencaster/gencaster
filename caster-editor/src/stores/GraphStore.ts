@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { type Ref, ref } from "vue";
+import { type Ref, ref, computed } from "vue";
 import type {
   Edge as GraphEdge,
   Edges as GraphEdges,
@@ -24,6 +24,8 @@ export const useGraphStore = defineStore("graph", () => {
     error,
     fetching,
   } = useGraphSubscription({ variables: { uuid }, pause: false });
+
+  const graphDataReady = computed(() => {return uuid.value === graph.value?.graph.uuid});
 
   // data operations
   const { executeMutation: createNodeMutation } = useCreateNodeMutation();
@@ -113,6 +115,7 @@ export const useGraphStore = defineStore("graph", () => {
     uuid,
     error,
     fetching,
+    graphDataReady,
     nodes,
     edges,
     layouts,
