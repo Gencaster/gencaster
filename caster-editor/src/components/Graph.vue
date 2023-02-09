@@ -27,8 +27,11 @@
     <div
       v-if="showEditor && selectedNodes.length > 0"
       ref="editorDom"
+      class="node-data"
     >
-      <NodeEditor class="node-data" />
+      <NodeEditor
+        class="node-data"
+      />
     </div>
 
     <!-- Other Interface -->
@@ -111,7 +114,7 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
     x: (gWidth - editorWidth) / 2,
     y: gHeight / 2,
   };
-
+  
   // move by
   const moveBy = {
     x: aimPos.x - clickPos.x,
