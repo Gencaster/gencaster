@@ -75,7 +75,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v5 # use the explicit version number
         with:
-          browser: firefox
+          browser: chrome
           build: npm run build
           start: npm run dev
           working-directory: caster-editor
