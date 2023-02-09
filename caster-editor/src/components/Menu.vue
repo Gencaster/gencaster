@@ -35,7 +35,7 @@
             class="unstyled"
             @click="addNode()"
           >
-            Add Node
+            Add Scene
           </button>
           <button
             class="unstyled"
@@ -72,9 +72,7 @@
       :show-close="false"
     >
       <span>
-        Are you sure to delete Scene "{{
-          (graph?.nodes[selectedNodes[0]] || { name: "deleted" }).name
-        }}"?
+        Are you sure to delete Scene "{{ selectedNodeName }}"?
       </span>
       <template #footer>
         <span class="dialog-footer">
@@ -158,6 +156,18 @@ const hideConnectionButton = computed(() => {
   return props.selectedNodes.length !== 2;
 });
 
+const selectedNodeName = computed(() => {
+  const nodeUuid = props.selectedNodes[0] || ""
+  let name = "undefined"
+  graphInStore.value?.graph.nodes.forEach(node => {
+    if (node.uuid === nodeUuid) {
+      name = node.name
+    }
+  });
+
+  return name
+})
+
 const hideRemoveButton = computed(() => {
   if (
     (props.selectedNodes.length === 0 && props.selectedEdges.length === 0) ||
@@ -194,7 +204,7 @@ const addNode = async () => {
 
   await graphStore.addNode({
     graphUuid: props.uuid,
-    name: "new node",
+    name: "new scene",
     color: "primary",
     positionX: centerPosition.x,
     positionY: centerPosition.y,
