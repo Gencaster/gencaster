@@ -9,7 +9,6 @@ export const useGraphsStore = defineStore("graphs", () => {
 
   async function getGraphs() {
     const { data, fetching: isFetching, error } = await useGetGraphsQuery();
-    console.log(useGetGraphsQuery)
     if (error.value) {
       console.log("Could not fetch graphs", error);
     }
