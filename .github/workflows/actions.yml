@@ -70,11 +70,11 @@ jobs:
         working-directory: caster-editor
         name: "Run type checks"
       - name: Cypress run
-        uses: cypress-io/github-action@v5.x.x # use the explicit version number
-        # working-directory: caster-editor
+        uses: cypress-io/github-action@v5 # use the explicit version number
         with:
-          # Specify Browser since container image is compile with Firefox
           browser: firefox
+          build: npm run build
+          start: npm run dev
           working-directory: caster-editor
 
   deploy-dev:
