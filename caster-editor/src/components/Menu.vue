@@ -3,14 +3,14 @@
     <div class="menu menu-edit">
       <div class="level level-1">
         <div class="menu-items left">
-          <el-radio-group v-model="menuStore.tab">
-            <el-radio-button :label="Tab.Edit">
+          <ElRadioGroup v-model="menuStore.tab">
+            <ElRadioButton :label="Tab.Edit">
               Build
-            </el-radio-button>
-            <el-radio-button :label="Tab.Play">
+            </ElRadioButton>
+            <ElRadioButton :label="Tab.Play">
               Listen
-            </el-radio-button>
-          </el-radio-group>
+            </ElRadioButton>
+          </ElRadioGroup>
         </div>
         <div class="menu-items middle">
           <span>
@@ -78,17 +78,17 @@
       </span>
       <template #footer>
         <span class="dialog-footer">
-          <el-button
+          <ElButton
             text
             bg
             @click="deleteDialogVisible = false"
-          >Cancel</el-button>
-          <el-button
+          >Cancel</ElButton>
+          <ElButton
             color="#FF0000"
             @click="deleteSelectedNodes()"
           >
             Delete Node
-          </el-button>
+          </ElButton>
         </span>
       </template>
     </ElDialog>
@@ -108,17 +108,17 @@
       </span>
       <template #footer>
         <span class="dialog-footer">
-          <el-button
+          <ElButton
             text
             bg
             @click="exitDialogVisible = false"
-          >Cancel</el-button>
-          <el-button
+          >Cancel</ElButton>
+          <ElButton
             color="#FF0000"
             @click="exitWithoutSaving()"
           >
             Exit
-          </el-button>
+          </ElButton>
         </span>
       </template>
     </ElDialog>
@@ -136,7 +136,7 @@ export interface MenuProps {
 import { storeToRefs } from "pinia";
 import type { Instance as GraphInstance } from "v-network-graph";
 import type { Scalars } from "@/graphql";
-import { ElMessage } from "element-plus";
+import { ElButton, ElMessage, ElRadioButton, ElRadioGroup } from "element-plus";
 import { Tab, useMenuStore } from "@/stores/MenuStore";
 import { useRouter } from "vue-router";
 import { computed, ref } from "vue";

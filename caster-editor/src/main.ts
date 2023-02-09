@@ -6,16 +6,16 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 import "v-network-graph/lib/style.css";
 
 import ElementPlus from "element-plus";
-// import "element-plus/dist/index.css";
+import "element-plus/dist/index.css";
 
 import App from "@/App.vue";
 import router from "./router";
 
-import "./assets/main.css";
 import "./assets/scss/main.scss";
 import "v-network-graph/lib/style.css";
 
 const app = createApp(App);
+app.use(router);
 
 app.use(urql, {
   url:
@@ -40,9 +40,7 @@ app.use(urql, {
     }),
   ],
 });
-app.use(ElementPlus);
 app.use(createPinia());
-app.use(router);
 app.use(VNetworkGraph);
-
+app.use(ElementPlus);
 app.mount("#app");

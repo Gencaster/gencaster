@@ -4,37 +4,37 @@
     <p>Log in to see your graphs:</p>
     <input v-model="model.username">
     <div class="login-wrapper">
-      <el-form
+      <ElForm
         ref="form"
         class="login-form"
         :model="model"
         :rules="rules"
         @submit.prevent
       >
-        <el-form-item prop="username">
-          <el-input
+        <ElFormItem prop="username">
+          <ElInput
             v-model="model.username"
             placeholder="Username"
           />
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
+        </ElFormItem>
+        <ElFormItem prop="password">
+          <ElInput
             v-model="model.password"
             placeholder="Password"
             type="password"
           />
-        </el-form-item>
-        <el-form-item>
-          <el-button
+        </ElFormItem>
+        <ElFormItem>
+          <ElButton
             :color="variables.greenLight"
             class="login-button"
             native-type="submit"
             @click="onSubmit"
           >
             Login
-          </el-button>
-        </el-form-item>
-      </el-form>
+          </ElButton>
+        </ElFormItem>
+      </ElForm>
     </div>
   </div>
 </template>
@@ -46,6 +46,7 @@ import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import type { Ref } from "vue";
 import { useGraphsStore } from "@/stores/GraphsStore";
+import { ElButton, ElForm, ElInput, type ElFormItem } from "element-plus";
 
 // Store
 const { graphs } = storeToRefs(useGraphsStore());
