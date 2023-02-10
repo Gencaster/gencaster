@@ -2,7 +2,6 @@
   <div>
     <p>Hello World! Welcome to the GenCaster Editor.</p>
     <p>Log in to see your graphs:</p>
-    <input v-model="model.username">
     <div class="login-wrapper">
       <ElForm
         ref="form"
