@@ -4,9 +4,9 @@ Models
 """
 
 import uuid
-from typing import Optional
 
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import gettext as _
 
 from stream.models import StreamPoint
@@ -96,8 +96,24 @@ class Node(models.Model):
         null=False,
     )
 
+    is_entry_node = models.BooleanField(
+        verbose_name="Is Entry node?",
+        help_text=_(
+            "Acts as a singular entrypoint for our graph."
+            "Only one such node can exist per graph."
+        ),
+        default=False,
+    )
+
     class Meta:
         ordering = ["graph"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["graph"],
+                condition=Q(is_entry_node=True),
+                name="unique_entry_point",
+            )
+        ]
 
     def __str__(self) -> str:
         return self.name
