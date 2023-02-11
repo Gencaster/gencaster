@@ -1,4 +1,8 @@
-"""An enumeration."""
+input AddGraphInput {
+  name: String!
+}
+
+"""Choice of foobar"""
 enum CellType {
   MARKDOWN
   PYTHON
@@ -47,15 +51,48 @@ input IntFilterLookup {
   iRegex: String
 }
 
+"""Mutations for GenCaster via GraphQL."""
 type Mutation {
+  """
+  Creates a new :class:`~story_graph.models.Node` in a given
+  ~class:`~story_graph.models.Graph`.
+  Although it creates a new node with UUID we don't hand it back yet.
+  """
   addNode(newNode: NodeCreate!): Void
+
+  """
+  Updates a given :class:`~story_graph.models.Node` which can be used
+  for renaming or moving it across the canvas.
+  """
   updateNode(nodeUpdate: NodeUpdate!): Void
+
+  """
+  Creates a :class:`~story_graph.models.Edge` for a given
+  :class:`~story_graph.models.Graph`.
+  It does not return the created edge.
+  """
   addEdge(newEdge: EdgeInput!): Void
+
+  """Deletes a given :class:`~story_graph.models.Edge`."""
   deleteEdge(edgeUuid: UUID!): Void
+
+  """Deletes a given :class:`~story_graph.models.Node`."""
   deleteNode(nodeUuid: UUID!): Void
+
+  """
+  Creates a new :class:`~story_graph.models.ScriptCell` for a given
+  :class:`~story_graph.models.Edge` and returns this cell.
+  """
   addScriptCell(nodeUuid: UUID!, newScriptCell: NewScriptCellInput!): ScriptCell!
+
+  """
+  Updates a given :class:`~story_graph.models.ScriptCell` to change its content.
+  """
   updateScriptCells(newCells: [ScriptCellInput!]!): Void
+
+  """Deletes a given :class:`~story_graph.models.ScriptCell`."""
   deleteScriptCell(scriptCellUuid: UUID!): Void
+  addGraph(graphInput: AddGraphInput!): Graph!
 }
 
 input NewScriptCellInput {
@@ -70,6 +107,7 @@ type Node {
   color: String!
   positionX: Float!
   positionY: Float!
+  isEntryNode: Boolean!
   inEdges: [Edge!]!
   outEdges: [Edge!]!
   scriptCells: [ScriptCell!]!
@@ -91,6 +129,7 @@ input NodeUpdate {
   color: String = null
 }
 
+"""Queries for GenCaster."""
 type Query {
   streamPoint(pk: ID!): StreamPoint!
   streamPoints(filters: StreamPointFilter): [StreamPoint!]!
