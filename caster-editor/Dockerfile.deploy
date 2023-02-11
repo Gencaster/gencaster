@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:18-alpine AS builder
 
 WORKDIR /root/caster-editor
 
@@ -11,8 +11,12 @@ COPY src/ /root/caster-editor/src/
 
 ARG BACKEND_GRAPHQL_URL
 
-ENV BACKEND_GRAPHQL_URL=${BACKEND_GRAPHQL_URL}
+ENV VITE_BACKEND_GRAPHQL_URL=${BACKEND_GRAPHQL_URL}
+
+ADD . .
 
 RUN npm run build
 
-CMD ["node", "./dist/index.mjs"]
+FROM nginx:1.23-alpine
+
+COPY --from=builder /root/caster-editor/dist/ /usr/share/nginx/html
