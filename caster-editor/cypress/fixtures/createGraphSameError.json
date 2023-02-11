@@ -1,0 +1,17 @@
+{
+    "data": null,
+    "errors": [
+        {
+            "message": "duplicate key value violates unique constraint \"story_graph_graph_name_key\"\nDETAIL:  Key (name)=(hey) already exists.\n",
+            "locations": [
+                {
+                    "line": 2,
+                    "column": 3
+                }
+            ],
+            "path": [
+                "addGraph"
+            ]
+        }
+    ]
+}
