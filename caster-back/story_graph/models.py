@@ -40,10 +40,22 @@ class Graph(models.Model):
         unique=True,
     )
 
-    async def get_entry_node(self) -> Optional["Node"]:
-        # @todo need to return the "Main" node
-        # which shall be our entry node
-        return await self.nodes.afirst()  # type: ignore
+    async def aget_or_create_entry_node(self) -> "Node":
+        """
+        Every graph needs a deterministic, unique entry node which is used
+        to start the iteration over the graph.
+
+        The creator of the graph is responsible for calling this method
+        as we can not implicit call it because there are a multitude of
+        ways of creating a Graph (async (asave), sync (save) or in a bulk where
+        we do not have a handle at all).
+        """
+        node, _ = await Node.objects.aget_or_create(
+            is_entry_node=True,
+            graph=self,
+            defaults={"name": "Start"},
+        )
+        return node
 
     class Meta:
         verbose_name = "Graph"
