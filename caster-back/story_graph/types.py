@@ -58,6 +58,7 @@ class Node:
     color: auto
     position_x: auto
     position_y: auto
+    is_entry_node: auto
 
     in_edges: List["Edge"]
     out_edges: List["Edge"]
