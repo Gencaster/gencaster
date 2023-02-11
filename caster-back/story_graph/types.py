@@ -101,3 +101,8 @@ class NewScriptCellInput:
     cell_type: CellType  # type: ignore
     cell_code: auto
     cell_order: auto
+
+
+@strawberry.django.input(models.Graph)
+class AddGraphInput:
+    name: auto
