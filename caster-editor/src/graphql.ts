@@ -201,6 +201,7 @@ export type NodeUpdate = {
 /** Queries for GenCaster. */
 export type Query = {
   __typename?: 'Query';
+  getStream: Stream;
   graph: Graph;
   graphs: Array<Graph>;
   node: Node;
@@ -249,12 +250,39 @@ export type ScriptCellInput = {
   uuid?: InputMaybe<Scalars['UUID']>;
 };
 
+export type Stream = {
+  __typename?: 'Stream';
+  active: Scalars['Boolean'];
+  createdDate: Scalars['DateTime'];
+  modifiedDate: Scalars['DateTime'];
+  streamPoint: StreamPoint;
+  uuid: Scalars['UUID'];
+};
+
+export type StreamInfo = {
+  __typename?: 'StreamInfo';
+  stream: Stream;
+  streamInstruction?: Maybe<StreamInstruction>;
+};
+
+export type StreamInstruction = {
+  __typename?: 'StreamInstruction';
+  createdDate: Scalars['DateTime'];
+  instructionText: Scalars['String'];
+  modifiedDate: Scalars['DateTime'];
+  returnValue: Scalars['String'];
+  state: Scalars['String'];
+  uuid: Scalars['UUID'];
+};
+
 export type StreamPoint = {
   __typename?: 'StreamPoint';
   createdDate: Scalars['DateTime'];
   host: Scalars['String'];
   janusInPort?: Maybe<Scalars['Int']>;
+  janusInRoom?: Maybe<Scalars['Int']>;
   janusOutPort?: Maybe<Scalars['Int']>;
+  janusOutRoom?: Maybe<Scalars['Int']>;
   lastLive?: Maybe<Scalars['DateTime']>;
   modifiedDate: Scalars['DateTime'];
   port: Scalars['Int'];
@@ -272,6 +300,7 @@ export type Subscription = {
   count: Scalars['Int'];
   graph: Graph;
   node: Node;
+  streamInfo: StreamInfo;
 };
 
 
@@ -405,6 +434,16 @@ export type CreateGraphMutationVariables = Exact<{
 
 
 export type CreateGraphMutation = { __typename?: 'Mutation', addGraph: { __typename?: 'Graph', name: string, uuid: any, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, isEntryNode: boolean }> } };
+
+export type StreamSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StreamSubscription = { __typename?: 'Subscription', streamInfo: { __typename?: 'StreamInfo', stream: { __typename?: 'Stream', active: boolean, createdDate: any, modifiedDate: any, uuid: any, streamPoint: { __typename?: 'StreamPoint', createdDate: any, host: string, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null, lastLive?: any | null, modifiedDate: any, port: number, uuid: any, useInput: boolean } }, streamInstruction?: { __typename?: 'StreamInstruction', createdDate: any, instructionText: string, modifiedDate: any, returnValue: string, state: string, uuid: any } | null } };
+
+export type StreamPointsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StreamPointsQuery = { __typename?: 'Query', streamPoints: Array<{ __typename?: 'StreamPoint', createdDate: any, host: string, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null, lastLive?: any | null, modifiedDate: any, port: number, useInput: boolean, uuid: any }> };
 
 
 export const GetGraphsDocument = gql`
@@ -580,4 +619,62 @@ export const CreateGraphDocument = gql`
 
 export function useCreateGraphMutation() {
   return Urql.useMutation<CreateGraphMutation, CreateGraphMutationVariables>(CreateGraphDocument);
+}
+export const StreamDocument = gql`
+    subscription stream {
+  streamInfo {
+    stream {
+      active
+      createdDate
+      modifiedDate
+      streamPoint {
+        createdDate
+        host
+        janusInPort
+        janusInRoom
+        janusOutPort
+        janusOutRoom
+        lastLive
+        modifiedDate
+        port
+        uuid
+        useInput
+      }
+      uuid
+    }
+    streamInstruction {
+      createdDate
+      instructionText
+      modifiedDate
+      returnValue
+      state
+      uuid
+    }
+  }
+}
+    `;
+
+export function useStreamSubscription<R = StreamSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, StreamSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<StreamSubscription, R>) {
+  return Urql.useSubscription<StreamSubscription, R, StreamSubscriptionVariables>({ query: StreamDocument, ...options }, handler);
+}
+export const StreamPointsDocument = gql`
+    query streamPoints {
+  streamPoints {
+    createdDate
+    host
+    janusInPort
+    janusInRoom
+    janusOutPort
+    janusOutRoom
+    lastLive
+    modifiedDate
+    port
+    useInput
+    uuid
+  }
+}
+    `;
+
+export function useStreamPointsQuery(options: Omit<Urql.UseQueryArgs<never, StreamPointsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<StreamPointsQuery>({ query: StreamPointsDocument, ...options });
 }

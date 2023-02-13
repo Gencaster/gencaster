@@ -18,6 +18,10 @@ export type Scalars = {
   Void: any;
 };
 
+export type AddGraphInput = {
+  name: Scalars['String'];
+};
+
 /** Choice of foobar */
 export enum CellType {
   Comment = 'COMMENT',
@@ -75,6 +79,7 @@ export type Mutation = {
    * It does not return the created edge.
    */
   addEdge?: Maybe<Scalars['Void']>;
+  addGraph: Graph;
   /**
    * Creates a new :class:`~story_graph.models.Node` in a given
    * ~class:`~story_graph.models.Graph`.
@@ -105,6 +110,12 @@ export type Mutation = {
 /** Mutations for GenCaster via GraphQL. */
 export type MutationAddEdgeArgs = {
   newEdge: EdgeInput;
+};
+
+
+/** Mutations for GenCaster via GraphQL. */
+export type MutationAddGraphArgs = {
+  graphInput: AddGraphInput;
 };
 
 
@@ -160,6 +171,7 @@ export type Node = {
   __typename?: 'Node';
   color: Scalars['String'];
   inEdges: Array<Edge>;
+  isEntryNode: Scalars['Boolean'];
   name: Scalars['String'];
   outEdges: Array<Edge>;
   positionX: Scalars['Float'];
@@ -414,6 +426,13 @@ export type NodeSubscriptionVariables = Exact<{
 
 export type NodeSubscription = { __typename?: 'Subscription', node: { __typename?: 'Node', color: string, name: string, positionX: number, positionY: number, uuid: any, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> } };
 
+export type CreateGraphMutationVariables = Exact<{
+  graphInput: AddGraphInput;
+}>;
+
+
+export type CreateGraphMutation = { __typename?: 'Mutation', addGraph: { __typename?: 'Graph', name: string, uuid: any, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, isEntryNode: boolean }> } };
+
 export type StreamSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -581,6 +600,23 @@ export const NodeDocument = gql`
 
 export function useNodeSubscription<R = NodeSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, NodeSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<NodeSubscription, R>) {
   return Urql.useSubscription<NodeSubscription, R, NodeSubscriptionVariables>({ query: NodeDocument, ...options }, handler);
+};
+export const CreateGraphDocument = gql`
+    mutation CreateGraph($graphInput: AddGraphInput!) {
+  addGraph(graphInput: $graphInput) {
+    name
+    uuid
+    nodes {
+      name
+      uuid
+      isEntryNode
+    }
+  }
+}
+    `;
+
+export function useCreateGraphMutation() {
+  return Urql.useMutation<CreateGraphMutation, CreateGraphMutationVariables>(CreateGraphDocument);
 };
 export const StreamDocument = gql`
     subscription stream {
