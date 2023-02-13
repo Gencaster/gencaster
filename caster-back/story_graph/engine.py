@@ -94,6 +94,5 @@ class Engine:
                 )
                 # back off a bit!
                 await asyncio.sleep(30)
-                if new_node := await self.graph.get_entry_node():
-                    self._current_node = new_node
+                self._current_node = await self.graph.aget_or_create_entry_node()
             await asyncio.sleep(0.5)
