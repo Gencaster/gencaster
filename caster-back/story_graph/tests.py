@@ -14,6 +14,19 @@ class GraphTestCase(TransactionTestCase):
     def get_graph(**kwargs) -> Graph:
         return mixer.blend(Graph, **kwargs)  # type: ignore
 
+    async def test_get_create_entry_node(self):
+        graph = await Graph.objects.acreate(name="test_graph")
+        await graph.aget_or_create_entry_node()
+        self.assertEqual(
+            await Node.objects.filter(graph=graph).acount(),
+            1,
+        )
+        node = await Node.objects.filter(graph=graph).afirst()
+        if node is None:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(node.is_entry_node)
+
 
 class NodeTestCase(TransactionTestCase):
     @staticmethod
@@ -22,6 +35,17 @@ class NodeTestCase(TransactionTestCase):
             Node,
             **kwargs,
         )  # type: ignore
+
+    async def test_unique_entry_node(self):
+        graph = await Graph.objects.acreate(name="test_graph")
+        await graph.aget_or_create_entry_node()
+        self.assertEqual(await Node.objects.filter(graph=graph).acount(), 1)
+        with self.assertRaises(IntegrityError):
+            await Node.objects.acreate(
+                graph=graph,
+                name="foobar",
+                is_entry_node=True,
+            )
 
 
 class EdgeTestCase(TransactionTestCase):

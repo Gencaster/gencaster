@@ -1,6 +1,6 @@
 overwrite: true
-schema: '../../caster-back/schema.gql'
-documents: '../../caster-back/*.gql'
+schema: '../caster-back/schema.gql'
+documents: '../caster-back/*.gql'
 
 generates:
   src/graphql.ts:

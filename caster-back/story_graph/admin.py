@@ -28,6 +28,10 @@ class ScriptCellInline(admin.TabularInline):
 @admin.register(Graph)
 class GraphAdmin(admin.ModelAdmin):
     inlines = [NodeInline]
+    list_display = [
+        "name",
+        "uuid",
+    ]
 
 
 @admin.register(Node)
@@ -36,10 +40,12 @@ class NodeAdmin(admin.ModelAdmin):
     list_display = [
         "name",
         "graph",
+        "is_entry_node",
     ]
 
     list_filter = [
         "graph",
+        "is_entry_node",
     ]
 
 
