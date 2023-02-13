@@ -4,9 +4,9 @@ Models
 """
 
 import uuid
-from typing import Optional
 
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import gettext as _
 
 from stream.models import StreamPoint
@@ -40,10 +40,22 @@ class Graph(models.Model):
         unique=True,
     )
 
-    async def get_entry_node(self) -> Optional["Node"]:
-        # @todo need to return the "Main" node
-        # which shall be our entry node
-        return await self.nodes.afirst()  # type: ignore
+    async def aget_or_create_entry_node(self) -> "Node":
+        """
+        Every graph needs a deterministic, unique entry node which is used
+        to start the iteration over the graph.
+
+        The creator of the graph is responsible for calling this method
+        as we can not implicit call it because there are a multitude of
+        ways of creating a Graph (async (asave), sync (save) or in a bulk where
+        we do not have a handle at all).
+        """
+        node, _ = await Node.objects.aget_or_create(
+            is_entry_node=True,
+            graph=self,
+            defaults={"name": "Start"},
+        )
+        return node
 
     class Meta:
         verbose_name = "Graph"
@@ -96,8 +108,24 @@ class Node(models.Model):
         null=False,
     )
 
+    is_entry_node = models.BooleanField(
+        verbose_name="Is Entry node?",
+        help_text=_(
+            "Acts as a singular entrypoint for our graph."
+            "Only one such node can exist per graph."
+        ),
+        default=False,
+    )
+
     class Meta:
         ordering = ["graph"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["graph"],
+                condition=Q(is_entry_node=True),
+                name="unique_entry_point",
+            )
+        ]
 
     def __str__(self) -> str:
         return self.name

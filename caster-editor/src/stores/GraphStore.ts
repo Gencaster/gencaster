@@ -1,20 +1,31 @@
 import { defineStore } from "pinia";
-import type { Ref } from "vue";
-import type { Edge as GraphEdge, Edges as GraphEdges, Node as GraphNode, Nodes as GraphNodes } from "v-network-graph";
-import type { GraphSubscription, NodeCreate } from "@/graphql/graphql";
+import { type Ref, ref, computed } from "vue";
+import type {
+  Edge as GraphEdge,
+  Edges as GraphEdges,
+  Node as GraphNode,
+  Nodes as GraphNodes,
+} from "v-network-graph";
+import type { GraphSubscription, NodeCreate } from "@/graphql";
 import {
   useCreateEdgeMutation,
   useCreateNodeMutation,
   useDeleteEdgeMutation,
   useDeleteNodeMutation,
   useGraphSubscription,
-  useUpdateNodeMutation
-} from "@/graphql/graphql";
+  useUpdateNodeMutation,
+} from "@/graphql";
 
 export const useGraphStore = defineStore("graph", () => {
   const uuid: Ref<string> = ref("");
 
-  const { data: graph, error, fetching } = useGraphSubscription({ variables: { uuid }, pause: false });
+  const {
+    data: graph,
+    error,
+    fetching,
+  } = useGraphSubscription({ variables: { uuid }, pause: false });
+
+  const graphDataReady = computed(() => {return uuid.value === graph.value?.graph.uuid});
 
   // data operations
   const { executeMutation: createNodeMutation } = useCreateNodeMutation();
@@ -44,11 +55,13 @@ export const useGraphStore = defineStore("graph", () => {
   };
 
   const { executeMutation: updateNodeMutation } = useUpdateNodeMutation();
-  const updateNodePosition = async (node: GraphSubscription["graph"]["nodes"][0]) => {
+  const updateNodePosition = async (
+    node: GraphSubscription["graph"]["nodes"][0]
+  ) => {
     // @todo use an input type in the gql backend
     await updateNodeMutation({
       nodeUuid: node.uuid,
-      ...node
+      ...node,
     });
   };
 
@@ -63,7 +76,7 @@ export const useGraphStore = defineStore("graph", () => {
       const graphNode: GraphNode = {
         name: node.name,
         color: node.color,
-        scriptCells: node.scriptCells
+        scriptCells: node.scriptCells,
       };
       n[node.uuid] = graphNode;
     });
@@ -75,7 +88,7 @@ export const useGraphStore = defineStore("graph", () => {
     graph.value?.graph.edges.forEach((edge) => {
       const graphEdge: GraphEdge = {
         source: edge.inNode.uuid,
-        target: edge.outNode.uuid
+        target: edge.outNode.uuid,
       };
       e[edge.uuid] = graphEdge;
     });
@@ -87,12 +100,12 @@ export const useGraphStore = defineStore("graph", () => {
     graph.value?.graph.nodes.forEach((node) => {
       const graphNode: GraphNode = {
         x: node.positionX,
-        y: node.positionY
+        y: node.positionY,
       };
       n[node.uuid] = graphNode;
     });
     const layout = {
-      nodes: n
+      nodes: n,
     };
     return layout;
   }
@@ -102,6 +115,7 @@ export const useGraphStore = defineStore("graph", () => {
     uuid,
     error,
     fetching,
+    graphDataReady,
     nodes,
     edges,
     layouts,
@@ -109,6 +123,6 @@ export const useGraphStore = defineStore("graph", () => {
     deleteNode,
     deleteEdge,
     createEdge,
-    updateNodePosition
+    updateNodePosition,
   };
 });

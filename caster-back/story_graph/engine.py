@@ -74,13 +74,7 @@ class Engine:
         self, max_steps: int = 1000
     ) -> AsyncGenerator[StreamInstruction, None]:
         """Starts the execution of the engine."""
-        if new_node := await self.graph.get_entry_node():
-            self._current_node = new_node
-        else:
-            log.error(
-                f"Could not find entry node on {self.graph} for {self.streaming_point}"
-            )
-            return
+        self._current_node = await self.graph.aget_or_create_entry_node()
 
         for _ in range(max_steps):
             log.debug(f"Currently running node {self._current_node}")

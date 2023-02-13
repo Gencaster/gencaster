@@ -60,7 +60,7 @@ services:
       args:
         - BACKEND_GRAPHQL_URL=https://backend.dev.gencaster.org/graphql
     ports:
-      - 3001:3001
+      - 3001:80
     environment:
       - HOST=0.0.0.0
       - PORT=3001

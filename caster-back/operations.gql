@@ -96,6 +96,18 @@ subscription node($uuid: UUID!) {
   }
 }
 
+mutation CreateGraph($graphInput: AddGraphInput!) {
+  addGraph(graphInput: $graphInput) {
+    name
+    uuid
+    nodes {
+      name
+      uuid
+      isEntryNode
+    }
+  }
+}
+
 subscription stream {
   streamInfo {
     stream {

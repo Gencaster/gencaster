@@ -9,13 +9,13 @@ FROM node:18-alpine
 WORKDIR /root/caster-editor/
 
 ADD package.json .
-ADD yarn.lock .
+ADD package-lock.json .
 
-RUN yarn install --frozen-lockfile
+RUN npm ci
 
 COPY . .
 
 # debug cmd
 # CMD ["tail", "-f", "/dev/null"]
 
-CMD ["yarn", "dev"]
+CMD ["npm", "run", "dev"]

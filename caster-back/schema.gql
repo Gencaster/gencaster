@@ -1,3 +1,7 @@
+input AddGraphInput {
+  name: String!
+}
+
 """Choice of foobar"""
 enum CellType {
   MARKDOWN
@@ -88,6 +92,7 @@ type Mutation {
 
   """Deletes a given :class:`~story_graph.models.ScriptCell`."""
   deleteScriptCell(scriptCellUuid: UUID!): Void
+  addGraph(graphInput: AddGraphInput!): Graph!
 }
 
 input NewScriptCellInput {
@@ -102,6 +107,7 @@ type Node {
   color: String!
   positionX: Float!
   positionY: Float!
+  isEntryNode: Boolean!
   inEdges: [Edge!]!
   outEdges: [Edge!]!
   scriptCells: [ScriptCell!]!
