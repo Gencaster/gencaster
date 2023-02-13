@@ -52,22 +52,33 @@ jobs:
   editor:
     name: "Check Editor"
     runs-on: "ubuntu-20.04"
+    container: cypress/browsers:node16.16.0-chrome107-ff107
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
       - uses: actions/setup-node@v3
         with:
-          node-version: "14"
-          cache: "yarn"
+          node-version: "16"
+          cache: "npm"
           cache-dependency-path: |
-            caster-editor/yarn.lock
-      - run: yarn install --immutable --immutable-cache --check-cache
+            caster-editor/package-lock.json
+      - run: npm ci
         working-directory: caster-editor
-      - uses: pre-commit/action@v2.0.3
+      - uses: pre-commit/action@v3.0.0
         with:
           extra_args: --files caster-editor/*
-      - run: yarn type-check
+      - run: npm run type-check
         working-directory: caster-editor
         name: "Run type checks"
+      - name: Cypress run
+        uses: cypress-io/github-action@v5 # use the explicit version number
+        with:
+          browser: chrome
+          build: npm run build
+          start: npm run dev
+          working-directory: caster-editor
 
   deploy-dev:
     if: success() && github.ref == 'refs/heads/main' # only deploy main

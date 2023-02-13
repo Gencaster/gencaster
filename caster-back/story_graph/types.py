@@ -58,6 +58,7 @@ class Node:
     color: auto
     position_x: auto
     position_y: auto
+    is_entry_node: auto
 
     in_edges: List["Edge"]
     out_edges: List["Edge"]
@@ -100,3 +101,8 @@ class NewScriptCellInput:
     cell_type: CellType  # type: ignore
     cell_code: auto
     cell_order: auto
+
+
+@strawberry.django.input(models.Graph)
+class AddGraphInput:
+    name: auto

@@ -1,0 +1,17 @@
+{
+    "data": {
+        "addGraph": {
+            "name": "test_graphy",
+            "uuid": "dd71bffe-f350-406a-9b7d-387a7beef048",
+            "nodes": [
+                {
+                    "name": "Start",
+                    "uuid": "d5d47930-553d-42e3-8508-1f9d52e2b918",
+                    "isEntryNode": true,
+                    "__typename": "Node"
+                }
+            ],
+            "__typename": "Graph"
+        }
+    }
+}

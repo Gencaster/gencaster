@@ -26,6 +26,7 @@ from strawberry_django.fields.field import StrawberryDjangoField
 
 import story_graph.models as story_graph_models
 from story_graph.types import (
+    AddGraphInput,
     EdgeInput,
     Graph,
     NewScriptCellInput,
@@ -287,6 +288,18 @@ class Mutation:
                 layer=info.context.channel_layer,
                 node_uuid=node.uuid,
             )
+
+    @strawberry.mutation
+    async def add_graph(self, info, graph_input: AddGraphInput) -> Graph:
+        await graphql_check_authenticated(info)
+
+        graph = await story_graph_models.Graph.objects.acreate(
+            name=graph_input.name,
+        )
+        await graph.aget_or_create_entry_node()
+        # need a refresh - in django 4.2 this will be available, see
+        # https://docs.djangoproject.com/en/4.2/ref/models/instances/#django.db.models.Model.arefresh_from_db
+        return await story_graph_models.Graph.objects.aget(uuid=graph.uuid)  # type: ignore
 
 
 @strawberry.type

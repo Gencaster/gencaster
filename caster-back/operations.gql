@@ -95,3 +95,15 @@ subscription node($uuid: UUID!) {
     uuid
   }
 }
+
+mutation CreateGraph($graphInput: AddGraphInput!) {
+  addGraph(graphInput: $graphInput) {
+    name
+    uuid
+    nodes {
+      name
+      uuid
+      isEntryNode
+    }
+  }
+}

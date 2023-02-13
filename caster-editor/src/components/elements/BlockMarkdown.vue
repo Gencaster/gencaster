@@ -1,44 +1,52 @@
 <template>
   <div class="block">
     <!-- markdown -->
-    <div v-if="scriptCell?.cellType === CellType.Markdown" class="editor-markdown">
+    <div
+      v-if="scriptCell?.cellType === CellType.Markdown"
+      class="editor-markdown"
+    >
       <div ref="editorDom" />
     </div>
 
     <!-- comment -->
-    <div v-if="scriptCell?.cellType === CellType.Comment" class="editor-comment">
+    <div
+      v-if="scriptCell?.cellType === CellType.Comment"
+      class="editor-comment"
+    >
       <div ref="editorDom" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+export interface BlockProps {
+  scriptCellUuid: String;
+  index: number;
+  dragging: boolean;
+}
+
 // Docs : https://github.com/nhn/tui.editor/tree/master/docs/en
 // Custom Markdown Commands: https://github.com/nhn/tui.editor/blob/master/docs/en/plugin.md
 import "@toast-ui/editor/dist/toastui-editor.css"; // Editor's Style
 import Editor from "@toast-ui/editor";
 import type { EditorOptions, Editor as EditorType } from "@toast-ui/editor";
 import { storeToRefs } from "pinia";
-import { useNuxtApp } from "#app";
-import { CellType } from "@/graphql/graphql";
-import type { NodeSubscription, ScriptCell } from "@/graphql/graphql";
+import { CellType } from "@/graphql";
+import type { NodeSubscription } from "@/graphql";
+import { useNodeStore } from "@/stores/NodeStore";
+import { onMounted, onUnmounted, ref } from "vue";
 
 const props = defineProps<BlockProps>();
 
-interface BlockProps {
-  scriptCellUuid: String
-  index: number
-  dragging: boolean
-}
-
-const nuxtApp = useNuxtApp();
-
 // Store
-const nodeStore = nuxtApp.nodeStore;
-const { scriptCellsModified, node } = storeToRefs(nodeStore);
+const { scriptCellsModified, node } = storeToRefs(useNodeStore());
 
 // Variables
-const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(node.value?.node.scriptCells.find((x: ScriptCell) => { return x.uuid === props.scriptCellUuid; }));
+const scriptCell = ref<NodeSubscription["node"]["scriptCells"][0] | undefined>(
+  node.value?.node.scriptCells.find((x) => {
+    return x.uuid === props.scriptCellUuid;
+  })
+);
 const editorDom = ref<HTMLElement>();
 const editor = ref<EditorType>();
 
@@ -52,16 +60,14 @@ onMounted(() => {
     previewStyle: "tab",
     toolbarItems: [],
     hideModeSwitch: true,
-    autofocus: false
-
+    autofocus: false,
   };
 
   editor.value = new Editor(options);
 
   // add events
   editor.value.on("change", () => {
-    if (scriptCell.value === undefined)
-      return;
+    if (scriptCell.value === undefined) return;
 
     scriptCellsModified.value = true;
     const markdown = editor.value?.getMarkdown() || "";
@@ -70,7 +76,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if (editor.value)
-    editor.value.destroy();
+  if (editor.value) editor.value.destroy();
 });
 </script>

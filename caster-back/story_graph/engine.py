@@ -69,11 +69,7 @@ class Engine:
 
     async def start(self):
         """Starts the execution of the engine."""
-        if new_node := await self.graph.get_entry_node():
-            self._current_node = new_node
-        else:
-            print("Could not find entry node :/")
-            return
+        self._current_node = await self.graph.aget_or_create_entry_node()
 
         for _ in range(10):
             print(self._current_node)

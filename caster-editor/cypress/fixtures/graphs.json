@@ -1,0 +1,11 @@
+{
+    "data": {
+        "graphs": [
+            {
+                "uuid": "b611fdaf-331f-4853-b10f-f593e181f115",
+                "name": "sc",
+                "__typename": "Graph"
+            }
+        ]
+    }
+}
