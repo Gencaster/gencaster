@@ -11,11 +11,11 @@ GenCasterMessage {
 		^"/acknowledge";
 	}
 
-	*response {|uuid, status, returnValue|
+	*response {|uuid, status, returnValue=nil|
 		^GenCasterMessage.eventToList((
 			\uuid: uuid,
 			\status: status,
-			\returnValue: returnValue,
+			\returnValue: returnValue.cs,
 		));
 	}
 
@@ -414,10 +414,11 @@ GenCasterServer {
 				if(returnValue.class==Event, {
 					returnValue = GenCasterMessage.eventToJson(returnValue);
 				});
+
 				this.sendAck(
 					status: GenCasterStatus.finished,
 					uuid: uuid,
-					message: (return_value: returnValue),
+					message: (return_value: returnValue.cs ),
 				);
 			}.fork;
 		}, path: "/instruction");

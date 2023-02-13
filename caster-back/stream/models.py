@@ -3,6 +3,8 @@ import logging
 import uuid
 from datetime import timedelta
 
+from asgiref.sync import async_to_sync
+from django.conf import settings
 from django.contrib import admin
 from django.core.files import File
 from django.db import models
@@ -18,8 +20,13 @@ log = logging.getLogger(__name__)
 
 class StreamPointManager(models.Manager["StreamPoint"]):
     def free_stream_points(self) -> models.QuerySet["StreamPoint"]:
-        last_online_time = timezone.now() - timedelta(seconds=60)
-        return self.exclude(streams__active=True).filter(last_live__gt=last_online_time)
+        return async_to_sync(self.afree_stream_points)()  # type: ignore
+
+    async def afree_stream_points(self) -> models.QuerySet["StreamPoint"]:
+        return self.exclude(streams__active=True).filter(
+            last_live__gt=timezone.now()
+            - timedelta(seconds=settings.STREAM_MAX_BEACON_SEC)
+        )
 
 
 class StreamPoint(models.Model):
@@ -167,11 +174,12 @@ class StreamPoint(models.Model):
 
 class StreamManager(models.Manager):
     def get_free_stream(self) -> "Stream":
-        free_stream_points = StreamPoint.objects.free_stream_points()
-        if free_stream_points:
-            return self.create(  # type: ignore
-                stream_point=free_stream_points.first(),
-            )
+        return async_to_sync(self.aget_free_stream)()  # type: ignore
+
+    async def aget_free_stream(self) -> "Stream":
+        free_stream_points = await StreamPoint.objects.afree_stream_points()  # type: ignore
+        if await free_stream_points.acount() > 0:
+            return await self.acreate(stream_point=await free_stream_points.afirst())  # type: ignore
         else:
             raise NoStreamAvailable()
 

@@ -11,6 +11,9 @@ purposes.
 .. automodule:: gencaster.schema
     :members:
 
+.. automodule:: gencaster.distributor
+    :members:
+
 .. automodule:: gencaster.settings
     :members:
 

@@ -25,6 +25,8 @@ from strawberry.types import Info
 from strawberry_django.fields.field import StrawberryDjangoField
 
 import story_graph.models as story_graph_models
+import stream.models as stream_models
+from story_graph.engine import Engine
 from story_graph.types import (
     AddGraphInput,
     EdgeInput,
@@ -36,9 +38,9 @@ from story_graph.types import (
     ScriptCell,
     ScriptCellInput,
 )
-from stream.types import StreamPoint
+from stream.types import Stream, StreamInfo, StreamPoint
 
-from .distributor import GenCasterChannel
+from .distributor import GenCasterChannel, GraphQLWSConsumerInjector
 
 log = logging.getLogger(__name__)
 
@@ -74,12 +76,17 @@ def _update_cells(new_cells: List[ScriptCellInput]):
             )
 
 
+async def get_stream():
+    return await stream_models.Stream.objects.aget_free_stream()
+
+
 @strawberry.type
 class Query:
     """Queries for GenCaster."""
 
     stream_point: StreamPoint = AuthStrawberryDjangoField()
     stream_points: List[StreamPoint] = AuthStrawberryDjangoField()
+    get_stream: Stream = strawberry.field(resolver=get_stream)
     graphs: List[Graph] = AuthStrawberryDjangoField()
     graph: Graph = AuthStrawberryDjangoField()
     nodes: List[Node] = AuthStrawberryDjangoField()
@@ -337,6 +344,37 @@ class Subscription:
             info.context.ws, node_uuid
         ):
             yield await story_graph_models.Node.objects.aget(uuid=node_update.uuid)  # type: ignore
+
+    @strawberry.subscription
+    async def stream_info(
+        self,
+        info: Info,
+    ) -> AsyncGenerator[StreamInfo, None]:
+        consumer: GraphQLWSConsumerInjector = info.context.ws
+        stream = await stream_models.Stream.objects.aget_free_stream()
+
+        graph = await story_graph_models.Graph.objects.order_by("?").afirst()
+
+        if not graph:
+            print("could not find graph!")
+            return
+
+        engine = Engine(
+            graph=graph,
+            streaming_point=stream.stream_point,
+        )
+
+        async def cleanup():
+            stream.active = False
+            await sync_to_async(stream.save)()
+
+        consumer.disconnect_callback = cleanup
+
+        async for instruction in engine.start(max_steps=int(10e4)):
+            yield StreamInfo(
+                stream=stream,  # type: ignore
+                stream_instruction=instruction,  # type: ignore
+            )
 
 
 schema = strawberry.Schema(

@@ -80,9 +80,29 @@ jobs:
           start: npm run dev
           working-directory: caster-editor
 
+  frontend:
+    name: "Check Frontend"
+    runs-on: "ubuntu-20.04"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "14"
+          cache: "npm"
+          cache-dependency-path: |
+            caster-front/package-lock.json
+      - run: npm ci
+        working-directory: caster-front
+      - uses: pre-commit/action@v2.0.3
+        with:
+          extra_args: --files caster-front/*
+      - run: npm run type-check
+        working-directory: caster-front
+        name: "Run type checks"
+
   deploy-dev:
     if: success() && github.ref == 'refs/heads/main' # only deploy main
-    needs: ["editor", "backend"]
+    needs: ["editor", "backend", "frontend"]
     name: Deploy dev
     runs-on: ubuntu-20.04
     steps:

@@ -6,7 +6,7 @@
   "extends": [
     "@antfu"
   ],
-  "ignorePatterns": ["**/static/sw.js"],
+  "ignorePatterns": ["**/graphql/graphql.ts"],
   "rules": {
     "no-console": "off",
     "no-alert": "off",

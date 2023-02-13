@@ -3,17 +3,17 @@ FROM node:14-alpine AS builder
 WORKDIR /root/caster-front
 
 COPY package.json .
-COPY yarn.lock .
+COPY package-lock.json .
 
-RUN yarn install --frozen-lockfile
+RUN npm ci
 
 COPY . .
 
 ARG BACKEND_GRAPHQL_URL
 
-ENV BACKEND_GRAPHQL_URL=${BACKEND_GRAPHQL_URL}
+ENV VITE_BACKEND_GRAPHQL_URL=${BACKEND_GRAPHQL_URL}
 
-RUN yarn generate
+RUN npm run build
 
 FROM nginx:1.23-alpine
 

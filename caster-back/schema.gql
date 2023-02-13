@@ -133,6 +133,7 @@ input NodeUpdate {
 type Query {
   streamPoint(pk: ID!): StreamPoint!
   streamPoints(filters: StreamPointFilter): [StreamPoint!]!
+  getStream: Stream!
   graphs: [Graph!]!
   graph(pk: ID!): Graph!
   nodes: [Node!]!
@@ -154,6 +155,28 @@ input ScriptCellInput {
   cellOrder: Int
 }
 
+type Stream {
+  uuid: UUID!
+  createdDate: DateTime!
+  modifiedDate: DateTime!
+  active: Boolean!
+  streamPoint: StreamPoint!
+}
+
+type StreamInfo {
+  stream: Stream!
+  streamInstruction: StreamInstruction
+}
+
+type StreamInstruction {
+  uuid: UUID!
+  createdDate: DateTime!
+  modifiedDate: DateTime!
+  instructionText: String!
+  state: String!
+  returnValue: String!
+}
+
 type StreamPoint {
   uuid: UUID!
   createdDate: DateTime!
@@ -164,6 +187,8 @@ type StreamPoint {
   janusInPort: Int
   janusOutPort: Int
   lastLive: DateTime
+  janusInRoom: Int
+  janusOutRoom: Int
 }
 
 input StreamPointFilter {
@@ -175,6 +200,7 @@ type Subscription {
   count(target: Int! = 100): Int!
   graph(graphUuid: UUID!): Graph!
   node(nodeUuid: UUID!): Node!
+  streamInfo: StreamInfo!
 }
 
 scalar UUID

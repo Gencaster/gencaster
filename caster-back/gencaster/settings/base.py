@@ -174,3 +174,5 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+STREAM_MAX_BEACON_SEC = 60

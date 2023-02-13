@@ -6,6 +6,7 @@ Engine
 
 import asyncio
 import logging
+from typing import AsyncGenerator
 
 from asgiref.sync import sync_to_async
 
@@ -36,20 +37,21 @@ class Engine:
         ssml_text = md_to_ssml(cell_code)
         self.streaming_point.speak_on_stream(ssml_text)
 
-    async def execute_sc_code(self, cell_code: str):
+    async def execute_sc_code(
+        self, cell_code: str
+    ) -> AsyncGenerator[StreamInstruction, None]:
         """Executes a SuperCollider code cell"""
         instruction = await sync_to_async(self.streaming_point.send_raw_instruction)(
             cell_code
         )
-        for _ in range(100):
+        yield instruction
+        for _ in range(10):
             await sync_to_async(instruction.refresh_from_db)()
             if instruction.state == StreamInstruction.InstructionState.FINISHED:
-                print("Finished executing")
                 return
             await asyncio.sleep(0.2)
-        print("Could not finish")
 
-    async def execute_node(self, node: Node):
+    async def execute_node(self, node: Node) -> AsyncGenerator[StreamInstruction, None]:
         """Executes a node."""
         script_cell: ScriptCell
         async for script_cell in node.script_cells.all():  # type: ignore
@@ -61,27 +63,36 @@ class Engine:
                 if script_cell.cell_code:
                     exec(script_cell.cell_code)
             elif cell_type == ScriptCell.CellType.SUPERCOLLIDER:
-                await self.execute_sc_code(script_cell.cell_code)
+                async for instruction in self.execute_sc_code(script_cell.cell_code):
+                    yield instruction
             elif cell_type == ScriptCell.CellType.MARKDOWN:
                 await sync_to_async(self.execute_markdown_code)(script_cell.cell_code)
             else:
                 log.error(f"Occured invalid/unknown CellType {cell_type}")
 
-    async def start(self):
+    async def start(
+        self, max_steps: int = 1000
+    ) -> AsyncGenerator[StreamInstruction, None]:
         """Starts the execution of the engine."""
         self._current_node = await self.graph.aget_or_create_entry_node()
 
-        for _ in range(10):
-            print(self._current_node)
+        for _ in range(max_steps):
+            log.debug(f"Currently running node {self._current_node}")
             if (
                 new_node := await Node.objects.filter(
-                    out_edges__out_node=self._current_node
+                    in_edges__in_node=self._current_node
                 )
                 .order_by("?")
                 .afirst()
             ):
                 self._current_node = new_node
-                await self.execute_node(self._current_node)
+                async for instruction in self.execute_node(self._current_node):
+                    yield instruction
             else:
-                print("Got nowhere to go?")
+                log.error(
+                    f"Ran into a dead end on {self.graph} on {self._current_node} - reset"
+                )
+                # back off a bit!
+                await asyncio.sleep(30)
+                self._current_node = await self.graph.aget_or_create_entry_node()
             await asyncio.sleep(0.5)

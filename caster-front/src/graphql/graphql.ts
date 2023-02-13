@@ -13,10 +13,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Date with time (isoformat) */
   DateTime: any;
   UUID: any;
-  /** Represents NULL values */
   Void: any;
 };
 
@@ -457,7 +455,7 @@ export const GetGraphsDocument = gql`
 
 export function useGetGraphsQuery(options: Omit<Urql.UseQueryArgs<never, GetGraphsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetGraphsQuery>({ query: GetGraphsDocument, ...options });
-}
+};
 export const CreateEdgeDocument = gql`
     mutation createEdge($nodeInUuid: UUID!, $nodeOutUuid: UUID!) {
   addEdge(newEdge: {nodeInUuid: $nodeInUuid, nodeOutUuid: $nodeOutUuid})
@@ -466,7 +464,7 @@ export const CreateEdgeDocument = gql`
 
 export function useCreateEdgeMutation() {
   return Urql.useMutation<CreateEdgeMutation, CreateEdgeMutationVariables>(CreateEdgeDocument);
-}
+};
 export const CreateNodeDocument = gql`
     mutation createNode($name: String!, $graphUuid: UUID!, $color: String, $positionX: Float, $positionY: Float) {
   addNode(
@@ -477,7 +475,7 @@ export const CreateNodeDocument = gql`
 
 export function useCreateNodeMutation() {
   return Urql.useMutation<CreateNodeMutation, CreateNodeMutationVariables>(CreateNodeDocument);
-}
+};
 export const UpdateNodeDocument = gql`
     mutation updateNode($nodeUuid: UUID!, $name: String, $color: String, $positionX: Float, $positionY: Float) {
   updateNode(
@@ -488,7 +486,7 @@ export const UpdateNodeDocument = gql`
 
 export function useUpdateNodeMutation() {
   return Urql.useMutation<UpdateNodeMutation, UpdateNodeMutationVariables>(UpdateNodeDocument);
-}
+};
 export const DeleteNodeDocument = gql`
     mutation deleteNode($nodeUuid: UUID!) {
   deleteNode(nodeUuid: $nodeUuid)
@@ -497,7 +495,7 @@ export const DeleteNodeDocument = gql`
 
 export function useDeleteNodeMutation() {
   return Urql.useMutation<DeleteNodeMutation, DeleteNodeMutationVariables>(DeleteNodeDocument);
-}
+};
 export const DeleteEdgeDocument = gql`
     mutation deleteEdge($edgeUuid: UUID!) {
   deleteEdge(edgeUuid: $edgeUuid)
@@ -506,7 +504,7 @@ export const DeleteEdgeDocument = gql`
 
 export function useDeleteEdgeMutation() {
   return Urql.useMutation<DeleteEdgeMutation, DeleteEdgeMutationVariables>(DeleteEdgeDocument);
-}
+};
 export const CreateScriptCellDocument = gql`
     mutation createScriptCell($nodeUuid: UUID!, $newScriptCell: NewScriptCellInput!) {
   addScriptCell(nodeUuid: $nodeUuid, newScriptCell: $newScriptCell) {
@@ -520,7 +518,7 @@ export const CreateScriptCellDocument = gql`
 
 export function useCreateScriptCellMutation() {
   return Urql.useMutation<CreateScriptCellMutation, CreateScriptCellMutationVariables>(CreateScriptCellDocument);
-}
+};
 export const DeleteScriptCellDocument = gql`
     mutation deleteScriptCell($scriptCellUuid: UUID!) {
   deleteScriptCell(scriptCellUuid: $scriptCellUuid)
@@ -529,7 +527,7 @@ export const DeleteScriptCellDocument = gql`
 
 export function useDeleteScriptCellMutation() {
   return Urql.useMutation<DeleteScriptCellMutation, DeleteScriptCellMutationVariables>(DeleteScriptCellDocument);
-}
+};
 export const UpdateScriptCellsDocument = gql`
     mutation updateScriptCells($newCells: [ScriptCellInput!]!) {
   updateScriptCells(newCells: $newCells)
@@ -538,7 +536,7 @@ export const UpdateScriptCellsDocument = gql`
 
 export function useUpdateScriptCellsMutation() {
   return Urql.useMutation<UpdateScriptCellsMutation, UpdateScriptCellsMutationVariables>(UpdateScriptCellsDocument);
-}
+};
 export const CountSubscriptionDocument = gql`
     subscription CountSubscription {
   count
@@ -547,7 +545,7 @@ export const CountSubscriptionDocument = gql`
 
 export function useCountSubscriptionSubscription<R = CountSubscriptionSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, CountSubscriptionSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<CountSubscriptionSubscription, R>) {
   return Urql.useSubscription<CountSubscriptionSubscription, R, CountSubscriptionSubscriptionVariables>({ query: CountSubscriptionDocument, ...options }, handler);
-}
+};
 export const GraphDocument = gql`
     subscription graph($uuid: UUID!) {
   graph(graphUuid: $uuid) {
@@ -581,7 +579,7 @@ export const GraphDocument = gql`
 
 export function useGraphSubscription<R = GraphSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, GraphSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<GraphSubscription, R>) {
   return Urql.useSubscription<GraphSubscription, R, GraphSubscriptionVariables>({ query: GraphDocument, ...options }, handler);
-}
+};
 export const NodeDocument = gql`
     subscription node($uuid: UUID!) {
   node(nodeUuid: $uuid) {
@@ -602,7 +600,7 @@ export const NodeDocument = gql`
 
 export function useNodeSubscription<R = NodeSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, NodeSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<NodeSubscription, R>) {
   return Urql.useSubscription<NodeSubscription, R, NodeSubscriptionVariables>({ query: NodeDocument, ...options }, handler);
-}
+};
 export const CreateGraphDocument = gql`
     mutation CreateGraph($graphInput: AddGraphInput!) {
   addGraph(graphInput: $graphInput) {
@@ -619,7 +617,7 @@ export const CreateGraphDocument = gql`
 
 export function useCreateGraphMutation() {
   return Urql.useMutation<CreateGraphMutation, CreateGraphMutationVariables>(CreateGraphDocument);
-}
+};
 export const StreamDocument = gql`
     subscription stream {
   streamInfo {
@@ -656,7 +654,7 @@ export const StreamDocument = gql`
 
 export function useStreamSubscription<R = StreamSubscription>(options: Omit<Urql.UseSubscriptionArgs<never, StreamSubscriptionVariables>, 'query'> = {}, handler?: Urql.SubscriptionHandlerArg<StreamSubscription, R>) {
   return Urql.useSubscription<StreamSubscription, R, StreamSubscriptionVariables>({ query: StreamDocument, ...options }, handler);
-}
+};
 export const StreamPointsDocument = gql`
     query streamPoints {
   streamPoints {
@@ -677,4 +675,4 @@ export const StreamPointsDocument = gql`
 
 export function useStreamPointsQuery(options: Omit<Urql.UseQueryArgs<never, StreamPointsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<StreamPointsQuery>({ query: StreamPointsDocument, ...options });
-}
+};

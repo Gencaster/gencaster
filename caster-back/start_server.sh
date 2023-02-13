@@ -18,7 +18,13 @@ python manage.py collectstatic --noinput > /dev/null
 
 if ! [ -z "$DEVELOPMENT" ]; then
     echo "Start development server";
-    uvicorn gencaster.asgi:application --reload --host 0.0.0.0 --port 8000
+    uvicorn \
+        gencaster.asgi:application \
+        --reload \
+        --host 0.0.0.0 \
+        --port 8000 \
+        --ws-ping-interval 10 \
+        --ws-ping-timeout 60 \
         # --header "Access-Control-Allow-Origin:*" \
         # --header "Access-Control-Allow-Methods:OPTIONS, GET, POST" \
         # --header "Access-Control-Allow-Headers:Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control" \
@@ -28,5 +34,7 @@ else
     uvicorn \
         gencaster.asgi:application \
         --host 0.0.0.0 \
-        --port 8000
+        --port 8000 \
+        --ws-ping-interval 10 \
+        --ws-ping-timeout 60
 fi
