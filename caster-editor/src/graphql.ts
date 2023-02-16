@@ -33,7 +33,6 @@ export enum CellType {
 }
 
 export type Edge = {
-  __typename?: 'Edge';
   inNode: Node;
   outNode: Node;
   uuid: Scalars['UUID'];
@@ -45,7 +44,6 @@ export type EdgeInput = {
 };
 
 export type Graph = {
-  __typename?: 'Graph';
   edges: Array<Edge>;
   name: Scalars['String'];
   nodes: Array<Node>;
@@ -74,7 +72,6 @@ export type IntFilterLookup = {
 
 /** Mutations for GenCaster via GraphQL. */
 export type Mutation = {
-  __typename?: 'Mutation';
   /**
    * Creates a :class:`~story_graph.models.Edge` for a given
    * :class:`~story_graph.models.Graph`.
@@ -170,7 +167,6 @@ export type NewScriptCellInput = {
 };
 
 export type Node = {
-  __typename?: 'Node';
   color: Scalars['String'];
   inEdges: Array<Edge>;
   isEntryNode: Scalars['Boolean'];
@@ -200,7 +196,6 @@ export type NodeUpdate = {
 
 /** Queries for GenCaster. */
 export type Query = {
-  __typename?: 'Query';
   getStream: Stream;
   graph: Graph;
   graphs: Array<Graph>;
@@ -235,7 +230,6 @@ export type QueryStreamPointsArgs = {
 };
 
 export type ScriptCell = {
-  __typename?: 'ScriptCell';
   cellCode: Scalars['String'];
   cellOrder: Scalars['Int'];
   cellType: CellType;
@@ -251,7 +245,6 @@ export type ScriptCellInput = {
 };
 
 export type Stream = {
-  __typename?: 'Stream';
   active: Scalars['Boolean'];
   createdDate: Scalars['DateTime'];
   modifiedDate: Scalars['DateTime'];
@@ -260,13 +253,11 @@ export type Stream = {
 };
 
 export type StreamInfo = {
-  __typename?: 'StreamInfo';
   stream: Stream;
   streamInstruction?: Maybe<StreamInstruction>;
 };
 
 export type StreamInstruction = {
-  __typename?: 'StreamInstruction';
   createdDate: Scalars['DateTime'];
   instructionText: Scalars['String'];
   modifiedDate: Scalars['DateTime'];
@@ -276,7 +267,6 @@ export type StreamInstruction = {
 };
 
 export type StreamPoint = {
-  __typename?: 'StreamPoint';
   createdDate: Scalars['DateTime'];
   host: Scalars['String'];
   janusInPort?: Maybe<Scalars['Int']>;
@@ -296,7 +286,6 @@ export type StreamPointFilter = {
 };
 
 export type Subscription = {
-  __typename?: 'Subscription';
   count: Scalars['Int'];
   graph: Graph;
   node: Node;
@@ -341,7 +330,7 @@ export type UuidFilterLookup = {
 export type GetGraphsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetGraphsQuery = { __typename?: 'Query', graphs: Array<{ __typename?: 'Graph', uuid: any, name: string }> };
+export type GetGraphsQuery = { graphs: Array<{ uuid: any, name: string }> };
 
 export type CreateEdgeMutationVariables = Exact<{
   nodeInUuid: Scalars['UUID'];
@@ -349,7 +338,7 @@ export type CreateEdgeMutationVariables = Exact<{
 }>;
 
 
-export type CreateEdgeMutation = { __typename?: 'Mutation', addEdge?: any | null };
+export type CreateEdgeMutation = { addEdge?: any | null };
 
 export type CreateNodeMutationVariables = Exact<{
   name: Scalars['String'];
@@ -360,7 +349,7 @@ export type CreateNodeMutationVariables = Exact<{
 }>;
 
 
-export type CreateNodeMutation = { __typename?: 'Mutation', addNode?: any | null };
+export type CreateNodeMutation = { addNode?: any | null };
 
 export type UpdateNodeMutationVariables = Exact<{
   nodeUuid: Scalars['UUID'];
@@ -371,21 +360,21 @@ export type UpdateNodeMutationVariables = Exact<{
 }>;
 
 
-export type UpdateNodeMutation = { __typename?: 'Mutation', updateNode?: any | null };
+export type UpdateNodeMutation = { updateNode?: any | null };
 
 export type DeleteNodeMutationVariables = Exact<{
   nodeUuid: Scalars['UUID'];
 }>;
 
 
-export type DeleteNodeMutation = { __typename?: 'Mutation', deleteNode?: any | null };
+export type DeleteNodeMutation = { deleteNode?: any | null };
 
 export type DeleteEdgeMutationVariables = Exact<{
   edgeUuid: Scalars['UUID'];
 }>;
 
 
-export type DeleteEdgeMutation = { __typename?: 'Mutation', deleteEdge?: any | null };
+export type DeleteEdgeMutation = { deleteEdge?: any | null };
 
 export type CreateScriptCellMutationVariables = Exact<{
   nodeUuid: Scalars['UUID'];
@@ -393,57 +382,57 @@ export type CreateScriptCellMutationVariables = Exact<{
 }>;
 
 
-export type CreateScriptCellMutation = { __typename?: 'Mutation', addScriptCell: { __typename?: 'ScriptCell', cellOrder: number, uuid: any, cellType: CellType, cellCode: string } };
+export type CreateScriptCellMutation = { addScriptCell: { cellOrder: number, uuid: any, cellType: CellType, cellCode: string } };
 
 export type DeleteScriptCellMutationVariables = Exact<{
   scriptCellUuid: Scalars['UUID'];
 }>;
 
 
-export type DeleteScriptCellMutation = { __typename?: 'Mutation', deleteScriptCell?: any | null };
+export type DeleteScriptCellMutation = { deleteScriptCell?: any | null };
 
 export type UpdateScriptCellsMutationVariables = Exact<{
   newCells: Array<ScriptCellInput> | ScriptCellInput;
 }>;
 
 
-export type UpdateScriptCellsMutation = { __typename?: 'Mutation', updateScriptCells?: any | null };
+export type UpdateScriptCellsMutation = { updateScriptCells?: any | null };
 
 export type CountSubscriptionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CountSubscriptionSubscription = { __typename?: 'Subscription', count: number };
+export type CountSubscriptionSubscription = { count: number };
 
 export type GraphSubscriptionVariables = Exact<{
   uuid: Scalars['UUID'];
 }>;
 
 
-export type GraphSubscription = { __typename?: 'Subscription', graph: { __typename?: 'Graph', name: string, uuid: any, edges: Array<{ __typename?: 'Edge', uuid: any, outNode: { __typename?: 'Node', uuid: any }, inNode: { __typename?: 'Node', uuid: any } }>, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, positionX: number, positionY: number, color: string, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> }> } };
+export type GraphSubscription = { graph: { name: string, uuid: any, edges: Array<{ uuid: any, outNode: { uuid: any }, inNode: { uuid: any } }>, nodes: Array<{ name: string, uuid: any, positionX: number, positionY: number, color: string, scriptCells: Array<{ cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> }> } };
 
 export type NodeSubscriptionVariables = Exact<{
   uuid: Scalars['UUID'];
 }>;
 
 
-export type NodeSubscription = { __typename?: 'Subscription', node: { __typename?: 'Node', color: string, name: string, positionX: number, positionY: number, uuid: any, scriptCells: Array<{ __typename?: 'ScriptCell', cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> } };
+export type NodeSubscription = { node: { color: string, name: string, positionX: number, positionY: number, uuid: any, scriptCells: Array<{ cellCode: string, cellOrder: number, cellType: CellType, uuid: any }> } };
 
 export type CreateGraphMutationVariables = Exact<{
   graphInput: AddGraphInput;
 }>;
 
 
-export type CreateGraphMutation = { __typename?: 'Mutation', addGraph: { __typename?: 'Graph', name: string, uuid: any, nodes: Array<{ __typename?: 'Node', name: string, uuid: any, isEntryNode: boolean }> } };
+export type CreateGraphMutation = { addGraph: { name: string, uuid: any, nodes: Array<{ name: string, uuid: any, isEntryNode: boolean }> } };
 
 export type StreamSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type StreamSubscription = { __typename?: 'Subscription', streamInfo: { __typename?: 'StreamInfo', stream: { __typename?: 'Stream', active: boolean, createdDate: any, modifiedDate: any, uuid: any, streamPoint: { __typename?: 'StreamPoint', createdDate: any, host: string, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null, lastLive?: any | null, modifiedDate: any, port: number, uuid: any, useInput: boolean } }, streamInstruction?: { __typename?: 'StreamInstruction', createdDate: any, instructionText: string, modifiedDate: any, returnValue: string, state: string, uuid: any } | null } };
+export type StreamSubscription = { streamInfo: { stream: { active: boolean, createdDate: any, modifiedDate: any, uuid: any, streamPoint: { createdDate: any, host: string, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null, lastLive?: any | null, modifiedDate: any, port: number, uuid: any, useInput: boolean } }, streamInstruction?: { createdDate: any, instructionText: string, modifiedDate: any, returnValue: string, state: string, uuid: any } | null } };
 
 export type StreamPointsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type StreamPointsQuery = { __typename?: 'Query', streamPoints: Array<{ __typename?: 'StreamPoint', createdDate: any, host: string, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null, lastLive?: any | null, modifiedDate: any, port: number, useInput: boolean, uuid: any }> };
+export type StreamPointsQuery = { streamPoints: Array<{ createdDate: any, host: string, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null, lastLive?: any | null, modifiedDate: any, port: number, useInput: boolean, uuid: any }> };
 
 
 export const GetGraphsDocument = gql`
