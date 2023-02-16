@@ -20,14 +20,14 @@ export const useNodeStore = defineStore("node", () => {
   const scriptCellsModified: Ref<boolean> = ref(false);
 
   const pauseSubscription = computed(() => {return uuid.value === undefined});
-  
+
   const {
     data: node,
     error,
     fetching,
     stale,
   } = useNodeSubscription({ variables: { uuid }, pause: pauseSubscription });
-  
+
   const nodeDataReady = computed(() => {return uuid.value === node.value?.node.uuid});
 
 
@@ -53,12 +53,6 @@ export const useNodeStore = defineStore("node", () => {
   const { executeMutation: updateScriptCellsMutation } =
     useUpdateScriptCellsMutation();
   const updateScriptCells = async (scriptCells: Array<ScriptCellInput>) => {
-    for (const cell of scriptCells) {
-      // @ts-expect-error: somehow the object has __typename which the API does not like
-      // TODO: this is because of the GraphQL settings. It passes a hard coded scriptcell with __typename
-      delete cell.__typename;
-    }
-
     await updateScriptCellsMutation({
       newCells: scriptCells,
     }).then(() => {
