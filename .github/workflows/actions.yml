@@ -24,7 +24,7 @@ jobs:
       - run: pip3 install -r requirements-dev.txt
       - uses: pre-commit/action@v3.0.0
         with:
-          extra_args: --files caster-back/* --files *.* --files docs/* --files caster/sound*
+          extra_args: --files caster-back/* --files *.* --files docs/* --files caster-sound/*
       - run: ./caster-back/run_tests.sh
         name: "Run tests"
       - uses: 5monkeys/cobertura-action@master
@@ -93,7 +93,7 @@ jobs:
             caster-front/package-lock.json
       - run: npm ci
         working-directory: caster-front
-      - uses: pre-commit/action@v2.0.3
+      - uses: pre-commit/action@v3.0.0
         with:
           extra_args: --files caster-front/*
       - run: npm run type-check
