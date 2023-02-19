@@ -75,6 +75,7 @@ services:
       dockerfile: Dockerfile.deploy
       args:
         - BACKEND_GRAPHQL_URL=https://backend.dev.gencaster.org/graphql
+        - JANUS_URL=https://sound.dev.gencaster.org/janus
     ports:
       - 3000:80
     environment:

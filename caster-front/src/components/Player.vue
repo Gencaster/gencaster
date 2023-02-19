@@ -8,10 +8,13 @@ const { activeStreamPoint, micActive, play, streamInfo } = storeToRefs(useStream
 
 let audioBridgeWebRtcUp = false;
 const { hostname, protocol } = window.location;
-const server
+const windowServer
   = protocol === "http:"
     ? `http://${hostname}:8088/janus`
     : `https://${hostname}:8089/janus`;
+
+const envServer = import.meta.env.VITE_JANUS_URL;
+const server = envServer === undefined ? windowServer : envServer;
 
 // @ts-expect-error: janus is an old library w/o es support
 const Janus = window.Janus;
