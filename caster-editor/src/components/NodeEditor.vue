@@ -254,8 +254,7 @@ const JSONViewerData = computed(() => {
 });
 
 const closeEditor = async () => {
-  // nodeUuid.value = undefined
-  // node.value = undefined;
+  scriptCellsModified.value = false;
   showEditor.value = false;
 };
 
@@ -288,6 +287,7 @@ const addScriptCell = (type: CellType) => {
     console.log("You can not add a script cell if not selected properly");
     return;
   }
+  scriptCellsModified.value = true;
   // first transfer the current state to the server as otherwise
   // we will reload from the server which may delete edits we have
   // not synced to the server yet
