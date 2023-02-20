@@ -84,8 +84,8 @@ async def get_stream():
 class Query:
     """Queries for GenCaster."""
 
-    stream_point: StreamPoint = AuthStrawberryDjangoField()
-    stream_points: List[StreamPoint] = AuthStrawberryDjangoField()
+    stream_point: StreamPoint = strawberry.field()  # AuthStrawberryDjangoField()
+    stream_points: List[StreamPoint] = strawberry.field()  # AuthStrawberryDjangoField()
     get_stream: Stream = strawberry.field(resolver=get_stream)
     graphs: List[Graph] = AuthStrawberryDjangoField()
     graph: Graph = AuthStrawberryDjangoField()
