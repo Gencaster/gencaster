@@ -33,4 +33,4 @@ repos:
         name: "Linting frontend"
         files: caster-front
         language: system
-        entry: /bin/sh -c "cd caster-front && npm run lint:ci"
+        entry: /bin/sh -c "cd caster-front && npm run lint:ci -- --fix"
