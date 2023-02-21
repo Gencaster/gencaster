@@ -101,6 +101,10 @@ input NewScriptCellInput {
   cellOrder: Int
 }
 
+type NoStreamAvailableError {
+  error: String!
+}
+
 type Node {
   uuid: UUID!
   name: String!
@@ -133,7 +137,6 @@ input NodeUpdate {
 type Query {
   streamPoint(pk: ID!): StreamPoint!
   streamPoints(filters: StreamPointFilter): [StreamPoint!]!
-  getStream: Stream!
   graphs: [Graph!]!
   graph(pk: ID!): Graph!
   nodes: [Node!]!
@@ -168,6 +171,8 @@ type StreamInfo {
   streamInstruction: StreamInstruction
 }
 
+union StreamInfoResponse = StreamInfo | NoStreamAvailableError
+
 type StreamInstruction {
   uuid: UUID!
   createdDate: DateTime!
@@ -200,7 +205,7 @@ type Subscription {
   count(target: Int! = 100): Int!
   graph(graphUuid: UUID!): Graph!
   node(nodeUuid: UUID!): Node!
-  streamInfo: StreamInfo!
+  streamInfo(graphUuid: UUID!): StreamInfoResponse!
 }
 
 scalar UUID

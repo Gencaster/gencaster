@@ -38,6 +38,7 @@ from story_graph.types import (
     ScriptCell,
     ScriptCellInput,
 )
+from stream.exceptions import NoStreamAvailable
 from stream.types import StreamInfo, StreamPoint
 
 from .distributor import GenCasterChannel, GraphQLWSConsumerInjector
@@ -305,6 +306,16 @@ class Mutation:
 
 
 @strawberry.type
+class NoStreamAvailableError:
+    error: str = "No stream available"
+
+
+StreamInfoResponse = strawberry.union(
+    "StreamInfoResponse", [StreamInfo, NoStreamAvailableError]
+)
+
+
+@strawberry.type
 class Subscription:
     @strawberry.subscription
     async def count(self, target: int = 100) -> AsyncGenerator[int, None]:
@@ -344,11 +355,16 @@ class Subscription:
     async def stream_info(
         self,
         info: Info,
-    ) -> AsyncGenerator[StreamInfo, None]:
+        graph_uuid: uuid.UUID,
+    ) -> AsyncGenerator[StreamInfoResponse, None]:  # type: ignore
         consumer: GraphQLWSConsumerInjector = info.context.ws
-        stream = await stream_models.Stream.objects.aget_free_stream()
+        try:
+            stream = await stream_models.Stream.objects.aget_free_stream()
+        except NoStreamAvailable:
+            yield NoStreamAvailableError()
+            return
 
-        graph = await story_graph_models.Graph.objects.order_by("?").afirst()
+        graph = await story_graph_models.Graph.objects.filter(uuid=graph_uuid).afirst()
 
         if not graph:
             print("could not find graph!")
