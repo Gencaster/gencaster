@@ -16,17 +16,15 @@ import {
 } from "@/graphql";
 
 export const useNodeStore = defineStore("node", () => {
-  const uuid: Ref<string | undefined> = ref(undefined);
+  const uuid: Ref<Scalars["UUID"] | undefined> = ref(undefined);
   const scriptCellsModified: Ref<boolean> = ref(false);
-
-  const pauseSubscription = computed(() => {return uuid.value === undefined});
 
   const {
     data: node,
     error,
     fetching,
     stale,
-  } = useNodeSubscription({ variables: { uuid }, pause: pauseSubscription });
+  } = useNodeSubscription({ variables: { uuid }, pause: computed(() => uuid.value === undefined ) });
 
   const nodeDataReady = computed(() => {return uuid.value === node.value?.node.uuid});
 

@@ -6,7 +6,7 @@ import type {
   Node as GraphNode,
   Nodes as GraphNodes,
 } from "v-network-graph";
-import type { GraphSubscription, NodeCreate } from "@/graphql";
+import type { GraphSubscription, NodeCreate, Scalars } from "@/graphql";
 import {
   useCreateEdgeMutation,
   useCreateNodeMutation,
@@ -17,15 +17,15 @@ import {
 } from "@/graphql";
 
 export const useGraphStore = defineStore("graph", () => {
-  const uuid: Ref<string> = ref("");
+  const uuid: Ref<Scalars["UUID"] | undefined> = ref(undefined);
 
   const {
     data: graph,
     error,
     fetching,
-  } = useGraphSubscription({ variables: { uuid }, pause: false });
+  } = useGraphSubscription({ variables: { uuid }, pause: computed(() => uuid.value === undefined) });
 
-  const graphDataReady = computed(() => {return uuid.value === graph.value?.graph.uuid});
+  const graphDataReady = computed(() => {return (uuid.value !== undefined) &&  (uuid.value === graph.value?.graph.uuid)});
 
   // data operations
   const { executeMutation: createNodeMutation } = useCreateNodeMutation();
