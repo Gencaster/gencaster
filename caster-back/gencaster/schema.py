@@ -101,9 +101,7 @@ class Mutation:
         """
         await graphql_check_authenticated(info)
 
-        graph = await sync_to_async(story_graph_models.Graph.objects.get)(
-            uuid=new_node.graph_uuid
-        )
+        graph = await story_graph_models.Graph.objects.aget(uuid=new_node.graph_uuid)
         node = story_graph_models.Node(
             name=new_node.name,
             graph=graph,
@@ -114,6 +112,7 @@ class Mutation:
             if new_value := getattr(new_node, field):
                 setattr(node, field, new_value)
 
+        # asave not yet implemented in django 4.1
         await sync_to_async(node.save)()
 
         await GenCasterChannel.send_graph_update(
@@ -159,15 +158,15 @@ class Mutation:
         It does not return the created edge.
         """
         await graphql_check_authenticated(info)
-        in_node: story_graph_models.Node = await sync_to_async(
-            story_graph_models.Node.objects.select_related("graph").get
-        )(uuid=new_edge.node_in_uuid)
-        out_node: story_graph_models.Node = await sync_to_async(
-            story_graph_models.Node.objects.get
-        )(uuid=new_edge.node_out_uuid)
-        edge: story_graph_models.Edge = await sync_to_async(
-            story_graph_models.Edge.objects.create
-        )(
+        in_node: story_graph_models.Node = (
+            await story_graph_models.Node.objects.select_related("graph").aget(
+                uuid=new_edge.node_in_uuid
+            )
+        )
+        out_node: story_graph_models.Node = await story_graph_models.Node.objects.aget(
+            uuid=new_edge.node_out_uuid
+        )
+        edge: story_graph_models.Edge = await story_graph_models.Edge.objects.acreate(
             in_node=in_node,
             out_node=out_node,
         )
@@ -182,10 +181,12 @@ class Mutation:
         """Deletes a given :class:`~story_graph.models.Edge`."""
         await graphql_check_authenticated(info)
         try:
-            edge: story_graph_models.Edge = await sync_to_async(
-                story_graph_models.Edge.objects.select_related("in_node__graph").get
-            )(uuid=edge_uuid)
-            await sync_to_async(edge.delete)()
+            edge: story_graph_models.Edge = (
+                await story_graph_models.Edge.objects.select_related(
+                    "in_node__graph"
+                ).aget(uuid=edge_uuid)
+            )
+            await story_graph_models.Edge.objects.filter(uuid=edge_uuid).adelete()
         except Exception:
             raise Exception(f"Could not delete edge {edge_uuid}")
         await GenCasterChannel.send_graph_update(
@@ -199,10 +200,12 @@ class Mutation:
         """Deletes a given :class:`~story_graph.models.Node`."""
         await graphql_check_authenticated(info)
         try:
-            node: story_graph_models.Node = await sync_to_async(
-                story_graph_models.Node.objects.select_related("graph").get
-            )(uuid=node_uuid)
-            await sync_to_async(node.delete)()
+            node: story_graph_models.Node = (
+                await story_graph_models.Node.objects.select_related("graph").aget(
+                    uuid=node_uuid
+                )
+            )
+            await story_graph_models.Node.objects.filter(uuid=node_uuid).adelete()
         except Exception:
             raise Exception(f"Could delete node {node_uuid}")
 

@@ -71,3 +71,22 @@ test-backend: venv virtualenv
 		export DJANGO_SETTINGS_MODULE="gencaster.settings.dev_local"; \
 		./run_tests.sh; \
 	)
+
+test-editor:
+	# node is not nice in regards of pid, see
+	# https://stackoverflow.com/a/59234367/3475778
+	# sending it to background with & and kill the pid does not work!
+	# therefore we kill every node process :)
+	cd caster-editor && (\
+		npm run type-check && \
+		(npm run dev&) && \
+		npm run cypress:run && \
+		pkill -9 node \
+	)
+
+test-frontend:
+	cd caster-front && (\
+		npm run type-check \
+	)
+
+test: test-backend test-editor test-frontend
