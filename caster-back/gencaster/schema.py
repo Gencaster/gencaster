@@ -38,7 +38,7 @@ from story_graph.types import (
     ScriptCell,
     ScriptCellInput,
 )
-from stream.types import Stream, StreamInfo, StreamPoint
+from stream.types import StreamInfo, StreamPoint
 
 from .distributor import GenCasterChannel, GraphQLWSConsumerInjector
 
@@ -76,17 +76,12 @@ def _update_cells(new_cells: List[ScriptCellInput]):
             )
 
 
-async def get_stream():
-    return await stream_models.Stream.objects.aget_free_stream()
-
-
 @strawberry.type
 class Query:
     """Queries for GenCaster."""
 
     stream_point: StreamPoint = strawberry.django.field()
     stream_points: List[StreamPoint] = strawberry.django.field()
-    get_stream: Stream = strawberry.field(resolver=get_stream)
     graphs: List[Graph] = AuthStrawberryDjangoField()
     graph: Graph = AuthStrawberryDjangoField()
     nodes: List[Node] = AuthStrawberryDjangoField()
