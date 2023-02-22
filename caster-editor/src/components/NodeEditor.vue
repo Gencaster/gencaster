@@ -1,12 +1,7 @@
 <template>
   <div>
-    <div v-if="!node || stale">
-      <Loading />
-    </div>
-    <div
-      v-else
-      class="node-editor-outer"
-    >
+    <div v-if="!node || stale" />
+    <div v-else>
       <div class="title">
         <div class="left">
           <p>{{ node?.node.name }}</p>
@@ -163,20 +158,13 @@
             <ElButton
               text
               bg
-              @click="closeEditor()"
+              @click="closeWithoutSaving()"
             >
               Close without saving
             </ElButton>
             <ElButton
               color="#ADFF00"
-              @click="
-                async () => {
-                  exitDialogVisible = false;
-                  await syncCellsWithServer().then(async () => {
-                    await closeEditor();
-                  });
-                }
-              "
+              @click="saveAndClose()"
             >
               Save and Close
             </ElButton>
@@ -222,8 +210,8 @@ import { storeToRefs } from "pinia";
 import { CellType, type GraphSubscription } from "@/graphql";
 import draggable from "vuedraggable";
 import Block from "./elements/Block.vue";
-import Loading from "./elements/Loading.vue";
 import { useNodeStore } from "@/stores/NodeStore";
+import { useGraphStore } from "@/stores/GraphStore";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 
 enum MoveDirection {
@@ -231,12 +219,13 @@ enum MoveDirection {
   down = "Down",
 }
 
-// const nuxtApp = useNuxtApp();
 
 // Store
 const nodeStore = useNodeStore();
-const { node, scriptCellsModified, stale, nodeDataReady } = storeToRefs(nodeStore);
+const { node, scriptCellsModified, stale, nodeDataReady, uuid: nodeUuid } = storeToRefs(nodeStore);
 const { showEditor } = storeToRefs(useInterfaceStore());
+const {selectedEdges, selectedNodes} = storeToRefs(useGraphStore());
+
 
 // Variables
 const renameNodeDialogVisible: Ref<boolean> = ref(false);
@@ -254,19 +243,34 @@ const JSONViewerData = computed(() => {
 });
 
 const closeEditor = async () => {
-  // nodeUuid.value = undefined
-  // node.value = undefined;
   showEditor.value = false;
+  selectedEdges.value = [];
+  selectedNodes.value = [];
+  nodeUuid.value = undefined;
 };
 
 const clickedClose = async () => {
+  console.log('clicked close without saving')
   if (scriptCellsModified.value) {
     exitDialogVisible.value = true;
-
     return;
   }
   await closeEditor();
 };
+
+const closeWithoutSaving = () => {
+  scriptCellsModified.value = false;
+  exitDialogVisible.value = false;
+  closeEditor();
+};
+
+const saveAndClose = async () => {
+  exitDialogVisible.value = false;
+  await syncCellsWithServer().then(async () => {
+    await closeEditor();
+    console.log('closed');
+  });
+}
 
 const renameNodeFromDialog = async () => {
   if (node.value === undefined) {
@@ -298,10 +302,10 @@ const addScriptCell = (type: CellType) => {
       cellOrder:
         node.value.node.scriptCells.length > 0
           ? Math.max(
-              ...node.value.node.scriptCells.map((x) => {
-                return x.cellOrder;
-              })
-            ) + 1
+            ...node.value.node.scriptCells.map((x) => {
+              return x.cellOrder;
+            })
+          ) + 1
           : 0,
       cellCode: "",
       cellType: type,

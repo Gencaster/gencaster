@@ -25,12 +25,12 @@
 
     <!-- Node Editor -->
     <div
-      v-if="showEditor && selectedNodes.length > 0"
       ref="editorDom"
       class="node-data"
+      :class="{ 'node-data--open': showEditor }"
     >
       <NodeEditor
-        class="node-data"
+        class="node-editor-outer"
       />
     </div>
 
@@ -76,7 +76,7 @@ const editorDom: Ref<HTMLElement | undefined> = ref(undefined);
 
 // Store
 const graphStore = useGraphStore();
-const { graph: graphInStore, graphDataReady } = storeToRefs(graphStore);
+const { graph: graphInStore, graphDataReady, selectedNodes, selectedEdges } = storeToRefs(graphStore);
 
 const nodeStore = useNodeStore();
 const { uuid: nodeUuid } = storeToRefs(nodeStore);
@@ -86,9 +86,6 @@ const { showEditor } = storeToRefs(interfaceStore);
 
 // Data
 const graph: Ref<GraphInstance | undefined> = ref();
-
-const selectedNodes: Ref<string[]> = ref([]);
-const selectedEdges: Ref<string[]> = ref([]);
 
 // Config
 const configs = GraphSettings.standard;
@@ -114,7 +111,7 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
     x: (gWidth - editorWidth) / 2,
     y: gHeight / 2,
   };
-  
+
   // move by
   const moveBy = {
     x: aimPos.x - clickPos.x,

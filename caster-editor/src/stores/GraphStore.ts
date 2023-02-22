@@ -18,6 +18,8 @@ import {
 
 export const useGraphStore = defineStore("graph", () => {
   const uuid: Ref<Scalars["UUID"] | undefined> = ref(undefined);
+  const selectedNodes: Ref<string[]> = ref([]);
+  const selectedEdges: Ref<string[]> = ref([]);
 
   const {
     data: graph,
@@ -116,6 +118,8 @@ export const useGraphStore = defineStore("graph", () => {
     error,
     fetching,
     graphDataReady,
+    selectedNodes,
+    selectedEdges,
     nodes,
     edges,
     layouts,

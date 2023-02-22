@@ -13,8 +13,15 @@
     position: fixed;
     width: 800px;
     height: calc(100vh - 100px);
-    right: 15px;
+    right: calc(-800px - 25px);
     top: 80px;
+    transition: right 0.3s ease-in-out;
+
+    background-color: yellow;
+
+    &.node-data--open {
+      right: 15px;
+    }
 
     .footer {
       display: flex;
