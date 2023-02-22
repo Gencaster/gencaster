@@ -133,9 +133,9 @@
         />
       </div>
 
-      <!-- Exit Page -->
+      <!-- Close node dialog -->
       <ElDialog
-        v-model="exitDialogVisible"
+        v-model="closeNodeDialogVisible"
         title="Careful"
         width="25%"
         center
@@ -151,7 +151,7 @@
             <ElButton
               text
               bg
-              @click="exitDialogVisible = false"
+              @click="closeNodeDialogVisible = false"
             >
               Cancel
             </ElButton>
@@ -230,7 +230,7 @@ const {selectedEdges, selectedNodes} = storeToRefs(useGraphStore());
 // Variables
 const renameNodeDialogVisible: Ref<boolean> = ref(false);
 const renameNodeDialogName: Ref<string> = ref("");
-const exitDialogVisible: Ref<boolean> = ref(false);
+const closeNodeDialogVisible: Ref<boolean> = ref(false);
 
 // Drag
 const dragging: Ref<boolean> = ref(false);
@@ -252,7 +252,7 @@ const closeEditor = async () => {
 const clickedClose = async () => {
   console.log('clicked close without saving')
   if (scriptCellsModified.value) {
-    exitDialogVisible.value = true;
+    closeNodeDialogVisible.value = true;
     return;
   }
   await closeEditor();
@@ -260,12 +260,12 @@ const clickedClose = async () => {
 
 const closeWithoutSaving = () => {
   scriptCellsModified.value = false;
-  exitDialogVisible.value = false;
+  closeNodeDialogVisible.value = false;
   closeEditor();
 };
 
 const saveAndClose = async () => {
-  exitDialogVisible.value = false;
+  closeNodeDialogVisible.value = false;
   await syncCellsWithServer().then(async () => {
     await closeEditor();
     console.log('closed');

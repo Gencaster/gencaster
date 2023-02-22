@@ -29,9 +29,7 @@
       class="node-data"
       :class="{ 'node-data--open': showEditor }"
     >
-      <NodeEditor
-        class="node-editor-outer"
-      />
+      <NodeEditor class="node-editor-outer" />
     </div>
 
     <!-- Other Interface -->
@@ -44,6 +42,39 @@
         {{ graphInStore?.graph.edges.length }}
       </p>
     </div>
+
+    <!-- Switch unsaved node dialog -->
+    <ElDialog
+      v-model="switchNodeDialog"
+      title="Careful"
+      width="25%"
+      center
+      lock-scroll
+      :show-close="false"
+    >
+      <span>
+        Unsaved changes in the editor! <br>
+        Are you sure to switch node without saving?
+      </span>
+      <template #footer>
+        <span class="dialog-footer">
+
+          <ElButton
+            text
+            bg
+            @click="switchWithoutSaving()"
+          >
+            Switch without saving
+          </ElButton>
+          <ElButton
+            color="#ADFF00"
+            @click="switchNodeDialog = false"
+          >
+            Cancel
+          </ElButton>
+        </span>
+      </template>
+    </ElDialog>
   </div>
 </template>
 
@@ -79,7 +110,7 @@ const graphStore = useGraphStore();
 const { graph: graphInStore, graphDataReady, selectedNodes, selectedEdges } = storeToRefs(graphStore);
 
 const nodeStore = useNodeStore();
-const { uuid: nodeUuid } = storeToRefs(nodeStore);
+const { uuid: nodeUuid, scriptCellsModified } = storeToRefs(nodeStore);
 
 const interfaceStore = useInterfaceStore();
 const { showEditor } = storeToRefs(interfaceStore);
@@ -146,11 +177,12 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
   });
 };
 
-const openNodeEditor = async () => {
+const openNodeEditor = async (node: string) => {
   showEditor.value = true;
-  nodeUuid.value = selectedNodes.value[0];
-  console.log(`Do something to ${selectedNodes.value[0]}`);
+  nodeUuid.value = node;
+  console.log(`Do something to ${node}`);
 };
+
 
 const eventHandlers: GraphEventHandlers = {
   // see https://dash14.github.io/v-network-graph/reference/events.html#events-with-event-handlers
@@ -159,7 +191,17 @@ const eventHandlers: GraphEventHandlers = {
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   "node:dblclick": async ({ node, event }) => {
-    openNodeEditor();
+    nextDBLClickedNode.value = node;
+
+    if (showEditor.value && scriptCellsModified.value) { // already open
+      switchNodeDialog.value = true
+      selectedNodes.value = [lastDBLClickedNode.value];
+      return
+    }
+
+    lastDBLClickedNode.value = node;
+
+    openNodeEditor(node);
     await nextTick();
     centerClickLeftToEditor(event);
   },
@@ -177,5 +219,19 @@ const eventHandlers: GraphEventHandlers = {
       graphStore.updateNodePosition(draggedNode);
     }
   },
+};
+
+// Dialogs
+const lastDBLClickedNode = ref<string>("")
+const nextDBLClickedNode = ref<string>("")
+const switchNodeDialog: Ref<boolean> = ref(false);
+
+const switchWithoutSaving = () => {
+  switchNodeDialog.value = false;
+  scriptCellsModified.value = false
+
+  openNodeEditor(nextDBLClickedNode.value);
+  selectedNodes.value = [nextDBLClickedNode.value]
+  lastDBLClickedNode.value = nextDBLClickedNode.value;
 };
 </script>
