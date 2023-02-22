@@ -7,7 +7,7 @@
           <p>{{ node?.node.name }}</p>
           <button
             class="unstyled"
-            @click="renameNodeDialogVisible = true"
+            @click="openNodeRenameDialog()"
           >
             edit
           </button>
@@ -281,6 +281,16 @@ const renameNodeFromDialog = async () => {
   await nodeStore.updateNode(node.value.node);
   renameNodeDialogVisible.value = false;
 };
+
+const openNodeRenameDialog = () => {
+  if (node.value === undefined) {
+    console.log("Need a valid node for rename");
+    return;
+  }
+  renameNodeDialogName.value = node.value.node.name;
+  renameNodeDialogVisible.value = true;
+}
+
 
 const syncCellsWithServer = async () => {
   if (node.value?.node !== undefined)
