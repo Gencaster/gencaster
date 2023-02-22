@@ -30,7 +30,7 @@ export const GraphSettings = {
         margin: 5,
         background: {
           visible: true,
-          color: variables.white,
+          color: variables.white08,
           padding: {
             vertical: 1,
             horizontal: 4,
@@ -73,7 +73,7 @@ export const GraphSettings = {
       // type: "straight",
       type: "curve",
       // gap: 40,
-      margin: 8,
+      margin: 8, // margin between the edge and the node
       marker: {
         source: {
           type: "none",
