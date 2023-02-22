@@ -147,7 +147,7 @@ class SchemaTestCase(TestCase):
             context_value=self.get_login_context(is_authenticated=False),
         )
 
-        self.assertGreaterEqual(len(resp.errors), 1)  # type: ignore
+        self.assertIsNone(resp.errors)
 
     @async_to_sync
     async def test_with_auth(self):

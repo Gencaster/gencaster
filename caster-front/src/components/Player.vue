@@ -259,8 +259,13 @@ initJanus();
   </div>
 
   <div class="stream-info">
-    <span>Assigned stream {{ streamInfo?.streamInfo.stream.streamPoint.port }}</span><br>
-    <span>Current instruction</span><br>
-    <span style="font-family: monospace;">{{ streamInfo?.streamInfo.streamInstruction?.instructionText }}</span>
+    <div v-if="streamInfo?.streamInfo.__typename === `NoStreamAvailableError`">
+      Currently no stream is available
+    </div>
+    <div v-else>
+      <span>Assigned stream {{ streamInfo?.streamInfo.stream.streamPoint.port }}</span><br>
+      <span>Current instruction</span><br>
+      <span style="font-family: monospace;">{{ streamInfo?.streamInfo.streamInstruction?.instructionText }}</span>
+    </div>
   </div>
 </template>

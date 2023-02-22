@@ -38,7 +38,8 @@ from story_graph.types import (
     ScriptCell,
     ScriptCellInput,
 )
-from stream.types import Stream, StreamInfo, StreamPoint
+from stream.exceptions import NoStreamAvailable
+from stream.types import StreamInfo, StreamPoint
 
 from .distributor import GenCasterChannel, GraphQLWSConsumerInjector
 
@@ -76,18 +77,13 @@ def _update_cells(new_cells: List[ScriptCellInput]):
             )
 
 
-async def get_stream():
-    return await stream_models.Stream.objects.aget_free_stream()
-
-
 @strawberry.type
 class Query:
     """Queries for GenCaster."""
 
     stream_point: StreamPoint = strawberry.django.field()
     stream_points: List[StreamPoint] = strawberry.django.field()
-    get_stream: Stream = strawberry.field(resolver=get_stream)
-    graphs: List[Graph] = AuthStrawberryDjangoField()
+    graphs: List[Graph] = strawberry.django.field()
     graph: Graph = AuthStrawberryDjangoField()
     nodes: List[Node] = AuthStrawberryDjangoField()
     node: Node = AuthStrawberryDjangoField()
@@ -313,6 +309,16 @@ class Mutation:
 
 
 @strawberry.type
+class NoStreamAvailableError:
+    error: str = "No stream available"
+
+
+StreamInfoResponse = strawberry.union(
+    "StreamInfoResponse", [StreamInfo, NoStreamAvailableError]
+)
+
+
+@strawberry.type
 class Subscription:
     @strawberry.subscription
     async def count(self, target: int = 100) -> AsyncGenerator[int, None]:
@@ -352,11 +358,16 @@ class Subscription:
     async def stream_info(
         self,
         info: Info,
-    ) -> AsyncGenerator[StreamInfo, None]:
+        graph_uuid: uuid.UUID,
+    ) -> AsyncGenerator[StreamInfoResponse, None]:  # type: ignore
         consumer: GraphQLWSConsumerInjector = info.context.ws
-        stream = await stream_models.Stream.objects.aget_free_stream()
+        try:
+            stream = await stream_models.Stream.objects.aget_free_stream()
+        except NoStreamAvailable:
+            yield NoStreamAvailableError()
+            return
 
-        graph = await story_graph_models.Graph.objects.order_by("?").afirst()
+        graph = await story_graph_models.Graph.objects.filter(uuid=graph_uuid).afirst()
 
         if not graph:
             print("could not find graph!")

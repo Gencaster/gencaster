@@ -108,34 +108,41 @@ mutation CreateGraph($graphInput: AddGraphInput!) {
   }
 }
 
-subscription stream {
-  streamInfo {
-    stream {
-      active
-      createdDate
-      modifiedDate
-      streamPoint {
+subscription stream($graphUuid: UUID!) {
+  streamInfo(graphUuid: $graphUuid) {
+    ... on StreamInfo {
+      __typename
+      stream {
+        active
         createdDate
-        host
-        janusInPort
-        janusInRoom
-        janusOutPort
-        janusOutRoom
-        lastLive
         modifiedDate
-        port
+        streamPoint {
+          uuid
+          port
+          useInput
+          modifiedDate
+          lastLive
+          host
+          createdDate
+          janusInPort
+          janusInRoom
+          janusOutPort
+          janusOutRoom
+        }
         uuid
-        useInput
       }
-      uuid
+      streamInstruction {
+        createdDate
+        instructionText
+        modifiedDate
+        state
+        uuid
+        returnValue
+      }
     }
-    streamInstruction {
-      createdDate
-      instructionText
-      modifiedDate
-      returnValue
-      state
-      uuid
+    ... on NoStreamAvailableError {
+      __typename
+      error
     }
   }
 }

@@ -166,6 +166,11 @@ export type NewScriptCellInput = {
   cellType?: InputMaybe<CellType>;
 };
 
+export type NoStreamAvailableError = {
+  __typename?: 'NoStreamAvailableError';
+  error: Scalars['String'];
+};
+
 export type Node = {
   color: Scalars['String'];
   inEdges: Array<Edge>;
@@ -196,7 +201,7 @@ export type NodeUpdate = {
 
 /** Queries for GenCaster. */
 export type Query = {
-  getStream: Stream;
+  __typename?: 'Query';
   graph: Graph;
   graphs: Array<Graph>;
   node: Node;
@@ -257,6 +262,8 @@ export type StreamInfo = {
   streamInstruction?: Maybe<StreamInstruction>;
 };
 
+export type StreamInfoResponse = NoStreamAvailableError | StreamInfo;
+
 export type StreamInstruction = {
   createdDate: Scalars['DateTime'];
   instructionText: Scalars['String'];
@@ -289,7 +296,7 @@ export type Subscription = {
   count: Scalars['Int'];
   graph: Graph;
   node: Node;
-  streamInfo: StreamInfo;
+  streamInfo: StreamInfoResponse;
 };
 
 
@@ -305,6 +312,11 @@ export type SubscriptionGraphArgs = {
 
 export type SubscriptionNodeArgs = {
   nodeUuid: Scalars['UUID'];
+};
+
+
+export type SubscriptionStreamInfoArgs = {
+  graphUuid: Scalars['UUID'];
 };
 
 export type UuidFilterLookup = {
@@ -424,10 +436,12 @@ export type CreateGraphMutationVariables = Exact<{
 
 export type CreateGraphMutation = { addGraph: { name: string, uuid: any, nodes: Array<{ name: string, uuid: any, isEntryNode: boolean }> } };
 
-export type StreamSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type StreamSubscriptionVariables = Exact<{
+  graphUuid: Scalars['UUID'];
+}>;
 
 
-export type StreamSubscription = { streamInfo: { stream: { active: boolean, createdDate: any, modifiedDate: any, uuid: any, streamPoint: { createdDate: any, host: string, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null, lastLive?: any | null, modifiedDate: any, port: number, uuid: any, useInput: boolean } }, streamInstruction?: { createdDate: any, instructionText: string, modifiedDate: any, returnValue: string, state: string, uuid: any } | null } };
+export type StreamSubscription = { __typename?: 'Subscription', streamInfo: { __typename: 'NoStreamAvailableError', error: string } | { __typename: 'StreamInfo', stream: { __typename?: 'Stream', active: boolean, createdDate: any, modifiedDate: any, uuid: any, streamPoint: { __typename?: 'StreamPoint', uuid: any, port: number, useInput: boolean, modifiedDate: any, lastLive?: any | null, host: string, createdDate: any, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null } }, streamInstruction?: { __typename?: 'StreamInstruction', createdDate: any, instructionText: string, modifiedDate: any, state: string, uuid: any, returnValue: string } | null } };
 
 export type StreamPointsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -610,34 +624,41 @@ export function useCreateGraphMutation() {
   return Urql.useMutation<CreateGraphMutation, CreateGraphMutationVariables>(CreateGraphDocument);
 }
 export const StreamDocument = gql`
-    subscription stream {
-  streamInfo {
-    stream {
-      active
-      createdDate
-      modifiedDate
-      streamPoint {
+    subscription stream($graphUuid: UUID!) {
+  streamInfo(graphUuid: $graphUuid) {
+    ... on StreamInfo {
+      __typename
+      stream {
+        active
         createdDate
-        host
-        janusInPort
-        janusInRoom
-        janusOutPort
-        janusOutRoom
-        lastLive
         modifiedDate
-        port
+        streamPoint {
+          uuid
+          port
+          useInput
+          modifiedDate
+          lastLive
+          host
+          createdDate
+          janusInPort
+          janusInRoom
+          janusOutPort
+          janusOutRoom
+        }
         uuid
-        useInput
       }
-      uuid
+      streamInstruction {
+        createdDate
+        instructionText
+        modifiedDate
+        state
+        uuid
+        returnValue
+      }
     }
-    streamInstruction {
-      createdDate
-      instructionText
-      modifiedDate
-      returnValue
-      state
-      uuid
+    ... on NoStreamAvailableError {
+      __typename
+      error
     }
   }
 }
