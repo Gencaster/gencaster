@@ -2,46 +2,50 @@
   <div>
     <div v-if="!node || stale" />
     <div v-else>
-      <div class="title">
-        <div class="left">
-          <p>{{ node?.node.name }}</p>
-          <button
-            class="unstyled"
-            @click="openNodeRenameDialog()"
-          >
-            edit
-          </button>
+      <div class="editor-header">
+        <div class="title">
+          <div class="left">
+            <p>{{ node?.node.name }}</p>
+            <button
+              class="unstyled"
+              @click="openNodeRenameDialog()"
+            >
+              edit
+            </button>
+          </div>
+          <div class="right">
+            <button
+              class="unstyled"
+              :disabled="!scriptCellsModified"
+              @click="syncCellsWithServer()"
+            >
+              Save Scene
+            </button>
+            <button
+              class="unstyled"
+              @click="clickedClose()"
+            >
+              Close
+            </button>
+          </div>
         </div>
-        <div class="right">
-          <button
-            class="unstyled"
-            :disabled="!scriptCellsModified"
-            @click="syncCellsWithServer()"
-          >
-            Save Scene
+        <div class="node-menu-bar">
+          <button @click="addScriptCell(CellType.Markdown)">
+            + Markdown
           </button>
-          <button
-            class="unstyled"
-            @click="clickedClose()"
-          >
-            Close
+          <button @click="addScriptCell(CellType.Python)">
+            + Python
+          </button>
+          <button @click="addScriptCell(CellType.Supercollider)">
+            + Supercollider
+          </button>
+          <button @click="addScriptCell(CellType.Comment)">
+            + Comment
           </button>
         </div>
       </div>
-      <div class="node-menu-bar">
-        <button @click="addScriptCell(CellType.Markdown)">
-          + Markdown
-        </button>
-        <button @click="addScriptCell(CellType.Python)">
-          + Python
-        </button>
-        <button @click="addScriptCell(CellType.Supercollider)">
-          + Supercollider
-        </button>
-        <button @click="addScriptCell(CellType.Comment)">
-          + Comment
-        </button>
-      </div>
+
+      <div class="editor-header-spacer" />
 
       <div class="blocks">
         <draggable
