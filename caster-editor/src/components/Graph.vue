@@ -177,10 +177,8 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
   });
 };
 
-const openNodeEditor = async (node: string) => {
+const openNodeEditor = () => {
   showEditor.value = true;
-  nodeUuid.value = node;
-  console.log(`Do something to ${node}`);
 };
 
 
@@ -191,17 +189,18 @@ const eventHandlers: GraphEventHandlers = {
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   "node:dblclick": async ({ node, event }) => {
-    nextDBLClickedNode.value = node;
+    nextNodeDblClicked.value = node;
 
     if (showEditor.value && scriptCellsModified.value) { // already open
       switchNodeDialog.value = true
-      selectedNodes.value = [lastDBLClickedNode.value];
+      selectedNodes.value = [lastNodeDblClicked.value];
       return
     }
 
-    lastDBLClickedNode.value = node;
+    lastNodeDblClicked.value = node;
+    nodeUuid.value = node;
 
-    openNodeEditor(node);
+    openNodeEditor();
     await nextTick();
     centerClickLeftToEditor(event);
   },
@@ -222,16 +221,16 @@ const eventHandlers: GraphEventHandlers = {
 };
 
 // Dialogs
-const lastDBLClickedNode = ref<string>("")
-const nextDBLClickedNode = ref<string>("")
+const lastNodeDblClicked = ref<Scalars["UUID"]>("")
+const nextNodeDblClicked = ref<Scalars["UUID"]>("")
 const switchNodeDialog: Ref<boolean> = ref(false);
 
 const switchWithoutSaving = () => {
   switchNodeDialog.value = false;
-  scriptCellsModified.value = false
-
-  openNodeEditor(nextDBLClickedNode.value);
-  selectedNodes.value = [nextDBLClickedNode.value]
-  lastDBLClickedNode.value = nextDBLClickedNode.value;
+  scriptCellsModified.value = false;
+  nodeUuid.value = nextNodeDblClicked.value;
+  selectedNodes.value = [nextNodeDblClicked.value]
+  lastNodeDblClicked.value = nextNodeDblClicked.value;
+  openNodeEditor();
 };
 </script>
