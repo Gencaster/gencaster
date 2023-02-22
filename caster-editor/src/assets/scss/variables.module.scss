@@ -28,6 +28,7 @@ $grey-dark: #898989;
 $black: #000;
 $alertRed: #FF0000;
 $white: #ffffff;
+$white08: rgba(255, 255, 255, 0.8);
 
 // paddings
 $paddingSidesDesktop: 15px;
@@ -53,4 +54,5 @@ $hoverColor: lightgrey;
     black: $black;
     alertRed: $alertRed;
     white: $white;
+    white08: $white08;
   }
