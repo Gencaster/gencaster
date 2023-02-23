@@ -1,79 +1,96 @@
 // node-editor
 .node-editor-outer {
   height: inherit;
-  widows: inherit;
-  padding: 5px 0px 15px 0px;
+  width: inherit;
+  padding-bottom: 15px;
   background-color: $mainWhite;
   border: 1px solid $black;
   overflow-y: scroll;
+  display: block;
+  position: relative;
 
-  .title {
-    display: flex;
-    height: $menuHeight;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
+  .editor-header-spacer {
+    width: inherit;
+    height: calc($menuHeight*2);
+    margin-bottom: 30px;
+  }
 
-    padding-left: 15px;
-    padding-right: 15px;
+  .editor-header {
+    display: block;
+    position: fixed;
+    width: 798px;
+    z-index: 2;
+    background-color: $mainWhite;
 
-    .left {
-      button {
-        color: $grey-dark;
 
-        &:hover {
-          font-style: italic;
-          background-color: transparent;
+    .title {
+      display: flex;
+      height: $menuHeight;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 5px;
+      margin-bottom: 4px;
+
+      padding-left: 15px;
+      padding-right: 15px;
+
+      .left {
+        button {
+          color: $grey-dark;
+
+          &:hover {
+            font-style: italic;
+            background-color: transparent;
+          }
+        }
+      }
+
+      .right {
+        transform: translateX(8px);
+        text-decoration: underline;
+      }
+
+      .left,
+      .right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        p {
+          margin: 0;
         }
       }
     }
 
-    .right {
-      transform: translateX(8px);
-      text-decoration: underline;
-    }
-
-    .left,
-    .right {
+    .node-menu-bar {
       display: flex;
-      justify-content: center;
       align-items: center;
-
-      p {
-        margin: 0;
-      }
-    }
-  }
-
-  .node-menu-bar {
-    display: flex;
-    align-items: center;
-    height: $menuHeight;
-    background-color: transparent;
-    margin-bottom: 20px;
-    border-bottom: 1px solid $grey;
-    border-top: 1px solid $grey;
-    padding-left: 15px;
-    padding-right: 15px;
-
-    button {
-      border: 0;
-      margin: 0;
-      padding: 0;
+      height: $menuHeight;
       background-color: transparent;
-      padding-left: 10px;
-      padding-right: 10px;
-      transform: translateX(-10px);
+      border-bottom: 1px solid $grey;
+      border-top: 1px solid $grey;
+      padding-left: 15px;
+      padding-right: 15px;
 
-      border-radius: 2px;
-      height: 24px;
-      cursor: pointer;
+      button {
+        border: 0;
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+        padding-left: 10px;
+        padding-right: 10px;
+        transform: translateX(-10px);
 
-      &:hover {
-        background-color: $grey-light;
+        border-radius: 2px;
+        height: 24px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: $grey-light;
+        }
       }
-    }
 
+    }
   }
 
   .blocks {
@@ -133,7 +150,7 @@
         border: 1px solid $grey;
         opacity: 0;
         transition: opacity .2s ease-in-out;
-        z-index: 999;
+        z-index: 1;
 
         .divider {
           height: 32px;

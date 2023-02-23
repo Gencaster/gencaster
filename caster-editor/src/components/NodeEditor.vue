@@ -1,52 +1,51 @@
 <template>
   <div>
-    <div v-if="!node || stale">
-      <Loading />
-    </div>
-    <div
-      v-else
-      class="node-editor-outer"
-    >
-      <div class="title">
-        <div class="left">
-          <p>{{ node?.node.name }}</p>
-          <button
-            class="unstyled"
-            @click="renameNodeDialogVisible = true"
-          >
-            edit
-          </button>
+    <div v-if="!node || stale" />
+    <div v-else>
+      <div class="editor-header">
+        <div class="title">
+          <div class="left">
+            <p>{{ node?.node.name }}</p>
+            <button
+              class="unstyled"
+              @click="openNodeRenameDialog()"
+            >
+              edit
+            </button>
+          </div>
+          <div class="right">
+            <button
+              class="unstyled"
+              :disabled="!scriptCellsModified"
+              @click="syncCellsWithServer()"
+            >
+              Save Scene
+            </button>
+            <button
+              class="unstyled"
+              @click="clickedClose()"
+            >
+              Close
+            </button>
+          </div>
         </div>
-        <div class="right">
-          <button
-            class="unstyled"
-            :disabled="!scriptCellsModified"
-            @click="syncCellsWithServer()"
-          >
-            Save Scene
+        <div class="node-menu-bar">
+          <button @click="addScriptCell(CellType.Markdown)">
+            + Markdown
           </button>
-          <button
-            class="unstyled"
-            @click="clickedClose()"
-          >
-            Close
+          <button @click="addScriptCell(CellType.Python)">
+            + Python
+          </button>
+          <button @click="addScriptCell(CellType.Supercollider)">
+            + Supercollider
+          </button>
+          <button @click="addScriptCell(CellType.Comment)">
+            + Comment
           </button>
         </div>
       </div>
-      <div class="node-menu-bar">
-        <button @click="addScriptCell(CellType.Markdown)">
-          + Markdown
-        </button>
-        <button @click="addScriptCell(CellType.Python)">
-          + Python
-        </button>
-        <button @click="addScriptCell(CellType.Supercollider)">
-          + Supercollider
-        </button>
-        <button @click="addScriptCell(CellType.Comment)">
-          + Comment
-        </button>
-      </div>
+
+      <div class="editor-header-spacer" />
 
       <div class="blocks">
         <draggable
@@ -138,9 +137,9 @@
         />
       </div>
 
-      <!-- Exit Page -->
+      <!-- Close node dialog -->
       <ElDialog
-        v-model="exitDialogVisible"
+        v-model="closeNodeDialogVisible"
         title="Careful"
         width="25%"
         center
@@ -156,27 +155,20 @@
             <ElButton
               text
               bg
-              @click="exitDialogVisible = false"
+              @click="closeNodeDialogVisible = false"
             >
               Cancel
             </ElButton>
             <ElButton
               text
               bg
-              @click="closeEditor()"
+              @click="closeWithoutSaving()"
             >
               Close without saving
             </ElButton>
             <ElButton
               color="#ADFF00"
-              @click="
-                async () => {
-                  exitDialogVisible = false;
-                  await syncCellsWithServer().then(async () => {
-                    await closeEditor();
-                  });
-                }
-              "
+              @click="saveAndClose()"
             >
               Save and Close
             </ElButton>
@@ -222,8 +214,8 @@ import { storeToRefs } from "pinia";
 import { CellType, type GraphSubscription } from "@/graphql";
 import draggable from "vuedraggable";
 import Block from "./elements/Block.vue";
-import Loading from "./elements/Loading.vue";
 import { useNodeStore } from "@/stores/NodeStore";
+import { useGraphStore } from "@/stores/GraphStore";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 
 enum MoveDirection {
@@ -231,17 +223,18 @@ enum MoveDirection {
   down = "Down",
 }
 
-// const nuxtApp = useNuxtApp();
 
 // Store
 const nodeStore = useNodeStore();
-const { node, scriptCellsModified, stale, nodeDataReady } = storeToRefs(nodeStore);
+const { node, scriptCellsModified, stale, nodeDataReady, uuid: nodeUuid } = storeToRefs(nodeStore);
 const { showEditor } = storeToRefs(useInterfaceStore());
+const {selectedEdges, selectedNodes} = storeToRefs(useGraphStore());
+
 
 // Variables
 const renameNodeDialogVisible: Ref<boolean> = ref(false);
 const renameNodeDialogName: Ref<string> = ref("");
-const exitDialogVisible: Ref<boolean> = ref(false);
+const closeNodeDialogVisible: Ref<boolean> = ref(false);
 
 // Drag
 const dragging: Ref<boolean> = ref(false);
@@ -254,19 +247,34 @@ const JSONViewerData = computed(() => {
 });
 
 const closeEditor = async () => {
-  // nodeUuid.value = undefined
-  // node.value = undefined;
   showEditor.value = false;
+  selectedEdges.value = [];
+  selectedNodes.value = [];
+  nodeUuid.value = undefined;
 };
 
 const clickedClose = async () => {
+  console.log('clicked close without saving')
   if (scriptCellsModified.value) {
-    exitDialogVisible.value = true;
-
+    closeNodeDialogVisible.value = true;
     return;
   }
   await closeEditor();
 };
+
+const closeWithoutSaving = () => {
+  scriptCellsModified.value = false;
+  closeNodeDialogVisible.value = false;
+  closeEditor();
+};
+
+const saveAndClose = async () => {
+  closeNodeDialogVisible.value = false;
+  await syncCellsWithServer().then(async () => {
+    await closeEditor();
+    console.log('closed');
+  });
+}
 
 const renameNodeFromDialog = async () => {
   if (node.value === undefined) {
@@ -277,6 +285,16 @@ const renameNodeFromDialog = async () => {
   await nodeStore.updateNode(node.value.node);
   renameNodeDialogVisible.value = false;
 };
+
+const openNodeRenameDialog = () => {
+  if (node.value === undefined) {
+    console.log("Need a valid node for rename");
+    return;
+  }
+  renameNodeDialogName.value = node.value.node.name;
+  renameNodeDialogVisible.value = true;
+}
+
 
 const syncCellsWithServer = async () => {
   if (node.value?.node !== undefined)
@@ -298,10 +316,10 @@ const addScriptCell = (type: CellType) => {
       cellOrder:
         node.value.node.scriptCells.length > 0
           ? Math.max(
-              ...node.value.node.scriptCells.map((x) => {
-                return x.cellOrder;
-              })
-            ) + 1
+            ...node.value.node.scriptCells.map((x) => {
+              return x.cellOrder;
+            })
+          ) + 1
           : 0,
       cellCode: "",
       cellType: type,

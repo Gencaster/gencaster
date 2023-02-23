@@ -25,13 +25,11 @@
 
     <!-- Node Editor -->
     <div
-      v-if="showEditor && selectedNodes.length > 0"
       ref="editorDom"
       class="node-data"
+      :class="{ 'node-data--open': showEditor }"
     >
-      <NodeEditor
-        class="node-data"
-      />
+      <NodeEditor class="node-editor-outer" />
     </div>
 
     <!-- Other Interface -->
@@ -44,6 +42,39 @@
         {{ graphInStore?.graph.edges.length }}
       </p>
     </div>
+
+    <!-- Switch unsaved node dialog -->
+    <ElDialog
+      v-model="switchNodeDialog"
+      title="Careful"
+      width="25%"
+      center
+      lock-scroll
+      :show-close="false"
+    >
+      <span>
+        Unsaved changes in the editor! <br>
+        Are you sure to switch node without saving?
+      </span>
+      <template #footer>
+        <span class="dialog-footer">
+
+          <ElButton
+            text
+            bg
+            @click="switchWithoutSaving()"
+          >
+            Switch without saving
+          </ElButton>
+          <ElButton
+            color="#ADFF00"
+            @click="switchNodeDialog = false"
+          >
+            Cancel
+          </ElButton>
+        </span>
+      </template>
+    </ElDialog>
   </div>
 </template>
 
@@ -76,19 +107,16 @@ const editorDom: Ref<HTMLElement | undefined> = ref(undefined);
 
 // Store
 const graphStore = useGraphStore();
-const { graph: graphInStore, graphDataReady } = storeToRefs(graphStore);
+const { graph: graphInStore, graphDataReady, selectedNodes, selectedEdges } = storeToRefs(graphStore);
 
 const nodeStore = useNodeStore();
-const { uuid: nodeUuid } = storeToRefs(nodeStore);
+const { uuid: nodeUuid, scriptCellsModified } = storeToRefs(nodeStore);
 
 const interfaceStore = useInterfaceStore();
 const { showEditor } = storeToRefs(interfaceStore);
 
 // Data
 const graph: Ref<GraphInstance | undefined> = ref();
-
-const selectedNodes: Ref<string[]> = ref([]);
-const selectedEdges: Ref<string[]> = ref([]);
 
 // Config
 const configs = GraphSettings.standard;
@@ -114,7 +142,7 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
     x: (gWidth - editorWidth) / 2,
     y: gHeight / 2,
   };
-  
+
   // move by
   const moveBy = {
     x: aimPos.x - clickPos.x,
@@ -149,11 +177,10 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
   });
 };
 
-const openNodeEditor = async () => {
+const openNodeEditor = () => {
   showEditor.value = true;
-  nodeUuid.value = selectedNodes.value[0];
-  console.log(`Do something to ${selectedNodes.value[0]}`);
 };
+
 
 const eventHandlers: GraphEventHandlers = {
   // see https://dash14.github.io/v-network-graph/reference/events.html#events-with-event-handlers
@@ -162,6 +189,17 @@ const eventHandlers: GraphEventHandlers = {
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   "node:dblclick": async ({ node, event }) => {
+    nextNodeDoubleClicked.value = node;
+
+    if (showEditor.value && scriptCellsModified.value) { // already open
+      switchNodeDialog.value = true
+      selectedNodes.value = [lastNodeDoubleClicked.value];
+      return
+    }
+
+    lastNodeDoubleClicked.value = node;
+    nodeUuid.value = node;
+
     openNodeEditor();
     await nextTick();
     centerClickLeftToEditor(event);
@@ -180,5 +218,19 @@ const eventHandlers: GraphEventHandlers = {
       graphStore.updateNodePosition(draggedNode);
     }
   },
+};
+
+// Dialogs
+const lastNodeDoubleClicked = ref<Scalars["UUID"]>("")
+const nextNodeDoubleClicked = ref<Scalars["UUID"]>("")
+const switchNodeDialog: Ref<boolean> = ref(false);
+
+const switchWithoutSaving = () => {
+  switchNodeDialog.value = false;
+  scriptCellsModified.value = false;
+  nodeUuid.value = nextNodeDoubleClicked.value;
+  selectedNodes.value = [nextNodeDoubleClicked.value]
+  lastNodeDoubleClicked.value = nextNodeDoubleClicked.value;
+  openNodeEditor();
 };
 </script>
