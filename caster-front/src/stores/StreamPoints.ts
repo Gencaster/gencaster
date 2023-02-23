@@ -1,31 +1,16 @@
 import { defineStore } from "pinia";
-import { type Ref, computed, ref } from "vue";
-import { type Scalars, type StreamPoint, useGetGraphsQuery, useStreamPointsQuery, useStreamSubscription } from "@/graphql/graphql";
+import { type Ref, ref } from "vue";
+import type { StreamPointsQuery } from "@/graphql/graphql";
+import { useStreamPointsQuery } from "@/graphql/graphql";
 
-export const useStreamPointStore = defineStore("streamPoints", () => {
-  const activeStreamPoint: Ref<StreamPoint> = ref({} as StreamPoint);
-  const micActive: Ref<boolean> = ref(false);
-  const play: Ref<boolean> = ref(false);
-  const selectedGraphUuid: Ref<Scalars["UUID"] | undefined> = ref(undefined);
-
+export const useStreamPointsStore = defineStore("streamPoints", () => {
   const { data: streamPoints, fetching, error } = useStreamPointsQuery();
-
-  const { data: graphs } = useGetGraphsQuery();
-
-  const { data: streamInfo } = useStreamSubscription({
-    pause: computed(() => selectedGraphUuid.value === undefined),
-    variables: { graphUuid: selectedGraphUuid }
-  });
+  const selectedStreamPoint: Ref<StreamPointsQuery["streamPoints"][0] | undefined> = ref(undefined);
 
   return {
     streamPoints,
-    streamInfo,
     fetching,
     error,
-    play,
-    activeStreamPoint,
-    micActive,
-    selectedGraphUuid,
-    graphs
+    selectedStreamPoint
   };
 });

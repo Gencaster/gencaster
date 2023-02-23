@@ -15,7 +15,9 @@
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10",
     "@urql/vue": "^1.0.4",
+    "element-plus": "^2.2.32",
     "graphql": "^16.6.0",
     "pinia": "^2.0.28",
     "subscriptions-transport-ws": "^0.11.0",
