@@ -2,9 +2,28 @@
 import { storeToRefs } from "pinia";
 import type { Ref } from "vue";
 import { ref, watch } from "vue";
-import { useStreamPointStore } from "@/stores/StreamPoints";
+import { usePlayerStore } from "@/stores/Player";
 
-const { activeStreamPoint, micActive, play, streamInfo } = storeToRefs(useStreamPointStore());
+defineProps({
+  showPlayer: {
+    type: Boolean,
+    default: false
+  },
+  showRawControls: {
+    type: Boolean,
+    default: false
+  },
+  showPlayerInfo: {
+    type: Boolean,
+    default: false
+  },
+  showStreamInfo: {
+    type: Boolean,
+    default: false
+  }
+});
+
+const { micActive, play, streamInfo, activeStreamPoint } = storeToRefs(usePlayerStore());
 
 let audioBridgeWebRtcUp = false;
 const { hostname, protocol } = window.location;
@@ -105,6 +124,12 @@ const switchStream = (streamId: number) => {
 };
 
 const getJanusStreamPoints = () => {
+  /* Legacy function which queries janus directly
+  for all streaming channels.
+  This may be interesting when using Gencaster without backend
+  as in its current state the backend is responsible to assign
+  a stream point to a user.
+  */
   streaming.send({
     message: { request: "list" },
     success(result: any) {
@@ -211,6 +236,9 @@ const stopMicStreaming = () => {
 };
 
 watch(activeStreamPoint, (newStreamPoint) => {
+  if (newStreamPoint === undefined)
+    return;
+
   console.log("Change to stream", newStreamPoint);
   if (newStreamPoint.janusOutRoom)
     switchStream(newStreamPoint.janusOutRoom);
@@ -224,6 +252,8 @@ watch(micActive, (micState) => {
     stopMicStreaming();
     return;
   }
+  if (activeStreamPoint.value === undefined)
+    return;
   if (activeStreamPoint.value.janusInRoom)
     switchAudioBridgeRoom(activeStreamPoint.value.janusInRoom);
 });
@@ -237,11 +267,9 @@ initJanus();
 </script>
 
 <template>
-  <h3>Player</h3>
+  <audio ref="audioPlayer" controls :hidden="showPlayer ? false : true " />
 
-  <audio ref="audioPlayer" controls />
-
-  <div class="player-control">
+  <div v-if="showRawControls" class="player-control">
     <button :disabled="activeStreamPoint === null" @click="() => { play = true }">
       Play
     </button>
@@ -253,12 +281,12 @@ initJanus();
     </button>
   </div>
 
-  <div class="player-info">
-    <span>Currently on stream {{ activeStreamPoint.port }} (Janus ID {{ activeStreamPoint.janusOutRoom }})</span><br>
+  <div v-if="showPlayerInfo" class="player-info">
+    <span>Currently on stream {{ activeStreamPoint?.port }} (Janus ID {{ activeStreamPoint?.janusOutRoom }})</span><br>
     <span>Mic is active: {{ micActive }}</span>
   </div>
 
-  <div class="stream-info">
+  <div v-if="showStreamInfo" class="stream-info">
     <div v-if="streamInfo?.streamInfo.__typename === `NoStreamAvailableError`">
       Currently no stream is available
     </div>
