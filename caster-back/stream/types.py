@@ -77,3 +77,32 @@ class StreamInstruction:
 class StreamInfo:
     stream: Stream
     stream_instruction: Optional[StreamInstruction]
+
+
+@strawberry.type
+class NoStreamAvailable:
+    """
+    Matches :class:`gencaster.stream.exceptions.NoStreamAvailable`.
+    """
+
+    error: str = "No stream available"
+
+
+@strawberry.type
+class InvalidAudioFile:
+    """
+    Matches :class:`gencaster.stream.exceptions.InvalidAudioFile`.
+    """
+
+    error: str = "No valid audio file"
+
+
+# combined types - can't be declared as type annotation
+
+StreamInfoResponse = strawberry.union(
+    "StreamInfoResponse", [StreamInfo, NoStreamAvailable]
+)
+
+AudioFileUploadResponse = strawberry.union(
+    "AudioFileUploadResponse", [AudioFile, InvalidAudioFile]
+)
