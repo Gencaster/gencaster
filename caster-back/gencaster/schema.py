@@ -27,7 +27,6 @@ from strawberry_django.fields.field import StrawberryDjangoField
 
 import story_graph.models as story_graph_models
 import stream.models as stream_models
-import stream.models as stream_models
 from story_graph.engine import Engine
 from story_graph.types import (
     AddGraphInput,
@@ -41,7 +40,7 @@ from story_graph.types import (
     ScriptCellInput,
 )
 from stream.exceptions import NoStreamAvailable
-from stream.types import StreamInfo, AddAudioFile, AudioFile, StreamPoint
+from stream.types import AddAudioFile, AudioFile, StreamInfo, StreamPoint
 
 from .distributor import GenCasterChannel, GraphQLWSConsumerInjector
 
@@ -311,6 +310,16 @@ class Mutation:
         # https://docs.djangoproject.com/en/4.2/ref/models/instances/#django.db.models.Model.arefresh_from_db
         return await story_graph_models.Graph.objects.aget(uuid=graph.uuid)  # type: ignore
 
+    @strawberry.mutation
+    async def add_audio_file(self, info, new_audio_file: AddAudioFile) -> AudioFile:
+        audio_file = await stream_models.AudioFile.objects.acreate(
+            file=File(new_audio_file.file, name=new_audio_file.file_name),
+            description=new_audio_file.description,
+        )
+        print(audio_file)
+
+        return audio_file
+
 
 @strawberry.type
 class NoStreamAvailableError:
@@ -376,16 +385,6 @@ class Subscription:
         if not graph:
             print("could not find graph!")
             return
-
-    @strawberry.mutation
-    async def add_audio_file(self, info, new_audio_file: AddAudioFile) -> AudioFile:
-        audio_file = await stream_models.AudioFile.objects.acreate(
-            file=File(new_audio_file.file, name=new_audio_file.file_name),
-            description=new_audio_file.description,
-        )
-        print(audio_file)
-
-        return audio_file
 
         engine = Engine(
             graph=graph,
