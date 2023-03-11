@@ -318,7 +318,7 @@ class Mutation:
         )
         print(audio_file)
 
-        return audio_file
+        return audio_file  # type: ignore
 
 
 @strawberry.type
