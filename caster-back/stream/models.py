@@ -2,6 +2,7 @@ import io
 import logging
 import uuid
 from datetime import timedelta
+from typing import Optional
 
 from asgiref.sync import async_to_sync
 from django.conf import settings
@@ -12,6 +13,8 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from google.cloud import texttospeech
 from pythonosc.udp_client import SimpleUDPClient
+
+import story_graph
 
 from .exceptions import NoStreamAvailable
 
@@ -173,15 +176,41 @@ class StreamPoint(models.Model):
 
 
 class StreamManager(models.Manager):
-    def get_free_stream(self) -> "Stream":
-        return async_to_sync(self.aget_free_stream)()  # type: ignore
+    def get_free_stream(self, graph: "story_graph.models.Graph") -> "Stream":
+        return async_to_sync(self.aget_free_stream)(graph)  # type: ignore
 
-    async def aget_free_stream(self) -> "Stream":
+    async def aget_free_stream(self, graph: "story_graph.models.Graph") -> "Stream":
+        """
+        Tries to obtain a stream by obey the stream assignment policy of the Graph.
+        """
+        # avoid circular dependency
+        from story_graph.models import Graph, GraphSession
+
+        if (
+            graph is not None
+            and graph.stream_assignment_policy
+            == Graph.StreamAssignmentPolicy.ONE_GRAPH_ONE_STREAM
+        ):
+            existing_stream: Optional[Stream] = (
+                await Stream.objects.filter(
+                    active=True, stream_point__graph_sessions__graph=graph
+                )
+                .prefetch_related("stream_point")
+                .afirst()
+            )
+            if existing_stream:
+                return existing_stream
+
         free_stream_points = await StreamPoint.objects.afree_stream_points()  # type: ignore
-        if await free_stream_points.acount() > 0:
-            return await self.acreate(stream_point=await free_stream_points.afirst())  # type: ignore
-        else:
+        if await free_stream_points.acount() == 0:
             raise NoStreamAvailable()
+        stream: Stream = await self.acreate(stream_point=await free_stream_points.afirst())  # type: ignore
+
+        if graph:
+            await GraphSession.objects.acreate(
+                graph=graph, streaming_point=stream.stream_point
+            )
+        return stream
 
     def disconnect_all_streams(self):
         stream: Stream

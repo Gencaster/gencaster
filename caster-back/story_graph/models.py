@@ -9,8 +9,6 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext as _
 
-from stream.models import StreamPoint
-
 
 class Graph(models.Model):
     """A collection of :class:`~Node` and :class:`~Edge`.
@@ -26,6 +24,13 @@ class Graph(models.Model):
     The story graph is a core concept and can be edited with a native editor.
     """
 
+    class StreamAssignmentPolicy(models.TextChoices):
+        ONE_GRAPH_ONE_STREAM = "one_graph_one_stream", _(
+            "Each graph has only one stream"
+        )
+        ONE_USER_ONE_STREAM = "one_user_one_stream", _("Each user gets its own stream")
+        DEACTIVATE = "deactivate", _("No stream assignment")
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -38,6 +43,13 @@ class Graph(models.Model):
         verbose_name=_("Name"),
         help_text=_("Name of the graph"),
         unique=True,
+    )
+
+    stream_assignment_policy = models.CharField(
+        max_length=255,
+        help_text=_("Manages the stream assignment for this graph"),
+        choices=StreamAssignmentPolicy.choices,
+        default=StreamAssignmentPolicy.ONE_USER_ONE_STREAM,
     )
 
     async def aget_or_create_entry_node(self) -> "Node":
@@ -249,7 +261,7 @@ class GraphSession(models.Model):
     )
 
     streaming_point = models.ForeignKey(
-        StreamPoint,
+        "stream.StreamPoint",
         related_name="graph_sessions",
         on_delete=models.CASCADE,
     )
