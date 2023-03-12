@@ -323,12 +323,12 @@ class Mutation:
     @strawberry.mutation
     async def add_audio_file(self, info, new_audio_file: AddAudioFile) -> AudioFileUploadResponse:  # type: ignore
         if new_audio_file.file is None or len(new_audio_file.file) == 0:
-            return InvalidAudioFile(error_message="Received empty audio file")
+            return InvalidAudioFile(error="Received empty audio file")
         elif not os.path.splitext(new_audio_file.file_name)[-1].lower() in [
             ".flac",
             ".wav",
         ]:
-            return InvalidAudioFile(error_message="Only support flac and wav files")
+            return InvalidAudioFile(error="Only support flac and wav files")
         try:
             audio_file = await stream_models.AudioFile.objects.acreate(
                 file=File(new_audio_file.file, name=new_audio_file.file_name),
@@ -336,7 +336,7 @@ class Mutation:
             )
         except Exception as e:
             return InvalidAudioFile(
-                error_message=f"Unexpected error, could not save audio file: {e}"
+                error=f"Unexpected error, could not save audio file: {e}"
             )
         return audio_file
 

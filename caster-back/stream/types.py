@@ -94,7 +94,7 @@ class InvalidAudioFile:
     Matches :class:`gencaster.stream.exceptions.InvalidAudioFile`.
     """
 
-    error_message: str = "No valid audio file"
+    error: str = "No valid audio file"
 
 
 # combined types - can't be declared as type annotation
