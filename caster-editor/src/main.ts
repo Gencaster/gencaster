@@ -1,8 +1,9 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import urql, { defaultExchanges, subscriptionExchange } from "@urql/vue";
+import urql, { defaultExchanges, subscriptionExchange, dedupExchange, cacheExchange } from "@urql/vue";
 import VNetworkGraph from "v-network-graph";
 import { SubscriptionClient } from "subscriptions-transport-ws";
+import { multipartFetchExchange } from '@urql/exchange-multipart-fetch';
 import "v-network-graph/lib/style.css";
 
 import ElementPlus from "element-plus";
@@ -25,7 +26,9 @@ app.use(urql, {
     credentials: "include",
   },
   exchanges: [
-    ...defaultExchanges,
+    dedupExchange,
+    cacheExchange,
+    multipartFetchExchange,
     subscriptionExchange({
       forwardSubscription: (operation) =>
         new SubscriptionClient(
