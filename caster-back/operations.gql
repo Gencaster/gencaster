@@ -140,7 +140,7 @@ subscription stream($graphUuid: UUID!) {
         returnValue
       }
     }
-    ... on NoStreamAvailableError {
+    ... on NoStreamAvailable {
       __typename
       error
     }
@@ -160,5 +160,23 @@ query streamPoints {
     port
     useInput
     uuid
+  }
+}
+
+mutation UploadAudioFile($addAudioFile: AddAudioFile!) {
+  addAudioFile(newAudioFile: $addAudioFile) {
+    ... on AudioFile {
+      __typename
+      uuid
+      description
+      file {
+        url
+        name
+      }
+    }
+    ... on InvalidAudioFile {
+      __typename
+      error
+    }
   }
 }

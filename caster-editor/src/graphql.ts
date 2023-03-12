@@ -16,13 +16,28 @@ export type Scalars = {
   /** Date with time (isoformat) */
   DateTime: any;
   UUID: any;
+  Upload: any;
   /** Represents NULL values */
   Void: any;
+};
+
+export type AddAudioFile = {
+  description: Scalars['String'];
+  file: Scalars['Upload'];
+  fileName: Scalars['String'];
 };
 
 export type AddGraphInput = {
   name: Scalars['String'];
 };
+
+export type AudioFile = {
+  description: Scalars['String'];
+  file: DjangoFileType;
+  uuid: Scalars['UUID'];
+};
+
+export type AudioFileUploadResponse = AudioFile | InvalidAudioFile;
 
 /** Choice of foobar */
 export enum CellType {
@@ -31,6 +46,13 @@ export enum CellType {
   Python = 'PYTHON',
   Supercollider = 'SUPERCOLLIDER'
 }
+
+export type DjangoFileType = {
+  name: Scalars['String'];
+  path: Scalars['String'];
+  size: Scalars['Int'];
+  url: Scalars['String'];
+};
 
 export type Edge = {
   inNode: Node;
@@ -70,8 +92,14 @@ export type IntFilterLookup = {
   startsWith?: InputMaybe<Scalars['Int']>;
 };
 
+/** Matches :class:`gencaster.stream.exceptions.InvalidAudioFile`. */
+export type InvalidAudioFile = {
+  error: Scalars['String'];
+};
+
 /** Mutations for GenCaster via GraphQL. */
 export type Mutation = {
+  addAudioFile: AudioFileUploadResponse;
   /**
    * Creates a :class:`~story_graph.models.Edge` for a given
    * :class:`~story_graph.models.Graph`.
@@ -103,6 +131,12 @@ export type Mutation = {
   updateNode?: Maybe<Scalars['Void']>;
   /** Updates a given :class:`~story_graph.models.ScriptCell` to change its content. */
   updateScriptCells?: Maybe<Scalars['Void']>;
+};
+
+
+/** Mutations for GenCaster via GraphQL. */
+export type MutationAddAudioFileArgs = {
+  newAudioFile: AddAudioFile;
 };
 
 
@@ -166,8 +200,8 @@ export type NewScriptCellInput = {
   cellType?: InputMaybe<CellType>;
 };
 
-export type NoStreamAvailableError = {
-  __typename?: 'NoStreamAvailableError';
+/** Matches :class:`gencaster.stream.exceptions.NoStreamAvailable`. */
+export type NoStreamAvailable = {
   error: Scalars['String'];
 };
 
@@ -201,13 +235,20 @@ export type NodeUpdate = {
 
 /** Queries for GenCaster. */
 export type Query = {
-  __typename?: 'Query';
+  audioFile: AudioFile;
+  audioFiles: Array<AudioFile>;
   graph: Graph;
   graphs: Array<Graph>;
   node: Node;
   nodes: Array<Node>;
   streamPoint: StreamPoint;
   streamPoints: Array<StreamPoint>;
+};
+
+
+/** Queries for GenCaster. */
+export type QueryAudioFileArgs = {
+  pk: Scalars['ID'];
 };
 
 
@@ -262,7 +303,7 @@ export type StreamInfo = {
   streamInstruction?: Maybe<StreamInstruction>;
 };
 
-export type StreamInfoResponse = NoStreamAvailableError | StreamInfo;
+export type StreamInfoResponse = NoStreamAvailable | StreamInfo;
 
 export type StreamInstruction = {
   createdDate: Scalars['DateTime'];
@@ -441,12 +482,19 @@ export type StreamSubscriptionVariables = Exact<{
 }>;
 
 
-export type StreamSubscription = { __typename?: 'Subscription', streamInfo: { __typename: 'NoStreamAvailableError', error: string } | { __typename: 'StreamInfo', stream: { __typename?: 'Stream', active: boolean, createdDate: any, modifiedDate: any, uuid: any, streamPoint: { __typename?: 'StreamPoint', uuid: any, port: number, useInput: boolean, modifiedDate: any, lastLive?: any | null, host: string, createdDate: any, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null } }, streamInstruction?: { __typename?: 'StreamInstruction', createdDate: any, instructionText: string, modifiedDate: any, state: string, uuid: any, returnValue: string } | null } };
+export type StreamSubscription = { streamInfo: { __typename: 'NoStreamAvailable', error: string } | { __typename: 'StreamInfo', stream: { active: boolean, createdDate: any, modifiedDate: any, uuid: any, streamPoint: { uuid: any, port: number, useInput: boolean, modifiedDate: any, lastLive?: any | null, host: string, createdDate: any, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null } }, streamInstruction?: { createdDate: any, instructionText: string, modifiedDate: any, state: string, uuid: any, returnValue: string } | null } };
 
 export type StreamPointsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type StreamPointsQuery = { streamPoints: Array<{ createdDate: any, host: string, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null, lastLive?: any | null, modifiedDate: any, port: number, useInput: boolean, uuid: any }> };
+
+export type UploadAudioFileMutationVariables = Exact<{
+  addAudioFile: AddAudioFile;
+}>;
+
+
+export type UploadAudioFileMutation = { addAudioFile: { __typename: 'AudioFile', uuid: any, description: string, file: { url: string, name: string } } | { __typename: 'InvalidAudioFile', error: string } };
 
 
 export const GetGraphsDocument = gql`
@@ -656,7 +704,7 @@ export const StreamDocument = gql`
         returnValue
       }
     }
-    ... on NoStreamAvailableError {
+    ... on NoStreamAvailable {
       __typename
       error
     }
@@ -687,4 +735,27 @@ export const StreamPointsDocument = gql`
 
 export function useStreamPointsQuery(options: Omit<Urql.UseQueryArgs<never, StreamPointsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<StreamPointsQuery>({ query: StreamPointsDocument, ...options });
+}
+export const UploadAudioFileDocument = gql`
+    mutation UploadAudioFile($addAudioFile: AddAudioFile!) {
+  addAudioFile(newAudioFile: $addAudioFile) {
+    ... on AudioFile {
+      __typename
+      uuid
+      description
+      file {
+        url
+        name
+      }
+    }
+    ... on InvalidAudioFile {
+      __typename
+      error
+    }
+  }
+}
+    `;
+
+export function useUploadAudioFileMutation() {
+  return Urql.useMutation<UploadAudioFileMutation, UploadAudioFileMutationVariables>(UploadAudioFileDocument);
 }

@@ -1,6 +1,20 @@
+input AddAudioFile {
+  file: Upload!
+  description: String!
+  fileName: String!
+}
+
 input AddGraphInput {
   name: String!
 }
+
+type AudioFile {
+  uuid: UUID!
+  file: DjangoFileType!
+  description: String!
+}
+
+union AudioFileUploadResponse = AudioFile | InvalidAudioFile
 
 """Choice of foobar"""
 enum CellType {
@@ -12,6 +26,13 @@ enum CellType {
 
 """Date with time (isoformat)"""
 scalar DateTime
+
+type DjangoFileType {
+  name: String!
+  path: String!
+  size: Int!
+  url: String!
+}
 
 type Edge {
   uuid: UUID!
@@ -49,6 +70,11 @@ input IntFilterLookup {
   isNull: Boolean
   regex: String
   iRegex: String
+}
+
+"""Matches :class:`gencaster.stream.exceptions.InvalidAudioFile`."""
+type InvalidAudioFile {
+  error: String!
 }
 
 """Mutations for GenCaster via GraphQL."""
@@ -93,6 +119,7 @@ type Mutation {
   """Deletes a given :class:`~story_graph.models.ScriptCell`."""
   deleteScriptCell(scriptCellUuid: UUID!): Void
   addGraph(graphInput: AddGraphInput!): Graph!
+  addAudioFile(newAudioFile: AddAudioFile!): AudioFileUploadResponse!
 }
 
 input NewScriptCellInput {
@@ -101,7 +128,8 @@ input NewScriptCellInput {
   cellOrder: Int
 }
 
-type NoStreamAvailableError {
+"""Matches :class:`gencaster.stream.exceptions.NoStreamAvailable`."""
+type NoStreamAvailable {
   error: String!
 }
 
@@ -141,6 +169,8 @@ type Query {
   graph(pk: ID!): Graph!
   nodes: [Node!]!
   node(pk: ID!): Node!
+  audioFiles: [AudioFile!]!
+  audioFile(pk: ID!): AudioFile!
 }
 
 type ScriptCell {
@@ -171,7 +201,7 @@ type StreamInfo {
   streamInstruction: StreamInstruction
 }
 
-union StreamInfoResponse = StreamInfo | NoStreamAvailableError
+union StreamInfoResponse = StreamInfo | NoStreamAvailable
 
 type StreamInstruction {
   uuid: UUID!
@@ -229,6 +259,8 @@ input UUIDFilterLookup {
   regex: String
   iRegex: String
 }
+
+scalar Upload
 
 """Represents NULL values"""
 scalar Void
