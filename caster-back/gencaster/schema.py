@@ -50,6 +50,8 @@ from stream.types import (
     StreamInfo,
     StreamInfoResponse,
     StreamPoint,
+    StreamVariable,
+    StreamVariableInput,
 )
 
 from .distributor import GenCasterChannel, GraphQLWSConsumerInjector
@@ -100,6 +102,7 @@ class Query:
     node: Node = AuthStrawberryDjangoField()
     audio_files: List[AudioFile] = AuthStrawberryDjangoField()
     audio_file: AudioFile = AuthStrawberryDjangoField()
+    stream_variable: StreamVariable = AuthStrawberryDjangoField()
 
 
 @strawberry.type
@@ -339,6 +342,32 @@ class Mutation:
                 error=f"Unexpected error, could not save audio file: {e}"
             )
         return audio_file
+
+    @strawberry.mutation
+    async def create_update_stream_variable(
+        self, info, stream_variables: List[StreamVariableInput]
+    ) -> List[StreamVariable]:
+        stream_vars: List[stream_models.StreamVariable] = []
+
+        for stream_variable in stream_variables:
+            (
+                stream_var,
+                _,
+            ) = await stream_models.StreamVariable.objects.aupdate_or_create(
+                stream=await stream_models.Stream.objects.aget(
+                    uuid=stream_variable.stream_uuid
+                ),
+                key=stream_variable.key,
+                defaults={
+                    "value": stream_variable.value,
+                    "stream_to_sc": stream_variable.stream_to_sc,
+                },
+            )
+            if stream_variable.stream_to_sc:
+                await sync_to_async(stream_var.send_to_sc)()
+            stream_vars.append(stream_var)
+
+        return stream_vars  # type: ignore
 
 
 @strawberry.type

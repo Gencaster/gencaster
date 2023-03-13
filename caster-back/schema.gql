@@ -10,7 +10,7 @@ input AddGraphInput {
 
 type AudioFile {
   uuid: UUID!
-  file: DjangoFileType!
+  file: DjangoFileType
   description: String!
 }
 
@@ -120,6 +120,7 @@ type Mutation {
   deleteScriptCell(scriptCellUuid: UUID!): Void
   addGraph(graphInput: AddGraphInput!): Graph!
   addAudioFile(newAudioFile: AddAudioFile!): AudioFileUploadResponse!
+  createUpdateStreamVariable(streamVariables: [StreamVariableInput!]!): [StreamVariable!]!
 }
 
 input NewScriptCellInput {
@@ -171,6 +172,7 @@ type Query {
   node(pk: ID!): Node!
   audioFiles: [AudioFile!]!
   audioFile(pk: ID!): AudioFile!
+  streamVariable(pk: ID!): StreamVariable!
 }
 
 type ScriptCell {
@@ -229,6 +231,21 @@ type StreamPoint {
 input StreamPointFilter {
   uuid: UUIDFilterLookup
   janusInPort: IntFilterLookup
+}
+
+type StreamVariable {
+  uuid: UUID!
+  key: String!
+  value: String!
+  stream: Stream!
+  streamToSc: Boolean!
+}
+
+input StreamVariableInput {
+  streamUuid: UUID!
+  key: String!
+  value: String!
+  streamToSc: Boolean! = false
 }
 
 type Subscription {
