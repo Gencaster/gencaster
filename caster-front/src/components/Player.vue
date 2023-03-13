@@ -235,8 +235,11 @@ const stopMicStreaming = () => {
   });
 };
 
-watch(activeStreamPoint, (newStreamPoint) => {
+watch(activeStreamPoint, (newStreamPoint, oldStreamPoint) => {
   if (newStreamPoint === undefined)
+    return;
+
+  if (newStreamPoint.uuid === oldStreamPoint?.uuid)
     return;
 
   console.log("Change to stream", newStreamPoint);
