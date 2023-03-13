@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import type { Ref } from "vue";
 import { ref, watch } from "vue";
 import { usePlayerStore } from "@/stores/Player";
+import GpsStreaming from "@/components/GpsStreaming.vue";
 
 defineProps({
   showPlayer: {
@@ -18,6 +19,10 @@ defineProps({
     default: false
   },
   showStreamInfo: {
+    type: Boolean,
+    default: false
+  },
+  showGpsStreaming: {
     type: Boolean,
     default: false
   }
@@ -282,6 +287,10 @@ initJanus();
     <button @click="() => { micActive = !micActive }">
       Change mic status
     </button>
+  </div>
+
+  <div v-if="showGpsStreaming" class="streaming-variables">
+    <GpsStreaming />
   </div>
 
   <div v-if="showPlayerInfo" class="player-info">

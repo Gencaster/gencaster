@@ -27,6 +27,7 @@ watch(selectedStreamPoint, (newStreamPoint) => {
       show-player-info
       show-raw-controls
       show-stream-info
+      show-gps-streaming
     />
   </main>
 </template>

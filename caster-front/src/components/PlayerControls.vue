@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/Player";
+import GpsStreaming from "@/components/GpsStreaming.vue";
 
 const { play, micActive } = storeToRefs(usePlayerStore());
 </script>
@@ -28,5 +29,6 @@ const { play, micActive } = storeToRefs(usePlayerStore());
     >
       {{ micActive ? "Disable" : "Activate" }} mic
     </el-button>
+    <GpsStreaming />
   </div>
 </template>
