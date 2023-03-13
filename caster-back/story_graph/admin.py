@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Edge, Graph, GraphSession, Node, ScriptCell
+from .models import Edge, Graph, Node, ScriptCell
 
 
 class NodeInline(admin.TabularInline):
@@ -78,8 +78,3 @@ class ScriptCellAdmin(admin.ModelAdmin):
     readonly_fields = [
         "uuid",
     ]
-
-
-@admin.register(GraphSession)
-class GraphSessionAdmin(admin.ModelAdmin):
-    pass

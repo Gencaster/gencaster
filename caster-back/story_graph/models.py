@@ -236,32 +236,3 @@ class ScriptCell(models.Model):
 
     def __str__(self) -> str:
         return f"{self.node}-{self.cell_order} ({self.cell_type})"
-
-
-class GraphSession(models.Model):
-    """A stroy session.
-
-    .. todo::
-
-        Do we need this?
-
-    """
-
-    uuid = models.UUIDField(
-        primary_key=True,
-        editable=False,
-        default=uuid.uuid4,
-        unique=True,
-    )
-
-    graph = models.ForeignKey(
-        Graph,
-        related_name="graph_sessions",
-        on_delete=models.CASCADE,
-    )
-
-    streaming_point = models.ForeignKey(
-        "stream.StreamPoint",
-        related_name="graph_sessions",
-        on_delete=models.CASCADE,
-    )

@@ -1,10 +1,24 @@
 from django.contrib import admin
 
-from .models import AudioFile, Stream, StreamInstruction, StreamPoint, TextToSpeech
+from .models import (
+    AudioFile,
+    Stream,
+    StreamInstruction,
+    StreamPoint,
+    StreamVariable,
+    TextToSpeech,
+)
+
+
+class StreamVariableInline(admin.TabularInline):
+    model = StreamVariable
+    extra: int = 0
 
 
 @admin.register(Stream)
 class StreamAdmin(admin.ModelAdmin):
+    inlines = [StreamVariableInline]
+
     list_display = [
         "stream_point",
         "uuid",
@@ -98,4 +112,19 @@ class TextToSpeechAdmin(admin.ModelAdmin):
     list_filter = [
         "created_date",
         "voice_name",
+    ]
+
+
+@admin.register(StreamVariable)
+class StreamVariableAdmin(admin.ModelAdmin):
+    list_display = ("uuid", "stream", "key", "value", "stream_to_sc")
+
+    readonly_fields = ["uuid"]
+
+    list_filter = [
+        "key",
+        "stream_to_sc",
+        "stream__graph",
+        "stream",
+        "stream__stream_point",
     ]
