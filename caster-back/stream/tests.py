@@ -11,7 +11,7 @@ from mixer.backend.django import mixer
 from story_graph.models import Graph, GraphSession
 from story_graph.tests import GraphTestCase
 
-from .exceptions import NoStreamAvailable
+from .exceptions import NoStreamAvailableException
 from .models import AudioFile, Stream, StreamInstruction, StreamPoint, TextToSpeech
 
 logging.disable(logging.CRITICAL)
@@ -109,19 +109,19 @@ class StreamTestCase(TestCase):
         )
 
     def test_no_free_stream(self):
-        with self.assertRaises(NoStreamAvailable):
+        with self.assertRaises(NoStreamAvailableException):
             Stream.objects.get_free_stream(graph=GraphTestCase.get_graph())
 
     def test_stream_not_online(self):
         stream_point = StreamPointTestCase.get_stream_point(last_live_sec=5000)
-        with self.assertRaises(NoStreamAvailable):
+        with self.assertRaises(NoStreamAvailableException):
             Stream.objects.get_free_stream(graph=GraphTestCase.get_graph())
 
     def test_all_streampoints_taken(self):
         for _ in range(2):
             stream_point = StreamPointTestCase.get_stream_point()
             stream = self.get_stream(active=True, stream_point=stream_point)
-        with self.assertRaises(NoStreamAvailable):
+        with self.assertRaises(NoStreamAvailableException):
             Stream.objects.get_free_stream(graph=GraphTestCase.get_graph())
 
     def test_reuse_stream_policy(self):

@@ -16,7 +16,7 @@ from pythonosc.udp_client import SimpleUDPClient
 
 import story_graph
 
-from .exceptions import NoStreamAvailable
+from .exceptions import NoStreamAvailableException
 
 log = logging.getLogger(__name__)
 
@@ -203,7 +203,7 @@ class StreamManager(models.Manager):
 
         free_stream_points = await StreamPoint.objects.afree_stream_points()  # type: ignore
         if await free_stream_points.acount() == 0:
-            raise NoStreamAvailable()
+            raise NoStreamAvailableException()
         stream: Stream = await self.acreate(stream_point=await free_stream_points.afirst())  # type: ignore
 
         if graph:

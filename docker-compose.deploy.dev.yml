@@ -47,6 +47,7 @@ services:
     volumes:
       - ./nginx.deploy.conf:/etc/nginx/conf.d/default.conf
       - static:/static/:ro
+      - ./data:/home/gencaster/media
     ports:
       - 8081:80
     depends_on:

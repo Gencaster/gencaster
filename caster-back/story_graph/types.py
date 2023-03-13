@@ -13,7 +13,9 @@ from strawberry import auto
 
 from . import models
 
-CellType = strawberry.enum(models.ScriptCell.CellType)
+# @todo
+# error: Cannot assign multiple types to name "CellType" without an explicit "Type[...]" annotation  [misc]
+CellType = strawberry.enum(models.ScriptCell.CellType)  # type: ignore
 
 
 @strawberry.input

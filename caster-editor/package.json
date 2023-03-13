@@ -15,16 +15,16 @@
     "codegen": "graphql-codegen --config codegen.ts",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
-
   },
   "dependencies": {
     "@codemirror/lang-json": "^6.0.1",
     "@codemirror/lang-python": "^6.1.1",
     "@element-plus/icons-vue": "^2.0.10",
     "@toast-ui/editor": "^3.2.1",
+    "@urql/exchange-multipart-fetch": "^1.0.1",
     "@urql/vue": "^1.0.4",
     "codemirror": "^6.0.1",
-    "element-plus": "^2.2.29",
+    "element-plus": "^2.2.36",
     "graphql": "^16.6.0",
     "gsap": "^3.11.4",
     "pinia": "^2.0.28",

@@ -12,6 +12,7 @@ the running backend.
 
 import asyncio
 import logging
+import os
 import uuid
 from typing import AsyncGenerator, List
 
@@ -19,6 +20,7 @@ import strawberry
 import strawberry.django
 from asgiref.sync import sync_to_async
 from django.core.exceptions import PermissionDenied
+from django.core.files import File
 from django.db import transaction
 from django.http.request import HttpRequest
 from strawberry.types import Info
@@ -38,8 +40,17 @@ from story_graph.types import (
     ScriptCell,
     ScriptCellInput,
 )
-from stream.exceptions import NoStreamAvailable
-from stream.types import StreamInfo, StreamPoint
+from stream.exceptions import NoStreamAvailableException
+from stream.types import (
+    AddAudioFile,
+    AudioFile,
+    AudioFileUploadResponse,
+    InvalidAudioFile,
+    NoStreamAvailable,
+    StreamInfo,
+    StreamInfoResponse,
+    StreamPoint,
+)
 
 from .distributor import GenCasterChannel, GraphQLWSConsumerInjector
 
@@ -87,6 +98,8 @@ class Query:
     graph: Graph = AuthStrawberryDjangoField()
     nodes: List[Node] = AuthStrawberryDjangoField()
     node: Node = AuthStrawberryDjangoField()
+    audio_files: List[AudioFile] = AuthStrawberryDjangoField()
+    audio_file: AudioFile = AuthStrawberryDjangoField()
 
 
 @strawberry.type
@@ -307,15 +320,25 @@ class Mutation:
         # https://docs.djangoproject.com/en/4.2/ref/models/instances/#django.db.models.Model.arefresh_from_db
         return await story_graph_models.Graph.objects.aget(uuid=graph.uuid)  # type: ignore
 
-
-@strawberry.type
-class NoStreamAvailableError:
-    error: str = "No stream available"
-
-
-StreamInfoResponse = strawberry.union(
-    "StreamInfoResponse", [StreamInfo, NoStreamAvailableError]
-)
+    @strawberry.mutation
+    async def add_audio_file(self, info, new_audio_file: AddAudioFile) -> AudioFileUploadResponse:  # type: ignore
+        if new_audio_file.file is None or len(new_audio_file.file) == 0:
+            return InvalidAudioFile(error="Received empty audio file")
+        elif not os.path.splitext(new_audio_file.file_name)[-1].lower() in [
+            ".flac",
+            ".wav",
+        ]:
+            return InvalidAudioFile(error="Only support flac and wav files")
+        try:
+            audio_file = await stream_models.AudioFile.objects.acreate(
+                file=File(new_audio_file.file, name=new_audio_file.file_name),
+                description=new_audio_file.description,
+            )
+        except Exception as e:
+            return InvalidAudioFile(
+                error=f"Unexpected error, could not save audio file: {e}"
+            )
+        return audio_file
 
 
 @strawberry.type
@@ -369,8 +392,8 @@ class Subscription:
 
         try:
             stream = await stream_models.Stream.objects.aget_free_stream(graph)
-        except NoStreamAvailable:
-            yield NoStreamAvailableError()
+        except NoStreamAvailableException:
+            yield NoStreamAvailable()
             return
 
         engine = Engine(
