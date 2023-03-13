@@ -13,7 +13,7 @@ from django.utils.translation import gettext as _
 from google.cloud import texttospeech
 from pythonosc.udp_client import SimpleUDPClient
 
-from .exceptions import NoStreamAvailable
+from .exceptions import NoStreamAvailableException
 
 log = logging.getLogger(__name__)
 
@@ -181,7 +181,7 @@ class StreamManager(models.Manager):
         if await free_stream_points.acount() > 0:
             return await self.acreate(stream_point=await free_stream_points.afirst())  # type: ignore
         else:
-            raise NoStreamAvailable()
+            raise NoStreamAvailableException()
 
     def disconnect_all_streams(self):
         stream: Stream

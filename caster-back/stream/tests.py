@@ -8,7 +8,7 @@ from django.test import TestCase
 from django.utils import timezone
 from mixer.backend.django import mixer
 
-from .exceptions import NoStreamAvailable
+from .exceptions import NoStreamAvailableException
 from .models import AudioFile, Stream, StreamInstruction, StreamPoint, TextToSpeech
 
 logging.disable(logging.CRITICAL)
@@ -106,19 +106,19 @@ class StreamTestCase(TestCase):
         )
 
     def test_no_free_stream(self):
-        with self.assertRaises(NoStreamAvailable):
+        with self.assertRaises(NoStreamAvailableException):
             Stream.objects.get_free_stream()
 
     def test_stream_not_online(self):
         stream_point = StreamPointTestCase.get_stream_point(last_live_sec=5000)
-        with self.assertRaises(NoStreamAvailable):
+        with self.assertRaises(NoStreamAvailableException):
             Stream.objects.get_free_stream()
 
     def test_all_streampoints_taken(self):
         for _ in range(2):
             stream_point = StreamPointTestCase.get_stream_point()
             stream = self.get_stream(active=True, stream_point=stream_point)
-        with self.assertRaises(NoStreamAvailable):
+        with self.assertRaises(NoStreamAvailableException):
             Stream.objects.get_free_stream()
 
     def test_make_all_offline(self):
