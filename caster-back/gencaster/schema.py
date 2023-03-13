@@ -384,16 +384,16 @@ class Subscription:
         graph_uuid: uuid.UUID,
     ) -> AsyncGenerator[StreamInfoResponse, None]:  # type: ignore
         consumer: GraphQLWSConsumerInjector = info.context.ws
-        try:
-            stream = await stream_models.Stream.objects.aget_free_stream()
-        except NoStreamAvailableException:
-            yield NoStreamAvailable()
-            return
 
         graph = await story_graph_models.Graph.objects.filter(uuid=graph_uuid).afirst()
-
         if not graph:
             print("could not find graph!")
+            return
+
+        try:
+            stream = await stream_models.Stream.objects.aget_free_stream(graph)
+        except NoStreamAvailableException:
+            yield NoStreamAvailable()
             return
 
         engine = Engine(

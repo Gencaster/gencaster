@@ -50,9 +50,9 @@ class NodeTestCase(TransactionTestCase):
 
 class EdgeTestCase(TransactionTestCase):
     def setUp(self) -> None:
-        self.graph: Graph = mixer.blend(Graph)
-        self.in_node: Node = mixer.blend(Node, graph=self.graph)
-        self.out_node: Node = mixer.blend(Node, graph=self.graph)
+        self.graph: Graph = mixer.blend(Graph)  # type: ignore
+        self.in_node: Node = mixer.blend(Node, graph=self.graph)  # type: ignore
+        self.out_node: Node = mixer.blend(Node, graph=self.graph)  # type: ignore
 
     @staticmethod
     def get_edge(**kwargs) -> Edge:

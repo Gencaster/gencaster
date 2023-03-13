@@ -8,6 +8,9 @@ from django.test import TestCase
 from django.utils import timezone
 from mixer.backend.django import mixer
 
+from story_graph.models import Graph, GraphSession
+from story_graph.tests import GraphTestCase
+
 from .exceptions import NoStreamAvailableException
 from .models import AudioFile, Stream, StreamInstruction, StreamPoint, TextToSpeech
 
@@ -99,7 +102,7 @@ class StreamTestCase(TestCase):
 
     def test_get_free_stream(self):
         stream_point = StreamPointTestCase.get_stream_point()
-        stream = Stream.objects.get_free_stream()
+        stream = Stream.objects.get_free_stream(graph=GraphTestCase.get_graph())
         self.assertEqual(
             stream.stream_point,
             stream_point,
@@ -107,19 +110,34 @@ class StreamTestCase(TestCase):
 
     def test_no_free_stream(self):
         with self.assertRaises(NoStreamAvailableException):
-            Stream.objects.get_free_stream()
+            Stream.objects.get_free_stream(graph=GraphTestCase.get_graph())
 
     def test_stream_not_online(self):
         stream_point = StreamPointTestCase.get_stream_point(last_live_sec=5000)
         with self.assertRaises(NoStreamAvailableException):
-            Stream.objects.get_free_stream()
+            Stream.objects.get_free_stream(graph=GraphTestCase.get_graph())
 
     def test_all_streampoints_taken(self):
         for _ in range(2):
             stream_point = StreamPointTestCase.get_stream_point()
             stream = self.get_stream(active=True, stream_point=stream_point)
         with self.assertRaises(NoStreamAvailableException):
-            Stream.objects.get_free_stream()
+            Stream.objects.get_free_stream(graph=GraphTestCase.get_graph())
+
+    def test_reuse_stream_policy(self):
+        graph = GraphTestCase.get_graph(
+            stream_assignment_policy=Graph.StreamAssignmentPolicy.ONE_GRAPH_ONE_STREAM
+        )
+        for _ in range(2):
+            StreamPointTestCase.get_stream_point()
+        first_stream = Stream.objects.get_free_stream(graph=graph)
+        # do the same thing twice, should not change
+        for _ in range(2):
+            self.assertEqual(GraphSession.objects.count(), 1)
+            self.assertEqual(
+                Stream.objects.get_free_stream(graph=graph),
+                first_stream,
+            )
 
     def test_make_all_offline(self):
         for _ in range(2):
