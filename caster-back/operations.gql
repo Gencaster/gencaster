@@ -180,3 +180,10 @@ mutation UploadAudioFile($addAudioFile: AddAudioFile!) {
     }
   }
 }
+
+mutation SendStreamVariable($streamVariables: [StreamVariableInput!]!) {
+  createUpdateStreamVariable(streamVariables: $streamVariables) {
+    uuid
+    value
+  }
+}
