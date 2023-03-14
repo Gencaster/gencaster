@@ -185,19 +185,53 @@ class Edge(models.Model):
         return f"{self.in_node} -> {self.out_node}"
 
 
+class AudioCell(models.Model):
+    class PlaybackChoices(models.TextChoices):
+        SYNC_PLAYBACK = ["sync_playback", _("Sync playback")]
+        ASYNC_PLAYBACK = ["async_playback", _("Async playback")]
+
+    uuid = models.UUIDField(
+        primary_key=True,
+        editable=False,
+        default=uuid.uuid4,
+        unique=True,
+    )
+
+    playback = models.CharField(
+        max_length=512,
+        choices=PlaybackChoices.choices,
+        default=PlaybackChoices.SYNC_PLAYBACK,
+        null=False,
+        blank=False,
+    )
+
+    audio_file = models.ForeignKey(
+        "stream.AudioFile",
+        on_delete=models.CASCADE,
+        related_name="audio_cells",
+        null=False,
+        blank=False,
+    )
+
+    def __str__(self) -> str:
+        return f"{self.audio_file} ({self.playback})"
+
+
+class CellType(models.TextChoices):
+    """Choice of foobar"""
+
+    MARKDOWN = ["markdown", _("Markdown")]
+    PYTHON = ["python", _("Python")]
+    SUPERCOLLIDER = ["supercollider", _("SuperCollider")]
+    COMMENT = ["comment", _("Comment")]
+    AUDIO = ["audio", _("Audio")]
+
+
 class ScriptCell(models.Model):
     """Stores a script which can be executed
     with our :class:`~story_graph.engine.Engine` on a
     :class:`~stream.models.Stream`.
     """
-
-    class CellType(models.TextChoices):
-        """Choice of foobar"""
-
-        MARKDOWN = ["markdown", _("Markdown")]
-        PYTHON = ["python", _("Python")]
-        SUPERCOLLIDER = ["supercollider", _("SuperCollider")]
-        COMMENT = ["comment", _("Comment")]
 
     uuid = models.UUIDField(
         primary_key=True,
@@ -229,10 +263,25 @@ class ScriptCell(models.Model):
         default=0,
     )
 
+    audio_cell = models.OneToOneField(
+        AudioCell,
+        on_delete=models.CASCADE,
+        related_name="script_cell",
+        null=True,
+        blank=True,
+    )
+
     class Meta:
         # ordering by uuid provides a deterministic order
         # in case cell_order is not unique
         ordering = ["node", "cell_order", "uuid"]
+        constraints = [
+            models.CheckConstraint(
+                check=Q(cell_type=CellType.AUDIO, audio_cell__isnull=False)
+                | ~Q(cell_type=CellType.AUDIO),
+                name="audio_type_needs_audio_cell_information",
+            )
+        ]
 
     def __str__(self) -> str:
         return f"{self.node}-{self.cell_order} ({self.cell_type})"
