@@ -74,12 +74,6 @@ class Edge:
     out_node: Node
 
 
-@strawberry.django.type(models.GraphSession)
-class GraphSession:
-    uuid: auto
-    graph: Graph
-
-
 @strawberry.django.type(models.ScriptCell)
 class ScriptCell:
     uuid: auto

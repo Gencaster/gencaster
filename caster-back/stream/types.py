@@ -1,3 +1,4 @@
+import uuid
 from datetime import timedelta
 from typing import Optional
 
@@ -106,3 +107,20 @@ StreamInfoResponse = strawberry.union(
 AudioFileUploadResponse = strawberry.union(
     "AudioFileUploadResponse", [AudioFile, InvalidAudioFile]
 )
+
+
+@strawberry.django.type(models.StreamVariable)
+class StreamVariable:
+    uuid: auto
+    key: auto
+    value: auto
+    stream: Stream
+    stream_to_sc: auto
+
+
+@strawberry.input
+class StreamVariableInput:
+    stream_uuid: uuid.UUID
+    key: str
+    value: str
+    stream_to_sc: bool = False

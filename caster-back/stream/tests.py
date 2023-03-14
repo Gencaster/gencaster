@@ -8,7 +8,7 @@ from django.test import TestCase
 from django.utils import timezone
 from mixer.backend.django import mixer
 
-from story_graph.models import Graph, GraphSession
+from story_graph.models import Graph
 from story_graph.tests import GraphTestCase
 
 from .exceptions import NoStreamAvailableException
@@ -133,9 +133,13 @@ class StreamTestCase(TestCase):
         first_stream = Stream.objects.get_free_stream(graph=graph)
         # do the same thing twice, should not change
         for _ in range(2):
-            self.assertEqual(GraphSession.objects.count(), 1)
+            stream = Stream.objects.get_free_stream(graph=graph)
             self.assertEqual(
-                Stream.objects.get_free_stream(graph=graph),
+                stream.graph,
+                graph,
+            )
+            self.assertEqual(
+                stream,
                 first_stream,
             )
 

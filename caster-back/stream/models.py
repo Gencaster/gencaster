@@ -184,7 +184,7 @@ class StreamManager(models.Manager):
         Tries to obtain a stream by obey the stream assignment policy of the Graph.
         """
         # avoid circular dependency
-        from story_graph.models import Graph, GraphSession
+        from story_graph.models import Graph
 
         if (
             graph is not None
@@ -192,9 +192,7 @@ class StreamManager(models.Manager):
             == Graph.StreamAssignmentPolicy.ONE_GRAPH_ONE_STREAM
         ):
             existing_stream: Optional[Stream] = (
-                await Stream.objects.filter(
-                    active=True, stream_point__graph_sessions__graph=graph
-                )
+                await Stream.objects.filter(active=True, graph=graph)
                 .prefetch_related("stream_point")
                 .afirst()
             )
@@ -204,12 +202,11 @@ class StreamManager(models.Manager):
         free_stream_points = await StreamPoint.objects.afree_stream_points()  # type: ignore
         if await free_stream_points.acount() == 0:
             raise NoStreamAvailableException()
-        stream: Stream = await self.acreate(stream_point=await free_stream_points.afirst())  # type: ignore
+        stream: Stream = await self.acreate(
+            stream_point=await free_stream_points.afirst(),
+            graph=graph,
+        )  # type: ignore
 
-        if graph:
-            await GraphSession.objects.acreate(
-                graph=graph, streaming_point=stream.stream_point
-            )
         return stream
 
     def disconnect_all_streams(self):
@@ -249,6 +246,13 @@ class Stream(models.Model):
         default=True,
     )
 
+    graph = models.ForeignKey(
+        "story_graph.Graph",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+
     def disconnect(self):
         log.info(f"Disconnect stream {self.uuid}")
         self.active = False
@@ -261,6 +265,53 @@ class Stream(models.Model):
 
     def __str__(self) -> str:
         return f"Stream on {self.stream_point}"
+
+
+class StreamVariable(models.Model):
+    uuid = models.UUIDField(
+        primary_key=True,
+        editable=False,
+        default=uuid.uuid4,
+        unique=True,
+    )
+
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+    stream = models.ForeignKey(
+        Stream, on_delete=models.CASCADE, related_name="variables"
+    )
+
+    key = models.CharField(
+        max_length=512,
+        null=False,
+        blank=False,
+    )
+
+    value = models.TextField(
+        default="",
+    )
+
+    stream_to_sc = models.BooleanField(
+        default=False,
+        verbose_name=_("Stream to SuperCollider"),
+        help_text=_("Stream values to SC as control rate Ndef"),
+    )
+
+    def send_to_sc(self) -> "StreamInstruction":
+        return self.stream.stream_point.send_raw_instruction(
+            instruction_text=f"Ndef(\\{self.key}, {{{self.value}}});"
+        )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["stream", "key"], name="unique key within graph session"
+            )
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.stream}: {self.key} -> {self.value}"
 
 
 class StreamInstruction(models.Model):

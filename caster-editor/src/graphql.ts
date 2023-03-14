@@ -33,7 +33,7 @@ export type AddGraphInput = {
 
 export type AudioFile = {
   description: Scalars['String'];
-  file: DjangoFileType;
+  file?: Maybe<DjangoFileType>;
   uuid: Scalars['UUID'];
 };
 
@@ -118,6 +118,7 @@ export type Mutation = {
    * :class:`~story_graph.models.Edge` and returns this cell.
    */
   addScriptCell: ScriptCell;
+  createUpdateStreamVariable: Array<StreamVariable>;
   /** Deletes a given :class:`~story_graph.models.Edge`. */
   deleteEdge?: Maybe<Scalars['Void']>;
   /** Deletes a given :class:`~story_graph.models.Node`. */
@@ -162,6 +163,12 @@ export type MutationAddNodeArgs = {
 export type MutationAddScriptCellArgs = {
   newScriptCell: NewScriptCellInput;
   nodeUuid: Scalars['UUID'];
+};
+
+
+/** Mutations for GenCaster via GraphQL. */
+export type MutationCreateUpdateStreamVariableArgs = {
+  streamVariables: Array<StreamVariableInput>;
 };
 
 
@@ -243,6 +250,7 @@ export type Query = {
   nodes: Array<Node>;
   streamPoint: StreamPoint;
   streamPoints: Array<StreamPoint>;
+  streamVariable: StreamVariable;
 };
 
 
@@ -273,6 +281,12 @@ export type QueryStreamPointArgs = {
 /** Queries for GenCaster. */
 export type QueryStreamPointsArgs = {
   filters?: InputMaybe<StreamPointFilter>;
+};
+
+
+/** Queries for GenCaster. */
+export type QueryStreamVariableArgs = {
+  pk: Scalars['ID'];
 };
 
 export type ScriptCell = {
@@ -331,6 +345,21 @@ export type StreamPoint = {
 export type StreamPointFilter = {
   janusInPort?: InputMaybe<IntFilterLookup>;
   uuid?: InputMaybe<UuidFilterLookup>;
+};
+
+export type StreamVariable = {
+  key: Scalars['String'];
+  stream: Stream;
+  streamToSc: Scalars['Boolean'];
+  uuid: Scalars['UUID'];
+  value: Scalars['String'];
+};
+
+export type StreamVariableInput = {
+  key: Scalars['String'];
+  streamToSc?: Scalars['Boolean'];
+  streamUuid: Scalars['UUID'];
+  value: Scalars['String'];
 };
 
 export type Subscription = {
@@ -494,7 +523,14 @@ export type UploadAudioFileMutationVariables = Exact<{
 }>;
 
 
-export type UploadAudioFileMutation = { addAudioFile: { __typename: 'AudioFile', uuid: any, description: string, file: { url: string, name: string } } | { __typename: 'InvalidAudioFile', error: string } };
+export type UploadAudioFileMutation = { addAudioFile: { __typename: 'AudioFile', uuid: any, description: string, file?: { url: string, name: string } | null } | { __typename: 'InvalidAudioFile', error: string } };
+
+export type SendStreamVariableMutationVariables = Exact<{
+  streamVariables: Array<StreamVariableInput> | StreamVariableInput;
+}>;
+
+
+export type SendStreamVariableMutation = { createUpdateStreamVariable: Array<{ uuid: any, value: string }> };
 
 
 export const GetGraphsDocument = gql`
@@ -758,4 +794,16 @@ export const UploadAudioFileDocument = gql`
 
 export function useUploadAudioFileMutation() {
   return Urql.useMutation<UploadAudioFileMutation, UploadAudioFileMutationVariables>(UploadAudioFileDocument);
+}
+export const SendStreamVariableDocument = gql`
+    mutation SendStreamVariable($streamVariables: [StreamVariableInput!]!) {
+  createUpdateStreamVariable(streamVariables: $streamVariables) {
+    uuid
+    value
+  }
+}
+    `;
+
+export function useSendStreamVariableMutation() {
+  return Urql.useMutation<SendStreamVariableMutation, SendStreamVariableMutationVariables>(SendStreamVariableDocument);
 }
