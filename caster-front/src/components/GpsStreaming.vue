@@ -45,6 +45,11 @@ const startStreaming = () => {
 
     if (streamVariables.length > 0)
       sendStreamVariableMutation.executeMutation({ streamVariables });
+  }, () => {
+    console.log("Could not successfully obtain GPS data");
+  }, {
+    enableHighAccuracy: true,
+    maximumAge: Infinity
   });
 };
 
