@@ -13,7 +13,7 @@ from asgiref.sync import sync_to_async
 from stream.models import StreamInstruction, StreamPoint
 
 from .markdown_parser import md_to_ssml
-from .models import Graph, Node, ScriptCell
+from .models import CellType, Graph, Node, ScriptCell
 
 log = logging.getLogger(__name__)
 
@@ -56,16 +56,16 @@ class Engine:
         script_cell: ScriptCell
         async for script_cell in node.script_cells.all():  # type: ignore
             cell_type = script_cell.cell_type
-            if cell_type == ScriptCell.CellType.COMMENT:
+            if cell_type == CellType.COMMENT:
                 continue
-            elif cell_type == ScriptCell.CellType.PYTHON:
+            elif cell_type == CellType.PYTHON:
                 print("Python should now execute: ", script_cell.cell_code)
                 if script_cell.cell_code:
                     exec(script_cell.cell_code)
-            elif cell_type == ScriptCell.CellType.SUPERCOLLIDER:
+            elif cell_type == CellType.SUPERCOLLIDER:
                 async for instruction in self.execute_sc_code(script_cell.cell_code):
                     yield instruction
-            elif cell_type == ScriptCell.CellType.MARKDOWN:
+            elif cell_type == CellType.MARKDOWN:
                 await sync_to_async(self.execute_markdown_code)(script_cell.cell_code)
             else:
                 log.error(f"Occured invalid/unknown CellType {cell_type}")
