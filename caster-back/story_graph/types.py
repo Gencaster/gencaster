@@ -19,7 +19,7 @@ from . import models
 # @todo
 # error: Cannot assign multiple types to name "CellType" without an explicit "Type[...]" annotation  [misc]
 CellType = strawberry.enum(models.CellType)  # type: ignore
-PlaybackType = strawberry.enum(models.AudioCell.PlaybackChoices)
+PlaybackType = strawberry.enum(models.AudioCell.PlaybackChoices)  # type: ignore
 
 
 @strawberry.input
