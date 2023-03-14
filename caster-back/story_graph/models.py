@@ -213,6 +213,10 @@ class AudioCell(models.Model):
         blank=False,
     )
 
+    volume = models.FloatField(
+        default=0.2,
+    )
+
     def __str__(self) -> str:
         return f"{self.audio_file} ({self.playback})"
 
