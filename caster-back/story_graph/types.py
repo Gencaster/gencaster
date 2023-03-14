@@ -11,11 +11,15 @@ import strawberry
 import strawberry.django
 from strawberry import auto
 
+import stream.models as stream_models
+from stream.types import AudioFile
+
 from . import models
 
 # @todo
 # error: Cannot assign multiple types to name "CellType" without an explicit "Type[...]" annotation  [misc]
-CellType = strawberry.enum(models.ScriptCell.CellType)  # type: ignore
+CellType = strawberry.enum(models.CellType)  # type: ignore
+PlaybackType = strawberry.enum(models.AudioCell.PlaybackChoices)
 
 
 @strawberry.input
@@ -74,6 +78,13 @@ class Edge:
     out_node: Node
 
 
+@strawberry.django.type(models.AudioCell)
+class AudioCell:
+    uuid: auto
+    playback: PlaybackType  # type: ignore
+    audio_file: AudioFile
+
+
 @strawberry.django.type(models.ScriptCell)
 class ScriptCell:
     uuid: auto
@@ -81,6 +92,18 @@ class ScriptCell:
     cell_type: CellType  # type: ignore
     cell_code: auto
     cell_order: auto
+    audio_cell: Optional[AudioCell]
+
+
+@strawberry.django.input(stream_models.AudioFile, partial=True)
+class AudioFileFoo:
+    uuid: auto
+
+
+@strawberry.django.input(models.AudioCell)
+class AudioCellInput:
+    playback_type: PlaybackType
+    audio_file: AudioFileFoo
 
 
 @strawberry.django.input(models.ScriptCell)
@@ -97,6 +120,7 @@ class NewScriptCellInput:
     cell_type: CellType  # type: ignore
     cell_code: auto
     cell_order: auto
+    audio_cell: Optional[AudioCellInput]
 
 
 @strawberry.django.input(models.Graph)

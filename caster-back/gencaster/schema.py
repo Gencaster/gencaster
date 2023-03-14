@@ -252,12 +252,23 @@ class Mutation:
             node: story_graph_models.Node = await story_graph_models.Node.objects.aget(
                 uuid=node_uuid
             )
+
+            # create audio cell - which has a fk to the associated audio_file uuid
+            if new_script_cell.audio_cell:
+                audio_cell = await story_graph_models.AudioCell.objects.acreate(
+                    playback=new_script_cell.audio_cell.playback_type,
+                    audio_file_id=new_script_cell.audio_cell.audio_file.uuid,
+                )
+            else:
+                audio_cell = None
+
             script_cell: story_graph_models.ScriptCell = (
                 await story_graph_models.ScriptCell.objects.acreate(
                     cell_order=new_script_cell.cell_order,
                     cell_type=new_script_cell.cell_type,
                     cell_code=new_script_cell.cell_code,
                     node=node,
+                    audio_cell=audio_cell,
                 )
             )
         except Exception as e:
@@ -267,6 +278,8 @@ class Mutation:
             layer=info.context.channel_layer,
             node_uuid=node_uuid,
         )
+
+        return script_cell  # type: ignore
 
         return ScriptCell(
             uuid=script_cell.uuid,
