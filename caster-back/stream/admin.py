@@ -79,6 +79,7 @@ class AudioFileAdmin(admin.ModelAdmin):
         "uuid",
         "created_date",
         "file",
+        "auto_generated",
     ]
 
     readonly_fields = [
@@ -87,9 +88,7 @@ class AudioFileAdmin(admin.ModelAdmin):
         "modified_date",
     ]
 
-    list_filter = [
-        "created_date",
-    ]
+    list_filter = ["created_date", "auto_generated"]
 
 
 @admin.register(TextToSpeech)
