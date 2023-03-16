@@ -14,7 +14,7 @@ from django.utils.translation import gettext as _
 from google.cloud import texttospeech
 from pythonosc.udp_client import SimpleUDPClient
 
-import story_graph
+import story_graph.models
 
 from .exceptions import NoStreamAvailableException
 
