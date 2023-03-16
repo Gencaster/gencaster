@@ -80,11 +80,9 @@ button {
   height: 26px;
   background: $grey-medium;
   border-radius: 4px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   margin-right: 16px;
 
   img {
@@ -94,7 +92,7 @@ button {
   }
 
   .fixArrow {
-    transform: translateX(-1px);
+    transform: translateX(0px);
   }
 }
 </style>

@@ -9,8 +9,6 @@
       :selected-edges="selectedEdges"
     />
 
-    <AudioSelector />
-
     <!-- Graph -->
     <v-network-graph
       v-if="graphDataReady"
@@ -33,6 +31,9 @@
     >
       <NodeEditor class="node-editor-outer" />
     </div>
+
+    <!-- Audio Selector -->
+    <AudioSelector v-if="showAudioSelector" />
 
     <!-- Other Interface -->
     <div
@@ -116,7 +117,7 @@ const nodeStore = useNodeStore();
 const { uuid: nodeUuid, scriptCellsModified } = storeToRefs(nodeStore);
 
 const interfaceStore = useInterfaceStore();
-const { showEditor } = storeToRefs(interfaceStore);
+const { showEditor, showAudioSelector } = storeToRefs(interfaceStore);
 
 // Data
 const graph: Ref<GraphInstance | undefined> = ref();

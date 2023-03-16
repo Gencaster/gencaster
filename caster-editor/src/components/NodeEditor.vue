@@ -33,6 +33,9 @@
           <button @click="addScriptCell(CellType.Markdown)">
             + Markdown
           </button>
+          <button @click="addAudioScriptCell()">
+            + Audio
+          </button>
           <button @click="addScriptCell(CellType.Python)">
             + Python
           </button>
@@ -230,11 +233,16 @@ const { node, scriptCellsModified, stale, nodeDataReady, uuid: nodeUuid } = stor
 const { showEditor } = storeToRefs(useInterfaceStore());
 const {selectedEdges, selectedNodes} = storeToRefs(useGraphStore());
 
+const interfaceStore = useInterfaceStore();
+const { showAudioSelector } = storeToRefs(interfaceStore);
+
 
 // Variables
 const renameNodeDialogVisible: Ref<boolean> = ref(false);
 const renameNodeDialogName: Ref<string> = ref("");
 const closeNodeDialogVisible: Ref<boolean> = ref(false);
+
+
 
 // Drag
 const dragging: Ref<boolean> = ref(false);
@@ -329,6 +337,10 @@ const addScriptCell = (type: CellType) => {
 
 const deleteScriptCell = async (scriptCellUuid: string) => {
   await nodeStore.deleteScriptCell(scriptCellUuid);
+};
+
+const addAudioScriptCell = () => {
+  showAudioSelector.value = true
 };
 
 const playScriptCell = () => {

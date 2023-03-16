@@ -1,9 +1,18 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 import FileUpload from "./FileUpload.vue";
-import MediaPlayer from "./MediaPlayer.vue";
+import MediaPlayer from "./MediaPlayer.vue"
+import type { AudioCell } from "@/graphql";
+import { CellType, useAudioFilesQuery, PlaybackChoices  } from "@/graphql";
+import { storeToRefs } from "pinia";
+import { useNodeStore } from "@/stores/NodeStore";
+import { useInterfaceStore } from "@/stores/InterfaceStore";
 
-import { useAudioFilesQuery } from "@/graphql";
+const nodeStore = useNodeStore();
+const { node, } = storeToRefs(nodeStore);
+const interfaceStore = useInterfaceStore();
+const { showAudioSelector } = storeToRefs(interfaceStore);
+
 // import { storeToRefs } from "pinia";
 
 // Store
@@ -18,6 +27,40 @@ const { data: audioFiles, executeQuery: refreshData } = audioFilesQuery.executeQ
 const filteredAudio = computed(() => {
   return audioFiles.value?.audioFiles
 })
+
+const selectAudio = (uuid: string) => {
+  if (node.value === undefined) {
+    console.log("You can not add a script cell if not selected properly");
+    return;
+  }
+
+  nodeStore.createScriptCell({
+    nodeUuid: node.value.node.uuid,
+    newScriptCell: {
+      // add cell as last cell by searching for highest current cell order
+      cellOrder:
+        node.value.node.scriptCells.length > 0
+          ? Math.max(
+            ...node.value.node.scriptCells.map((x) => {
+              return x.cellOrder;
+            })
+          ) + 1
+          : 0,
+      cellCode: "",
+      cellType: CellType.Audio,
+      audioCell: {
+        audioFile: {
+          uuid: uuid,
+        },
+        playbackType: PlaybackChoices.AsyncPlayback,
+      },
+    },
+  });
+
+  showAudioSelector.value = false
+  console.log("Added Audio");
+  console.log(uuid)
+}
 
 const doRefresh = () => {
   refreshData();
@@ -34,12 +77,11 @@ const doRefresh = () => {
         </div>
         <div class="right">
           <p>Files</p>
-          <!-- <p>{{ graphInStore }}</p> -->
         </div>
       </div>
       <div class="content">
         <div class="left">
-          <FileUpload />
+          <FileUpload class="upload" />
         </div>
         <div class="right">
           <div class="list-wrapper">
@@ -49,8 +91,7 @@ const doRefresh = () => {
               class="row"
             >
               <MediaPlayer :audio="audio" />
-              <!-- <p>{{ audio.uuid }}</p> -->
-              <button>
+              <button @click="selectAudio(audio.uuid)">
                 <p>Select</p>
               </button>
             </div>
@@ -124,15 +165,22 @@ const doRefresh = () => {
     .left,
     .right {
       padding-top: $spacingM;
+      padding-bottom: $spacingM;
+      height: 100%;
     }
-
     .list-wrapper {
-      background-color: yellow;
       width: 100%;
 
       .row {
         width: 100%;
         display: flex;
+        padding-top: 4px;
+        padding-bottom: 4px;
+
+
+        &:hover {
+          background-color: $grey-light;
+        }
 
 
         button {
@@ -150,6 +198,11 @@ const doRefresh = () => {
           padding-right: 8px;
         }
       }
+    }
+
+    .upload {
+      width: 100%;
+      height: 100%;
     }
   }
 }

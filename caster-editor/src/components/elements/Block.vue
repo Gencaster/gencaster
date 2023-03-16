@@ -24,6 +24,17 @@
         :dragging="dragging"
       />
     </div>
+    <div
+      v-if="
+        props.cellType === CellType.Audio
+      "
+    >
+      <BlockAudio
+        :script-cell-uuid="props.scriptCellUuid"
+        :index="index"
+        :dragging="dragging"
+      />
+    </div>
   </div>
 </template>
 
@@ -38,6 +49,8 @@ export interface BlockProps {
 import { CellType } from "@/graphql";
 import BlockMarkdown from "./BlockMarkdown.vue";
 import BlockCodemirror from "./BlockCodemirror.vue";
+import BlockAudio from "./BlockAudio.vue";
+
 
 const props = defineProps<BlockProps>();
 </script>
