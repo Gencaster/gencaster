@@ -8,6 +8,7 @@ from django.conf import settings
 from django.utils import timezone
 from strawberry import auto
 from strawberry.file_uploads import Upload
+from strawberry_django.filters import FilterLookup
 
 from . import models
 
@@ -50,7 +51,14 @@ class Stream:
     stream_point: "StreamPoint"
 
 
-@strawberry.django.type(models.AudioFile)
+@strawberry.django.filters.filter(models.AudioFile)
+class AudioFileFilter:
+    name: FilterLookup[str]
+    auto_generated: bool
+    description: FilterLookup[str]
+
+
+@strawberry.django.type(models.AudioFile, filters=AudioFileFilter)
 class AudioFile:
     uuid: auto
     file: auto
