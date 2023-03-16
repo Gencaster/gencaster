@@ -54,7 +54,9 @@ class Stream:
 class AudioFile:
     uuid: auto
     file: auto
+    name: auto
     description: auto
+    auto_generated: auto
 
 
 @strawberry.input
@@ -62,6 +64,7 @@ class AddAudioFile:
     file: Upload
     description: str
     file_name: str
+    name: str
 
 
 @strawberry.django.type(models.StreamInstruction)

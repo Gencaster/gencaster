@@ -258,6 +258,7 @@ class Mutation:
                 audio_cell = await story_graph_models.AudioCell.objects.acreate(
                     playback=new_script_cell.audio_cell.playback_type,
                     audio_file_id=new_script_cell.audio_cell.audio_file.uuid,
+                    volume=new_script_cell.audio_cell.volume,
                 )
             else:
                 audio_cell = None
@@ -349,6 +350,7 @@ class Mutation:
             audio_file = await stream_models.AudioFile.objects.acreate(
                 file=File(new_audio_file.file, name=new_audio_file.file_name),
                 description=new_audio_file.description,
+                auto_generated=False,
             )
         except Exception as e:
             return InvalidAudioFile(

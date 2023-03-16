@@ -96,14 +96,15 @@ class ScriptCell:
 
 
 @strawberry.django.input(stream_models.AudioFile, partial=True)
-class AudioFileFoo:
+class AudioFileReference:
     uuid: auto
 
 
 @strawberry.django.input(models.AudioCell)
 class AudioCellInput:
     playback_type: PlaybackType
-    audio_file: AudioFileFoo
+    audio_file: AudioFileReference
+    volume: float = 0.2
 
 
 @strawberry.django.input(models.ScriptCell)
