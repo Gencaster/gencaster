@@ -13,7 +13,7 @@ from asgiref.sync import sync_to_async
 from stream.models import StreamInstruction, StreamPoint
 
 from .markdown_parser import md_to_ssml
-from .models import CellType, Graph, Node, ScriptCell
+from .models import AudioCell, CellType, Graph, Node, ScriptCell
 
 log = logging.getLogger(__name__)
 
@@ -45,16 +45,38 @@ class Engine:
             cell_code
         )
         yield instruction
-        for _ in range(10):
+        await self.wait_for_finished_instruction(instruction)
+
+    async def execute_audio_cell(
+        self, audio_cell: AudioCell
+    ) -> AsyncGenerator[StreamInstruction, None]:
+        """
+        Plays the associated :class:`AudioFile` of an :class:`AudioCell`.
+
+        .. todo::
+
+            This does not respect the different Playback formats
+
+        """
+        instruction = await sync_to_async(self.streaming_point.play_audio_file)(
+            audio_cell.audio_file,
+        )
+        yield instruction
+        await self.wait_for_finished_instruction(instruction)
+
+    async def wait_for_finished_instruction(
+        self, instruction: StreamInstruction, timeout: int = 30, interval: float = 0.2
+    ) -> None:
+        for _ in range(int(timeout / interval)):
             await sync_to_async(instruction.refresh_from_db)()
             if instruction.state == StreamInstruction.InstructionState.FINISHED:
                 return
-            await asyncio.sleep(0.2)
+            await asyncio.sleep(interval)
 
     async def execute_node(self, node: Node) -> AsyncGenerator[StreamInstruction, None]:
         """Executes a node."""
         script_cell: ScriptCell
-        async for script_cell in node.script_cells.all():  # type: ignore
+        async for script_cell in node.script_cells.select_related("audio_cell", "audio_cell__audio_file").all():  # type: ignore
             cell_type = script_cell.cell_type
             if cell_type == CellType.COMMENT:
                 continue
@@ -67,6 +89,12 @@ class Engine:
                     yield instruction
             elif cell_type == CellType.MARKDOWN:
                 await sync_to_async(self.execute_markdown_code)(script_cell.cell_code)
+            elif cell_type == CellType.AUDIO:
+                if script_cell.audio_cell:
+                    async for instruction in self.execute_audio_cell(
+                        script_cell.audio_cell
+                    ):
+                        yield instruction
             else:
                 log.error(f"Occured invalid/unknown CellType {cell_type}")
 
