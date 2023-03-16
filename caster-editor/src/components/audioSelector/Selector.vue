@@ -1,16 +1,23 @@
 <script lang="ts" setup>
-import AudioFileUpload from "./AudioFileUpload.vue";
+import { computed } from "vue";
+import FileUpload from "./FileUpload.vue";
+import MediaPlayer from "./MediaPlayer.vue";
+
+import { useAudioFilesQuery } from "@/graphql";
 // import { storeToRefs } from "pinia";
 
 // Store
 // import { useGraphStore } from "@/stores/GraphStore";
 
-import { useAudioFilesQuery } from "@/graphql";
 // import { useQuery } from '@urql/vue';
 
 const audioFilesQuery = useAudioFilesQuery();
 
 const { data: audioFiles, executeQuery: refreshData } = audioFilesQuery.executeQuery();
+
+const filteredAudio = computed(() => {
+  return audioFiles.value?.audioFiles
+})
 
 const doRefresh = () => {
   refreshData();
@@ -32,20 +39,21 @@ const doRefresh = () => {
       </div>
       <div class="content">
         <div class="left">
-          <AudioFileUpload />
+          <FileUpload />
         </div>
         <div class="right">
           <div class="list-wrapper">
-            <button @click="doRefresh()">
-              refresh
-            </button>
-            {{ audioFiles }}
-            <!-- <div
-              v-for="(audio, index) in placeholderAudioList"
+            <div
+              v-for="(audio, index) in filteredAudio"
               :key="index"
+              class="row"
             >
-              <p>{{ audio.name }}</p>
-            </div> -->
+              <MediaPlayer :audio="audio" />
+              <!-- <p>{{ audio.uuid }}</p> -->
+              <button>
+                <p>Select</p>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -116,6 +124,32 @@ const doRefresh = () => {
     .left,
     .right {
       padding-top: $spacingM;
+    }
+
+    .list-wrapper {
+      background-color: yellow;
+      width: 100%;
+
+      .row {
+        width: 100%;
+        display: flex;
+
+
+        button {
+          all: unset;
+          cursor: pointer;
+          width: auto;
+          height: 26px;
+          background: $green-light;
+          border-radius: 4px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding-left: 8px;
+          padding-right: 8px;
+        }
+      }
     }
   }
 }
