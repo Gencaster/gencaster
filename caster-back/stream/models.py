@@ -413,6 +413,21 @@ class AudioFile(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
 
+    name = models.CharField(
+        max_length=1024,
+        default="untitled",
+        null=False,
+        blank=False,
+        help_text=_("Acts as an identifier for humans"),
+    )
+
+    auto_generated = models.BooleanField(
+        default=True,
+        help_text=_(
+            "Allows to separate automatic generated audio files speech to text and user uploads"
+        ),
+    )
+
     file = models.FileField(
         editable=True,
         blank=True,
