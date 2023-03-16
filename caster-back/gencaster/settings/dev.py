@@ -21,7 +21,6 @@ CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
 CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SECURE = False
-SESSION_COOKIE_DOMAIN = None
 
 # forces us to use 127.0.0.1 instead of localhost
 # b/c otherwise the browser
