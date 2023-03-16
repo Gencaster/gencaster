@@ -9,6 +9,8 @@
       :selected-edges="selectedEdges"
     />
 
+    <AudioSelector />
+
     <!-- Graph -->
     <v-network-graph
       v-if="graphDataReady"
@@ -99,6 +101,7 @@ import { useInterfaceStore } from "@/stores/InterfaceStore";
 import { useNodeStore } from "@/stores/NodeStore";
 import Menu from "./Menu.vue";
 import NodeEditor from "./NodeEditor.vue";
+import AudioSelector from  "./AudioSelector.vue";
 
 defineProps<GraphProps>();
 

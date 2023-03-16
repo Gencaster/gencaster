@@ -51,7 +51,7 @@ const limit = 1;
       <el-button
         class="ml-3"
         type="success"
-        @click="submitUpload"
+        @click="submitUpload()"
       >
         upload to server
       </el-button>

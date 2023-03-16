@@ -27,7 +27,7 @@
     "element-plus": "^2.2.36",
     "graphql": "^16.6.0",
     "gsap": "^3.11.4",
-    "pinia": "^2.0.28",
+    "pinia": "^2.0.33",
     "subscriptions-transport-ws": "^0.11.0",
     "v-network-graph": "^0.8.1",
     "vue": "^3.2.45",
