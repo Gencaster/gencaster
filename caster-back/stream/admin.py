@@ -77,8 +77,8 @@ class StreamInstructionAdmin(admin.ModelAdmin):
 class AudioFileAdmin(admin.ModelAdmin):
     list_display = [
         "uuid",
+        "name",
         "created_date",
-        "file",
         "auto_generated",
     ]
 
