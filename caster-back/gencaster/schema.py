@@ -348,6 +348,7 @@ class Mutation:
             return InvalidAudioFile(error="Only support flac and wav files")
         try:
             audio_file = await stream_models.AudioFile.objects.acreate(
+                name=new_audio_file.name,
                 file=File(new_audio_file.file, name=new_audio_file.file_name),
                 description=new_audio_file.description,
                 auto_generated=False,
