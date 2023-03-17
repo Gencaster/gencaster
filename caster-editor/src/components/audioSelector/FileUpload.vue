@@ -15,6 +15,7 @@ const submitUpload = async () => {
     return;
   }
   const audioUpload: AddAudioFile = {
+    name: (Math.random() + 1).toString(36).substring(7),
     description: "Some fake description",
     fileName: fileList.value[0].name,
     file: fileList.value[0].raw as File
