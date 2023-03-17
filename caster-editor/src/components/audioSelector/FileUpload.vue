@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ElUpload, type UploadUserFile } from "element-plus";
+import { ElButton, ElUpload, type UploadUserFile } from "element-plus";
 
 import { ref, type Ref } from "vue";
 import { useUploadAudioFileMutation, type AddAudioFile } from "@/graphql";
@@ -37,24 +37,21 @@ const limit = 1;
     <ElUpload
       ref="uploadRef"
       v-model:file-list="fileList"
-      class="upload-demo"
+      class="uploader"
       :auto-upload="false"
       :limit="limit"
       accept=".wav,.flac"
+      drag
     >
-      <template #trigger>
-        <el-button type="primary">
+      <!-- <template #trigger>
+        <ElButton>
           select file
-        </el-button>
-      </template>
+        </ElButton>
+      </template> -->
 
-      <el-button
-        class="ml-3"
-        type="success"
-        @click="submitUpload"
-      >
-        upload to server
-      </el-button>
+      <div class="el-upload__text">
+        Drop file here or <em>click to upload</em>
+      </div>
 
       <template #tip>
         <div class="el-upload__tip">
@@ -63,5 +60,22 @@ const limit = 1;
       </template>
     </ElUpload>
     {{ errorMessage }}
+
+    <ElButton
+      class="ml-3"
+      type="success"
+      @click="submitUpload()"
+    >
+      upload to server
+    </ElButton>
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import '@/assets/scss/variables.module.scss';
+
+.uploader {
+
+}
+
+</style>

@@ -32,6 +32,9 @@
       <NodeEditor class="node-editor-outer" />
     </div>
 
+    <!-- Audio Selector -->
+    <AudioSelector v-if="showAudioSelector" />
+
     <!-- Other Interface -->
     <div
       v-if="!showEditor"
@@ -99,6 +102,7 @@ import { useInterfaceStore } from "@/stores/InterfaceStore";
 import { useNodeStore } from "@/stores/NodeStore";
 import Menu from "./Menu.vue";
 import NodeEditor from "./NodeEditor.vue";
+import AudioSelector from  "./audioSelector/Selector.vue";
 
 defineProps<GraphProps>();
 
@@ -113,7 +117,7 @@ const nodeStore = useNodeStore();
 const { uuid: nodeUuid, scriptCellsModified } = storeToRefs(nodeStore);
 
 const interfaceStore = useInterfaceStore();
-const { showEditor } = storeToRefs(interfaceStore);
+const { showEditor, showAudioSelector } = storeToRefs(interfaceStore);
 
 // Data
 const graph: Ref<GraphInstance | undefined> = ref();
