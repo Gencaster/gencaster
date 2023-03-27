@@ -102,25 +102,18 @@ class AudioFileReference:
 
 @strawberry.django.input(models.AudioCell)
 class AudioCellInput:
-    playback_type: PlaybackType
+    uuid: auto = strawberry.django.field(default=None)
+    playback: PlaybackType
     audio_file: AudioFileReference
     volume: float = 0.2
 
 
 @strawberry.django.input(models.ScriptCell)
 class ScriptCellInput:
-    uuid: auto
+    uuid: auto = strawberry.django.field(default=None)
     cell_type: CellType  # type: ignore
     cell_code: auto
-    cell_order: auto
-
-
-@strawberry.django.input(models.ScriptCell)
-class NewScriptCellInput:
-    # same as ScriptCellInput but on creation we hand out the UUID
-    cell_type: CellType  # type: ignore
-    cell_code: auto
-    cell_order: auto
+    cell_order: auto = strawberry.django.field(default=None)
     audio_cell: Optional[AudioCellInput]
 
 
