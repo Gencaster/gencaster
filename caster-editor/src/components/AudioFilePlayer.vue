@@ -1,32 +1,40 @@
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
-import { AudioFile } from "@/graphql";
+import { ref, onMounted, type Ref } from "vue";
+import type { AudioFile, DjangoFileType } from "@/graphql";
 
-export interface MediaPlayerProps {
-  audio: AudioFile;
+export interface AudioType extends Pick<AudioFile, 'name'> {
+  file: Pick<DjangoFileType, 'url'>
 }
 
-const audioplayer = ref<HTMLAudioElement | null>(null)
+export interface AudioFilePlayerProps {
+  audioFile:  AudioType;
+}
+
+const audioPlayer: Ref<HTMLAudioElement | undefined> = ref()
 const audioPlaying = ref(false)
 
-defineProps<MediaPlayerProps>();
+defineProps<AudioFilePlayerProps>();
 
 
 const toggleAudio = () => {
-  if (audioplayer.value === null) return
+  if (audioPlayer.value === null) return
 
   if (audioPlaying.value) {
     audioPlaying.value = false
-    audioplayer.value.pause()
-    audioplayer.value.currentTime = 0;
+    if(audioPlayer.value) {
+      audioPlayer.value.pause()
+      audioPlayer.value.currentTime = 0;
+    }
   } else {
     audioPlaying.value = true
-    audioplayer.value.play()
+    if(audioPlayer.value) {
+      audioPlayer.value.play()
+    }
   }
 }
 
 onMounted(() => {
-  audioplayer.value?.addEventListener('ended', () => {
+  audioPlayer.value?.addEventListener('ended', () => {
     audioPlaying.value = false
   })
 })
@@ -48,12 +56,13 @@ onMounted(() => {
         alt="Play button"
       >
     </button>
-    <p>{{ audio.name || 'no name' }}</p>
-    <p>{{ audio.lastUpdate || 'no date' }}</p>
+    <p>{{ audioFile.name }}</p>
+    <p>no date</p>
 
     <audio
-      ref="audioplayer"
-      :src="`http://127.0.0.1:8081${audio.file.url}`"
+      v-if="audioFile.file"
+      ref="audioPlayer"
+      :src="`http://127.0.0.1:8081${audioFile.file.url}`"
     />
   </div>
 </template>

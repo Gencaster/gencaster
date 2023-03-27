@@ -1,67 +1,31 @@
-<script lang="ts" setup>
-import { computed } from "vue";
-import FileUpload from "./FileUpload.vue";
-import MediaPlayer from "./MediaPlayer.vue"
-import type { AudioCell } from "@/graphql";
-import { CellType, useAudioFilesQuery, PlaybackChoices  } from "@/graphql";
-import { storeToRefs } from "pinia";
-import { useNodeStore } from "@/stores/NodeStore";
-import { useInterfaceStore } from "@/stores/InterfaceStore";
+<script lang="ts" setup>import { computed, ref, type Ref } from "vue";
+import FileUpload from "./AudioFileUpload.vue";
+import MediaPlayer, {type AudioType} from "./AudioFilePlayer.vue"
+import { useAudioFilesQuery, type Scalars  } from "@/graphql";
 
-const nodeStore = useNodeStore();
-const { node, } = storeToRefs(nodeStore);
-const interfaceStore = useInterfaceStore();
-const { showAudioSelector } = storeToRefs(interfaceStore);
+const props = defineProps<{
+  audioFileUUID?: {type: Scalars['UUID'], required: false}
+}>();
 
-// import { storeToRefs } from "pinia";
+const emit = defineEmits<{
+  (e: 'selectedAudioFile', uuid: Scalars['UUID']): void
+  (e: 'cancel'): void
+}>();
 
-// Store
-// import { useGraphStore } from "@/stores/GraphStore";
+const audioNameFilter: Ref<string> = ref("");
+const { data, executeQuery: refreshData } = useAudioFilesQuery({variables: {audioNameFilter}}).executeQuery();
 
-// import { useQuery } from '@urql/vue';
-
-const audioFilesQuery = useAudioFilesQuery();
-
-const { data: audioFiles, executeQuery: refreshData } = audioFilesQuery.executeQuery();
-
-const filteredAudio = computed(() => {
-  return audioFiles.value?.audioFiles
-})
-
-const selectAudio = (uuid: string) => {
-  if (node.value === undefined) {
-    console.log("You can not add a script cell if not selected properly");
-    return;
+const selectedUUID = computed<Scalars["UUID"] | undefined>({
+  get() {
+    return props.audioFileUUID
+  },
+  set(value) {
+    emit('selectedAudioFile', value);
+    return value;
   }
+});
 
-  nodeStore.createScriptCell({
-    nodeUuid: node.value.node.uuid,
-    newScriptCell: {
-      // add cell as last cell by searching for highest current cell order
-      cellOrder:
-        node.value.node.scriptCells.length > 0
-          ? Math.max(
-            ...node.value.node.scriptCells.map((x) => {
-              return x.cellOrder;
-            })
-          ) + 1
-          : 0,
-      cellCode: "",
-      cellType: CellType.Audio,
-      audioCell: {
-        audioFile: {
-          uuid: uuid,
-        },
-        playbackType: PlaybackChoices.AsyncPlayback,
-      },
-    },
-  });
-
-  showAudioSelector.value = false
-  console.log("Added Audio");
-  console.log(uuid)
-}
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const doRefresh = () => {
   refreshData();
 };
@@ -77,23 +41,38 @@ const doRefresh = () => {
         </div>
         <div class="right">
           <p>Files</p>
+          <ElInput
+            v-model="audioNameFilter"
+            placeholder="Search"
+          />
         </div>
       </div>
       <div class="content">
         <div class="left">
           <FileUpload class="upload" />
+          <el-button
+            @click="emit('cancel')"
+          >
+            Cancel
+          </el-button>
         </div>
         <div class="right">
           <div class="list-wrapper">
             <div
-              v-for="(audio, index) in filteredAudio"
-              :key="index"
-              class="row"
+              v-if="data?.audioFiles"
             >
-              <MediaPlayer :audio="audio" />
-              <button @click="selectAudio(audio.uuid)">
-                <p>Select</p>
-              </button>
+              <div
+                v-for="(audioFile, index) in data?.audioFiles"
+                :key="index"
+                class="row"
+              >
+                <MediaPlayer
+                  :audio-file="audioFile as AudioType"
+                />
+                <button @click="selectedUUID = audioFile.uuid">
+                  <p>Select</p>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -106,7 +85,7 @@ const doRefresh = () => {
 @import '@/assets/scss/variables.module.scss';
 
 .audio-selector-wrapper {
-  width: 100%;
+  width: 50%;
   height: 100%;
   position: fixed;
   top: 0;

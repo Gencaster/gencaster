@@ -16,7 +16,8 @@ type AudioCell {
 }
 
 input AudioCellInput {
-  playbackType: PlaybackChoices!
+  uuid: UUID = null
+  playback: PlaybackChoices
   audioFile: AudioFileReference!
   volume: Float = 0.2
 }
@@ -132,28 +133,15 @@ type Mutation {
   deleteNode(nodeUuid: UUID!): Void
 
   """
-  Creates a new :class:`~story_graph.models.ScriptCell` for a given
-  :class:`~story_graph.models.Edge` and returns this cell.
+  Creates or updates a given :class:`~story_graph.models.ScriptCell` to change its content.
   """
-  addScriptCell(nodeUuid: UUID!, newScriptCell: NewScriptCellInput!): ScriptCell!
-
-  """
-  Updates a given :class:`~story_graph.models.ScriptCell` to change its content.
-  """
-  updateScriptCells(newCells: [ScriptCellInput!]!): Void
+  createUpdateScriptCells(scriptCellInputs: [ScriptCellInput!]!, nodeUuid: UUID!): [ScriptCell!]!
 
   """Deletes a given :class:`~story_graph.models.ScriptCell`."""
   deleteScriptCell(scriptCellUuid: UUID!): Void
   addGraph(graphInput: AddGraphInput!): Graph!
   addAudioFile(newAudioFile: AddAudioFile!): AudioFileUploadResponse!
   createUpdateStreamVariable(streamVariables: [StreamVariableInput!]!): [StreamVariable!]!
-}
-
-input NewScriptCellInput {
-  cellType: CellType
-  cellCode: String!
-  cellOrder: Int
-  audioCell: AudioCellInput
 }
 
 """Matches :class:`gencaster.stream.exceptions.NoStreamAvailable`."""
@@ -218,10 +206,11 @@ type ScriptCell {
 }
 
 input ScriptCellInput {
-  uuid: UUID
+  uuid: UUID = null
   cellType: CellType
   cellCode: String!
-  cellOrder: Int
+  cellOrder: Int = null
+  audioCell: AudioCellInput
 }
 
 input StrFilterLookup {
