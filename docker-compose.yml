@@ -42,6 +42,8 @@ services:
       args:
         - MAKE_JOBS=8
     platform: linux/amd64
+    deploy:
+      replicas: ${GENCASTER_SOUND_REPLICAS:-1}
     depends_on:
       - osc_backend
     env_file:

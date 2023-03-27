@@ -45,13 +45,13 @@ make docker-local
 
 You can use the following flags to modify the stack
 
-
 flag | comment
 --- | ---
-`-e` | Starts without the editor
-`-s` | Starts without the frontend
+`no-editor=1` | Starts without the editor
+`no-frontend=1` | Starts without the frontend
+`no-sound=1` | Starts without the frontend
 
-**Example:** `make -es docker-local` starts without editor and frontend.
+**Example:** `make no-editor=1 no-frontend=1 docker-local` starts without editor and frontend.
 
 This allows you to use your local host machine in place to develop with auto reload as Docker and NodeJS is not a nice tandem because of the dependence of the `node_modules` folder.
 
