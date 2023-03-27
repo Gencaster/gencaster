@@ -82,6 +82,7 @@ class Edge:
 class AudioCell:
     uuid: auto
     playback: PlaybackType  # type: ignore
+    volume: auto
     audio_file: AudioFile
 
 

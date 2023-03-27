@@ -12,6 +12,7 @@ input AddGraphInput {
 type AudioCell {
   uuid: UUID!
   playback: PlaybackChoices!
+  volume: Float!
   audioFile: AudioFile!
 }
 

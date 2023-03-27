@@ -85,6 +85,7 @@ subscription node($uuid: UUID!) {
       audioCell {
         playback
         uuid
+        volume
         audioFile {
           uuid
           name
