@@ -6,7 +6,7 @@ from mistletoe import Document
 from mixer.backend.django import mixer
 
 from .markdown_parser import GencasterRenderer
-from .models import Edge, Graph, Node, ScriptCell
+from .models import AudioCell, Edge, Graph, Node, ScriptCell
 
 
 class GraphTestCase(TransactionTestCase):
@@ -174,3 +174,13 @@ class ScriptCellTestCase(TransactionTestCase):
             ScriptCell.objects.filter(node=node).all().values_list("cell_order")
         )
         self.assertEqual(db_cell_order, sorted(db_cell_order))
+
+
+class AudioCellTestCase(TransactionTestCase):
+    @staticmethod
+    def get_audio_cell(**kwargs) -> AudioCell:
+        return mixer.blend(AudioCell, **kwargs)  # type: ignore
+
+    def test_str(self):
+        audio_cell = self.get_audio_cell()
+        self.assertTrue(str(audio_cell.audio_file) in str(audio_cell))
