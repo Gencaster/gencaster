@@ -10,10 +10,11 @@
       v-model:text="scriptCellText"
       :cell-type="scriptCell.cellType"
     />
-    <!-- <ScriptCellAudio
+    <ScriptCellAudio
       v-if="scriptCell.audioCell !== undefined && scriptCell.audioCell !== null && scriptCell.cellType === CellType.Audio"
-      v-model:="scriptCellComp"
-    /> -->
+      v-model:text="scriptCellText"
+      v-model:audio-cell="sriptCellAudioCell"
+    />
 
     <div class="scriptcell-tools">
       <div class="celltype">
@@ -47,10 +48,10 @@
 </template>
 
 <script setup lang="ts">
-import { type ScriptCell, CellType, type Scalars, useDeleteScriptCellMutation } from '@/graphql';
+import { type ScriptCell, CellType, type Scalars, useDeleteScriptCellMutation, type AudioCell } from '@/graphql';
 import ScriptCellMarkdown from './ScriptCellMarkdown.vue';
 import ScriptCellCodemirror from './ScriptCellCodemirror.vue';
-// import ScriptCellAudio from './ScriptCellAudio.vue';
+import ScriptCellAudio from './ScriptCellAudio.vue';
 import { ElMessage } from 'element-plus';
 import { computed } from 'vue';
 
@@ -72,6 +73,18 @@ const scriptCellText = computed<string>({
   set(value) {
     const newCell = {...props.scriptCell}
     newCell.cellCode = value;
+    emit('update:scriptCell', newCell);
+    return value;
+  }
+});
+
+const sriptCellAudioCell = computed<AudioCell>({
+  get() {
+    return props.scriptCell.audioCell;
+  },
+  set(value) {
+    const newCell = {...props.scriptCell};
+    newCell.audioCell = value;
     emit('update:scriptCell', newCell);
     return value;
   }
