@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <div class="cell">
     <ScriptCellMarkdown
@@ -10,12 +11,13 @@
       v-model:text="scriptCellText"
       :cell-type="scriptCell.cellType"
     />
-    <ScriptCellAudio
-      v-if="scriptCell.audioCell !== undefined && scriptCell.audioCell !== null && scriptCell.cellType === CellType.Audio"
-      v-model:text="scriptCellText"
-      v-model:audio-cell="sriptCellAudioCell"
-    />
-
+    <div v-if="scriptCell.audioCell!==undefined">
+      <ScriptCellAudio
+        v-if="scriptCell.audioCell !== undefined && scriptCell.audioCell !== null && scriptCell.audioCell?.audioFile.file !== undefined && scriptCell.cellType === CellType.Audio"
+        v-model:text="scriptCellText"
+        v-model:audio-cell="scriptCell.audioCell"
+      />
+    </div>
     <div class="scriptcell-tools">
       <div class="celltype">
         <p>{{ scriptCell.cellType }}</p>
@@ -48,14 +50,22 @@
 </template>
 
 <script setup lang="ts">
-import { type ScriptCell, CellType, type Scalars, useDeleteScriptCellMutation, type AudioCell } from '@/graphql';
+import { type ScriptCell, CellType, type Scalars, useDeleteScriptCellMutation, type AudioCell, type AudioFile, type DjangoFileType } from '@/graphql';
 import ScriptCellMarkdown from './ScriptCellMarkdown.vue';
 import ScriptCellCodemirror from './ScriptCellCodemirror.vue';
 import ScriptCellAudio from './ScriptCellAudio.vue';
 import { ElMessage } from 'element-plus';
 import { computed } from 'vue';
 
-export type ScriptCellData = Pick<ScriptCell, 'audioCell' | 'cellType' | 'cellCode' | 'uuid'>
+type Maybe<T> = T | undefined | null;
+
+type ScriptCellData = Pick<ScriptCell, 'cellType' | 'cellCode' | 'uuid'> & {
+  audioCell?: null | undefined | Pick<AudioCell, 'playback' | 'uuid' | 'volume'> & {
+    audioFile: Pick<AudioFile, 'uuid'> & {
+      file?: Maybe<Pick<DjangoFileType, 'url'>>
+    }
+  }
+}
 
 const props = defineProps<{
     scriptCell: ScriptCellData
@@ -78,9 +88,9 @@ const scriptCellText = computed<string>({
   }
 });
 
-const sriptCellAudioCell = computed<AudioCell>({
+const sriptCellAudioCell = computed<ScriptCellData['audioCell']>({
   get() {
-    return props.scriptCell.audioCell;
+    return props.scriptCell.audioCell ?? undefined;
   },
   set(value) {
     const newCell = {...props.scriptCell};

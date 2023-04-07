@@ -14,6 +14,7 @@
       <template #item="{element, index}">
         <div>
           <NodeEditorCell
+            v-if="moveableScriptCells[index]"
             v-model:script-cell="moveableScriptCells[index]"
           />
         </div>

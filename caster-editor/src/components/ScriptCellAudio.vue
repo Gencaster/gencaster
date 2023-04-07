@@ -28,7 +28,7 @@
     <Browser
       v-if="showBrowser"
       @cancel="showBrowser = false"
-      @selected-audio-file="(uuid) => {
+      @selected-audio-file="(uuid: Scalars['UUID']) => {
         audioCellData.audioFile.uuid = uuid;
         showBrowser=false;
       }"
@@ -37,38 +37,34 @@
 </template>
 
 <script lang="ts" setup>
-import { type ScriptCell, type AudioCell, type AudioFile, type DjangoFileType, PlaybackChoices
- } from "@/graphql";
-
-export interface AudioFileURL extends Pick<AudioFile, 'uuid'> {
-  file: Pick<DjangoFileType, 'url'>
-}
-
-export interface AudioCellData extends Pick<AudioCell, 'playback' | 'uuid' | 'volume'> {
-  audioFile: AudioFileURL
-}
-
-export interface AudioScriptCellData extends Pick<ScriptCell, 'cellCode' | 'cellType'> {
-    audioCell: AudioCellData
-}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { type ScriptCell, type AudioCell, type AudioFile, PlaybackChoices, type Scalars} from "@/graphql";
 
 import Browser from "@/components/AudioFileBrowser.vue";
 import { computed, ref, type Ref  } from "vue";
 import { ElSelect, ElOption, ElSlider } from "element-plus";
 
+type AudioScriptCellData = Pick<ScriptCell, 'cellCode' | 'cellType'> & {
+    audioCell: Pick<AudioCell, 'uuid' | 'volume' | 'playback'> & {
+      audioFile: Pick<AudioFile, 'uuid'> & {
+        // file: null | undefined | Pick<DjangoFileType, 'url'>
+      }
+    }
+}
+
 const props = defineProps<{
     text: string,
-    audioCell: AudioCellData
+    audioCell: AudioScriptCellData['audioCell']
 }>();
 
 const emit = defineEmits<{
-  (e: "update:audioCell", scriptCell: AudioCellData): void
+  (e: "update:audioCell", scriptCell: AudioScriptCellData['audioCell']): void
   (e: "update:text", text: string): void
 }>();
 
 const showBrowser: Ref<boolean> = ref(false);
 
-const audioCellData = computed<AudioCellData>({
+const audioCellData = computed<AudioScriptCellData['audioCell']>({
   get() {
     return props.audioCell
   },
