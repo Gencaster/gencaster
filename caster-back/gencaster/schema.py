@@ -302,7 +302,7 @@ class Mutation:
             script_cells.append(script_cell)
 
         await GenCasterChannel.send_node_update(
-            layer=info.context.channel_layer, node_uuid=node_uuid
+            layer=info.context.channel_layer, node_uuid=node.uuid
         )
         return script_cells  # type: ignore
 

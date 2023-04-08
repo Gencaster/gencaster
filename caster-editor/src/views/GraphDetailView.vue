@@ -6,7 +6,7 @@ import Graph from "@/components/Graph.vue";
 import Menu from "@/components/Menu.vue";
 import NodeEditor from "@/components/NodeEditor.vue";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
-import { PlaybackChoices, useCreateUpdateScriptCellsMutation, useGraphSubscription, useNodeSubscription, type AudioCellInput, type NodeSubscription, type ScriptCellInput } from "@/graphql"
+import { useCreateUpdateScriptCellsMutation, useGraphSubscription, useNodeSubscription, type NodeSubscription, type ScriptCellInput } from "@/graphql"
 
 const { showNodeEditor, selectedNodeUUIDs, scriptCellsModified } = storeToRefs(useInterfaceStore());
 
@@ -55,26 +55,24 @@ const saveNode = () => {
   }
   // this needs to be rewritten - some types between DOM and
   // input do not add up, therefore we need to translate the data here
-  const scriptCellInputs: ScriptCellInput[] = [];
-  nodeData.value.scriptCells.forEach((domCell) => {
-    const cellInput: ScriptCellInput = {
-      uuid: domCell.uuid,
-      cellCode: domCell.cellCode,
-      cellOrder: domCell.cellOrder,
-      cellType: domCell.cellType,
+  const scriptCellInputs: ScriptCellInput[] = nodeData.value.scriptCells.map((domCell) => {
+    const input: ScriptCellInput = {
+      'uuid': domCell.uuid,
+      'cellCode': domCell.cellCode,
+      'cellOrder': domCell.cellOrder,
+      'cellType': domCell.cellType,
     };
     if(domCell.audioCell) {
-      const audioCell: AudioCellInput = {
-        audioFile: {
-          uuid: domCell.audioCell.audioFile.uuid === undefined ? null : domCell.audioCell.audioFile.uuid,
-        },
-        // fix hardcode
-        playback: PlaybackChoices.AsyncPlayback,
-        uuid: domCell.audioCell.uuid === undefined ? null : domCell.audioCell.uuid
-      };
-      cellInput.audioCell = audioCell;
+      input['audioCell'] = {
+        'volume': domCell.audioCell.volume,
+        'uuid': domCell.audioCell.uuid,
+        'playback': domCell.audioCell.playback,
+        'audioFile': {
+          'uuid': domCell.audioCell.audioFile.uuid
+        }
+      }
     }
-    scriptCellInputs.push(cellInput);
+    return input;
   });
 
   scriptCellMutation.executeMutation({

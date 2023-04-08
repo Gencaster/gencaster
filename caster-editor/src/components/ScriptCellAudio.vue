@@ -9,10 +9,10 @@
         placeholder="Select"
       >
         <ElOption
-          v-for="item in Object.keys(PlaybackChoices)"
-          :key="item"
-          :label="item"
-          :value="item"
+          v-for="[key, value] in Object.entries(PlaybackChoices)"
+          :key="key"
+          :label="key"
+          :value="value"
         />
       </ElSelect>
     </p>
@@ -69,6 +69,7 @@ const audioCellData = computed<AudioScriptCellData['audioCell']>({
     return props.audioCell
   },
   set(value) {
+    console.log('current audio cell internal', value);
     emit('update:audioCell', value);
     return value;
   }
