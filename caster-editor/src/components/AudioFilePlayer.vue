@@ -15,6 +15,7 @@ const audioPlaying = ref(false)
 
 defineProps<AudioFilePlayerProps>();
 
+const baseURL: string = import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081";
 
 const toggleAudio = () => {
   if (audioPlayer.value === null) return
@@ -62,7 +63,7 @@ onMounted(() => {
     <audio
       v-if="audioFile.file"
       ref="audioPlayer"
-      :src="`http://127.0.0.1:8081${audioFile.file.url}`"
+      :src="`${baseURL}${audioFile.file.url}`"
     />
   </div>
 </template>
