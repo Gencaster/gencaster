@@ -276,6 +276,7 @@ type Query {
   audioFiles(filters: AudioFileFilter): [AudioFile!]!
   audioFile(pk: ID!): AudioFile!
   streamVariable(pk: ID!): StreamVariable!
+  isAuthenticated: User!
 }
 
 """
@@ -460,6 +461,28 @@ input UUIDFilterLookup {
 }
 
 scalar Upload
+
+"""
+Users within the Django authentication system are represented by this
+model.
+
+Username and password are required. Other fields are optional.
+"""
+type User {
+  """Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."""
+  username: String!
+
+  """Designates whether the user can log into this admin site."""
+  isStaff: Boolean!
+
+  """
+  Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+  """
+  isActive: Boolean!
+  firstName: String!
+  lastName: String!
+  email: String!
+}
 
 """Represents NULL values"""
 scalar Void

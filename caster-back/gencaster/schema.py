@@ -14,14 +14,16 @@ import asyncio
 import logging
 import os
 import uuid
-from typing import AsyncGenerator, List, Optional
+from typing import Any, AsyncGenerator, List, Optional
 
 import strawberry
 import strawberry.django
 from asgiref.sync import sync_to_async
+from django.contrib.auth.models import User as UserModel
 from django.core.exceptions import PermissionDenied
 from django.core.files import File
 from django.http.request import HttpRequest
+from strawberry import auto
 from strawberry.types import Info
 from strawberry_django.fields.field import StrawberryDjangoField
 
@@ -56,6 +58,15 @@ from stream.types import (
 from .distributor import GenCasterChannel, GraphQLWSConsumerInjector
 
 log = logging.getLogger(__name__)
+
+
+class IsAuthenticated(strawberry.BasePermission):
+    message = "User is not authenticated"
+
+    async def has_permission(self, source: Any, info: Info, **kwargs) -> bool:
+        if await sync_to_async(lambda: info.context.request.user.is_authenticated)():
+            return True
+        return False
 
 
 class AuthStrawberryDjangoField(StrawberryDjangoField):
@@ -103,6 +114,16 @@ async def update_or_create_audio_cell(
     return audio_cell
 
 
+@strawberry.django.type(UserModel)
+class User:
+    username: auto
+    is_staff: auto
+    is_active: auto
+    first_name: auto
+    last_name: auto
+    email: auto
+
+
 @strawberry.type
 class Query:
     """Queries for GenCaster."""
@@ -116,6 +137,10 @@ class Query:
     audio_files: List[AudioFile] = AuthStrawberryDjangoField()
     audio_file: AudioFile = AuthStrawberryDjangoField()
     stream_variable: StreamVariable = AuthStrawberryDjangoField()
+
+    @strawberry.field(permission_classes=[IsAuthenticated])
+    async def is_authenticated(self, info) -> User:
+        return info.context.request.user  # type: ignore
 
 
 @strawberry.type
