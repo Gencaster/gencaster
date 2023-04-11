@@ -340,7 +340,7 @@ GenCasterServer {
 	playBuffer {|bufferPath|
 		// loads, plays and frees a buffer
 		// a naive garbage collection mechanism
-		Buffer.read(s, bufferPath, action: {|buffer|
+		Buffer.read(Server.default, bufferPath, action: {|buffer|
 			Synth(\gencasterBufferPlayback, [\buffer, buffer]);
 			fork({
 				(1+(buffer.duration)).wait;
