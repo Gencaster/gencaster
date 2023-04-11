@@ -36,19 +36,24 @@ dev-server: venv virtualenv
 docker-local:
 	docker compose $(DOCKER_ALL_FILES) stop
 	$(eval FILES += $(DOCKER_LOCAL))
-ifneq (,$(findstring e, $(MAKEFLAGS)))
+ifdef no-editor
 	@echo "Start with NO editor"
 else
 	$(eval FILES += $(DOCKER_EDITOR))
 endif
-ifneq (,$(findstring s, $(MAKEFLAGS)))
+ifdef no-frontend
 	@echo "Start with NO frontend"
 else
 	$(eval FILES += $(DOCKER_FRONTEND))
 endif
+ifdef no-sound
+	@echo "Start with NO sound container"
+	$(eval ENV_VARIABLES += GENCASTER_SOUND_REPLICAS=0)
+endif
 	@echo "Start with $(FILES)"
+	@echo "Start with env $(ENV_VARIABLES)"
 	docker compose $(FILES) build
-	docker compose $(FILES) up
+	$(ENV_VARIABLES) docker compose $(FILES) up
 
 docker-deploy-dev:
 	docker compose $(DOCKER_ALL_FILES) stop

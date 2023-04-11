@@ -4,13 +4,16 @@ from unittest import mock
 from asgiref.sync import async_to_sync, sync_to_async
 from django.test import TestCase
 
-from story_graph.models import Edge, Graph, Node, ScriptCell
+from story_graph.models import AudioCell, CellType, Edge, Graph, Node, ScriptCell
 from story_graph.tests import (
+    AudioCellTestCase,
     EdgeTestCase,
     GraphTestCase,
     NodeTestCase,
     ScriptCellTestCase,
 )
+from stream.models import AudioFile
+from stream.tests import AudioFileTestCase
 
 from .schema import schema
 
@@ -219,8 +222,8 @@ class SchemaTestCase(TestCase):
         self.assertGreaterEqual(len(resp.errors), 1)  # type: ignore
 
     CREATE_SCRIPT_CELL = """
-    mutation createScriptCell($nodeUuid: UUID!, $newScriptCell: NewScriptCellInput!) {
-        addScriptCell(nodeUuid: $nodeUuid, newScriptCell: $newScriptCell) {
+    mutation createScriptCell($nodeUuid: UUID!, $newScriptCell: [ScriptCellInput!]!) {
+        createUpdateScriptCells(nodeUuid: $nodeUuid, scriptCellInputs: $newScriptCell) {
             cellOrder
             uuid
             cellType
@@ -280,8 +283,10 @@ class SchemaTestCase(TestCase):
         self.assertEqual(0, await ScriptCell.objects.all().acount())
 
     UPDATE_SCRIPT_CELL = """
-    mutation MyMutation($newCells: [ScriptCellInput!]!) {
-        updateScriptCells(newCells: $newCells)
+    mutation MyMutation($newCells: [ScriptCellInput!]!, $nodeUUID: UUID!) {
+        createUpdateScriptCells(scriptCellInputs: $newCells, nodeUuid: $nodeUUID) {
+            uuid
+        }
     }
     """
 
@@ -301,7 +306,8 @@ class SchemaTestCase(TestCase):
                         "cellOrder": 4,
                         "cellCode": "Hello vinzenz!",
                     }
-                ]
+                ],
+                "nodeUUID": str(script_cell.node.uuid),
             },
             context_value=self.get_login_context(),
         )
@@ -335,24 +341,122 @@ class SchemaTestCase(TestCase):
         self.assertEqual("Hello world!", script_cell.cell_code)
 
     @async_to_sync
-    async def test_update_script_cell_invalid_cell(self):
+    async def test_create_script_celll(self):
+        node: Node = await sync_to_async(NodeTestCase.get_node)()
+        self.assertEqual(await ScriptCell.objects.all().acount(), 0)
         resp = await schema.execute(
             self.UPDATE_SCRIPT_CELL,
             variable_values={
                 "newCells": [
                     {
-                        "uuid": str(uuid.uuid4()),
                         "cellType": "MARKDOWN",
                         "cellOrder": 4,
                         "cellCode": "Hello vinzenz!",
                     }
-                ]
+                ],
+                "nodeUUID": str(node.uuid),
             },
             context_value=self.get_login_context(),
         )
         # does NOT yield an error!
         self.assertIsNone(resp.errors)
-        self.assertEqual(0, await ScriptCell.objects.all().acount())
+        self.assertEqual(await ScriptCell.objects.all().acount(), 1)
+
+    @async_to_sync
+    async def test_create_audio_script_cell_missing_audio_cell(self):
+        node: Node = await sync_to_async(NodeTestCase.get_node)()
+        self.assertEqual(await ScriptCell.objects.all().acount(), 0)
+        resp = await schema.execute(
+            self.UPDATE_SCRIPT_CELL,
+            variable_values={
+                "newCells": [
+                    {
+                        "cellType": "AUDIO",
+                        "cellOrder": 4,
+                        "cellCode": "Hello vinzenz!",
+                    }
+                ],
+                "nodeUUID": str(node.uuid),
+            },
+            context_value=self.get_login_context(),
+        )
+        self.assertIsNotNone(resp.errors)
+        self.assertEqual(await ScriptCell.objects.all().acount(), 0)
+
+    @async_to_sync
+    async def test_create_audio_script_cell(self):
+        node: Node = await sync_to_async(NodeTestCase.get_node)()
+        audio_file: AudioFile = await sync_to_async(AudioFileTestCase.get_audio_file)()
+
+        self.assertEqual(await ScriptCell.objects.all().acount(), 0)
+        resp = await schema.execute(
+            self.UPDATE_SCRIPT_CELL,
+            variable_values={
+                "newCells": [
+                    {
+                        "cellType": "AUDIO",
+                        "cellOrder": 4,
+                        "cellCode": "Hello vinzenz!",
+                        "audioCell": {
+                            "playback": "ASYNC_PLAYBACK",
+                            "audioFile": {"uuid": str(audio_file.uuid)},
+                        },
+                    }
+                ],
+                "nodeUUID": str(node.uuid),
+            },
+            context_value=self.get_login_context(),
+        )
+        self.assertIsNone(resp.errors)
+        self.assertEqual(await ScriptCell.objects.all().acount(), 1)
+        self.assertEqual(await AudioCell.objects.all().acount(), 1)
+
+    @async_to_sync
+    async def test_create_update_audio_cell(self):
+        audio_file: AudioFile = await sync_to_async(AudioFileTestCase.get_audio_file)()
+        audio_cell: AudioCell = await sync_to_async(AudioCellTestCase.get_audio_cell)(
+            audio_file=audio_file, volume=0.4
+        )
+        node: Node = await sync_to_async(NodeTestCase.get_node)()
+
+        script_cell: ScriptCell = await sync_to_async(
+            ScriptCellTestCase.get_script_cell
+        )(
+            node=node,
+            cell_type=CellType.AUDIO,
+            audio_cell=audio_cell,
+        )
+
+        self.assertEqual(await ScriptCell.objects.all().acount(), 1)
+        self.assertEqual(await AudioCell.objects.all().acount(), 1)
+
+        resp = await schema.execute(
+            self.UPDATE_SCRIPT_CELL,
+            variable_values={
+                "newCells": [
+                    {
+                        "uuid": str(script_cell.uuid),
+                        "cellType": "AUDIO",
+                        "cellOrder": 4,
+                        "cellCode": "Hello vinzenz!",
+                        "audioCell": {
+                            "uuid": str(audio_cell.uuid),
+                            "playback": "ASYNC_PLAYBACK",
+                            "volume": 0.1,
+                            "audioFile": {"uuid": str(audio_file.uuid)},
+                        },
+                    }
+                ],
+                "nodeUUID": str(script_cell.node.uuid),
+            },
+            context_value=self.get_login_context(),
+        )
+        self.assertIsNone(resp.errors)
+        self.assertEqual(await ScriptCell.objects.all().acount(), 1)
+        self.assertEqual(await AudioCell.objects.all().acount(), 1)
+
+        await sync_to_async(audio_cell.refresh_from_db)()
+        self.assertEqual(audio_cell.volume, 0.1)
 
     DELETE_SCRIPT_CELL = """
     mutation deleteScriptCell($scriptCellUuid:UUID!) {

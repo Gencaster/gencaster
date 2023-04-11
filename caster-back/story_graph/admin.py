@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Edge, Graph, Node, ScriptCell
+from .models import AudioCell, Edge, Graph, Node, ScriptCell
 
 
 class NodeInline(admin.TabularInline):
@@ -77,4 +77,17 @@ class ScriptCellAdmin(admin.ModelAdmin):
 
     readonly_fields = [
         "uuid",
+    ]
+
+
+@admin.register(AudioCell)
+class AudioCellAdmin(admin.ModelAdmin):
+    list_display = ["uuid", "audio_file", "playback"]
+
+    readonly_fields = ["uuid"]
+
+    list_filter = [
+        "playback",
+        "script_cell__node__graph",
+        "script_cell__node",
     ]

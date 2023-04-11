@@ -5,12 +5,12 @@ services:
       context: caster-editor
       dockerfile: Dockerfile.deploy
       args:
-        - BACKEND_GRAPHQL_URL=http://127.0.0.1:8081/graphql
+        - BACKEND_URL=http://127.0.0.1:8081
     ports:
-      - 3001:3001
+      - 3001:80
     depends_on:
       - backend
     environment:
       - HOST=0.0.0.0
       - PORT=3001
-      - BACKEND_GRAPHQL_URL=http://127.0.0.1:8081/graphql
+      - BACKEND_URL=http://127.0.0.1:8081

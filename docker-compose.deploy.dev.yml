@@ -59,13 +59,13 @@ services:
       context: caster-editor
       dockerfile: Dockerfile.deploy
       args:
-        - BACKEND_GRAPHQL_URL=https://backend.dev.gencaster.org/graphql
+        - BACKEND_URL=https://backend.dev.gencaster.org
     ports:
       - 3001:80
     environment:
       - HOST=0.0.0.0
       - PORT=3001
-      - BACKEND_GRAPHQL_URL="https://backend.dev.gencaster.org/graphql"
+      - BACKEND_URL="https://backend.dev.gencaster.org"
     depends_on:
       - backend
 
@@ -75,7 +75,7 @@ services:
       context: caster-front
       dockerfile: Dockerfile.deploy
       args:
-        - BACKEND_GRAPHQL_URL=https://backend.dev.gencaster.org/graphql
+        - BACKEND_URL=https://backend.dev.gencaster.org
         - JANUS_URL=https://sound.dev.gencaster.org/janus
     ports:
       - 3000:80

@@ -39,17 +39,16 @@
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
 import variables from "@/assets/scss/variables.module.scss";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import type { Ref } from "vue";
-import { useGraphsStore } from "@/stores/GraphsStore";
 import { ElButton, ElForm, ElInput, type ElFormItem } from "element-plus";
 
-// Store
-const { graphs } = storeToRefs(useGraphsStore());
+
 const router = useRouter();
+
+router.push("/graph");
 
 const form: Ref<HTMLElement | undefined> = ref(undefined);
 
@@ -81,11 +80,6 @@ const rules = ref({
       trigger: "blur",
     },
   ],
-});
-
-watch(graphs, () => {
-  // @todo create a log-in state
-  router.push("/graphs");
 });
 
 const onSubmit = () => {

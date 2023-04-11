@@ -1,129 +1,66 @@
 <!-- eslint-disable vue/no-v-model-argument -->
 <template>
   <div>
-    <!-- Menu -->
-    <Menu
-      :graph="graph"
-      :uuid="uuid"
-      :selected-nodes="selectedNodes"
-      :selected-edges="selectedEdges"
-    />
-
-    <!-- Graph -->
-    <v-network-graph
-      v-if="graphDataReady"
-      ref="graph"
-      v-model:selected-nodes="selectedNodes"
-      v-model:selected-edges="selectedEdges"
+    <VNetworkGraph
+      ref="vNetworkGraph"
+      v-model:selected-nodes="selectedNodeUUIDs"
+      v-model:selected-edges="selectedEdgeUUIDs"
       class="graph"
-      :nodes="graphStore.nodes()"
-      :edges="graphStore.edges()"
-      :configs="configs"
-      :layouts="graphStore.layouts()"
+      :nodes="nodes()"
+      :edges="edges()"
+      :configs="graphSettings.standard"
+      :layouts="layouts()"
       :event-handlers="eventHandlers"
     />
 
-    <!-- Node Editor -->
     <div
-      ref="editorDom"
-      class="node-data"
-      :class="{ 'node-data--open': showEditor }"
-    >
-      <NodeEditor class="node-editor-outer" />
-    </div>
-
-    <!-- Other Interface -->
-    <div
-      v-if="!showEditor"
+      v-if="!showNodeEditor"
       class="stats"
     >
       <p>
-        Nodes: {{ graphInStore?.graph.nodes.length }} &nbsp; Edges:
-        {{ graphInStore?.graph.edges.length }}
+        Nodes: {{ graph.nodes.length }} &nbsp; Edges:
+        {{ graph.edges.length }}
       </p>
     </div>
-
-    <!-- Switch unsaved node dialog -->
-    <ElDialog
-      v-model="switchNodeDialog"
-      title="Careful"
-      width="25%"
-      center
-      lock-scroll
-      :show-close="false"
-    >
-      <span>
-        Unsaved changes in the editor! <br>
-        Are you sure to switch node without saving?
-      </span>
-      <template #footer>
-        <span class="dialog-footer">
-
-          <ElButton
-            text
-            bg
-            @click="switchWithoutSaving()"
-          >
-            Switch without saving
-          </ElButton>
-          <ElButton
-            color="#ADFF00"
-            @click="switchNodeDialog = false"
-          >
-            Cancel
-          </ElButton>
-        </span>
-      </template>
-    </ElDialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-export interface GraphProps {
-  uuid: Scalars["UUID"];
-}
 
 import type {
   EventHandlers as GraphEventHandlers,
-  Instance as GraphInstance,
+  Edge as GraphEdge,
+  Edges as GraphEdges,
+  Node as GraphNode,
+  Nodes as GraphNodes,
 } from "v-network-graph";
-import { ref } from "vue";
-import type { Ref } from "vue";
+
+import { ref, type Ref } from "vue";
 import { nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
-import { GraphSettings } from "@/assets/js/graphSettings";
-import type { Scalars } from "@/graphql";
-import { useGraphStore } from "@/stores/GraphStore";
+import type { GraphSubscription, Scalars } from "@/graphql";
+import { useUpdateNodeMutation } from "@/graphql"
 import { useInterfaceStore } from "@/stores/InterfaceStore";
-import { useNodeStore } from "@/stores/NodeStore";
-import Menu from "./Menu.vue";
-import NodeEditor from "./NodeEditor.vue";
+import * as vNG from "v-network-graph";
+import { VNetworkGraph } from "v-network-graph";
+import variables from "@/assets/scss/variables.module.scss";
 
-defineProps<GraphProps>();
-
-// Html
-const editorDom: Ref<HTMLElement | undefined> = ref(undefined);
+const props = defineProps<{
+  graph: GraphSubscription['graph']
+}>();
 
 // Store
-const graphStore = useGraphStore();
-const { graph: graphInStore, graphDataReady, selectedNodes, selectedEdges } = storeToRefs(graphStore);
+const {
+  showNodeEditor,
+  vNetworkGraph,
+  selectedNodeUUIDs,
+  selectedEdgeUUIDs,
+  scriptCellsModified,
+} = storeToRefs(useInterfaceStore());
 
-const nodeStore = useNodeStore();
-const { uuid: nodeUuid, scriptCellsModified } = storeToRefs(nodeStore);
-
-const interfaceStore = useInterfaceStore();
-const { showEditor } = storeToRefs(interfaceStore);
-
-// Data
-const graph: Ref<GraphInstance | undefined> = ref();
-
-// Config
-const configs = GraphSettings.standard;
-
-// Graph Manipulations
 const centerClickLeftToEditor = (event: MouseEvent) => {
-  if (!graph.value) return;
+  if (!vNetworkGraph.value) return;
 
   // get click position
   const clickPos = {
@@ -132,10 +69,11 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
   };
 
   // get canvas size
-  const { height: gHeight, width: gWidth } = graph.value.getSizes();
+  const { height: gHeight, width: gWidth } = vNetworkGraph.value.getSizes();
 
-  // get editor width
-  const editorWidth = editorDom.value?.offsetWidth || 0;
+  // get editor width - @todo FIX THIS
+  // const editorWidth = editorDom.value?.offsetWidth || 0;
+  const editorWidth = 0;
 
   // screen aim
   const aimPos = {
@@ -162,7 +100,7 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
       y: moveBy.y * delta,
     };
 
-    graph.value?.panBy(shift);
+    vNetworkGraph.value?.panBy(shift);
     prevProgress = progress.absolute;
   };
 
@@ -177,60 +115,217 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
   });
 };
 
-const openNodeEditor = () => {
-  showEditor.value = true;
-};
-
+const updateNodeMutation = useUpdateNodeMutation();
 
 const eventHandlers: GraphEventHandlers = {
   // see https://dash14.github.io/v-network-graph/reference/events.html#events-with-event-handlers
   "view:load": () => {
-    graph.value?.fitToContents();
+    vNetworkGraph.value?.fitToContents();
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   "node:dblclick": async ({ node, event }) => {
     nextNodeDoubleClicked.value = node;
 
-    if (showEditor.value && scriptCellsModified.value) { // already open
+    if (showNodeEditor.value && scriptCellsModified.value) { // already open
       switchNodeDialog.value = true
-      selectedNodes.value = [lastNodeDoubleClicked.value];
+      selectedNodeUUIDs.value = [lastNodeDoubleClicked.value];
       return
     }
 
     lastNodeDoubleClicked.value = node;
-    nodeUuid.value = node;
+    selectedNodeUUIDs.value =  [node];
 
-    openNodeEditor();
+    showNodeEditor.value = true;
     await nextTick();
     centerClickLeftToEditor(event);
   },
   "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
     for (const p in dragEvent) {
-      const draggedNode = graphInStore.value?.graph.nodes.find(
+
+      const draggedNode = props.graph.nodes.find(
         (x) => x.uuid === p
       );
       if (draggedNode === undefined) {
-        console.log("Could not find dragged Node in our local store");
+        console.log(`Dragged unknown node ${p}`);
         continue;
       }
-      draggedNode.positionX = dragEvent[p].x;
-      draggedNode.positionY = dragEvent[p].y;
-      graphStore.updateNodePosition(draggedNode);
+
+      updateNodeMutation.executeMutation({
+        nodeUuid: draggedNode.uuid,
+        positionX: dragEvent[p].x,
+        positionY: dragEvent[p].y,
+      })
     }
   },
 };
+
+  /*
+    transforms the edges, nodes and layout from our StoryGraph model to
+    v-network-graph model. Maybe this can be done in a nicer,
+    two way support via urql as some kind of type transformation?
+  */
+  function nodes(): GraphNodes {
+    const n: GraphNodes = {};
+    props.graph.nodes.forEach((node) => {
+      const graphNode: GraphNode = {
+        name: node.name,
+        color: node.color,
+        scriptCells: node.scriptCells,
+      };
+      n[node.uuid] = graphNode;
+    });
+    return n;
+  }
+
+  function edges(): GraphEdges {
+    const e: GraphEdges = {};
+    props.graph.edges.forEach((edge) => {
+      const graphEdge: GraphEdge = {
+        source: edge.inNode.uuid,
+        target: edge.outNode.uuid,
+      };
+      e[edge.uuid] = graphEdge;
+    });
+    return e;
+  }
+
+  function layouts(): GraphNodes {
+    const n: GraphNodes = {};
+    props.graph.nodes.forEach((node) => {
+      const graphNode: GraphNode = {
+        x: node.positionX,
+        y: node.positionY,
+      };
+      n[node.uuid] = graphNode;
+    });
+    const layout = {
+      nodes: n,
+    };
+    return layout;
+  }
 
 // Dialogs
 const lastNodeDoubleClicked = ref<Scalars["UUID"]>("")
 const nextNodeDoubleClicked = ref<Scalars["UUID"]>("")
 const switchNodeDialog: Ref<boolean> = ref(false);
 
-const switchWithoutSaving = () => {
-  switchNodeDialog.value = false;
-  scriptCellsModified.value = false;
-  nodeUuid.value = nextNodeDoubleClicked.value;
-  selectedNodes.value = [nextNodeDoubleClicked.value]
-  lastNodeDoubleClicked.value = nextNodeDoubleClicked.value;
-  openNodeEditor();
+const graphSettings = {
+  standard: vNG.defineConfigs({
+    node: {
+      selectable: true,
+      normal: {
+        type: "circle",
+        radius: 16,
+        strokeWidth: 0,
+        color: variables.grey,
+      },
+      hover: {
+        type: "circle",
+        radius: 16,
+        strokeWidth: 0,
+        color: variables.greenLight,
+      },
+      selected: {
+        type: "circle",
+        radius: 16,
+        strokeWidth: 0,
+        color: variables.greenLight,
+      },
+      label: {
+        fontSize: 15,
+        fontFamily: "arial",
+        color: variables.black,
+        margin: 5,
+        background: {
+          visible: true,
+          color: variables.white08,
+          padding: {
+            vertical: 1,
+            horizontal: 4,
+          },
+          borderRadius: 2,
+        },
+      },
+      focusring: { visible: false },
+      zOrder: {
+        enabled: true, // whether the z-order control is enable or not. default: false
+        bringToFrontOnHover: true, // whether to bring to front on hover.    default: true
+        bringToFrontOnSelected: true, // whether to bring to front on selected. default: true
+      },
+    },
+    edge: {
+      selectable: true,
+      normal: {
+        width: 3,
+        color: "black",
+        dasharray: 0,
+        animationSpeed: 5,
+        linecap: "square",
+        animate: false,
+      },
+      hover: {
+        width: 4,
+        color: variables.greenLight,
+        dasharray: "0",
+        linecap: "square",
+        animate: false,
+      },
+      selected: {
+        width: 3,
+        color: variables.greenLight,
+        dasharray: "0",
+        linecap: "square",
+        animate: false,
+      },
+      gap: 5,
+      // type: "straight",
+      type: "curve",
+      // gap: 40,
+      margin: 8, // margin between the edge and the node
+      marker: {
+        source: {
+          type: "none",
+          width: 4,
+          height: 4,
+          margin: -1,
+          units: "strokeWidth",
+          color: null,
+        },
+        target: {
+          type: "arrow",
+          width: 4,
+          height: 6,
+          margin: -1,
+          units: "strokeWidth",
+          color: null,
+        },
+      },
+      zOrder: {
+        enabled: true, // whether the z-order control is enable or not. default: false
+        bringToFrontOnHover: true, // whether to bring to front on hover.    default: true
+        bringToFrontOnSelected: true, // whether to bring to front on selected. default: true
+      },
+    },
+    view: {
+      grid: {
+        visible: false,
+        interval: 30,
+        thickIncrements: 0,
+        line: {
+          color: "#F5F5F5",
+          width: 1,
+          dasharray: 0,
+        },
+        thick: {
+          color: "#F5F5F5",
+          width: 1,
+          dasharray: 0,
+        },
+      },
+      // layoutHandler: new vNG.GridLayout({ grid: 30 })
+    },
+  }),
 };
+
+
 </script>

@@ -13,7 +13,7 @@ import "./assets/main.css";
 const app = createApp(App);
 
 app.use(urql, {
-  url: import.meta.env.VITE_BACKEND_GRAPHQL_URL || "http://127.0.0.1:8081/graphql",
+  url: `${import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081"}/graphql`,
   requestPolicy: "network-only",
   fetchOptions: {
     credentials: "include"
@@ -21,7 +21,7 @@ app.use(urql, {
   exchanges: [
     ...defaultExchanges,
     subscriptionExchange({
-      forwardSubscription: operation => new SubscriptionClient((import.meta.env.VITE_BACKEND_GRAPHQL_URL || "http://127.0.0.1:8081/graphql").replaceAll("https", "wss").replaceAll("http", "ws"), { reconnect: true }).request(operation)
+      forwardSubscription: operation => new SubscriptionClient((`${import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081"}/graphql`).replaceAll("https", "wss").replaceAll("http", "ws"), { reconnect: true }).request(operation)
     })
   ]
 });

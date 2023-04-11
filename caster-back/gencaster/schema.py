@@ -14,14 +14,13 @@ import asyncio
 import logging
 import os
 import uuid
-from typing import AsyncGenerator, List
+from typing import AsyncGenerator, List, Optional
 
 import strawberry
 import strawberry.django
 from asgiref.sync import sync_to_async
 from django.core.exceptions import PermissionDenied
 from django.core.files import File
-from django.db import transaction
 from django.http.request import HttpRequest
 from strawberry.types import Info
 from strawberry_django.fields.field import StrawberryDjangoField
@@ -31,9 +30,9 @@ import stream.models as stream_models
 from story_graph.engine import Engine
 from story_graph.types import (
     AddGraphInput,
+    AudioCellInput,
     EdgeInput,
     Graph,
-    NewScriptCellInput,
     Node,
     NodeCreate,
     NodeUpdate,
@@ -80,14 +79,28 @@ async def graphql_check_authenticated(info: Info):
         raise PermissionDenied()
 
 
-def _update_cells(new_cells: List[ScriptCellInput]):
-    with transaction.atomic():
-        for new_cell in new_cells:
-            story_graph_models.ScriptCell.objects.filter(uuid=new_cell.uuid).update(
-                cell_order=new_cell.cell_order,
-                cell_code=new_cell.cell_code,
-                cell_type=new_cell.cell_type,
-            )
+async def update_or_create_audio_cell(
+    audio_cell_input: Optional[AudioCellInput],
+) -> Optional[story_graph_models.AudioCell]:
+    if audio_cell_input:
+        (
+            audio_cell,
+            created,
+        ) = await story_graph_models.AudioCell.objects.aupdate_or_create(
+            uuid=audio_cell_input.uuid,
+            defaults={
+                "playback": audio_cell_input.playback,
+                "audio_file_id": audio_cell_input.audio_file.uuid,
+                "volume": audio_cell_input.volume,
+            },
+        )
+        if created:
+            # @todo access .uuid directly to avoid fk access
+            # in async mode
+            log.debug(f"Created audio cell {audio_cell.uuid}")
+    else:
+        audio_cell = None
+    return audio_cell
 
 
 @strawberry.type
@@ -238,58 +251,60 @@ class Mutation:
         return None
 
     @strawberry.mutation
-    async def add_script_cell(
-        self,
-        info,
-        node_uuid: uuid.UUID,
-        new_script_cell: NewScriptCellInput,
-    ) -> ScriptCell:
-        """Creates a new :class:`~story_graph.models.ScriptCell` for a given
-        :class:`~story_graph.models.Edge` and returns this cell.
-        """
+    async def create_update_script_cells(
+        self, info, script_cell_inputs: List[ScriptCellInput], node_uuid: uuid.UUID
+    ) -> List[ScriptCell]:
+        """Creates or updates a given :class:`~story_graph.models.ScriptCell` to change its content."""
         await graphql_check_authenticated(info)
+
         try:
             node: story_graph_models.Node = await story_graph_models.Node.objects.aget(
                 uuid=node_uuid
             )
-            script_cell: story_graph_models.ScriptCell = (
-                await story_graph_models.ScriptCell.objects.acreate(
-                    cell_order=new_script_cell.cell_order,
-                    cell_type=new_script_cell.cell_type,
-                    cell_code=new_script_cell.cell_code,
-                    node=node,
+        except story_graph_models.Node.DoesNotExist as e:
+            log.error(f"Received update on unknown node {node_uuid}")
+            # @todo return error
+            raise e
+
+        script_cells: List[story_graph_models.ScriptCell] = []
+
+        for script_cell_input in script_cell_inputs:
+            audio_cell = await update_or_create_audio_cell(script_cell_input.audio_cell)
+
+            # if no cell order is given we add it to the end of the current node
+            if not script_cell_input.cell_order:
+                cur_max_cell_order = (
+                    await story_graph_models.ScriptCell.objects.filter(node=node)
+                    .order_by("-cell_order")
+                    .afirst()
                 )
+                if cur_max_cell_order:
+                    script_cell_input.cell_order = cur_max_cell_order.cell_order + 1
+                else:
+                    script_cell_input.cell_order = 0
+
+            (
+                script_cell,
+                created,
+            ) = await story_graph_models.ScriptCell.objects.aupdate_or_create(
+                uuid=script_cell_input.uuid,
+                defaults={
+                    "cell_order": script_cell_input.cell_order,
+                    "cell_type": script_cell_input.cell_type,
+                    "cell_code": script_cell_input.cell_code,
+                    "node": node,
+                    "audio_cell": audio_cell,
+                },
             )
-        except Exception as e:
-            raise Exception(f"Could not create node: {e}")
+            if created:
+                log.debug(f"Created script cell {script_cell.uuid}")
+
+            script_cells.append(script_cell)
 
         await GenCasterChannel.send_node_update(
-            layer=info.context.channel_layer,
-            node_uuid=node_uuid,
+            layer=info.context.channel_layer, node_uuid=node.uuid
         )
-
-        return ScriptCell(
-            uuid=script_cell.uuid,
-            node=script_cell.node,
-            cell_order=script_cell.cell_order,
-            cell_code=script_cell.cell_code,
-            cell_type=script_cell.cell_type,
-        )  # type: ignore
-
-    @strawberry.mutation
-    async def update_script_cells(self, info, new_cells: List[ScriptCellInput]) -> None:
-        """Updates a given :class:`~story_graph.models.ScriptCell` to change its content."""
-        await graphql_check_authenticated(info)
-        await sync_to_async(_update_cells)(new_cells)
-
-        script_cell_uuids = [x.uuid for x in new_cells]
-        async for node in story_graph_models.Node.objects.filter(
-            script_cells__uuid__in=script_cell_uuids
-        ):
-            await GenCasterChannel.send_node_update(
-                layer=info.context.channel_layer,
-                node_uuid=node.uuid,
-            )
+        return script_cells  # type: ignore
 
     @strawberry.mutation
     async def delete_script_cell(self, info, script_cell_uuid: uuid.UUID) -> None:
@@ -334,8 +349,10 @@ class Mutation:
             return InvalidAudioFile(error="Only support flac and wav files")
         try:
             audio_file = await stream_models.AudioFile.objects.acreate(
+                name=new_audio_file.name,
                 file=File(new_audio_file.file, name=new_audio_file.file_name),
                 description=new_audio_file.description,
+                auto_generated=False,
             )
         except Exception as e:
             return InvalidAudioFile(

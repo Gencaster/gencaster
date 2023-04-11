@@ -14,7 +14,7 @@ from django.utils.translation import gettext as _
 from google.cloud import texttospeech
 from pythonosc.udp_client import SimpleUDPClient
 
-import story_graph
+import story_graph.models
 
 from .exceptions import NoStreamAvailableException
 
@@ -132,12 +132,12 @@ class StreamPoint(models.Model):
         tts = TextToSpeech.create_from_text(ssml_text)
         self.play_audio_file(tts.audio_file)
 
-    def play_audio_file(self, audio_file: "AudioFile"):
+    def play_audio_file(self, audio_file: "AudioFile") -> "StreamInstruction":
         sc_audio_file_path = f"/data/{audio_file.file.name}"
         sc_code = (
             f'{{Buffer.read(s, path: "{sc_audio_file_path}", action: {{|b| b.play;}})}}'
         )
-        self.send_raw_instruction(sc_code)
+        return self.send_raw_instruction(sc_code)
 
     # todo make this async?
     def send_raw_instruction(self, instruction_text: str) -> "StreamInstruction":
@@ -412,6 +412,21 @@ class AudioFile(models.Model):
 
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
+
+    name = models.CharField(
+        max_length=1024,
+        default="untitled",
+        null=False,
+        blank=False,
+        help_text=_("Acts as an identifier for humans"),
+    )
+
+    auto_generated = models.BooleanField(
+        default=True,
+        help_text=_(
+            "Allows to separate automatic generated audio files speech to text and user uploads"
+        ),
+    )
 
     file = models.FileField(
         editable=True,

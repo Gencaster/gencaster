@@ -11,11 +11,15 @@ import strawberry
 import strawberry.django
 from strawberry import auto
 
+import stream.models as stream_models
+from stream.types import AudioFile
+
 from . import models
 
 # @todo
 # error: Cannot assign multiple types to name "CellType" without an explicit "Type[...]" annotation  [misc]
-CellType = strawberry.enum(models.ScriptCell.CellType)  # type: ignore
+CellType = strawberry.enum(models.CellType)  # type: ignore
+PlaybackType = strawberry.enum(models.AudioCell.PlaybackChoices)  # type: ignore
 
 
 @strawberry.input
@@ -74,6 +78,14 @@ class Edge:
     out_node: Node
 
 
+@strawberry.django.type(models.AudioCell)
+class AudioCell:
+    uuid: auto
+    playback: PlaybackType  # type: ignore
+    volume: auto
+    audio_file: AudioFile
+
+
 @strawberry.django.type(models.ScriptCell)
 class ScriptCell:
     uuid: auto
@@ -81,22 +93,29 @@ class ScriptCell:
     cell_type: CellType  # type: ignore
     cell_code: auto
     cell_order: auto
+    audio_cell: Optional[AudioCell]
+
+
+@strawberry.django.input(stream_models.AudioFile, partial=True)
+class AudioFileReference:
+    uuid: auto
+
+
+@strawberry.django.input(models.AudioCell)
+class AudioCellInput:
+    uuid: auto = strawberry.django.field(default=None)
+    playback: PlaybackType
+    audio_file: AudioFileReference
+    volume: float = 0.2
 
 
 @strawberry.django.input(models.ScriptCell)
 class ScriptCellInput:
-    uuid: auto
+    uuid: auto = strawberry.django.field(default=None)
     cell_type: CellType  # type: ignore
     cell_code: auto
-    cell_order: auto
-
-
-@strawberry.django.input(models.ScriptCell)
-class NewScriptCellInput:
-    # same as ScriptCellInput but on creation we hand out the UUID
-    cell_type: CellType  # type: ignore
-    cell_code: auto
-    cell_order: auto
+    cell_order: auto = strawberry.django.field(default=None)
+    audio_cell: Optional[AudioCellInput]
 
 
 @strawberry.django.input(models.Graph)
