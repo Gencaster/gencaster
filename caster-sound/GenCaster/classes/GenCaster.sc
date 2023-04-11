@@ -318,6 +318,35 @@ GenCasterServer {
 		environment = this.serverInfo;
 		environment[\oscBackendClient] = oscBackendClient;
 		environment[\this] = this;
+		this.loadSynthDefs;
+	}
+
+	loadSynthDefs {
+		// can playback mono and stereo files as stereo files
+		SynthDef(\gencasterBufferPlayback, {|out|
+			var buffer = \buffer.kr(0);
+			var numChannels = BufChannels.kr(buffer);
+			var sig = PlayBuf.ar(
+				numChannels: 2,
+				bufnum: buffer,
+				rate: BufRateScale.kr(buffer) * \rate.kr(1.0),
+				doneAction: Done.freeSelf
+			);
+			sig = Select.ar(numChannels>1, [sig[0]!2, sig]);
+			Out.ar(out, sig * \amp.kr(0.2));
+		}).add;
+	}
+
+	playBuffer {|bufferPath|
+		// loads, plays and frees a buffer
+		// a naive garbage collection mechanism
+		Buffer.read(Server.default, bufferPath, action: {|buffer|
+			Synth(\gencasterBufferPlayback, [\buffer, buffer]);
+			fork({
+				(1+(buffer.duration)).wait;
+				buffer.free;
+			});
+		});
 	}
 
 	num {
