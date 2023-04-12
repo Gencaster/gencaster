@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
-    "@urql/vue": "^1.0.4",
+    "@urql/vue": "^1.1.0",
     "element-plus": "^2.2.32",
     "graphql": "^16.6.0",
     "pinia": "^2.0.28",
