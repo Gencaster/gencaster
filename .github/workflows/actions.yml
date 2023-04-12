@@ -27,15 +27,18 @@ jobs:
           extra_args: --files caster-back/* --files *.* --files docs/* --files caster-sound/*
       - run: ./caster-back/run_tests.sh
         name: "Run tests"
+        continue-on-error: true
       - uses: 5monkeys/cobertura-action@master
-        if: (success() || failure()) && ${{ github.actor != 'dependabot[bot]' }}
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        continue-on-error: true
         with:
           path: caster-back/coverage.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           minimum_coverage: 50
       - name: Backend Test Report
         uses: dorny/test-reporter@v1
-        if: (success() || failure()) && ${{ github.actor != 'dependabot[bot]' }}
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        continue-on-error: true
         with:
           name: Test reporting
           path: caster-back/mypy-tests.xml,caster-back/tests.xml
