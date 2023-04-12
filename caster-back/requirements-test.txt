@@ -2,7 +2,7 @@
 
 mixer==7.2.2
 mypy==0.991
-coverage==6.4
+coverage==7.2.3
 black==22.3.0
 unittest-xml-reporting==3.2.0
 django-stubs==1.13.0
