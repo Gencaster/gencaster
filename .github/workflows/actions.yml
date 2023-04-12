@@ -105,6 +105,7 @@ jobs:
     needs: ["editor", "backend", "frontend"]
     name: Deploy dev
     runs-on: ubuntu-20.04
+    concurrency: "dev_deployment"
     steps:
       - name: Deploy dev environment
         uses: appleboy/ssh-action@master
