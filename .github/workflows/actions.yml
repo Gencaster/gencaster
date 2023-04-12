@@ -28,14 +28,14 @@ jobs:
       - run: ./caster-back/run_tests.sh
         name: "Run tests"
       - uses: 5monkeys/cobertura-action@master
-        if: success() || failure()
+        if: (success() || failure()) && ${{ github.actor != 'dependabot[bot]' }}
         with:
           path: caster-back/coverage.xml
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           minimum_coverage: 50
       - name: Backend Test Report
         uses: dorny/test-reporter@v1
-        if: success() || failure()
+        if: (success() || failure()) && ${{ github.actor != 'dependabot[bot]' }}
         with:
           name: Test reporting
           path: caster-back/mypy-tests.xml,caster-back/tests.xml
@@ -105,6 +105,7 @@ jobs:
     needs: ["editor", "backend", "frontend"]
     name: Deploy dev
     runs-on: ubuntu-20.04
+    concurrency: "dev_deployment"
     steps:
       - name: Deploy dev environment
         uses: appleboy/ssh-action@master
