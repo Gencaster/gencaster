@@ -5,19 +5,19 @@ updates:
     directory: "/caster-back"
     schedule:
       interval: "weekly"
-    target-branch: "develop"
+    target-branch: "main"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-    target-branch: "develop"
+    target-branch: "main"
   - package-ecosystem: "npm"
     directory: "/caster-front"
     schedule:
       interval: "weekly"
-    target-branch: "develop"
+    target-branch: "main"
   - package-ecosystem: "npm"
     directory: "/caster-editor"
     schedule:
       interval: "weekly"
-    target-branch: "develop"
+    target-branch: "main"
