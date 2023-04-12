@@ -7,6 +7,6 @@ strawberry-graphql-django==0.8.2
 strawberry-graphql[channels]<=0.154.0
 strawberry-django-plus==1.35
 django-cors-headers==3.13.0
-mistletoe==0.9.0
+mistletoe==1.0.1
 pydantic==1.10.7
 channels-redis==4.0.0
