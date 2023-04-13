@@ -42,6 +42,7 @@ const server = envServer === undefined ? windowServer : envServer;
 
 // @ts-expect-error: janus is an old library w/o es support
 const Janus = window.Janus;
+
 let audioBridge: any = null;
 let streaming: any = null;
 const streamingConnected: Ref<boolean> = ref(false);
@@ -168,8 +169,6 @@ const setupJanusStreaming = () => {
     },
     onmessage(msg: any, jsep: RTCSessionDescription) {
       if (jsep) {
-        // eslint-disable-next-line unicorn/prefer-includes
-        const stereo = jsep.sdp.indexOf("stereo=1") !== -1;
         // Offer from the plugin, let's answer
         streaming.createAnswer({
           jsep,
@@ -177,7 +176,7 @@ const setupJanusStreaming = () => {
           media: { audioSend: false, videoSend: false, data: true },
           customizeSdp(jsep: RTCSessionDescription) {
             // eslint-disable-next-line unicorn/prefer-includes
-            if (stereo && jsep.sdp.indexOf("stereo=1") === -1) {
+            if (jsep.sdp.indexOf("stereo=1") === -1) {
               // Make sure that our offer contains stereo too
               // @ts-expect-error: sdp seems readonly but we ignore it
               jsep.sdp = jsep.sdp.replace(
