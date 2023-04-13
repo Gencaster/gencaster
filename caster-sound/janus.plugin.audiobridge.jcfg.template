@@ -12,6 +12,8 @@ room-$NUM: {
         rtp_forward_port = ${JANUS_IN_PORT} # port to forward RTP packets of mixed audio to
         rtp_forward_codec = "opus" # (default), pcma (A-Law) or pcmu (mu-Law)
         rtp_forward_always_on = true # true|false, whether silence should be forwarded when the room is empty (optional: false used if missing)
+        default_bitrate = 96
+        audiolevel_ext = false
 }
 
 EOF
