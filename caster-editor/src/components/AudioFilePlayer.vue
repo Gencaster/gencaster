@@ -7,7 +7,8 @@ export interface AudioType extends Pick<AudioFile, 'name'> {
 }
 
 export interface AudioFilePlayerProps {
-  audioFile:  AudioType;
+  audioFile: AudioType;
+  type: 'minimal' | 'browser';
 }
 
 const audioPlayer: Ref<HTMLAudioElement | undefined> = ref()
@@ -22,13 +23,13 @@ const toggleAudio = () => {
 
   if (audioPlaying.value) {
     audioPlaying.value = false
-    if(audioPlayer.value) {
+    if (audioPlayer.value) {
       audioPlayer.value.pause()
       audioPlayer.value.currentTime = 0;
     }
   } else {
     audioPlaying.value = true
-    if(audioPlayer.value) {
+    if (audioPlayer.value) {
       audioPlayer.value.play()
     }
   }
@@ -44,27 +45,49 @@ onMounted(() => {
 
 <template>
   <div class="media-player">
-    <button @click="toggleAudio">
-      <img
-        v-if="!audioPlaying"
-        src="@/assets/icons/icon-triangle-right.svg"
-        alt="Play button"
-        class="fixArrow"
-      >
-      <img
-        v-else
-        src="@/assets/icons/icon-pause.svg"
-        alt="Play button"
-      >
-    </button>
-    <p>{{ audioFile.name }}</p>
-    <p>no date</p>
+    <div v-if="type === 'browser'">
+      <button @click="toggleAudio">
+        <img
+          v-if="!audioPlaying"
+          src="@/assets/icons/icon-triangle-right.svg"
+          alt="Play button"
+          class="fixArrow"
+        >
+        <img
+          v-else
+          src="@/assets/icons/icon-pause.svg"
+          alt="Play button"
+        >
+      </button>
+      <p>{{ audioFile.name }}</p>
+      <p>no date</p>
 
-    <audio
-      v-if="audioFile.file"
-      ref="audioPlayer"
-      :src="`${baseURL}${audioFile.file.url}`"
-    />
+      <audio
+        v-if="audioFile.file"
+        ref="audioPlayer"
+        :src="`${baseURL}${audioFile.file.url}`"
+      />
+    </div>
+    <div v-if="type === 'minimal'">
+      <button @click="toggleAudio">
+        <img
+          v-if="!audioPlaying"
+          src="@/assets/icons/icon-triangle-right.svg"
+          alt="Play button"
+          class="fixArrow"
+        >
+        <img
+          v-else
+          src="@/assets/icons/icon-pause.svg"
+          alt="Play button"
+        >
+      </button>
+      <audio
+        v-if="audioFile.file"
+        ref="audioPlayer"
+        :src="`${baseURL}${audioFile.file.url}`"
+      />
+    </div>
   </div>
 </template>
 
@@ -75,7 +98,12 @@ onMounted(() => {
   display: flex;
   height: 26px;
   width: 100%;
-  align-items: center;
+
+  div {
+    align-items: center;
+    display: flex;
+    height: 26px;
+  }
 
   p {
     margin: 0;

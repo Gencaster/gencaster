@@ -67,6 +67,7 @@ const doRefresh = () => {
                 class="row"
               >
                 <MediaPlayer
+                  :type="'browser'"
                   :audio-file="audioFile as AudioType"
                 />
                 <button @click="selectedUUID = audioFile.uuid">

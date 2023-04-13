@@ -1,5 +1,5 @@
 <template>
-  <div class="block">
+  <div class="block block-markdown">
     <div
       :class="{
         'editor-comment': cellType === CellType.Comment,
