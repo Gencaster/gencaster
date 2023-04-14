@@ -49,3 +49,14 @@
     --el-dialog-content-font-size: 15px;
   }
 }
+/* SLIDER */
+
+.el-slider {
+  .el-slider__bar {
+    background-color: $grey-dark;
+  }
+
+  .el-slider__button {
+    border-color: $grey-dark;
+  }
+}

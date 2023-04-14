@@ -20,7 +20,12 @@
       </div>
     </div>
     <div class="playback slot quarter">
-      <!-- <p>
+      <div class="header">
+        <p class="title lighter">
+          Playback
+        </p>
+      </div>
+      <div class="content">
         <ElSelect
           v-model="audioCellData.playback"
           placeholder="Select"
@@ -32,18 +37,31 @@
             :value="value"
           />
         </ElSelect>
-      </p> -->
+      </div>
     </div>
     <div class="volume slot quarter">
-      <!-- <ElSlider
-        v-model="audioCellData.volume"
-        :min="0.0"
-        :max="1.0"
-        :step="0.01"
-        show-input
-      /> -->
+      <div class="header">
+        <p class="title lighter">
+          Volume
+        </p>
+      </div>
+
+      <div class="content">
+        <ElSlider
+          v-model="audioCellData.volume"
+          :min="0.0"
+          :max="1.0"
+          :step="0.01"
+        />
+      </div>
     </div>
-    <div class="coment slot half" />
+    <div class="comment slot half">
+      <div class="header">
+        <p class="title lighter">
+          Comment
+        </p>
+      </div>
+    </div>
 
 
     <Browser
@@ -95,6 +113,8 @@ const audioCellData = computed<AudioScriptCellData['audioCell']>({
   }
 });
 
+const radio3 = ref('New York')
+
 </script>
 
 <style lang="scss" scoped>
@@ -124,6 +144,10 @@ const audioCellData = computed<AudioScriptCellData['audioCell']>({
     justify-content: space-between;
     height: 20px;
 
+    .lighter {
+      color: $grey-dark;
+    }
+
     p {
       margin: 0;
     }
@@ -149,9 +173,18 @@ const audioCellData = computed<AudioScriptCellData['audioCell']>({
 
     .content {
       display: flex;
-      align-items: center;
+      align-items: end;
       // justify-content: space-around;
       // align-items: flex-end;
+    }
+  }
+
+  .playback, .volume {
+    border-right: 1px solid $grey;
+    .content {
+      display: flex;
+      align-items: end;
+
     }
   }
 }
