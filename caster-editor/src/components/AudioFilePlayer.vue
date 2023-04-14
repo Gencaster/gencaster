@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { watch, ref, onMounted, computed, type Ref } from "vue";
 import type { AudioFile, DjangoFileType } from "@/graphql";
+import { ElSlider } from "element-plus";
+
 export interface AudioType extends Pick<AudioFile, 'name'> {
   file: Pick<DjangoFileType, 'url'>
 }
@@ -13,6 +15,7 @@ export interface AudioFilePlayerProps {
 
 const audioPlayer: Ref<HTMLAudioElement | undefined> = ref()
 const audioPlaying = ref(false)
+const position: Ref<number> = ref(0.0);
 
 const props = defineProps<AudioFilePlayerProps>();
 
@@ -46,6 +49,10 @@ const normalizedVolume = computed(() => {
 watch(normalizedVolume, () => {
   setVolume()
 })
+
+const updatePosition = () => {
+  position.value = ((audioPlayer.value?.currentTime ?? 0.0) / (audioPlayer.value?.duration ?? 1.0));
+}
 
 const setVolume = () => {
   if (audioPlayer.value === undefined) return
@@ -87,7 +94,10 @@ onMounted(() => {
         :src="`${baseURL}${audioFile.file.url}`"
       />
     </div>
-    <div v-if="type === 'minimal'">
+    <div
+      v-if="type === 'minimal'"
+      class="minimal"
+    >
       <button @click="toggleAudio">
         <img
           v-if="!audioPlaying"
@@ -105,7 +115,16 @@ onMounted(() => {
         v-if="audioFile.file"
         ref="audioPlayer"
         :src="`${baseURL}${audioFile.file.url}`"
+        @timeupdate="updatePosition()"
       />
+      <ElSlider
+        v-model="position"
+        :min="0.0"
+        :max="1.0"
+      />
+      <p v-if="audioPlayer">
+        {{ (position * (audioPlayer?.duration)).toFixed(0) ?? '' }}s / {{ (audioPlayer?.duration).toFixed(0) ?? '' }}s
+      </p>
     </div>
   </div>
 </template>
@@ -150,6 +169,14 @@ button {
 
   .fixArrow {
     transform: translateX(0px);
+  }
+}
+
+.minimal {
+
+  .el-slider {
+    width: 100px;
+    margin-right: 16px;
   }
 }
 </style>
