@@ -88,17 +88,17 @@ const scriptCellText = computed<string>({
   }
 });
 
-const sriptCellAudioCell = computed<ScriptCellData['audioCell']>({
-  get() {
-    return props.scriptCell.audioCell ?? undefined;
-  },
-  set(value) {
-    const newCell = {...props.scriptCell};
-    newCell.audioCell = value;
-    emit('update:scriptCell', newCell);
-    return value;
-  }
-});
+// const sriptCellAudioCell = computed<ScriptCellData['audioCell']>({
+//   get() {
+//     return props.scriptCell.audioCell ?? undefined;
+//   },
+//   set(value) {
+//     const newCell = {...props.scriptCell};
+//     newCell.audioCell = value;
+//     emit('update:scriptCell', newCell);
+//     return value;
+//   }
+// });
 
 const displayError = async(message: string) => {
   ElMessage({
