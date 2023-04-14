@@ -13,9 +13,10 @@
         </p>
       </div>
       <div class="content">
-        <MediaPlayer
+        <AudioPlayer
           :audio-file="audioCell.audioFile as AudioType"
           :type="'minimal'"
+          :volume="audioCellData.volume"
         />
       </div>
     </div>
@@ -70,7 +71,6 @@
       </div>
     </div>
 
-
     <Browser
       v-if="showBrowser"
       @cancel="showBrowser = false"
@@ -85,7 +85,7 @@
 <script lang="ts" setup>
 import { computed, ref, type Ref } from "vue";
 import Browser from "@/components/AudioFileBrowser.vue";
-import MediaPlayer, { type AudioType } from "./AudioFilePlayer.vue"
+import AudioPlayer, { type AudioType } from "./AudioFilePlayer.vue"
 import ScriptCellMarkdown from './ScriptCellMarkdown.vue';
 import { ElSelect, ElOption, ElSlider } from "element-plus";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

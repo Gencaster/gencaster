@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { ref, onMounted, type Ref } from "vue";
+import { watch, ref, onMounted, computed, type Ref } from "vue";
 import type { AudioFile, DjangoFileType } from "@/graphql";
-
 export interface AudioType extends Pick<AudioFile, 'name'> {
   file: Pick<DjangoFileType, 'url'>
 }
@@ -9,12 +8,13 @@ export interface AudioType extends Pick<AudioFile, 'name'> {
 export interface AudioFilePlayerProps {
   audioFile: AudioType;
   type: 'minimal' | 'browser';
+  volume?: number;
 }
 
 const audioPlayer: Ref<HTMLAudioElement | undefined> = ref()
 const audioPlaying = ref(false)
 
-defineProps<AudioFilePlayerProps>();
+const props = defineProps<AudioFilePlayerProps>();
 
 const baseURL: string = import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081";
 
@@ -35,10 +35,29 @@ const toggleAudio = () => {
   }
 }
 
+const normalizedVolume = computed(() => {
+  if (props.volume !== undefined && props.volume <= 1 && props.volume >= 0) {
+    return props.volume
+  } else {
+    return 1
+  }
+})
+
+watch(normalizedVolume, () => {
+  setVolume()
+})
+
+const setVolume = () => {
+  if (audioPlayer.value === undefined) return
+  audioPlayer.value.volume = normalizedVolume.value
+}
+
 onMounted(() => {
   audioPlayer.value?.addEventListener('ended', () => {
     audioPlaying.value = false
   })
+
+  setVolume()
 })
 
 </script>

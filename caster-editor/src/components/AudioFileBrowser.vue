@@ -1,10 +1,11 @@
-<script lang="ts" setup>import { computed, ref, type Ref } from "vue";
+<script lang="ts" setup>
+import { computed, ref, type Ref } from "vue";
 import FileUpload from "./AudioFileUpload.vue";
-import MediaPlayer, {type AudioType} from "./AudioFilePlayer.vue"
-import { useAudioFilesQuery, type Scalars  } from "@/graphql";
+import MediaPlayer, { type AudioType } from "./AudioFilePlayer.vue"
+import { useAudioFilesQuery, type Scalars } from "@/graphql";
 
 const props = defineProps<{
-  audioFileUUID?: {type: Scalars['UUID'], required: false}
+  audioFileUUID?: { type: Scalars['UUID'], required: false }
 }>();
 
 const emit = defineEmits<{
@@ -13,7 +14,7 @@ const emit = defineEmits<{
 }>();
 
 const audioNameFilter: Ref<string> = ref("");
-const { data, executeQuery: refreshData } = useAudioFilesQuery({variables: {audioNameFilter}}).executeQuery();
+const { data, executeQuery: refreshData } = useAudioFilesQuery({ variables: { audioNameFilter } }).executeQuery();
 
 const selectedUUID = computed<Scalars["UUID"] | undefined>({
   get() {
@@ -50,17 +51,13 @@ const doRefresh = () => {
       <div class="content">
         <div class="left">
           <FileUpload class="upload" />
-          <el-button
-            @click="emit('cancel')"
-          >
+          <el-button @click="emit('cancel')">
             Cancel
           </el-button>
         </div>
         <div class="right">
           <div class="list-wrapper">
-            <div
-              v-if="data?.audioFiles"
-            >
+            <div v-if="data?.audioFiles">
               <div
                 v-for="(audioFile, index) in data?.audioFiles"
                 :key="index"
@@ -148,6 +145,7 @@ const doRefresh = () => {
       padding-bottom: $spacingM;
       height: 100%;
     }
+
     .list-wrapper {
       width: 100%;
 
