@@ -61,7 +61,7 @@ type Maybe<T> = T | undefined | null;
 
 type ScriptCellData = Pick<ScriptCell, 'cellType' | 'cellCode' | 'uuid'> & {
   audioCell?: null | undefined | Pick<AudioCell, 'playback' | 'uuid' | 'volume'> & {
-    audioFile: Pick<AudioFile, 'uuid'> & {
+    audioFile: Pick<AudioFile, 'uuid' | 'name'> & {
       file?: Maybe<Pick<DjangoFileType, 'url'>>
     }
   }

@@ -74,8 +74,12 @@
     <Browser
       v-if="showBrowser"
       @cancel="showBrowser = false"
-      @selected-audio-file="(uuid: Scalars['UUID']) => {
-        audioCellData.audioFile.uuid = uuid;
+      @selected-audio-file="(audioFile) => {
+        audioCellData.audioFile.name = audioFile.name;
+        audioCellData.audioFile.uuid = audioFile.uuid;
+        if(audioCellData.audioFile.file?.url && audioFile.file) {
+          audioCellData.audioFile.file.url = audioFile.file.url
+        }
         showBrowser = false;
       }"
     />
@@ -89,14 +93,19 @@ import AudioPlayer, { type AudioType } from "./AudioFilePlayer.vue"
 import ScriptCellMarkdown from './ScriptCellMarkdown.vue';
 import { ElSelect, ElOption, ElSlider } from "element-plus";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { type ScriptCell, type AudioCell, type AudioFile, PlaybackChoices, type Scalars } from "@/graphql";
+import { type ScriptCell, type AudioCell, type AudioFile, PlaybackChoices, type Scalars, type DjangoFileType } from "@/graphql";
 import { CellType } from "@/graphql";
 
 
 // Props and Types
+
+type Maybe<T> = T | undefined | null;
+
 type AudioScriptCellData = Pick<ScriptCell, 'cellCode' | 'cellType'> & {
   audioCell: Pick<AudioCell, 'uuid' | 'volume' | 'playback'> & {
-    audioFile: AudioFile
+    audioFile: Pick<AudioFile, 'name' | 'uuid'> & {
+      file?: Maybe<Pick<DjangoFileType, 'url'>>
+    }
   }
 }
 
