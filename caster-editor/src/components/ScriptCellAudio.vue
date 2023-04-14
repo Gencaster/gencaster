@@ -61,6 +61,13 @@
           Comment
         </p>
       </div>
+
+      <div class="content">
+        <ScriptCellMarkdown
+          v-model:text="textData"
+          :cell-type="CellType.Comment"
+        />
+      </div>
     </div>
 
 
@@ -76,14 +83,17 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, ref, type Ref } from "vue";
+import Browser from "@/components/AudioFileBrowser.vue";
+import MediaPlayer, { type AudioType } from "./AudioFilePlayer.vue"
+import ScriptCellMarkdown from './ScriptCellMarkdown.vue';
+import { ElSelect, ElOption, ElSlider } from "element-plus";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { type ScriptCell, type AudioCell, type AudioFile, PlaybackChoices, type Scalars } from "@/graphql";
+import { CellType } from "@/graphql";
 
-import Browser from "@/components/AudioFileBrowser.vue";
-import { computed, ref, type Ref } from "vue";
-import { ElSelect, ElOption, ElSlider } from "element-plus";
-import MediaPlayer, { type AudioType } from "./AudioFilePlayer.vue"
 
+// Props and Types
 type AudioScriptCellData = Pick<ScriptCell, 'cellCode' | 'cellType'> & {
   audioCell: Pick<AudioCell, 'uuid' | 'volume' | 'playback'> & {
     audioFile: AudioFile
@@ -95,12 +105,11 @@ const props = defineProps<{
   audioCell: AudioScriptCellData['audioCell']
 }>();
 
+// Mutations
 const emit = defineEmits<{
   (e: "update:audioCell", scriptCell: AudioScriptCellData['audioCell']): void
   (e: "update:text", text: string): void
 }>();
-
-const showBrowser: Ref<boolean> = ref(false);
 
 const audioCellData = computed<AudioScriptCellData['audioCell']>({
   get() {
@@ -113,7 +122,18 @@ const audioCellData = computed<AudioScriptCellData['audioCell']>({
   }
 });
 
-const radio3 = ref('New York')
+const textData = computed<string>({
+  get() {
+    return props.text;
+  },
+  set(value) {
+    emit('update:text', value);
+    return value;
+  }
+});
+
+// State
+const showBrowser: Ref<boolean> = ref(false);
 
 </script>
 
@@ -179,12 +199,34 @@ const radio3 = ref('New York')
     }
   }
 
-  .playback, .volume {
+  .playback,
+  .volume {
     border-right: 1px solid $grey;
+
     .content {
       display: flex;
       align-items: end;
 
+    }
+  }
+
+  .comment {
+    .content {
+      .block-markdown {
+        min-height: 60px;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+
+        :deep(.editor-comment) {
+          width: 100%;
+          .toastui-editor-defaultUI .ProseMirror {
+            padding: 4px 0px 12px 0px;
+            overflow-wrap: anywhere;
+          }
+        }
+
+      }
     }
   }
 }
