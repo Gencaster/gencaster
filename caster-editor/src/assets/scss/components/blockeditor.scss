@@ -108,6 +108,10 @@
       padding: 20px 20px 15px 30px;
       border: 1px solid $grey;
 
+      &:has(.block-audio) {
+        padding: 0;
+      }
+
       &.dragging {
         pointer-events: none;
         cursor: grabbing !important;
@@ -118,10 +122,6 @@
             overflow-x: hidden; // hides the scrollbar on drag
           }
         }
-      }
-
-      &.no-padding {
-        padding: 0px 0px 0px 0px;
       }
 
       .cell-type {

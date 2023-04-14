@@ -61,7 +61,7 @@ type Maybe<T> = T | undefined | null;
 
 type ScriptCellData = Pick<ScriptCell, 'cellType' | 'cellCode' | 'uuid'> & {
   audioCell?: null | undefined | Pick<AudioCell, 'playback' | 'uuid' | 'volume'> & {
-    audioFile: Pick<AudioFile, 'uuid'> & {
+    audioFile: Pick<AudioFile, 'uuid' | 'name'> & {
       file?: Maybe<Pick<DjangoFileType, 'url'>>
     }
   }
@@ -88,17 +88,17 @@ const scriptCellText = computed<string>({
   }
 });
 
-const sriptCellAudioCell = computed<ScriptCellData['audioCell']>({
-  get() {
-    return props.scriptCell.audioCell ?? undefined;
-  },
-  set(value) {
-    const newCell = {...props.scriptCell};
-    newCell.audioCell = value;
-    emit('update:scriptCell', newCell);
-    return value;
-  }
-});
+// const sriptCellAudioCell = computed<ScriptCellData['audioCell']>({
+//   get() {
+//     return props.scriptCell.audioCell ?? undefined;
+//   },
+//   set(value) {
+//     const newCell = {...props.scriptCell};
+//     newCell.audioCell = value;
+//     emit('update:scriptCell', newCell);
+//     return value;
+//   }
+// });
 
 const displayError = async(message: string) => {
   ElMessage({

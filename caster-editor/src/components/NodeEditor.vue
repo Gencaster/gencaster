@@ -1,5 +1,5 @@
 <template>
-  <div class="test-component node-editor">
+  <div class="node-editor">
     <NodeEditorHeader
       :node="node"
       @save-node="emit('saveNode')"
@@ -40,7 +40,7 @@ const scriptCells = computed({
 
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .node-editor {
   z-index: 2;
   background-color: white;
@@ -50,5 +50,6 @@ const scriptCells = computed({
   right: 0;
   top: 80px;
   transition: right 0.3s ease-in-out;
+  overflow-x: hidden;
 }
 </style>

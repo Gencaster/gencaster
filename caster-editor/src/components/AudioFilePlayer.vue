@@ -1,19 +1,23 @@
 <script lang="ts" setup>
-import { ref, onMounted, type Ref } from "vue";
+import { watch, ref, onMounted, computed, type Ref } from "vue";
 import type { AudioFile, DjangoFileType } from "@/graphql";
+import { ElSlider } from "element-plus";
 
 export interface AudioType extends Pick<AudioFile, 'name'> {
   file: Pick<DjangoFileType, 'url'>
 }
 
 export interface AudioFilePlayerProps {
-  audioFile:  AudioType;
+  audioFile: AudioType;
+  type: 'minimal' | 'browser';
+  volume?: number;
 }
 
 const audioPlayer: Ref<HTMLAudioElement | undefined> = ref()
 const audioPlaying = ref(false)
+const position: Ref<number> = ref(0.0);
 
-defineProps<AudioFilePlayerProps>();
+const props = defineProps<AudioFilePlayerProps>();
 
 const baseURL: string = import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081";
 
@@ -22,49 +26,106 @@ const toggleAudio = () => {
 
   if (audioPlaying.value) {
     audioPlaying.value = false
-    if(audioPlayer.value) {
+    if (audioPlayer.value) {
       audioPlayer.value.pause()
       audioPlayer.value.currentTime = 0;
     }
   } else {
     audioPlaying.value = true
-    if(audioPlayer.value) {
+    if (audioPlayer.value) {
       audioPlayer.value.play()
     }
   }
+}
+
+const normalizedVolume = computed(() => {
+  if (props.volume !== undefined && props.volume <= 1 && props.volume >= 0) {
+    return props.volume
+  } else {
+    return 1
+  }
+})
+
+watch(normalizedVolume, () => {
+  setVolume()
+})
+
+const updatePosition = () => {
+  position.value = ((audioPlayer.value?.currentTime ?? 0.0) / (audioPlayer.value?.duration ?? 1.0));
+}
+
+const setVolume = () => {
+  if (audioPlayer.value === undefined) return
+  audioPlayer.value.volume = normalizedVolume.value
 }
 
 onMounted(() => {
   audioPlayer.value?.addEventListener('ended', () => {
     audioPlaying.value = false
   })
+
+  setVolume()
 })
 
 </script>
 
 <template>
   <div class="media-player">
-    <button @click="toggleAudio">
-      <img
-        v-if="!audioPlaying"
-        src="@/assets/icons/icon-triangle-right.svg"
-        alt="Play button"
-        class="fixArrow"
-      >
-      <img
-        v-else
-        src="@/assets/icons/icon-pause.svg"
-        alt="Play button"
-      >
-    </button>
-    <p>{{ audioFile.name }}</p>
-    <p>no date</p>
+    <div v-if="type === 'browser'">
+      <button @click="toggleAudio">
+        <img
+          v-if="!audioPlaying"
+          src="@/assets/icons/icon-triangle-right.svg"
+          alt="Play button"
+          class="fixArrow"
+        >
+        <img
+          v-else
+          src="@/assets/icons/icon-pause.svg"
+          alt="Play button"
+        >
+      </button>
+      <p>{{ audioFile.name }}</p>
+      <p>no date</p>
 
-    <audio
-      v-if="audioFile.file"
-      ref="audioPlayer"
-      :src="`${baseURL}${audioFile.file.url}`"
-    />
+      <audio
+        v-if="audioFile.file"
+        ref="audioPlayer"
+        :src="`${baseURL}${audioFile.file.url}`"
+      />
+    </div>
+    <div
+      v-if="type === 'minimal'"
+      class="minimal"
+    >
+      <button @click="toggleAudio">
+        <img
+          v-if="!audioPlaying"
+          src="@/assets/icons/icon-triangle-right.svg"
+          alt="Play button"
+          class="fixArrow"
+        >
+        <img
+          v-else
+          src="@/assets/icons/icon-pause.svg"
+          alt="Play button"
+        >
+      </button>
+      <audio
+        v-if="audioFile.file"
+        ref="audioPlayer"
+        :src="`${baseURL}${audioFile.file.url}`"
+        @timeupdate="updatePosition()"
+      />
+      <ElSlider
+        v-model="position"
+        :min="0.0"
+        :max="1.0"
+      />
+      <p v-if="audioPlayer">
+        {{ (position * (audioPlayer?.duration)).toFixed(0) ?? '' }}s / {{ (audioPlayer?.duration).toFixed(0) ?? '' }}s
+      </p>
+    </div>
   </div>
 </template>
 
@@ -75,7 +136,12 @@ onMounted(() => {
   display: flex;
   height: 26px;
   width: 100%;
-  align-items: center;
+
+  div {
+    align-items: center;
+    display: flex;
+    height: 26px;
+  }
 
   p {
     margin: 0;
@@ -103,6 +169,14 @@ button {
 
   .fixArrow {
     transform: translateX(0px);
+  }
+}
+
+.minimal {
+
+  .el-slider {
+    width: 100px;
+    margin-right: 16px;
   }
 }
 </style>

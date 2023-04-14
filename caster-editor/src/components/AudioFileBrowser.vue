@@ -1,25 +1,26 @@
-<script lang="ts" setup>import { computed, ref, type Ref } from "vue";
+<script lang="ts" setup>
+import { computed, ref, type Ref } from "vue";
 import FileUpload from "./AudioFileUpload.vue";
-import MediaPlayer, {type AudioType} from "./AudioFilePlayer.vue"
-import { useAudioFilesQuery, type Scalars  } from "@/graphql";
+import MediaPlayer, { type AudioType } from "./AudioFilePlayer.vue"
+import { useAudioFilesQuery, type AudioFile, type DjangoFileType } from "@/graphql";
 
-const props = defineProps<{
-  audioFileUUID?: {type: Scalars['UUID'], required: false}
-}>();
+export type AudioFilePicker = Pick<AudioFile, 'name' | 'uuid'> & {file?: Pick<DjangoFileType, 'url'> | undefined | null};
+
 
 const emit = defineEmits<{
-  (e: 'selectedAudioFile', uuid: Scalars['UUID']): void
+  (e: 'selectedAudioFile', audioFile: AudioFilePicker): void
   (e: 'cancel'): void
 }>();
 
 const audioNameFilter: Ref<string> = ref("");
-const { data, executeQuery: refreshData } = useAudioFilesQuery({variables: {audioNameFilter}}).executeQuery();
+const { data, executeQuery: refreshData } = useAudioFilesQuery({ variables: { audioNameFilter } }).executeQuery();
 
-const selectedUUID = computed<Scalars["UUID"] | undefined>({
+const selectedAudioFile = computed<AudioFilePicker | undefined>({
   get() {
-    return props.audioFileUUID
+    return undefined
   },
   set(value) {
+    if(value === undefined) return
     emit('selectedAudioFile', value);
     return value;
   }
@@ -50,26 +51,23 @@ const doRefresh = () => {
       <div class="content">
         <div class="left">
           <FileUpload class="upload" />
-          <el-button
-            @click="emit('cancel')"
-          >
+          <el-button @click="emit('cancel')">
             Cancel
           </el-button>
         </div>
         <div class="right">
           <div class="list-wrapper">
-            <div
-              v-if="data?.audioFiles"
-            >
+            <div v-if="data?.audioFiles">
               <div
-                v-for="(audioFile, index) in data?.audioFiles"
+                v-for="(file, index) in data?.audioFiles"
                 :key="index"
                 class="row"
               >
                 <MediaPlayer
-                  :audio-file="audioFile as AudioType"
+                  :type="'browser'"
+                  :audio-file="file as AudioType"
                 />
-                <button @click="selectedUUID = audioFile.uuid">
+                <button @click="selectedAudioFile = file">
                   <p>Select</p>
                 </button>
               </div>
@@ -147,6 +145,7 @@ const doRefresh = () => {
       padding-bottom: $spacingM;
       height: 100%;
     }
+
     .list-wrapper {
       width: 100%;
 

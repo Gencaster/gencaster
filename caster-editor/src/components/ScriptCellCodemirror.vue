@@ -1,5 +1,5 @@
 <template>
-  <div class="block">
+  <div class="block block-codemirror">
     <div
       :class="{
         'editor-supercollider' : cellType===CellType.Supercollider,
