@@ -1,7 +1,7 @@
 -r requirements-dev.txt
 
 mixer==7.2.2
-mypy==0.991
+mypy==1.2.0
 coverage==7.2.3
 black==23.3.0
 unittest-xml-reporting==3.2.0
