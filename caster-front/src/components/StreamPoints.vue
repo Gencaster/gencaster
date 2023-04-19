@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useStreamPointsStore } from "@/stores/StreamPoints";
+import type { StreamPoint } from "@/graphql";
+import { useStreamPointsQuery } from "@/graphql";
 
-const { streamPoints, fetching, selectedStreamPoint } = storeToRefs(useStreamPointsStore());
+const emit = defineEmits<{
+  (e: "selectedStreamPoint", streamPointUUID: StreamPoint): void
+}>();
 
-const selectStreamPoint = (index: number) => {
-  selectedStreamPoint.value = streamPoints.value?.streamPoints[index];
-};
+const { data, fetching } = useStreamPointsQuery();
 </script>
 
 <template>
   <ElTable
     v-loading="fetching"
-    :data="streamPoints?.streamPoints"
+    :data="data?.streamPoints"
     style="width: 100%"
     :default-sort="{ prop: 'port', order: 'ascending' }"
   >
@@ -26,7 +26,7 @@ const selectStreamPoint = (index: number) => {
           link
           type="primary"
           size="small"
-          @click.prevent="selectStreamPoint(scope.$index)"
+          @click.prevent="emit('selectedStreamPoint', scope.row.uuid)"
         >
           Select
         </el-button>

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "@/views/HomeView.vue";
-import AdminView from "@/views/AdminView.vue";
-import GraphPlayerView from "@/views/GraphPlayerView.vue";
+import GraphDetail from "@/components/GraphDetail.vue";
+import DebugPlayer from "@/components/DebugPlayer.vue";
+import Graphs from "@/components/Graphs.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,19 +9,22 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: HomeView
+      component: Graphs
     },
     {
-      path: "/admin",
-      name: "admin",
-      component: AdminView
+      path: "/debug",
+      name: "debug",
+      component: DebugPlayer
     },
     {
-      path: "/graph/:graphUuid/player",
+      path: "/listen/:graphName/",
       name: "graphPlayer",
-      component: GraphPlayerView
+      component: GraphDetail,
+      props: route => ({
+        graphName: route.params.graphName,
+        fullView: false
+      })
     }
-
   ]
 });
 

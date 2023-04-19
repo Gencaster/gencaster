@@ -162,6 +162,24 @@ export interface Graph {
   uuid: Scalars["UUID"]
 }
 
+/**
+ * A collection of :class:`~Node` and :class:`~Edge`.
+ * This can be considered a score as well as a program as it
+ * has an entry point as a :class:`~Node` and can jump to any
+ * other :class:`~Node`, also allowing for recursive loops/cycles.
+ *
+ * Each node can be considered a little program on its own which can consist
+ * of multiple :class:`~ScriptCell` which can be coded in a variety of
+ * languages which can control the frontend and the audio (by e.g. speaking
+ * on the stream) or setting a background music.
+ *
+ * The story graph is a core concept and can be edited with a native editor.
+ */
+export interface GraphFilter {
+  /** Name of the graph */
+  name?: InputMaybe<StrFilterLookup>
+}
+
 export interface IntFilterLookup {
   contains?: InputMaybe<Scalars["Int"]>
   endsWith?: InputMaybe<Scalars["Int"]>
@@ -341,6 +359,11 @@ export interface QueryAudioFilesArgs {
 /** Queries for GenCaster. */
 export interface QueryGraphArgs {
   pk: Scalars["ID"]
+}
+
+/** Queries for GenCaster. */
+export interface QueryGraphsArgs {
+  filters?: InputMaybe<GraphFilter>
 }
 
 /** Queries for GenCaster. */
@@ -566,7 +589,9 @@ export interface User {
   username: Scalars["String"]
 }
 
-export type GetGraphsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetGraphsQueryVariables = Exact<{
+  name?: InputMaybe<Scalars["String"]>
+}>;
 
 export interface GetGraphsQuery { graphs: Array<{ uuid: any; name: string }> }
 
@@ -674,8 +699,8 @@ export type IsAuthenticatedQueryVariables = Exact<{ [key: string]: never }>;
 export interface IsAuthenticatedQuery { isAuthenticated: { email: string; username: string } }
 
 export const GetGraphsDocument = gql`
-    query GetGraphs {
-  graphs {
+    query GetGraphs($name: String) {
+  graphs(filters: {name: {iContains: $name}}) {
     uuid
     name
   }

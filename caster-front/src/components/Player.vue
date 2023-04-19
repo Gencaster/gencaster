@@ -1,34 +1,27 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import type { Ref } from "vue";
-import { ref, watch } from "vue";
+import { type Ref, onMounted, ref, toRef, watch } from "vue";
+import { ElDescriptions, ElDescriptionsItem } from "element-plus";
+import { onBeforeRouteLeave } from "vue-router";
 import { usePlayerStore } from "@/stores/Player";
 import GpsStreaming from "@/components/GpsStreaming.vue";
+import type { Stream, StreamPoint } from "@/graphql";
 
-defineProps({
-  showPlayer: {
-    type: Boolean,
-    default: false
-  },
-  showRawControls: {
-    type: Boolean,
-    default: false
-  },
-  showPlayerInfo: {
-    type: Boolean,
-    default: false
-  },
-  showStreamInfo: {
-    type: Boolean,
-    default: false
-  },
-  showGpsStreaming: {
-    type: Boolean,
-    default: false
-  }
+const props = withDefaults(defineProps<{
+  showPlayer?: boolean
+  showRawControls?: boolean
+  showPlayerInfo?: boolean
+  showGpsStreaming?: boolean
+  streamPoint: StreamPoint
+  stream?: Pick<Stream, "uuid">
+}>(), {
+  showPlayer: false,
+  showRawControls: false,
+  showPlayerInfo: false,
+  showGpsStreaming: false
 });
 
-const { micActive, play, streamInfo, activeStreamPoint } = storeToRefs(usePlayerStore());
+const { micActive, play } = storeToRefs(usePlayerStore());
 
 let audioBridgeWebRtcUp = false;
 const { hostname, protocol } = window.location;
@@ -239,7 +232,22 @@ const stopMicStreaming = () => {
   });
 };
 
-watch(activeStreamPoint, (newStreamPoint, oldStreamPoint) => {
+const stopStreaming = () => {
+  console.log("Stop streaming");
+  streaming.send({
+    message: {
+      request: "stop"
+    }
+  });
+};
+
+onBeforeRouteLeave(() => {
+  console.log("Player unmounted");
+  stopMicStreaming();
+  stopStreaming();
+});
+
+watch(toRef(props, "streamPoint"), (newStreamPoint, oldStreamPoint) => {
   if (newStreamPoint === undefined)
     return;
 
@@ -253,34 +261,38 @@ watch(activeStreamPoint, (newStreamPoint, oldStreamPoint) => {
     switchAudioBridgeRoom(newStreamPoint.janusInRoom);
 });
 
+onMounted(async () => {
+  console.log("Player mounted");
+  await initJanus();
+  // todo this is rather nasty way of setting things up
+  await setTimeout(() => {
+    switchStream(props.streamPoint.janusOutRoom ?? 0);
+  }, 1000.0);
+});
+
 watch(micActive, (micState) => {
   console.log(`Change mic status to ${micState}`);
-  if (micState === false) {
+  if (micState === false)
     stopMicStreaming();
-    return;
-  }
-  if (activeStreamPoint.value === undefined)
-    return;
-  if (activeStreamPoint.value.janusInRoom)
-    switchAudioBridgeRoom(activeStreamPoint.value.janusInRoom);
+
+  if (toRef(props, "streamPoint").value.janusInRoom)
+    switchAudioBridgeRoom(toRef(props, "streamPoint").value.janusInRoom ?? 0);
 });
 
 watch(play, (playState) => {
   console.log(`Change play status to ${playState}`);
   playState ? audioPlayer.value.play() : audioPlayer.value.pause();
 });
-
-initJanus();
 </script>
 
 <template>
   <audio ref="audioPlayer" controls :hidden="showPlayer ? false : true " />
 
   <div v-if="showRawControls" class="player-control">
-    <button :disabled="activeStreamPoint === null" @click="() => { play = true }">
+    <button :disabled="streamPoint === null" @click="() => { play = true }">
       Play
     </button>
-    <button :disabled="activeStreamPoint === null" @click="() => { play = false }">
+    <button :disabled="streamPoint === null" @click="() => { play = false }">
       Pause
     </button>
     <button @click="() => { micActive = !micActive }">
@@ -288,23 +300,27 @@ initJanus();
     </button>
   </div>
 
-  <div v-if="showGpsStreaming" class="streaming-variables">
-    <GpsStreaming />
+  <div v-if="stream">
+    <GpsStreaming
+      :stream="stream"
+    />
+  </div>
+  <div v-else>
+    GPS works only on a Gencaster stream
   </div>
 
   <div v-if="showPlayerInfo" class="player-info">
-    <span>Currently on stream {{ activeStreamPoint?.port }} (Janus ID {{ activeStreamPoint?.janusOutRoom }})</span><br>
-    <span>Mic is active: {{ micActive }}</span>
-  </div>
-
-  <div v-if="showStreamInfo" class="stream-info">
-    <div v-if="streamInfo?.streamInfo.__typename === `NoStreamAvailableError`">
-      Currently no stream is available
-    </div>
-    <div v-else>
-      <span>Assigned stream {{ streamInfo?.streamInfo.stream.streamPoint.port }}</span><br>
-      <span>Current instruction</span><br>
-      <span style="font-family: monospace;">{{ streamInfo?.streamInfo.streamInstruction?.instructionText }}</span>
-    </div>
+    <ElDescriptions
+      title="Player info"
+      :column="1"
+      border
+    >
+      <ElDescriptionsItem label="SuperCollider port">
+        {{ streamPoint.port }}
+      </ElDescriptionsItem>
+      <ElDescriptionsItem label="Janus out port">
+        {{ streamPoint.janusOutPort }}
+      </ElDescriptionsItem>
+    </ElDescriptions>
   </div>
 </template>
