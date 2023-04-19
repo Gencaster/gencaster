@@ -40,12 +40,18 @@ class GraphQLWSConsumerInjector(GraphQLWSConsumer):
 
     def __init__(self, *args, **kwargs):
         self.disconnect_callback: Optional[Callable[[], Awaitable[None]]] = None
+        self.receive_callback: Optional[Callable] = None
         super().__init__(*args, **kwargs)
 
     async def websocket_disconnect(self, message):
         if self.disconnect_callback:
             await self.disconnect_callback()
         return await super().websocket_disconnect(message)
+
+    async def receive(self, *args, **kwargs) -> None:
+        if self.receive_callback:
+            await self.receive_callback(*args, **kwargs)
+        await super().receive(*args, **kwargs)
 
 
 class GenCasterChannel:
