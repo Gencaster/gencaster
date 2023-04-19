@@ -3,7 +3,7 @@ uvicorn[standard]==0.17.5
 psycopg2-binary==2.9.3
 python-osc==1.8.1
 google-cloud-texttospeech==2.14.1
-strawberry-graphql-django==0.8.2
+strawberry-graphql-django==0.9.4
 strawberry-graphql[channels]<=0.154.0
 strawberry-django-plus==1.35
 django-cors-headers==3.13.0
