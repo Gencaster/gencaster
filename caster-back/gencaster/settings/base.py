@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "story_graph",
     "stream",
     "strawberry.django",
+    "strawberry_django_plus",
     "channels",
     "corsheaders",
 ]
