@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:19-alpine
 
 # from https://stackoverflow.com/a/35317425/3475778
 WORKDIR /install

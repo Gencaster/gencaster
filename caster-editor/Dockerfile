@@ -4,7 +4,7 @@
 # the idea was that this Dockerfile will create a node_modules folder according to the docker-container environment
 # but this will result in a 500 by nuxt? i dont care anymore, this is even worse than the cors problem
 
-FROM node:18-alpine
+FROM node:19-alpine
 
 WORKDIR /root/caster-editor/
 
