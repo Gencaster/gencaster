@@ -1,5 +1,5 @@
-query GetGraphs {
-  graphs {
+query GetGraphs($name:String) {
+  graphs(filters: {name: {iContains: $name}}) {
     uuid
     name
   }

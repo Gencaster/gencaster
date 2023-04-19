@@ -36,6 +36,7 @@ from story_graph.types import (
     AudioCellInput,
     EdgeInput,
     Graph,
+    GraphFilter,
     Node,
     NodeCreate,
     NodeUpdate,
@@ -131,7 +132,7 @@ class Query:
 
     stream_point: StreamPoint = strawberry.django.field()
     stream_points: List[StreamPoint] = strawberry.django.field()
-    graphs: List[Graph] = strawberry.django.field()
+    graphs: List[Graph] = strawberry.django.field(filters=GraphFilter)
     graph: Graph = AuthStrawberryDjangoField()
     nodes: List[Node] = AuthStrawberryDjangoField()
     node: Node = AuthStrawberryDjangoField()

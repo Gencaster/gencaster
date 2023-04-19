@@ -46,6 +46,11 @@ class EdgeInput:
     node_out_uuid: uuid.UUID
 
 
+@strawberry.django.filters.filter(models.Graph, lookups=True)
+class GraphFilter:
+    name: auto
+
+
 @strawberry.django.type(models.Graph)
 class Graph:
     uuid: auto
