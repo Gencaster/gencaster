@@ -40,13 +40,9 @@ class Context:
 class CorsAsyncGraphQLView(AsyncGraphQLView):
     """A hack to add CORS headers to our GraphQL endpoint."""
 
-    def _create_response(self, response_data, sub_response):
-        r = super()._create_response(response_data, sub_response)
-        return r
-
     @method_decorator(csrf_exempt)
     async def dispatch(self, request, *args, **kwargs):
-        if request.method.lower() == "options":
+        if request.method and request.method.lower() == "options":
             return HttpResponse()
         return await super().dispatch(request, *args, **kwargs)
 
