@@ -16,19 +16,18 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
-    "@urql/vue": "^1.1.0",
+    "@urql/vue": "^1.0.4",
     "element-plus": "^2.3.3",
     "graphql": "^16.6.0",
     "pinia": "^2.0.28",
     "subscriptions-transport-ws": "^0.11.0",
-    "urql": "^3.0.3",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.34.0",
     "@graphql-codegen/cli": "^3.3.0",
-    "@graphql-codegen/typescript-operations": "^2.5.12",
+    "@graphql-codegen/typescript-operations": "^3.0.3",
     "@graphql-codegen/typescript-vue-urql": "^2.3.6",
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/jsdom": "^20.0.1",
