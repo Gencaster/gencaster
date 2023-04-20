@@ -1,38 +1,30 @@
 <script lang="ts" setup>
-import { storeToRefs } from "pinia";
-import { ElTable } from "element-plus";
+import { ElTable, ElTableColumn } from "element-plus";
+import { useRouter } from "vue-router";
+import { useGetGraphsQuery } from "@/graphql";
 
-import { useGraphsStore } from "@/stores/Graphs";
-
-const { graphs, selectedGraph, fetching } = storeToRefs(useGraphsStore());
-
-const selectGraph = (index: number) => {
-  selectedGraph.value = graphs.value?.graphs[index];
-};
+const router = useRouter();
+const { data, fetching } = useGetGraphsQuery();
 </script>
 
 <template>
   <div>
     <ElTable
       v-loading="fetching"
-      :data="graphs?.graphs"
+      :data="data?.graphs"
       :default-sort="{ prop: 'name', order: 'ascending' }"
-      style="width: 100%"
     >
-      <el-table-column prop="name" label="Name" />
-      <el-table-column prop="uuid" label="UUID" />
-      <el-table-column fixed="right" label="Actions">
+      <ElTableColumn label="Graph name" sortable prop="name">
         <template #default="scope">
           <el-button
             link
-            type="primary"
             size="small"
-            @click.prevent="selectGraph(scope.$index)"
+            @click.prevent="$router.push({ name: 'graphPlayer', params: { graphName: scope.row.name } })"
           >
-            Select
+            {{ scope.row.name }}
           </el-button>
         </template>
-      </el-table-column>
+      </ElTableColumn>
     </ElTable>
   </div>
 </template>

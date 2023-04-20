@@ -2,14 +2,20 @@
 import { storeToRefs } from "pinia";
 import { type Ref, ref, watch } from "vue";
 import { usePlayerStore } from "@/stores/Player";
-import type { Scalars, StreamVariableInput } from "@/graphql";
+import type { Stream, StreamVariableInput } from "@/graphql";
 import { useSendStreamVariableMutation } from "@/graphql";
 
-const { streamInfo } = storeToRefs(usePlayerStore());
+const props = withDefaults(defineProps<{
+  showButton?: boolean
+  stream: Pick<Stream, "uuid">
+}>(), {
+  showButton: false
+});
+
+const { streamGPS } = storeToRefs(usePlayerStore());
 
 const sendStreamVariableMutation = useSendStreamVariableMutation();
 
-const stream: Ref<boolean> = ref(false);
 const watcherId: Ref<number | undefined> = ref(undefined);
 const sendNull: Ref<boolean> = ref(false);
 
@@ -18,14 +24,6 @@ const startStreaming = () => {
 
   navigator.geolocation.getCurrentPosition((position) => {
     console.log("New position ", position);
-    let streamUuid: Scalars["UUID"];
-    if (streamInfo.value?.streamInfo.__typename === "StreamInfo") {
-      streamUuid = streamInfo.value.streamInfo.stream.uuid;
-    }
-    else {
-      console.log("Could not retrieve current stream UUID for GPS streaming");
-      return;
-    }
     const streamVariables: StreamVariableInput[] = [];
 
     // hacky but somehow we can not access the interface via .keys or .entries
@@ -36,7 +34,7 @@ const startStreaming = () => {
         return;
 
       streamVariables.push({
-        streamUuid,
+        streamUuid: props.stream.uuid,
         key: k,
         value: String(v),
         streamToSc: !isNaN(v)
@@ -59,17 +57,19 @@ const stopStreaming = () => {
     navigator.geolocation.clearWatch(watcherId.value);
 };
 
-watch(stream, () => {
-  stream.value ? startStreaming() : stopStreaming();
+watch(streamGPS, () => {
+  console.log("Stream GPS changed");
+  streamGPS.value ? startStreaming() : stopStreaming();
 });
 </script>
 
 <template>
   <el-button
+    v-if="showButton"
     class="button"
     type="warning"
-    @click="() => stream = !stream"
+    @click="() => streamGPS = !streamGPS"
   >
-    {{ stream ? "Disable" : "Activate" }} GPS streaming
+    {{ streamGPS ? "Disable" : "Activate" }} GPS streaming
   </el-button>
 </template>

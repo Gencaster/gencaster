@@ -11,10 +11,11 @@ the running backend.
 """
 
 import asyncio
+import json
 import logging
 import os
 import uuid
-from typing import Any, AsyncGenerator, List, Optional
+from typing import Any, AsyncGenerator, Dict, List, Optional
 
 import strawberry
 import strawberry.django
@@ -35,6 +36,7 @@ from story_graph.types import (
     AudioCellInput,
     EdgeInput,
     Graph,
+    GraphFilter,
     Node,
     NodeCreate,
     NodeUpdate,
@@ -130,7 +132,7 @@ class Query:
 
     stream_point: StreamPoint = strawberry.django.field()
     stream_points: List[StreamPoint] = strawberry.django.field()
-    graphs: List[Graph] = strawberry.django.field()
+    graphs: List[Graph] = strawberry.django.field(filters=GraphFilter)
     graph: Graph = AuthStrawberryDjangoField()
     nodes: List[Node] = AuthStrawberryDjangoField()
     node: Node = AuthStrawberryDjangoField()
@@ -476,7 +478,19 @@ class Subscription:
             stream.active = False
             await sync_to_async(stream.save)()
 
+        async def cleanup_on_stop(**kwargs: Dict[str, str]):
+            """
+            A helper function which scans for a "stop" signal send via the websocket connection of our
+            graphql subscription as this is the indication from urql that we paused the subscription.
+            """
+            if text_data := kwargs.get("text_data"):
+                d = json.loads(text_data)  # type: ignore
+                if d.get("type") == "stop":
+                    log.info("Stop a stream due to a stop signal")
+                    await cleanup()
+
         consumer.disconnect_callback = cleanup
+        consumer.receive_callback = cleanup_on_stop
 
         async for instruction in engine.start(max_steps=int(10e4)):
             yield StreamInfo(

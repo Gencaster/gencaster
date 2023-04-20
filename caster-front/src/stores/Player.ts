@@ -16,11 +16,14 @@ export const usePlayerStore = defineStore("player", () => {
 
   const activeStreamPoint: Ref<StreamPoint | undefined> = ref(undefined);
 
+  const streamGPS: Ref<boolean> = ref(false);
+
   return {
     micActive,
     play,
     streamInfo,
     graphUuid,
-    activeStreamPoint
+    activeStreamPoint,
+    streamGPS
   };
 });

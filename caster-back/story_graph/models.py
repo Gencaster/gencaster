@@ -72,6 +72,7 @@ class Graph(models.Model):
     class Meta:
         verbose_name = "Graph"
         verbose_name_plural = "Graphs"
+        ordering = ["name"]
 
     def __str__(self) -> str:
         return self.name

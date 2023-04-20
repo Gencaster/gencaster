@@ -150,6 +150,24 @@ type Graph {
   edges: [Edge!]!
 }
 
+"""
+A collection of :class:`~Node` and :class:`~Edge`.
+This can be considered a score as well as a program as it
+has an entry point as a :class:`~Node` and can jump to any
+other :class:`~Node`, also allowing for recursive loops/cycles.
+
+Each node can be considered a little program on its own which can consist
+of multiple :class:`~ScriptCell` which can be coded in a variety of
+languages which can control the frontend and the audio (by e.g. speaking
+on the stream) or setting a background music.
+
+The story graph is a core concept and can be edited with a native editor.
+"""
+input GraphFilter {
+  """Name of the graph"""
+  name: StrFilterLookup
+}
+
 input IntFilterLookup {
   exact: Int
   iExact: Int
@@ -269,7 +287,7 @@ enum PlaybackChoices {
 type Query {
   streamPoint(pk: ID!): StreamPoint!
   streamPoints(filters: StreamPointFilter): [StreamPoint!]!
-  graphs: [Graph!]!
+  graphs(filters: GraphFilter): [Graph!]!
   graph(pk: ID!): Graph!
   nodes: [Node!]!
   node(pk: ID!): Node!
