@@ -51,19 +51,20 @@
     <AudioFileBrowser
       v-if="showAudioFileBrowser"
       @cancel="showAudioFileBrowser = false"
-      @selected-audio-file="(uuid) => createAudioCell(uuid)"
+      @selected-audio-file="(audioFile) => createAudioCell(audioFile)"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { PlaybackChoices, type Node, type Scalars } from '@/graphql';
+import { PlaybackChoices, type Node, type Scalars, type AudioFile } from '@/graphql';
 import { CellType, useCreateUpdateScriptCellsMutation } from "@/graphql";
 import { useInterfaceStore } from '@/stores/InterfaceStore';
 import { storeToRefs } from 'pinia';
 import { ref, type Ref } from 'vue';
 import DialogRenameNode from './DialogRenameNode.vue';
 import AudioFileBrowser from './AudioFileBrowser.vue';
+import { ElMessage } from 'element-plus';
 
 export type NodeName = Pick<Node, 'name' | 'uuid'>
 
@@ -76,7 +77,7 @@ const emit = defineEmits<{
   (e: 'saveNode'): void
 }>();
 
-const { showNodeEditor } = storeToRefs(useInterfaceStore());
+const { showNodeEditor, scriptCellsModified } = storeToRefs(useInterfaceStore());
 
 const showAudioFileBrowser: Ref<boolean> = ref(false);
 
@@ -85,7 +86,10 @@ const showRenameNodeDialog: Ref<boolean> = ref(false);
 const createScriptCellMutation = useCreateUpdateScriptCellsMutation();
 
 const addScriptCell = async (cellType: CellType) => {
-    console.log("Add something");
+    if(scriptCellsModified.value === true) {
+      ElMessage.warning("Please save your changes before adding a new script cell");
+      return;
+    }
     if(cellType===CellType.Audio) {
       showAudioFileBrowser.value = true;
       return;
@@ -98,17 +102,17 @@ const addScriptCell = async (cellType: CellType) => {
       }]
     });
     if(error) {
-      alert(`Error on creating script cell: ${error.message}`);
+      ElMessage.error(`Error on creating script cell: ${error.message}`);
     }
 }
 
-const createAudioCell = async (audioFileUUID: Scalars['UUID']) => {
+const createAudioCell = async (audioFile: Pick<AudioFile, 'uuid'>) => {
   const { error } = await createScriptCellMutation.executeMutation({
     nodeUuid: props.node.uuid,
     scriptCellInputs: [{
       audioCell: {
         audioFile: {
-          uuid: audioFileUUID
+          uuid: audioFile.uuid
         },
         playback: PlaybackChoices.AsyncPlayback,
       },
