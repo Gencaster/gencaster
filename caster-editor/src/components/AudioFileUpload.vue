@@ -1,36 +1,61 @@
 <script lang="ts" setup>
-import { ElButton, ElUpload, type UploadUserFile } from "element-plus";
+import { ElButton, ElMessage, ElUpload, type UploadUserFile, ElInput, ElForm, ElFormItem, type FormRules, type FormInstance } from "element-plus";
 
-import { ref, type Ref } from "vue";
-import { useUploadAudioFileMutation, type AddAudioFile } from "@/graphql";
+import { reactive, ref, type Ref } from "vue";
+import { useUploadAudioFileMutation, type AddAudioFile, type Scalars} from "@/graphql";
 
 const fileList: Ref<UploadUserFile[]> = ref([]);
 
 const audioFileUpload = useUploadAudioFileMutation();
-const errorMessage: Ref<string | undefined> = ref(undefined);
+
+const emit = defineEmits<{
+  (e: 'uploadedNewFile', audioFileUUID: Scalars['UUID']): void
+}>();
+
+const form: {name: string | undefined, description: string | undefined} = reactive({
+  name: undefined,
+  description: undefined,
+});
+
+const formRef = ref<FormInstance>();
+
+const rules = reactive<FormRules>({
+  name: {required: true, message: 'Please insert a name', trigger: 'blur'},
+  description: {required: false},
+});
 
 const submitUpload = async () => {
-  if((fileList.value.length < 1)) {
-    errorMessage.value = "No files selected for upload";
-    return;
-  }
+  if (!formRef.value) return
+  await formRef.value.validate((valid, fields) => {
+    if (valid) {
+      doSubmit();
+    } else {
+      ElMessage.error("Input is missing");
+    }
+  })
+};
+
+const doSubmit = async() => {
   const audioUpload: AddAudioFile = {
-    name: (Math.random() + 1).toString(36).substring(7),
-    description: "Some fake description",
+    name: form.name ?? (Math.random() + 1).toString(36).substring(7),
+    description: form.description ?? "",
     fileName: fileList.value[0].name,
     file: fileList.value[0].raw as File
   };
 
   const { data, error } = await audioFileUpload.executeMutation({addAudioFile: audioUpload});
   if(error) {
-    console.log("Unexpected error on uploading the audio: " + error.message);
+    ElMessage.error("Unexpected error on uploading the audio: " + error.message);
   }
   if(data?.addAudioFile.__typename=="InvalidAudioFile") {
-    errorMessage.value = data.addAudioFile.error;
+    ElMessage.error(`Uploaded invalid audio file: ${data.addAudioFile.error}`);
+  } else if(data) {
+    ElMessage.success(`Uploaded audio file successfully`);
+    emit('uploadedNewFile', data.addAudioFile.uuid);
+    form.description = undefined;
+    form.name = undefined;
   }
-};
-
-const limit = 1;
+}
 </script>
 
 <template>
@@ -40,16 +65,10 @@ const limit = 1;
       v-model:file-list="fileList"
       class="uploader"
       :auto-upload="false"
-      :limit="limit"
+      :limit="1"
       accept=".wav,.flac"
       drag
     >
-      <!-- <template #trigger>
-        <ElButton>
-          select file
-        </ElButton>
-      </template> -->
-
       <div class="el-upload__text">
         Drop file here or <em>click to upload</em>
       </div>
@@ -60,15 +79,41 @@ const limit = 1;
         </div>
       </template>
     </ElUpload>
-    {{ errorMessage }}
 
-    <ElButton
-      class="ml-3"
-      type="success"
-      @click="submitUpload()"
+    <ElForm
+      ref="formRef"
+      :model="form"
+      :rules="rules"
+      label-position="top"
     >
-      upload to server
-    </ElButton>
+      <ElFormItem
+        label="Name"
+        prop="name"
+      >
+        <ElInput
+          v-model="form.name"
+          placeholder="Audio name..."
+        />
+      </ElFormItem>
+      <ElFormItem
+        label="Description"
+        prop="description"
+      >
+        <ElInput
+          v-model="form.description"
+          type="textarea"
+          placeholder="Description"
+        />
+      </ElFormItem>
+      <ElButton
+        class="ml-3"
+        type="primary"
+        style="margin-top: 10px;"
+        @click="submitUpload()"
+      >
+        upload to server
+      </ElButton>
+    </ElForm>
   </div>
 </template>
 
