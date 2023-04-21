@@ -3,21 +3,18 @@ import { watch, ref, onMounted, computed, type Ref } from "vue";
 import type { AudioFile, DjangoFileType } from "@/graphql";
 import { ElSlider } from "element-plus";
 
-export interface AudioType extends Pick<AudioFile, 'name'> {
-  file: Pick<DjangoFileType, 'url'>
-}
-
-export interface AudioFilePlayerProps {
-  audioFile: AudioType;
-  type: 'minimal' | 'browser';
-  volume?: number;
-}
-
 const audioPlayer: Ref<HTMLAudioElement | undefined> = ref()
 const audioPlaying = ref(false)
 const position: Ref<number> = ref(0.0);
 
-const props = defineProps<AudioFilePlayerProps>();
+const props = defineProps<{
+  audioFile: Pick<AudioFile, 'name'> & {
+    createdDate?: string
+    file?: undefined | null | Pick<DjangoFileType, 'url'>
+  };
+  type: 'minimal' | 'browser';
+  volume?: number;
+}>();
 
 const baseURL: string = import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081";
 
@@ -86,7 +83,7 @@ onMounted(() => {
         >
       </button>
       <p>{{ audioFile.name }}</p>
-      <p>no date</p>
+      <!-- <p>{{ audioFile.createdDate }}</p> -->
 
       <audio
         v-if="audioFile.file"
