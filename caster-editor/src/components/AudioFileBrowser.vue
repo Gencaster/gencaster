@@ -1,36 +1,21 @@
 <script lang="ts" setup>
-import { computed, ref, type Ref } from "vue";
-import FileUpload from "./AudioFileUpload.vue";
-import MediaPlayer, { type AudioType } from "./AudioFilePlayer.vue"
-import { useAudioFilesQuery, type AudioFile, type DjangoFileType } from "@/graphql";
+import { ref, type Ref } from "vue";
+import AudioFileUpload from "./AudioFileUpload.vue";
+import MediaPlayer from "./AudioFilePlayer.vue"
+import { useAudioFilesQuery, type AudioFile, type DjangoFileType, type Scalars, type ScriptCellInput, type AudioCellInput, type AudioFilesQuery } from "@/graphql";
+import { ElButton } from "element-plus";
 
 export type AudioFilePicker = Pick<AudioFile, 'name' | 'uuid'> & {file?: Pick<DjangoFileType, 'url'> | undefined | null};
 
 
+
 const emit = defineEmits<{
-  (e: 'selectedAudioFile', audioFile: AudioFilePicker): void
+  (e: 'selectedAudioFile', audioFile: AudioFilesQuery['audioFiles'][0]): void
   (e: 'cancel'): void
 }>();
 
 const audioNameFilter: Ref<string> = ref("");
-const { data, executeQuery: refreshData } = useAudioFilesQuery({ variables: { audioNameFilter } }).executeQuery();
-
-const selectedAudioFile = computed<AudioFilePicker | undefined>({
-  get() {
-    return undefined
-  },
-  set(value) {
-    if(value === undefined) return
-    emit('selectedAudioFile', value);
-    return value;
-  }
-});
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const doRefresh = () => {
-  refreshData();
-};
-
+const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audioNameFilter } });
 </script>
 
 <template>
@@ -50,13 +35,16 @@ const doRefresh = () => {
       </div>
       <div class="content">
         <div class="left">
-          <FileUpload class="upload" />
-          <el-button @click="emit('cancel')">
-            Cancel
-          </el-button>
+          <AudioFileUpload
+            class="upload"
+            @uploaded-new-file="executeQuery()"
+          />
         </div>
         <div class="right">
-          <div class="list-wrapper">
+          <div
+            v-loading="fetching"
+            class="list-wrapper"
+          >
             <div v-if="data?.audioFiles">
               <div
                 v-for="(file, index) in data?.audioFiles"
@@ -65,14 +53,22 @@ const doRefresh = () => {
               >
                 <MediaPlayer
                   :type="'browser'"
-                  :audio-file="file as AudioType"
+                  :audio-file="file"
                 />
-                <button @click="selectedAudioFile = file">
+                <button @click="emit('selectedAudioFile', file)">
                   <p>Select</p>
                 </button>
               </div>
             </div>
           </div>
+        </div>
+        <div class="bottom">
+          <ElButton
+            type="primary"
+            @click="emit('cancel')"
+          >
+            Cancel
+          </ElButton>
         </div>
       </div>
     </div>
@@ -83,11 +79,11 @@ const doRefresh = () => {
 @import '@/assets/scss/variables.module.scss';
 
 .audio-selector-wrapper {
-  width: 50%;
+  width: 70%;
   height: 100%;
   position: fixed;
   top: 0;
-  left: 0;
+  left: 15%;
   z-index: 999;
   background-color: rgba($white, 0.8);
   display: flex;

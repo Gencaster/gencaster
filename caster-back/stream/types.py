@@ -58,13 +58,14 @@ class AudioFileFilter:
     description: FilterLookup[str]
 
 
-@strawberry.django.type(models.AudioFile, filters=AudioFileFilter)
+@strawberry.django.type(models.AudioFile, filters=AudioFileFilter, pagination=True)
 class AudioFile:
     uuid: auto
     file: auto
     name: auto
     description: auto
     auto_generated: auto
+    created_date: auto
 
 
 @strawberry.input

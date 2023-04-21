@@ -7,6 +7,7 @@ import Menu from "@/components/Menu.vue";
 import NodeEditor from "@/components/NodeEditor.vue";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 import { useCreateUpdateScriptCellsMutation, useGraphSubscription, useNodeSubscription, type NodeSubscription, type ScriptCellInput } from "@/graphql"
+import { ElMessage } from "element-plus";
 
 const { showNodeEditor, selectedNodeUUIDs, scriptCellsModified } = storeToRefs(useInterfaceStore());
 
@@ -48,7 +49,7 @@ const nodeData = computed<NodeSubscription['node'] | undefined>({
 
 const scriptCellMutation = useCreateUpdateScriptCellsMutation();
 
-const saveNode = () => {
+const saveNode = async () => {
   console.log("I should now save the node");
   if(!nodeData.value) {
     return;
@@ -75,10 +76,16 @@ const saveNode = () => {
     return input;
   });
 
-  scriptCellMutation.executeMutation({
+  const {error} = await scriptCellMutation.executeMutation({
     nodeUuid: nodeData.value.uuid,
     scriptCellInputs: scriptCellInputs
-  })
+  });
+
+  if(error) {
+    ElMessage.error(`Could not save Script Cell: ${error.message}`);
+  } else {
+    scriptCellsModified.value = false;
+  }
 };
 </script>
 

@@ -14,7 +14,7 @@
       </div>
       <div class="content">
         <AudioPlayer
-          :audio-file="audioCell.audioFile as AudioType"
+          :audio-file="audioCell.audioFile"
           :type="'minimal'"
           :volume="audioCellData.volume"
         />
@@ -89,7 +89,7 @@
 <script lang="ts" setup>
 import { computed, ref, type Ref } from "vue";
 import Browser from "@/components/AudioFileBrowser.vue";
-import AudioPlayer, { type AudioType } from "./AudioFilePlayer.vue"
+import AudioPlayer from "./AudioFilePlayer.vue"
 import ScriptCellMarkdown from './ScriptCellMarkdown.vue';
 import { ElSelect, ElOption, ElSlider } from "element-plus";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
