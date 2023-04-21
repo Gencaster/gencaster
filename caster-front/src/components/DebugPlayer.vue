@@ -1,13 +1,31 @@
 <script setup lang="ts">
 import { ElButton, ElCollapse, ElCollapseItem } from "element-plus";
-import { type Ref, ref } from "vue";
+import { type Ref, computed, ref } from "vue";
+import { storeToRefs } from "pinia";
 import StreamInfo from "./StreamInfo.vue";
 import StreamPoints from "@/components/StreamPoints.vue";
 import type { StreamPoint } from "@/graphql";
 import PlayerButtons from "@/components/PlayerButtons.vue";
 import Player from "@/components/Player.vue";
+import { usePlayerStore } from "@/stores/Player";
 
 const selectedStreamPoint: Ref<StreamPoint | undefined> = ref();
+
+const { micActive, streamGPS, play } = storeToRefs(usePlayerStore());
+
+const streamInfo = computed(() => {
+  return {
+    uuid: "",
+    streamPoint: selectedStreamPoint.value
+  };
+});
+
+const resetStreamPoint = () => {
+  micActive.value = false;
+  streamGPS.value = false;
+  play.value = false;
+  selectedStreamPoint.value = undefined;
+};
 </script>
 
 <template>
@@ -21,7 +39,7 @@ const selectedStreamPoint: Ref<StreamPoint | undefined> = ref();
         />
         <ElButton
           style="width: 100%; margin-top: 10px;"
-          @click="selectedStreamPoint = undefined"
+          @click="resetStreamPoint()"
         >
           Reset streaming point
         </ElButton>
@@ -40,7 +58,7 @@ const selectedStreamPoint: Ref<StreamPoint | undefined> = ref();
       <ElCollapseItem title="Debug info">
         <div v-if="selectedStreamPoint">
           <StreamInfo
-            :stream="{ uuid: 'none', streamPoint: selectedStreamPoint }"
+            :stream="streamInfo"
           />
         </div>
         <div v-else>
