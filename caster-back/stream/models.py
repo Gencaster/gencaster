@@ -132,10 +132,40 @@ class StreamPoint(models.Model):
         tts = TextToSpeech.create_from_text(ssml_text)
         self.play_audio_file(tts.audio_file)
 
-    def play_audio_file(self, audio_file: "AudioFile") -> "StreamInstruction":
+    def play_audio_file(
+        self,
+        audio_file: "AudioFile",
+        playback_type: story_graph.models.AudioCell.PlaybackChoices = story_graph.models.AudioCell.PlaybackChoices.ASYNC_PLAYBACK,
+    ) -> "StreamInstruction":
         sc_audio_file_path = f"/data/{audio_file.file.name}"
-        sc_code = f'{{g.playBuffer("{sc_audio_file_path}")}}'
-        return self.send_raw_instruction(sc_code)
+
+        manual_finish = False
+
+        if playback_type == story_graph.models.AudioCell.PlaybackChoices.ASYNC_PLAYBACK:
+            instruction = StreamInstruction.objects.create(
+                stream_point=self,
+                instruction_text=f'{{g.playBuffer("{sc_audio_file_path}")}}',
+            )
+        elif (
+            playback_type == story_graph.models.AudioCell.PlaybackChoices.SYNC_PLAYBACK
+        ):
+            manual_finish = True
+            # we need the uuid on the finish message so we first create the instruction
+            # and after it we modify the callback to include its UUID
+            # @todo: another idea: store the UUID on the Gencsater server instance
+            # of supercollider, but this could be overwritten by another instruction?
+            instruction = StreamInstruction.objects.create(
+                stream_point=self, instruction_text=""
+            )
+            instruction.instruction_text = (
+                f'{{g.syncPlayBuffer("{sc_audio_file_path}", "{instruction.uuid}")}}'
+            )
+            instruction.save()
+        else:
+            raise NotImplementedError(f"Unsupported playback type {playback_type}")
+
+        self.send_stream_instruction(instruction, manual_finish)
+        return instruction
 
     # todo make this async?
     def send_raw_instruction(self, instruction_text: str) -> "StreamInstruction":
@@ -146,10 +176,20 @@ class StreamPoint(models.Model):
         self.send_stream_instruction(instruction)
         return instruction
 
-    def send_stream_instruction(self, instruction: "StreamInstruction") -> None:
+    def send_stream_instruction(
+        self, instruction: "StreamInstruction", manual_finish: bool = False
+    ) -> None:
+        """Sends an OSC message with an instruction to our SuperCollider server.
+        Check the function `instructionReceiver` in `GenCaster.sc` which will accept the send message.
+
+        :param instruction: The given instruction on the Server.
+        :param manual_finish: If set to True, one has to take care self of sending the unlocking `finished` message.
+            This is helpful in cases of async function calls, e.g. on a playback of a sample.
+            Defaults to False.
+        """
         self.client.send_message(
             address="/instruction",
-            value=[str(instruction.uuid), instruction.instruction_text],
+            value=[str(instruction.uuid), instruction.instruction_text, manual_finish],
         )
         instruction.state = StreamInstruction.InstructionState.SENT
         instruction.save()

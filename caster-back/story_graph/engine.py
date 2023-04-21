@@ -59,7 +59,7 @@ class Engine:
 
         """
         instruction = await sync_to_async(self.streaming_point.play_audio_file)(
-            audio_cell.audio_file,
+            audio_cell.audio_file, audio_cell.playback
         )
         yield instruction
         await self.wait_for_finished_instruction(instruction)
