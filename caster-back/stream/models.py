@@ -130,7 +130,10 @@ class StreamPoint(models.Model):
         :param ssml_text: See https://cloud.google.com/text-to-speech/docs/ssml
         """
         tts = TextToSpeech.create_from_text(ssml_text)
-        self.play_audio_file(tts.audio_file)
+        self.play_audio_file(
+            tts.audio_file,
+            playback_type=story_graph.models.AudioCell.PlaybackChoices.SYNC_PLAYBACK,
+        )
 
     def play_audio_file(
         self,
