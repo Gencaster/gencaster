@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<{
   showGpsStreaming: false
 });
 
-const { micActive, play } = storeToRefs(usePlayerStore());
+const { micActive, play, streamGPS } = storeToRefs(usePlayerStore());
 
 let audioBridgeWebRtcUp = false;
 const { hostname, protocol } = window.location;
@@ -242,9 +242,13 @@ const stopStreaming = () => {
 };
 
 onBeforeRouteLeave(() => {
+  // reset player state if we leave the player
   console.log("Player unmounted");
   stopMicStreaming();
   stopStreaming();
+  play.value = false;
+  micActive.value = false;
+  streamGPS.value = false;
 });
 
 watch(toRef(props, "streamPoint"), (newStreamPoint, oldStreamPoint) => {

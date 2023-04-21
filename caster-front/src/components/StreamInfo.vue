@@ -6,8 +6,8 @@ import type { Stream, StreamInstruction, StreamPoint } from "@/graphql";
 
 defineProps<{
   streamInstruction?: null | undefined | Pick<StreamInstruction, "instructionText">
-  stream: Pick<Stream, "uuid"> & {
-    streamPoint: Pick<StreamPoint, "janusInRoom" | "janusOutRoom" | "port">
+  stream?: Pick<Stream, "uuid"> & {
+    streamPoint?: Pick<StreamPoint, "janusInRoom" | "janusOutRoom" | "port">
   }
 }>();
 
@@ -18,14 +18,14 @@ const { play, micActive, streamGPS } = storeToRefs(usePlayerStore());
   <div class="stream-info">
     <ElDescriptions :column="1" border>
       <ElDescriptionsItem label="Stream UUID">
-        {{ stream.uuid }}
+        {{ stream?.uuid }}
       </ElDescriptionsItem>
       <ElDescriptionsItem label="SuperCollider port">
-        {{ stream.streamPoint.port }}
+        {{ stream?.streamPoint?.port }}
       </ElDescriptionsItem>
       <ElDescriptionsItem label="Janus Rooms">
-        In: {{ stream.streamPoint.janusInRoom }}<br>
-        Out: {{ stream.streamPoint.janusOutRoom }}
+        In: {{ stream?.streamPoint?.janusInRoom }}<br>
+        Out: {{ stream?.streamPoint?.janusOutRoom }}
       </ElDescriptionsItem>
       <ElDescriptionsItem label="Local status">
         Playing: {{ play }}<br>

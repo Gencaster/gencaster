@@ -26,7 +26,7 @@ const { data, fetching } = useStreamPointsQuery();
           link
           type="primary"
           size="small"
-          @click.prevent="emit('selectedStreamPoint', scope.row.uuid)"
+          @click.prevent="emit('selectedStreamPoint', scope.row)"
         >
           Select
         </el-button>
