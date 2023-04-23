@@ -10,7 +10,7 @@ const router = useRouter();
 </script>
 
 <template>
-  <div class="player-buttions">
+  <div class="player-buttons">
     <ElRow :gutter="10">
       <ElCol :xs="24" :span="24">
         <ElButton
