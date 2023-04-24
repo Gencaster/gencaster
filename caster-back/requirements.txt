@@ -5,7 +5,7 @@ python-osc==1.8.1
 google-cloud-texttospeech==2.14.1
 strawberry-graphql-django==0.9.4
 strawberry-graphql[channels]<=0.171.1
-strawberry-django-plus==2.2.0
+strawberry-django-plus==2.3.0
 django-cors-headers==3.13.0
 mistletoe==1.0.1
 pydantic==1.10.7
