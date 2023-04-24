@@ -337,15 +337,26 @@ GenCasterServer {
 		}).add;
 	}
 
-	playBuffer {|bufferPath|
+	playBuffer {|bufferPath, callback=nil|
 		// loads, plays and frees a buffer
-		// a naive garbage collection mechanism
+		// this allows us to establish garbage collection as otherwise
+		// we would run out of memory and number of buffers
+		callback = callback?{};
 		Buffer.read(Server.default, bufferPath, action: {|buffer|
-			Synth(\gencasterBufferPlayback, [\buffer, buffer]);
-			fork({
-				(1+(buffer.duration)).wait;
+			Synth(\gencasterBufferPlayback, [\buffer, buffer]).onFree({
 				buffer.free;
+				callback.(buffer);
 			});
+		});
+	}
+
+	syncPlayBuffer {|bufferPath, uuid|
+		this.playBuffer(bufferPath, callback: {
+			this.sendAck(
+				status: GenCasterStatus.finished,
+				uuid: uuid,
+				message: (return_value: "Buffer % finished playing".format(bufferPath); ),
+			);
 		});
 	}
 
@@ -433,7 +444,9 @@ GenCasterServer {
 		^OSCdef(\instructionReceiver, {|msg, time, addr, recvPort|
 			var uuid = msg[1];
 			var function = (msg[2] ? "{}").asString;
+			var manualFinish = msg[3] ? false;
 			this.sendAck(status: GenCasterStatus.received, uuid: uuid);
+			"Execute now: '%'".format(function).postln;
 			{
 				var returnValue = function.interpret;
 				if(returnValue.class==Function, {
@@ -444,11 +457,13 @@ GenCasterServer {
 					returnValue = GenCasterMessage.eventToJson(returnValue);
 				});
 
-				this.sendAck(
-					status: GenCasterStatus.finished,
-					uuid: uuid,
-					message: (return_value: returnValue.cs ),
-				);
+				if(manualFinish.not) {
+					this.sendAck(
+						status: GenCasterStatus.finished,
+						uuid: uuid,
+						message: (return_value: returnValue.cs ),
+					);
+				}
 			}.fork;
 		}, path: "/instruction");
 	}

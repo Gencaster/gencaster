@@ -30,12 +30,16 @@ class Engine:
         self.streaming_point: StreamPoint = streaming_point
         self._current_node: Node
 
-    def execute_markdown_code(self, cell_code: str):
+    async def execute_markdown_code(self, cell_code: str):
         """Runs the code of a markdown cell by parsing its content with the
         :class:`~story_graph.markdown_parser.GencasterRenderer`.
         """
         ssml_text = md_to_ssml(cell_code)
-        self.streaming_point.speak_on_stream(ssml_text)
+        instruction = await sync_to_async(self.streaming_point.speak_on_stream)(
+            ssml_text
+        )
+        yield instruction
+        await self.wait_for_finished_instruction(instruction)
 
     async def execute_sc_code(
         self, cell_code: str
@@ -59,7 +63,7 @@ class Engine:
 
         """
         instruction = await sync_to_async(self.streaming_point.play_audio_file)(
-            audio_cell.audio_file,
+            audio_cell.audio_file, audio_cell.playback
         )
         yield instruction
         await self.wait_for_finished_instruction(instruction)
@@ -88,7 +92,10 @@ class Engine:
                 async for instruction in self.execute_sc_code(script_cell.cell_code):
                     yield instruction
             elif cell_type == CellType.MARKDOWN:
-                await sync_to_async(self.execute_markdown_code)(script_cell.cell_code)
+                async for instruction in self.execute_markdown_code(
+                    script_cell.cell_code
+                ):
+                    yield instruction
             elif cell_type == CellType.AUDIO:
                 if script_cell.audio_cell:
                     async for instruction in self.execute_audio_cell(
