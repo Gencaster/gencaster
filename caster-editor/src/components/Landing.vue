@@ -86,3 +86,17 @@ const onSubmit = () => {
   console.log("submit");
 };
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/scss/variables.module.scss';
+
+.login-wrapper {
+        margin-top: $globalPadding;
+        .el-form {
+            display: flex;
+            .el-form-item {
+                margin-right: $globalPadding;
+            }
+        }
+    }
+</style>
