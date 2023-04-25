@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Hello World! Welcome to the GenCaster Editor.</p>
+    <p>Hello World! Welcome to the Gencaster Editor.</p>
     <p>Log in to see your graphs:</p>
     <div class="login-wrapper">
       <ElForm

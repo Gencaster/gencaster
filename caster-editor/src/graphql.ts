@@ -212,7 +212,7 @@ export type InvalidAudioFile = {
   error: Scalars['String'];
 };
 
-/** Mutations for GenCaster via GraphQL. */
+/** Mutations for Gencaster via GraphQL. */
 export type Mutation = {
   addAudioFile: AudioFileUploadResponse;
   /**
@@ -245,62 +245,62 @@ export type Mutation = {
 };
 
 
-/** Mutations for GenCaster via GraphQL. */
+/** Mutations for Gencaster via GraphQL. */
 export type MutationAddAudioFileArgs = {
   newAudioFile: AddAudioFile;
 };
 
 
-/** Mutations for GenCaster via GraphQL. */
+/** Mutations for Gencaster via GraphQL. */
 export type MutationAddEdgeArgs = {
   newEdge: EdgeInput;
 };
 
 
-/** Mutations for GenCaster via GraphQL. */
+/** Mutations for Gencaster via GraphQL. */
 export type MutationAddGraphArgs = {
   graphInput: AddGraphInput;
 };
 
 
-/** Mutations for GenCaster via GraphQL. */
+/** Mutations for Gencaster via GraphQL. */
 export type MutationAddNodeArgs = {
   newNode: NodeCreate;
 };
 
 
-/** Mutations for GenCaster via GraphQL. */
+/** Mutations for Gencaster via GraphQL. */
 export type MutationCreateUpdateScriptCellsArgs = {
   nodeUuid: Scalars['UUID'];
   scriptCellInputs: Array<ScriptCellInput>;
 };
 
 
-/** Mutations for GenCaster via GraphQL. */
+/** Mutations for Gencaster via GraphQL. */
 export type MutationCreateUpdateStreamVariableArgs = {
   streamVariables: Array<StreamVariableInput>;
 };
 
 
-/** Mutations for GenCaster via GraphQL. */
+/** Mutations for Gencaster via GraphQL. */
 export type MutationDeleteEdgeArgs = {
   edgeUuid: Scalars['UUID'];
 };
 
 
-/** Mutations for GenCaster via GraphQL. */
+/** Mutations for Gencaster via GraphQL. */
 export type MutationDeleteNodeArgs = {
   nodeUuid: Scalars['UUID'];
 };
 
 
-/** Mutations for GenCaster via GraphQL. */
+/** Mutations for Gencaster via GraphQL. */
 export type MutationDeleteScriptCellArgs = {
   scriptCellUuid: Scalars['UUID'];
 };
 
 
-/** Mutations for GenCaster via GraphQL. */
+/** Mutations for Gencaster via GraphQL. */
 export type MutationUpdateNodeArgs = {
   nodeUpdate: NodeUpdate;
 };
@@ -354,7 +354,7 @@ export enum PlaybackChoices {
   SyncPlayback = 'SYNC_PLAYBACK'
 }
 
-/** Queries for GenCaster. */
+/** Queries for Gencaster. */
 export type Query = {
   audioFile: AudioFile;
   audioFiles: Array<AudioFile>;
@@ -369,51 +369,51 @@ export type Query = {
 };
 
 
-/** Queries for GenCaster. */
+/** Queries for Gencaster. */
 export type QueryAudioFileArgs = {
   pagination?: InputMaybe<OffsetPaginationInput>;
   pk: Scalars['ID'];
 };
 
 
-/** Queries for GenCaster. */
+/** Queries for Gencaster. */
 export type QueryAudioFilesArgs = {
   filters?: InputMaybe<AudioFileFilter>;
   pagination?: InputMaybe<OffsetPaginationInput>;
 };
 
 
-/** Queries for GenCaster. */
+/** Queries for Gencaster. */
 export type QueryGraphArgs = {
   pk: Scalars['ID'];
 };
 
 
-/** Queries for GenCaster. */
+/** Queries for Gencaster. */
 export type QueryGraphsArgs = {
   filters?: InputMaybe<GraphFilter>;
 };
 
 
-/** Queries for GenCaster. */
+/** Queries for Gencaster. */
 export type QueryNodeArgs = {
   pk: Scalars['ID'];
 };
 
 
-/** Queries for GenCaster. */
+/** Queries for Gencaster. */
 export type QueryStreamPointArgs = {
   pk: Scalars['ID'];
 };
 
 
-/** Queries for GenCaster. */
+/** Queries for Gencaster. */
 export type QueryStreamPointsArgs = {
   filters?: InputMaybe<StreamPointFilter>;
 };
 
 
-/** Queries for GenCaster. */
+/** Queries for Gencaster. */
 export type QueryStreamVariableArgs = {
   pk: Scalars['ID'];
 };
