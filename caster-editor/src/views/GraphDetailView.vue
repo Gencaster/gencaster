@@ -115,3 +115,11 @@ const saveNode = async () => {
     Failed to fetch data
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import '@/assets/scss/variables.module.scss';
+
+.edit-page {
+  overflow-y: hidden;
+}
+</style>
