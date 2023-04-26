@@ -1,3 +1,3 @@
-# GenCaster editor
+# Gencaster editor
 
-Frontend for GenCaster editor.
+Frontend for Gencaster editor.

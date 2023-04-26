@@ -41,15 +41,23 @@ const scriptCells = computed({
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/variables.module.scss';
 .node-editor {
   z-index: 2;
   background-color: white;
   position: fixed;
   width: 800px;
   height: calc(100vh - 100px);
-  right: 0;
+  right: 10px;
   top: 80px;
   transition: right 0.3s ease-in-out;
   overflow-x: hidden;
+  border: 1px solid $black;
 }
+
+.editor-header-spacer {
+    width: inherit;
+    height: calc($menuHeight*2);
+    margin-bottom: 30px;
+  }
 </style>

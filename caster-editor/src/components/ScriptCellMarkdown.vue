@@ -78,3 +78,36 @@ onUnmounted(() => {
 });
 
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/scss/variables.module.scss';
+
+.editor-comment,
+.editor-markdown {
+
+  :deep(.toastui-editor-defaultUI) {
+    border: none;
+
+    .toastui-editor {
+      min-height: 60px !important;
+    }
+
+    // this fixes sortable js
+    .toastui-editor-pseudo-clipboard {
+      display: none;
+    }
+
+    .placeholder {
+      .ProseMirror-trailingBreak {
+        display: none;
+      }
+    }
+  }
+
+  /* Hiding the nav bar*/
+  :deep(.toastui-editor-toolbar) {
+    display: none;
+  }
+}
+
+</style>

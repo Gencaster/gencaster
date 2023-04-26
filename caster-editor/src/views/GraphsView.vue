@@ -1,7 +1,5 @@
 <template>
-  <div
-    v-if="error"
-  >
+  <div v-if="error">
     <h3>Please login</h3>
   </div>
   <div
@@ -28,3 +26,11 @@ import Loading from "@/components/Loading.vue";
 
 const { data, error, fetching } = useGetGraphsQuery();
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/scss/variables.module.scss';
+
+.graphs-overview-page {
+  padding: 10px 15px 10px 15px;
+}
+</style>

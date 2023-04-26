@@ -55,3 +55,49 @@ defineProps<{
 
 const createGraphDialogVisible: Ref<boolean> = ref(false);
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/scss/variables.module.scss';
+
+.graph-selection {
+    .graph {
+      width: 100%;
+      height: 50px;
+      background-color: $mainWhite;
+      border: 1px solid $mainBlack;
+      border-bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      text-decoration: none;
+
+      div {
+        padding-left: $globalPadding;
+        padding-right: $globalPadding;
+        width: auto;
+        display: flex;
+        align-items: center;
+        p {
+          margin: 0;
+        }
+      }
+
+      &:hover {
+        background-color: $hoverColor;
+        cursor: pointer;
+      }
+
+      &.new-one {
+        text-align: center;
+        border: 1px solid $mainBlack;
+        div {
+          width: 100%;
+          p {
+            width: inherit;
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+
+</style>

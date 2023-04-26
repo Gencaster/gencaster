@@ -52,3 +52,114 @@ const moveableScriptCells = computed<NodeSubscription['node']['scriptCells']>({
 });
 
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/scss/variables.module.scss';
+
+.blocks {
+    display: block;
+    position: relative;
+    padding-left: 15px;
+    padding-right: 15px;
+
+
+    .cell {
+      position: relative;
+      margin-bottom: 25px;
+      border-radius: 4px;
+      background-color: $grey-light;
+      padding: 20px 20px 15px 30px;
+      border: 1px solid $grey;
+
+      &:has(.block-audio) {
+        padding: 0;
+      }
+
+      &.dragging {
+        pointer-events: none;
+        cursor: grabbing !important;
+
+        .editor-python,
+        .editor-supercollider {
+          .cm-scroller {
+            overflow-x: hidden; // hides the scrollbar on drag
+          }
+        }
+      }
+
+      .cell-type {
+        position: absolute;
+        top: 4px;
+        right: 8px;
+        color: $grey-dark;
+        font-style: italic;
+      }
+
+      &:hover {
+        :deep(.scriptcell-tools) {
+          opacity: 1;
+        }
+      }
+
+      :deep(.scriptcell-tools) {
+        display: flex;
+        align-items: center;
+        background-color: $grey-light;
+        position: absolute;
+        bottom: -12px;
+        right: 8px;
+        height: 32px;
+        border-radius: 4px;
+        border: 1px solid $grey;
+        opacity: 0;
+        transition: opacity .2s ease-in-out;
+        z-index: 1;
+
+        .divider {
+          height: 32px;
+          width: 1px;
+          background-color: $grey;
+        }
+
+        .celltype {
+          height: 32px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          pointer-events: none;
+
+          p {
+            margin: 0;
+            margin-left: 12px;
+            margin-right: 12px;
+            text-transform: lowercase;
+
+            &::first-letter {
+              text-transform: uppercase
+            }
+          }
+        }
+
+        .icon {
+          height: 32px;
+          width: 32px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+
+          &:hover {
+            background-color: $grey;
+          }
+
+          img {
+            height: 20px;
+            width: 20px;
+          }
+
+        }
+      }
+    }
+  }
+
+</style>

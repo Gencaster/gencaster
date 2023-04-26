@@ -127,3 +127,85 @@ const createAudioCell = async (audioFile: Pick<AudioFile, 'uuid'>) => {
 }
 
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/scss/variables.module.scss';
+
+.editor-header {
+    display: block;
+    position: fixed;
+    width: 798px;
+    z-index: 2;
+    background-color: $mainWhite;
+
+
+    .title {
+      display: flex;
+      height: $menuHeight;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 5px;
+      margin-bottom: 4px;
+
+      padding-left: 15px;
+      padding-right: 15px;
+
+      .left {
+        button {
+          color: $grey-dark;
+
+          &:hover {
+            font-style: italic;
+            background-color: transparent;
+          }
+        }
+      }
+
+      .right {
+        transform: translateX(8px);
+        text-decoration: underline;
+      }
+
+      .left,
+      .right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        p {
+          margin: 0;
+        }
+      }
+    }
+
+    .node-menu-bar {
+      display: flex;
+      align-items: center;
+      height: $menuHeight;
+      background-color: transparent;
+      border-bottom: 1px solid $grey;
+      border-top: 1px solid $grey;
+      padding-left: 15px;
+      padding-right: 15px;
+
+      button {
+        border: 0;
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+        padding-left: 10px;
+        padding-right: 10px;
+        transform: translateX(-10px);
+
+        border-radius: 2px;
+        height: 24px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: $grey-light;
+        }
+      }
+
+    }
+  }
+</style>

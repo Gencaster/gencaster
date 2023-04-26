@@ -326,6 +326,25 @@ const graphSettings = {
     },
   }),
 };
-
-
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/scss/variables.module.scss';
+
+.graph {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 64px);
+  }
+
+  .stats {
+    position: fixed;
+    bottom: 10px;
+    right: 15px;
+    p {
+      margin: 0;
+    }
+  }
+
+
+</style>

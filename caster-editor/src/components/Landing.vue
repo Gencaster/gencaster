@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Hello World! Welcome to the GenCaster Editor.</p>
+    <p>Hello World! Welcome to the Gencaster Editor.</p>
     <p>Log in to see your graphs:</p>
     <div class="login-wrapper">
       <ElForm
@@ -86,3 +86,17 @@ const onSubmit = () => {
   console.log("submit");
 };
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/scss/variables.module.scss';
+
+.login-wrapper {
+        margin-top: $globalPadding;
+        .el-form {
+            display: flex;
+            .el-form-item {
+                margin-right: $globalPadding;
+            }
+        }
+    }
+</style>
