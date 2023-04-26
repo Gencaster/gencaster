@@ -46,7 +46,11 @@ const resetStreamPoint = () => {
       </ElCollapseItem>
       <ElCollapseItem title="Player">
         <div v-if="selectedStreamPoint">
-          <PlayerButtons />
+          <PlayerButtons
+            play-button
+            mic-button
+            gps-button
+          />
           <Player
             :stream-point="selectedStreamPoint"
           />
