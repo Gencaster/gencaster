@@ -194,7 +194,7 @@ type InvalidAudioFile {
   error: String!
 }
 
-"""Mutations for GenCaster via GraphQL."""
+"""Mutations for Gencaster via GraphQL."""
 type Mutation {
   """
   Creates a new :class:`~story_graph.models.Node` in a given
@@ -289,7 +289,7 @@ enum PlaybackChoices {
   ASYNC_PLAYBACK
 }
 
-"""Queries for GenCaster."""
+"""Queries for Gencaster."""
 type Query {
   streamPoint(pk: ID!): StreamPoint!
   streamPoints(filters: StreamPointFilter): [StreamPoint!]!
@@ -360,7 +360,11 @@ type Stream {
   uuid: UUID!
   createdDate: DateTime!
   modifiedDate: DateTime!
-  active: Boolean!
+
+  """
+  Used as a garbage collection. If multiple users share the same stream we need to know when we can release the stream which happens if listener counter is 0. It starts with a default of 0 because this allows us to count stateless.
+  """
+  numListeners: Int!
   streamPoint: StreamPoint!
 }
 

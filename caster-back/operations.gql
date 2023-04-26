@@ -119,7 +119,7 @@ subscription stream($graphUuid: UUID!) {
     ... on StreamInfo {
       __typename
       stream {
-        active
+        numListeners
         createdDate
         modifiedDate
         streamPoint {

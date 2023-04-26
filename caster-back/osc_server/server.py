@@ -137,7 +137,7 @@ class OSCServer:
         """Remote actions are used to trigger actions on a SuperCollider instance
         and can be send in form of a :class:`~stream.models.StreamInstruction`
         or raw from a local running SuperCollider instance which
-        can be used to live code the SuperCollider instances managed by GenCaster.
+        can be used to live code the SuperCollider instances managed by Gencaster.
         """
         remote_message = RemoteActionMessage.from_osc_args(*osc_args)
 

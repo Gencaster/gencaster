@@ -128,7 +128,7 @@ class User:
 
 @strawberry.type
 class Query:
-    """Queries for GenCaster."""
+    """Queries for Gencaster."""
 
     stream_point: StreamPoint = strawberry.django.field()
     stream_points: List[StreamPoint] = strawberry.django.field()
@@ -147,7 +147,7 @@ class Query:
 
 @strawberry.type
 class Mutation:
-    """Mutations for GenCaster via GraphQL."""
+    """Mutations for Gencaster via GraphQL."""
 
     @strawberry.mutation
     async def add_node(self, info: Info, new_node: NodeCreate) -> None:
