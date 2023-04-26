@@ -460,8 +460,7 @@ class Subscription:
 
         graph = await story_graph_models.Graph.objects.filter(uuid=graph_uuid).afirst()
         if not graph:
-            print("could not find graph!")
-            return
+            raise Exception("could not find graph!")
 
         try:
             stream = await stream_models.Stream.objects.aget_free_stream(graph)
@@ -469,14 +468,15 @@ class Subscription:
             yield NoStreamAvailable()
             return
 
+        await stream.increment_num_listeners()
+
         engine = Engine(
             graph=graph,
             stream=stream,
         )
 
         async def cleanup():
-            stream.active = False
-            await sync_to_async(stream.save)()
+            await stream.decrement_num_listeners()
 
         async def cleanup_on_stop(**kwargs: Dict[str, str]):
             """

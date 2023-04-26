@@ -4,6 +4,7 @@ from datetime import timedelta
 from typing import List
 from unittest import mock
 
+from asgiref.sync import sync_to_async
 from django.test import TestCase
 from django.utils import timezone
 from mixer.backend.django import mixer
@@ -121,7 +122,7 @@ class StreamTestCase(TestCase):
     def test_all_streampoints_taken(self):
         for _ in range(2):
             stream_point = StreamPointTestCase.get_stream_point()
-            stream = self.get_stream(active=True, stream_point=stream_point)
+            stream = self.get_stream(num_listeners=1, stream_point=stream_point)
         with self.assertRaises(NoStreamAvailableException):
             Stream.objects.get_free_stream(graph=GraphTestCase.get_graph())
 
@@ -132,6 +133,8 @@ class StreamTestCase(TestCase):
         for _ in range(2):
             StreamPointTestCase.get_stream_point()
         first_stream = Stream.objects.get_free_stream(graph=graph)
+        first_stream.num_listeners = 1
+        first_stream.save()
         # do the same thing twice, should not change
         for _ in range(2):
             stream = Stream.objects.get_free_stream(graph=graph)
@@ -144,18 +147,48 @@ class StreamTestCase(TestCase):
                 first_stream,
             )
 
+    async def test_stream_garbage_collection(self):
+        graph = await sync_to_async(GraphTestCase.get_graph)(
+            stream_assignment_policy=Graph.StreamAssignmentPolicy.ONE_GRAPH_ONE_STREAM
+        )
+        for _ in range(2):
+            await sync_to_async(StreamPointTestCase.get_stream_point)()
+        first_stream = await Stream.objects.aget_free_stream(graph=graph)
+        await first_stream.increment_num_listeners()
+
+        stream = await Stream.objects.aget_free_stream(graph=graph)
+        await stream.increment_num_listeners()
+        await sync_to_async(stream.refresh_from_db)()
+
+        self.assertEqual(
+            await sync_to_async(lambda: stream.graph.uuid)(),  # type: ignore
+            graph.uuid,
+        )
+        self.assertEqual(stream.num_listeners, 2)
+
+        await stream.decrement_num_listeners()
+        await stream.decrement_num_listeners()
+        await sync_to_async(stream.refresh_from_db)()
+
+        self.assertEqual(stream.num_listeners, 0)
+
+        # check if only one stream was freed
+        self.assertEqual(await Stream.objects.filter(num_listeners__lt=1).acount(), 1)
+        self.assertEqual(await Stream.objects.acount(), 1)
+
     def test_make_all_offline(self):
         for _ in range(2):
-            stream = self.get_stream(active=True)
-        stream = self.get_stream(active=True)
+            stream = self.get_stream(num_listeners=1)
+        stream = self.get_stream(num_listeners=1)
 
         stream.disconnect()
-        self.assertFalse(stream.active)
+        stream.refresh_from_db()
+        self.assertEqual(stream.num_listeners, 0)
 
         Stream.objects.disconnect_all_streams()
 
         self.assertEqual(
-            Stream.objects.filter(active=True).count(),
+            Stream.objects.filter(num_listeners__gt=0).count(),
             0,
         )
 

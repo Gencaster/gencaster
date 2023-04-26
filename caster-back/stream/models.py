@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.core.files import File
 from django.db import models
+from django.db.models import F
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from google.cloud import texttospeech
@@ -26,7 +27,7 @@ class StreamPointManager(models.Manager["StreamPoint"]):
         return async_to_sync(self.afree_stream_points)()  # type: ignore
 
     async def afree_stream_points(self) -> models.QuerySet["StreamPoint"]:
-        return self.exclude(streams__active=True).filter(
+        return self.exclude(streams__num_listeners__gt=0).filter(
             last_live__gt=timezone.now()
             - timedelta(seconds=settings.STREAM_MAX_BEACON_SEC)
         )
@@ -233,7 +234,7 @@ class StreamManager(models.Manager):
             == Graph.StreamAssignmentPolicy.ONE_GRAPH_ONE_STREAM
         ):
             existing_stream: Optional[Stream] = (
-                await Stream.objects.filter(active=True, graph=graph)
+                await Stream.objects.filter(num_listeners__gt=0, graph=graph)
                 .prefetch_related("stream_point")
                 .afirst()
             )
@@ -252,7 +253,7 @@ class StreamManager(models.Manager):
 
     def disconnect_all_streams(self):
         stream: Stream
-        for stream in Stream.objects.filter(active=True):
+        for stream in Stream.objects.filter(num_listeners__gt=0):
             stream.disconnect()
 
 
@@ -282,9 +283,14 @@ class Stream(models.Model):
         verbose_name=_("Associated instance"),
     )
 
-    active = models.BooleanField(
-        verbose_name=_("Is stream currently in use"),
-        default=True,
+    num_listeners = models.IntegerField(
+        default=0,
+        verbose_name=_("Number of listeners"),
+        help_text=_(
+            "Used as a garbage collection. If multiple users share the same stream "
+            "we need to know when we can release the stream which happens if listener counter is 0. "
+            "It starts with a default of 0 because this allows us to count stateless."
+        ),
     )
 
     graph = models.ForeignKey(
@@ -294,9 +300,19 @@ class Stream(models.Model):
         blank=True,
     )
 
+    async def increment_num_listeners(self):
+        await Stream.objects.filter(uuid=self.uuid).aupdate(
+            num_listeners=F("num_listeners") + 1
+        )
+
+    async def decrement_num_listeners(self):
+        await Stream.objects.filter(uuid=self.uuid).aupdate(
+            num_listeners=F("num_listeners") - 1
+        )
+
     def disconnect(self):
         log.info(f"Disconnect stream {self.uuid}")
-        self.active = False
+        self.num_listeners = 0
         self.save()
 
     class Meta:
