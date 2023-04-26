@@ -94,7 +94,8 @@ class StreamPointTestCase(TestCase):
 
 
 class StreamTestCase(TestCase):
-    def get_stream(self, **kwargs) -> Stream:
+    @staticmethod
+    def get_stream(**kwargs) -> Stream:
         return mixer.blend(  # type: ignore
             Stream,
             **kwargs,

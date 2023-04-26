@@ -1,12 +1,15 @@
+import asyncio
 import random
 
+from asgiref.sync import sync_to_async
 from django.db.utils import IntegrityError
 from django.test import TransactionTestCase
 from mistletoe import Document
 from mixer.backend.django import mixer
 
+from .engine import Engine
 from .markdown_parser import GencasterRenderer
-from .models import AudioCell, Edge, Graph, Node, ScriptCell
+from .models import AudioCell, CellType, Edge, Graph, Node, ScriptCell
 
 
 class GraphTestCase(TransactionTestCase):
@@ -16,7 +19,7 @@ class GraphTestCase(TransactionTestCase):
 
     async def test_get_create_entry_node(self):
         graph = await Graph.objects.acreate(name="test_graph")
-        await graph.aget_or_create_entry_node()
+        await graph.acreate_entry_node()
         self.assertEqual(
             await Node.objects.filter(graph=graph).acount(),
             1,
@@ -38,7 +41,7 @@ class NodeTestCase(TransactionTestCase):
 
     async def test_unique_entry_node(self):
         graph = await Graph.objects.acreate(name="test_graph")
-        await graph.aget_or_create_entry_node()
+        await graph.acreate_entry_node()
         self.assertEqual(await Node.objects.filter(graph=graph).acount(), 1)
         with self.assertRaises(IntegrityError):
             await Node.objects.acreate(
@@ -184,3 +187,49 @@ class AudioCellTestCase(TransactionTestCase):
     def test_str(self):
         audio_cell = self.get_audio_cell()
         self.assertTrue(str(audio_cell.audio_file) in str(audio_cell))
+
+
+class EngineTestCase(TransactionTestCase):
+    def setup_graph_without_start(self):
+        from stream.tests import StreamTestCase
+
+        self.graph = GraphTestCase.get_graph()
+        self.node = NodeTestCase.get_node(graph=self.graph)
+        self.script_cell = ScriptCellTestCase.get_script_cell(
+            node=self.node, cell_type=CellType.PYTHON, is_blocking=True, cell_code="2+2"
+        )
+        self.stream = StreamTestCase.get_stream()
+
+    async def test_no_start(self):
+        await sync_to_async(self.setup_graph_without_start)()
+        engine = Engine(self.graph, self.stream)
+        # @todo use async with asyncio.timeout which
+        # gets introduced in python 3.11
+        with self.assertRaises(Node.DoesNotExist):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.5)
+
+    async def test_blocking(self):
+        await sync_to_async(self.setup_graph_without_start)()
+        entry_node = await self.graph.acreate_entry_node()
+        entry_node.is_blocking_node = True
+        await sync_to_async(entry_node.save)()
+        engine = Engine(self.graph, self.stream)
+
+        with self.assertRaises(asyncio.TimeoutError):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.5)
+
+    async def test_non_blocking_exhausting(self):
+        await sync_to_async(self.setup_graph_without_start)()
+        entry_node = await self.graph.acreate_entry_node()
+        await Edge.objects.acreate(
+            out_node=self.node,
+            in_node=entry_node,
+        )
+        self.node.is_blocking_node = False
+        await sync_to_async(self.node.save)()
+        await sync_to_async(self.node.refresh_from_db)()
+
+        engine = Engine(self.graph, self.stream)
+
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 4.5)

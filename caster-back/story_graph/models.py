@@ -52,7 +52,13 @@ class Graph(models.Model):
         default=StreamAssignmentPolicy.ONE_USER_ONE_STREAM,
     )
 
-    async def aget_or_create_entry_node(self) -> "Node":
+    async def aget_entry_node(self) -> "Node":
+        """
+        See :func:`Graph.create_entry_node`.
+        """
+        return await Node.objects.aget(is_entry_node=True, graph=self)
+
+    async def acreate_entry_node(self) -> "Node":
         """
         Every graph needs a deterministic, unique entry node which is used
         to start the iteration over the graph.
@@ -62,12 +68,11 @@ class Graph(models.Model):
         ways of creating a Graph (async (asave), sync (save) or in a bulk where
         we do not have a handle at all).
         """
-        node, _ = await Node.objects.aget_or_create(
+        return await Node.objects.acreate(
             is_entry_node=True,
             graph=self,
-            defaults={"name": "Start"},
+            name="Start",
         )
-        return node
 
     class Meta:
         verbose_name = "Graph"
@@ -126,6 +131,14 @@ class Node(models.Model):
         help_text=_(
             "Acts as a singular entrypoint for our graph."
             "Only one such node can exist per graph."
+        ),
+        default=False,
+    )
+
+    is_blocking_node = models.BooleanField(
+        verbose_name="Is blocking node?",
+        help_text=_(
+            "If we encounter this node during graph execution we will halt execution indefinitely on this node. This is useful if we have setup a state and do not want to change it anymore."
         ),
         default=False,
     )

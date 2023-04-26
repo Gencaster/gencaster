@@ -360,7 +360,7 @@ class Mutation:
         graph = await story_graph_models.Graph.objects.acreate(
             name=graph_input.name,
         )
-        await graph.aget_or_create_entry_node()
+        await graph.acreate_entry_node()
         # need a refresh - in django 4.2 this will be available, see
         # https://docs.djangoproject.com/en/4.2/ref/models/instances/#django.db.models.Model.arefresh_from_db
         return await story_graph_models.Graph.objects.aget(uuid=graph.uuid)  # type: ignore
@@ -471,7 +471,7 @@ class Subscription:
 
         engine = Engine(
             graph=graph,
-            streaming_point=stream.stream_point,
+            stream=stream,
         )
 
         async def cleanup():
