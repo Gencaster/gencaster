@@ -41,11 +41,13 @@ class NodeAdmin(admin.ModelAdmin):
         "name",
         "graph",
         "is_entry_node",
+        "is_blocking_node",
     ]
 
     list_filter = [
         "graph",
         "is_entry_node",
+        "is_blocking_node",
     ]
 
 
