@@ -23,12 +23,12 @@ class StreamAdmin(admin.ModelAdmin):
         "stream_point",
         "uuid",
         "created_date",
-        "active",
+        "num_listeners",
     ]
 
     list_filter = [
         "stream_point",
-        "active",
+        "num_listeners",
     ]
 
 

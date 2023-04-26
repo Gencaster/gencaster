@@ -472,9 +472,10 @@ export type StrFilterLookup = {
  * It also allows us to trace past streams.
  */
 export type Stream = {
-  active: Scalars['Boolean'];
   createdDate: Scalars['DateTime'];
   modifiedDate: Scalars['DateTime'];
+  /** Used as a garbage collection. If multiple users share the same stream we need to know when we can release the stream which happens if listener counter is 0. It starts with a default of 0 because this allows us to count stateless. */
+  numListeners: Scalars['Int'];
   streamPoint: StreamPoint;
   uuid: Scalars['UUID'];
 };
@@ -717,7 +718,7 @@ export type StreamSubscriptionVariables = Exact<{
 }>;
 
 
-export type StreamSubscription = { streamInfo: { __typename: 'NoStreamAvailable', error: string } | { __typename: 'StreamInfo', stream: { active: boolean, createdDate: any, modifiedDate: any, uuid: any, streamPoint: { uuid: any, port: number, useInput: boolean, modifiedDate: any, lastLive?: any | null, host: string, createdDate: any, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null } }, streamInstruction?: { createdDate: any, instructionText: string, modifiedDate: any, state: string, uuid: any, returnValue: string } | null } };
+export type StreamSubscription = { streamInfo: { __typename: 'NoStreamAvailable', error: string } | { __typename: 'StreamInfo', stream: { numListeners: number, createdDate: any, modifiedDate: any, uuid: any, streamPoint: { uuid: any, port: number, useInput: boolean, modifiedDate: any, lastLive?: any | null, host: string, createdDate: any, janusInPort?: number | null, janusInRoom?: number | null, janusOutPort?: number | null, janusOutRoom?: number | null } }, streamInstruction?: { createdDate: any, instructionText: string, modifiedDate: any, state: string, uuid: any, returnValue: string } | null } };
 
 export type StreamPointsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -931,7 +932,7 @@ export const StreamDocument = gql`
     ... on StreamInfo {
       __typename
       stream {
-        active
+        numListeners
         createdDate
         modifiedDate
         streamPoint {

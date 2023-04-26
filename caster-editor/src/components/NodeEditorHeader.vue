@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { PlaybackChoices, type Node, type Scalars, type AudioFile } from '@/graphql';
+import { PlaybackChoices, type Node, type AudioFile } from '@/graphql';
 import { CellType, useCreateUpdateScriptCellsMutation } from "@/graphql";
 import { useInterfaceStore } from '@/stores/InterfaceStore';
 import { storeToRefs } from 'pinia';

@@ -2,7 +2,7 @@
 Settings
 ========
 
-Configure environment for GenCaster backend.
+Configure environment for Gencaster backend.
 
 .. automodule:: gencaster.settings.base
     :members:

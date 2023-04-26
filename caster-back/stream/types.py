@@ -47,7 +47,7 @@ class Stream:
     uuid: auto
     created_date: auto
     modified_date: auto
-    active: auto
+    num_listeners: auto
     stream_point: "StreamPoint"
 
 

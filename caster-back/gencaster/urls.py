@@ -29,7 +29,7 @@ from strawberry.django.views import AsyncGraphQLView
 
 from .schema import schema
 
-admin.site.site_header = "GenCaster admin"
+admin.site.site_header = "Gencaster admin"
 
 
 @dataclass

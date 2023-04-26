@@ -2,7 +2,7 @@
 import { ref, type Ref } from "vue";
 import AudioFileUpload from "./AudioFileUpload.vue";
 import MediaPlayer from "./AudioFilePlayer.vue"
-import { useAudioFilesQuery, type AudioFile, type DjangoFileType, type Scalars, type ScriptCellInput, type AudioCellInput, type AudioFilesQuery } from "@/graphql";
+import { useAudioFilesQuery, type AudioFile, type DjangoFileType, type AudioFilesQuery } from "@/graphql";
 import { ElButton } from "element-plus";
 
 export type AudioFilePicker = Pick<AudioFile, 'name' | 'uuid'> & {file?: Pick<DjangoFileType, 'url'> | undefined | null};

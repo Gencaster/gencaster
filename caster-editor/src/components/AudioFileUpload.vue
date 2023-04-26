@@ -26,7 +26,7 @@ const rules = reactive<FormRules>({
 
 const submitUpload = async () => {
   if (!formRef.value) return
-  await formRef.value.validate((valid, fields) => {
+  await formRef.value.validate((valid) => {
     if (valid) {
       doSubmit();
     } else {

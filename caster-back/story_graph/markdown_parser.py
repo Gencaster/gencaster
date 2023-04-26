@@ -72,7 +72,7 @@ class GencasterRenderer(BaseRenderer):
         }
 
     def validate_gencaster_tokens(self, text: str) -> bool:
-        """Validates if the used tags are known to GenCaster
+        """Validates if the used tags are known to Gencaster
 
         .. todo::
 
