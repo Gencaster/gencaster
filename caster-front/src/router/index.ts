@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import GraphDetail from "@/components/GraphDetail.vue";
 import DebugPlayer from "@/components/DebugPlayer.vue";
+import RandomPlayer from "@/components/RandomPlayer.vue";
 import Graphs from "@/components/Graphs.vue";
 
 const router = createRouter({
@@ -15,6 +16,11 @@ const router = createRouter({
       path: "/debug",
       name: "debug",
       component: DebugPlayer
+    },
+    {
+      path: "/random",
+      name: "random",
+      component: RandomPlayer
     },
     {
       path: "/listen/:graphName/",

@@ -309,9 +309,6 @@ watch(play, (playState) => {
       :stream="stream"
     />
   </div>
-  <div v-else>
-    GPS works only on a Gencaster stream
-  </div>
 
   <div v-if="showPlayerInfo" class="player-info">
     <ElDescriptions
