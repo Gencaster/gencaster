@@ -183,6 +183,39 @@ GenCaster {
 		interp.codeDump = interp.codeDump.addFunc(fun);
 	}
 
+	broadcastDocument {
+		var interp, fun, document;
+		this.clear;
+		interp = thisProcess.interpreter;
+		document = thisProcess.nowExecutingPath;
+
+		if(document.isNil, {
+			Error("Can only broadcast from a saved document").throw;
+		});
+
+		fun = {|code|
+			var msg;
+
+			if(ScIDE.currentPath == document, {
+				"send to all: '%'".format(code).postln;
+
+				netClient.sendMsg(GenCasterMessage.addressRemoteAction, *GenCasterMessage.remoteAction(
+					action: \code,
+					password: password,
+					cmd: code,
+				));
+				nil;
+			}, {
+				code;
+			});
+		};
+		interp.preProcessor = fun;
+	}
+
+	broadcastDocumentReset {
+		thisProcess.interpreter.preProcessor = nil;
+	}
+
 	broadcast {
 		var interp, fun;
 		this.clear;
