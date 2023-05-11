@@ -6,13 +6,22 @@ $spacingM: 1rem;
 $spacingL: 2.5rem;
 $spacingXL: 6rem;
 
+// sizes
+$desktopMaxWidth: 1280px;
+$mobilePadding: 22px;
+
+// lines
+$lineThin: 1px;
+$lineStandard: 2px;
+$lineThick: 4px;
+
 // font sizes
 $smallFontSizeMobile: 0.8rem;
 $smallFontSize: 0.8rem;
 $baseFontSizeMobile: 18px;
 $baseFontSize: 18px;
-$mediumFontSizeMobile: 1.5rem;
-$mediumFontSize: 1.5rem;
+$mediumFontSizeMobile: 24px;
+$mediumFontSize: 24px;
 $largeFontSizeMobile: 2rem;
 $largeFontSize: 2rem;
 $largerFontSizeMobile: 2.5rem;
@@ -20,7 +29,8 @@ $largerFontSize: 3.5rem;
 
 
 // colors
-$background-white: #FFFEF9;
+$white: #FFFEF9;
 $green-light: #ADFF00;
 $grey-light: #F7F7F3;
+$grey: #CDCDCD;
 $black: #111111;

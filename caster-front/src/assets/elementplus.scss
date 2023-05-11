@@ -1,1 +1,72 @@
+@import 'variables.scss';
+
 /* ============ Element Plus ============ */
+
+// table
+.el-table {
+    --el-table-border-color: #{$black};
+    --el-table-border: #{$lineStandard} solid var(--el-table-border-color);
+    --el-table-text-color: #{$black};
+
+
+    --el-table-header-text-color: #{$black};
+    --el-table-row-hover-bg-color: #{$green-light};
+
+    --el-table-header-bg-color: transparent;
+    --el-table-bg-color: transparent;
+    --el-table-tr-bg-color: transparent;
+    --el-menu-bg-color: transparent;
+    --el-table-expanded-cell-bg-color: transparent;
+
+    font-size: #{$mediumFontSize};
+
+    .cell {
+        padding: 0;
+
+        span {
+            font-size: $mediumFontSize ;
+            text-decoration: none;
+        }
+    }
+
+    .el-table__cell {
+        padding: 0;
+    }
+
+    .el-table__header-wrapper {
+        .cell {
+            margin-bottom: 12px;
+            font-weight: 300;
+
+            .caret-wrapper {
+                transform: scale(1.3) translateX(2px);
+            }
+        }
+    }
+
+    .el-button {
+        --el-button-hover-link-text-color: #{$black};
+        --el-button-hover-link-text-color: #{$black};
+
+        width: 100%;
+        justify-content: flex-start;
+        text-decoration: none;
+        color: $black;
+        padding: 0;
+        border: 0;
+        height: 50px;
+
+        &::hover {
+            color: $black;
+
+        }
+    }
+}
+
+.el-table .ascending .sort-caret.ascending {
+    border-bottom-color: #{$black};
+}
+
+.el-table .descending .sort-caret.descending {
+    border-top-color: #{$black};
+}

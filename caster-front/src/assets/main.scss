@@ -16,7 +16,7 @@ body,
 }
 
 body {
-  background-color: $background-white;
+  background-color: $white;
   color: $black;
 }
 
@@ -33,4 +33,14 @@ body {
   max-height: 100%;
   float: left;
   width: 100%;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
