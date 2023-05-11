@@ -9,6 +9,7 @@ defineProps<{
 
 <template>
   <div class="default-graph-detail">
+    <p>Dast ist ein test</p>
     <GraphPlayer
       :graph="graph"
     />

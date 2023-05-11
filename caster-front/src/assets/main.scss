@@ -1,33 +1,36 @@
-// import dark theme
 @use 'element-plus/theme-chalk/src/dark/css-vars.scss' as *;
 
-// :root {
-//   --ep-color-primary: red;
-// }
+@import 'variables.scss';
+@import 'mixins.scss';
+@import 'typography.scss';
+@import 'elementplus.scss';
+
+
+
 
 html,
 body,
 #app {
+  margin:0px;
+  height:100%;
+}
+
+body {
+  background-color: $background-white;
+  color: $black;
+}
+
+html {
+  margin: 0;
+  padding: 0;
   height: 100%;
 }
 
 body {
-  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
-    '微软雅黑', Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   margin: 0;
-  font-weight: 300;
-}
-
-a {
-  color: var(--ep-color-primary);
-  text-decoration: none;
-}
-
-code {
-  border-radius: 2px;
-  padding: 2px 4px;
-  background-color: var(--ep-color-primary-light-9);
-  color: var(--ep-color-primary);
+  padding: 0;
+  height: 100%;
+  max-height: 100%;
+  float: left;
+  width: 100%;
 }
