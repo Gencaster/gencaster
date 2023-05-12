@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Ref, ref } from "vue";
+import { type Ref, computed, ref } from "vue";
 import { ElButton, ElCollapse, ElCollapseItem } from "element-plus";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -7,13 +7,12 @@ import Player from "@/components/Player.vue";
 import GraphPlayerCredits from "@/components/GraphPlayerCredits.vue";
 import PlayerVisualizer from "@/components/PlayerVisualizer/PlayerVisualizer.vue";
 import PlayerBar from "@/components/PlayerBar/PlayerBar.vue";
+import StreamInfo from "@/components/StreamInfo.vue";
+import EndScreen from "@/components/EndScreen.vue";
 
 import type { Graph } from "@/graphql";
 import { useStreamSubscription } from "@/graphql";
-import StreamInfo from "@/components/StreamInfo.vue";
-
 import { usePlayerStore } from "@/stores/Player";
-// import PlayerButtons from "@/components/PlayerButtons.vue";
 const props = defineProps<{
   graph: Pick<Graph, "uuid" | "name">
 }>();
@@ -21,6 +20,7 @@ const props = defineProps<{
 const { play, startingTimestamp, playerState } = storeToRefs(usePlayerStore());
 
 const router = useRouter();
+const showDebug = computed<boolean>(() => router.currentRoute.value.query.debug === null);
 
 const { data, error, stale } = useStreamSubscription({
   variables: {
@@ -28,6 +28,8 @@ const { data, error, stale } = useStreamSubscription({
   },
   pause: router.currentRoute.value.name !== "graphPlayer"
 });
+
+const debugOpen = "debug";
 
 const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
 
@@ -74,10 +76,16 @@ const startListening = () => {
       </div>
     </Transition>
 
+    <Transition>
+      <div v-if="playerState === 'end'">
+        <EndScreen :title="graph.name" />
+      </div>
+    </Transition>
+
     <div v-if="data?.streamInfo.__typename === 'StreamInfo'">
       <Player ref="playerRef" :stream-point="data.streamInfo.stream.streamPoint" :stream="data.streamInfo.stream" />
-      <ElCollapse style="margin-top: 10px;">
-        <ElCollapseItem title="Debug info">
+      <ElCollapse v-if="showDebug" v-model="debugOpen" style="margin-top: 100px;">
+        <ElCollapseItem title="Debug info" name="debug">
           <StreamInfo :stream="data.streamInfo.stream" :stream-instruction="data.streamInfo.streamInstruction" />
         </ElCollapseItem>
       </ElCollapse>

@@ -48,7 +48,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
-    <h1 class="title">
+    <h1 v-if="playerState !== 'end'" class="title">
       {{ title }}
     </h1>
     <div class="player-bar">
