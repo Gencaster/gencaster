@@ -8,6 +8,8 @@ $spacingXL: 6rem;
 
 // sizes
 $desktopMaxWidth: 1280px;
+$cardMaxWidth: 600px;
+
 $mobilePadding: 22px;
 
 // lines
@@ -22,10 +24,14 @@ $baseFontSizeMobile: 18px;
 $baseFontSize: 18px;
 $mediumFontSizeMobile: 24px;
 $mediumFontSize: 24px;
-$largeFontSizeMobile: 2rem;
-$largeFontSize: 2rem;
+$largeFontSizeMobile: 48px;
+$largeFontSize: 48px;
 $largerFontSizeMobile: 2.5rem;
 $largerFontSize: 3.5rem;
+
+// other
+$borderRadius: 4px;
+$buttonScale: 1.1;
 
 
 // colors

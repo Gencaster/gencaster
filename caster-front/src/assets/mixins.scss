@@ -54,7 +54,7 @@
 @mixin fontStyle($fontStyle) {
   @if $fontStyle == body {
     font-size: $baseFontSizeMobile;
-    line-height: 1.3;
+    line-height: 1.4;
     @include onScreen('tablet-portrait-up') {
       font-size: $baseFontSize;
     }
@@ -62,7 +62,7 @@
 
   @if $fontStyle == headline {
     font-size: $largeFontSizeMobile;
-    line-height: 1.3;
+    line-height: 1.4;
     @include onScreen('tablet-portrait-up') {
       font-size: $largeFontSize;
     }
@@ -78,7 +78,7 @@
 
   @if $fontStyle == smallHeadline {
     font-size: $mediumFontSizeMobile;
-    line-height: 1.3;
+    line-height: 1.45;
     @include onScreen('tablet-portrait-up') {
       font-size: $mediumFontSize;
     }

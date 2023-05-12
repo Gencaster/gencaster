@@ -290,41 +290,37 @@ watch(play, (playState) => {
 </script>
 
 <template>
-  <audio ref="audioPlayer" controls :hidden="showPlayer ? false : true " />
+  <div>
+    <audio ref="audioPlayer" controls :hidden="showPlayer ? false : true" />
 
-  <div v-if="showRawControls" class="player-control">
-    <button :disabled="streamPoint === null" @click="() => { play = true }">
-      Play
-    </button>
-    <button :disabled="streamPoint === null" @click="() => { play = false }">
-      Pause
-    </button>
-    <button @click="() => { micActive = !micActive }">
-      Change mic status
-    </button>
-  </div>
+    <div v-if="showRawControls" class="player-control">
+      <button :disabled="streamPoint === null" @click="() => { play = true }">
+        Play
+      </button>
+      <button :disabled="streamPoint === null" @click="() => { play = false }">
+        Pause
+      </button>
+      <button @click="() => { micActive = !micActive }">
+        Change mic status
+      </button>
+    </div>
 
-  <div v-if="stream">
-    <GpsStreaming
-      :stream="stream"
-    />
-  </div>
-  <div v-else>
-    GPS works only on a Gencaster stream
-  </div>
+    <div v-if="stream">
+      <GpsStreaming :stream="stream" />
+    </div>
+    <div v-else>
+      GPS works only on a Gencaster stream
+    </div>
 
-  <div v-if="showPlayerInfo" class="player-info">
-    <ElDescriptions
-      title="Player info"
-      :column="1"
-      border
-    >
-      <ElDescriptionsItem label="SuperCollider port">
-        {{ streamPoint.port }}
-      </ElDescriptionsItem>
-      <ElDescriptionsItem label="Janus out port">
-        {{ streamPoint.janusOutPort }}
-      </ElDescriptionsItem>
-    </ElDescriptions>
+    <div v-if="showPlayerInfo" class="player-info">
+      <ElDescriptions title="Player info" :column="1" border>
+        <ElDescriptionsItem label="SuperCollider port">
+          {{ streamPoint.port }}
+        </ElDescriptionsItem>
+        <ElDescriptionsItem label="Janus out port">
+          {{ streamPoint.janusOutPort }}
+        </ElDescriptionsItem>
+      </ElDescriptions>
+    </div>
   </div>
 </template>

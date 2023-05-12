@@ -33,6 +33,12 @@ h6 {
   overflow-wrap: break-word;
 }
 
+h1 {
+  @include fontStyle('headline');
+  margin-bottom: $spacingS;
+
+}
+
 h2 {
   @include fontStyle('headline');
   margin-bottom: $spacingS;
@@ -66,15 +72,15 @@ a:active {
   text-underline-offset: 0.1em !important;
 }
 
-a[target='_blank'] {
-  &::after {
-    content: '↗';
+// a[target='_blank'] {
+//   &::after {
+//     content: '↗';
 
-    margin-left: 1px;
-    text-decoration: none;
-    display: inline-block;
-  }
-}
+//     margin-left: 1px;
+//     text-decoration: none;
+//     display: inline-block;
+//   }
+// }
 
 a[target='_blank'].no-arrow {
   &::after {

@@ -2,6 +2,50 @@
 
 /* ============ Element Plus ============ */
 
+// button
+
+// el-button el-button--default
+
+.el-button--large {}
+
+.el-button {
+    width: auto !important;
+    &.caps {
+        text-transform: uppercase;
+    }
+
+    &.green {
+        background-color: $green-light;
+        border: $lineStandard solid $black;
+        --el-button-bg-color: #{$green-light};
+        --el-button-active-text-color: #{$black};
+
+        &:hover {
+            color: $black;
+            // --el-button-bg-color: white;
+            // background-color: white;
+            transform: scale($buttonScale);
+        }
+    }
+}
+
+.el-button--large {
+    display: inline-block;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: $black;
+    width: auto;
+    padding: 5px 10px 2px 10px;
+    --el-button-size: auto;
+    height: auto;
+
+    span {
+        @include fontStyle('headline');
+        line-height: 1;
+    }
+}
+
+
 // table
 .el-table {
     --el-table-border-color: #{$black};

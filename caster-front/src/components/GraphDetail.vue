@@ -22,7 +22,7 @@ const { data, fetching, error } = useGetGraphsQuery({
 <template>
   <div v-if="router.currentRoute.value.name === 'graphPlayer'" v-loading="fetching" class="graph-detail">
     <div v-if="error || (!fetching && (data?.graphs.length !== 1)) || !data" class="error">
-      Could not find proper graph
+      <!-- Could not find proper graph -->
     </div>
     <!-- @todo use a database field here -->
     <div v-else-if="data?.graphs[0].name.includes('Drifter')">
@@ -39,5 +39,9 @@ const { data, fetching, error } = useGetGraphsQuery({
 </template>
 
 <style lang="scss" scoped>
-
+@import '@/assets/variables.scss';
+.default-graph-detail {
+  margin: 0 auto;
+  width: calc(100% - 2 * $mobilePadding);
+}
 </style>

@@ -9,9 +9,14 @@ defineProps<{
 
 <template>
   <div class="default-graph-detail">
-    <p>Dast ist ein test</p>
     <GraphPlayer
       :graph="graph"
     />
   </div>
 </template>
+
+<style lang="scss" scoped>
+.default-graph-detail {
+  background-color: yellow;
+}
+</style>
