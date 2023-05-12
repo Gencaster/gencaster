@@ -52,7 +52,9 @@ class GencasterToken(SpanToken):
 
 
 class GencasterRenderer(BaseRenderer):
-    """ """
+    """
+    Acts as a python parser for the Gencaster markdown dialect.
+    """
 
     def __init__(self, stream_variables: Optional[Dict[str, str]] = None) -> None:
         super().__init__(GencasterToken)
@@ -159,11 +161,6 @@ class GencasterRenderer(BaseRenderer):
 
         Eval does not allow for variable assignment but we obtain a return value.
 
-        .. seealso::
-
-           Use :func:`~story_graph.markdown_parser.GencasterRenderer.exec_python`
-           to access variables.
-
         .. todo::
 
             Store variables in :class:`story_graph.models.GraphSession` context.
@@ -180,8 +177,6 @@ class GencasterRenderer(BaseRenderer):
         """
         Executes a Python statement which allows to assign variables.
 
-        Example:
-
 
         .. code-block:: markdown
 
@@ -189,6 +184,10 @@ class GencasterRenderer(BaseRenderer):
             A is now {eval_python}`a`.
 
         becomes `A is now 2`.
+
+        .. seealso::
+
+           Use :func:`~GencasterRenderer.var` to access stream variables.
         """
         try:
             exec(text)
@@ -198,7 +197,7 @@ class GencasterRenderer(BaseRenderer):
 
     def var(self, text: str) -> str:
         """
-        Refers to the value of a :class:`~story_graph.models.StreamVariable`.
+        Refers to the value of a :class:`~stream.models.StreamVariable`.
 
         Example:
 
