@@ -1,5 +1,6 @@
 import asyncio
 import random
+from datetime import datetime
 from typing import Dict, Optional
 
 from asgiref.sync import async_to_sync, sync_to_async
@@ -276,6 +277,16 @@ class EngineTestCase(TransactionTestCase):
             node=entry_node, cell_type=cell_type, cell_code=cell_code
         )
 
+    async def helper_create_delayed_stream_variable(
+        self, key: str, value: str, delay_time: float = 0.1
+    ):
+        await asyncio.sleep(delay_time)
+        await StreamVariable.objects.acreate(
+            stream=self.stream,
+            key=key,
+            value=value,
+        )
+
     async def test_get_variables(self):
         await sync_to_async(self.setup_with_script_cell)("vars['a'] = 2+2")
         engine = Engine(self.graph, self.stream)
@@ -300,6 +311,26 @@ while True:
         engine = Engine(self.graph, self.stream)
         with self.assertRaises(StopAsyncIteration):
             await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.5)
+
+    async def test_wait_for_start_variable(self):
+        await sync_to_async(self.setup_with_script_cell)(
+            """await wait_for_stream_variable('start')
+vars['foo'] = 42"""
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        start_time = datetime.now()
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(
+                asyncio.gather(
+                    engine.start().__aiter__().__anext__(),
+                    self.helper_create_delayed_stream_variable("start", "true", 0.2),
+                ),
+                1.0,
+            )
+        end_time = datetime.now()
+        self.assertTrue((end_time - start_time).total_seconds() > 0.2)
+        v = await engine.get_stream_variables()
+        self.assertEqual(v.get("start"), "true")
 
     async def test_invalid_python_code(self):
         await sync_to_async(self.setup_with_script_cell)("34+aeu")
@@ -376,14 +407,6 @@ while True:
         engine = Engine(self.graph, self.stream, raise_exceptions=True)
         await engine.wait_for_stream_variable("hello", timeout=0.1)
 
-    async def helper_create_delayed_stream_variable(self):
-        await asyncio.sleep(0.1)
-        await StreamVariable.objects.acreate(
-            stream=self.stream,
-            key="start",
-            value="true",
-        )
-
     async def test_wait_for_changing_stream_variable(self):
         await sync_to_async(self.setup_with_script_cell)("")
         await StreamVariable.objects.acreate(
@@ -393,7 +416,7 @@ while True:
         )
         engine = Engine(self.graph, self.stream, raise_exceptions=True)
         job = asyncio.gather(
-            self.helper_create_delayed_stream_variable(),
+            self.helper_create_delayed_stream_variable("start", "true", 0.1),
             engine.wait_for_stream_variable("start", timeout=1.0, update_speed=0.1),
         )
         await asyncio.wait_for(job, timeout=0.5)
