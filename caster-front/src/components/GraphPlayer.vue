@@ -5,7 +5,7 @@ import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import Player from "@/components/Player.vue";
 import GraphPlayerCredits from "@/components/GraphPlayerCredits.vue";
-import PlayerVisualizer from "@/components/PlayerVisualizer.vue";
+import PlayerVisualizer from "@/components/PlayerVisualizer/PlayerVisualizer.vue";
 
 import type { Graph } from "@/graphql";
 import { useStreamSubscription } from "@/graphql";
@@ -30,6 +30,8 @@ const { data, error, stale } = useStreamSubscription({
 
 const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
 
+const state = ref("start"); // start, playing, end
+
 const showTitle = ref(true);
 </script>
 
@@ -48,7 +50,7 @@ const showTitle = ref(true);
             <div class="button-wrapper">
               <ElButton
                 class="caps green" size="large" type="default" style="width: 100%;"
-                @click="play = !play; showTitle = false"
+                @click="play = !play; showTitle = false; state = 'playing';"
               >
                 Start
               </ElButton>
@@ -60,9 +62,11 @@ const showTitle = ref(true);
       </div>
     </Transition>
 
-    <div class="audio-visualizer">
-      <PlayerVisualizer />
-    </div>
+    <Transition>
+      <div v-if="state === 'playing'" class="audio-visualizer">
+        <PlayerVisualizer />
+      </div>
+    </Transition>
 
     <div v-if=" data?.streamInfo.__typename === 'StreamInfo' ">
       <Player ref="playerRef" :stream-point=" data.streamInfo.stream.streamPoint " :stream=" data.streamInfo.stream " />
@@ -87,6 +91,7 @@ const showTitle = ref(true);
 
 .graph-player {
   .graph-title-card {
+    margin: 0 auto;
     position: relative;
     display: block;
     box-sizing: border-box;
@@ -121,6 +126,17 @@ const showTitle = ref(true);
       }
     }
   }
+}
 
+.audio-visualizer {
+  box-sizing: border-box;
+  position: absolute;
+  top: 20px;
+  left: 0px;
+  height: 80px;
+  width: 100%;
+  padding-left: 24px;
+  padding-right: 24px;;
+  margin: 0 auto;
 }
 </style>

@@ -16,7 +16,12 @@ defineProps<{
 </template>
 
 <style lang="scss" scoped>
+@import '@/assets/mixins.scss';
+@import '@/assets/variables.scss';
+
 .default-graph-detail {
-  background-color: yellow;
+  // margin: 0 auto;
+  // width: calc(100% - 2 * $mobilePadding);
+  // background-color: yellow;
 }
 </style>
