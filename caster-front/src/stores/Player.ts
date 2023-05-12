@@ -8,7 +8,7 @@ export const usePlayerStore = defineStore("player", () => {
   const play: Ref<boolean> = ref(false);
   const startingTimestamp: Ref<number> = ref(0);
   const playerState: Ref<"start" | "playing" | "end"> = ref("start");
-  const showInfoPopup: Ref<boolean> = ref(false);
+  const showInfo: Ref<boolean> = ref(false);
 
   // gps
   const gpsErrored: Ref<boolean> = ref(false);
@@ -58,7 +58,7 @@ export const usePlayerStore = defineStore("player", () => {
     description,
     infoContent,
     endContent,
-    showInfoPopup,
+    showInfo,
     userDataRequests
   };
 });

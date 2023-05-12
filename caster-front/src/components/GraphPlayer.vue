@@ -11,6 +11,7 @@ import StreamInfo from "@/components/StreamInfo.vue";
 import EndScreen from "@/components/EndScreen.vue";
 import Content from "@/components/Content.vue";
 import DataPopups from "@/components/DataPopups.vue";
+import AudioInfo from "@/components/AudioInfo.vue";
 
 import type { Graph } from "@/graphql";
 import { useStreamSubscription } from "@/graphql";
@@ -19,7 +20,7 @@ const props = defineProps<{
   graph: Pick<Graph, "uuid" | "name">
 }>();
 
-const { play, startingTimestamp, playerState, title, description, infoContent, userDataRequests } = storeToRefs(usePlayerStore());
+const { play, startingTimestamp, playerState, title, description, infoContent, showInfo } = storeToRefs(usePlayerStore());
 
 const router = useRouter();
 const showDebug = computed<boolean>(() => router.currentRoute.value.query.debug === null);
@@ -98,9 +99,11 @@ const startListening = () => {
       </div>
     </Transition>
 
-    <!-- <Transition>
-      <div v-if="showInfoPopup" class="info" />
-    </Transition> -->
+    <Transition>
+      <div v-if="showInfo">
+        <AudioInfo />
+      </div>
+    </Transition>
 
     <div v-if="data?.streamInfo.__typename === 'StreamInfo'">
       <Player ref="playerRef" :stream-point="data.streamInfo.stream.streamPoint" :stream="data.streamInfo.stream" />
@@ -124,6 +127,7 @@ const startListening = () => {
 @import '@/assets/variables.scss';
 
 .graph-player {
+  z-index: 1;
   padding-left: $mobilePadding;
   padding-right: $mobilePadding;
 

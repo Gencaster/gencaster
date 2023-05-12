@@ -6,7 +6,7 @@ defineProps({
   title: String
 });
 
-const { startingTimestamp, play, playerState } = storeToRefs(usePlayerStore());
+const { startingTimestamp, play, playerState, showInfo } = storeToRefs(usePlayerStore());
 
 const format = (num: number) => {
   const s = `${num}`;
@@ -53,7 +53,7 @@ onBeforeUnmount(() => {
     </h1>
     <div class="player-bar">
       <div class="element">
-        <button class="text-btn text-btn-medium">
+        <button class="text-btn text-btn-medium" @click="showInfo = true">
           <span>INFO</span>
         </button>
       </div>
@@ -63,8 +63,10 @@ onBeforeUnmount(() => {
       <div class="element">
         <button class="text-btn text-btn-medium" @click="stopPlayer()">
           <div v-if="playerState !== 'end'" class="stop-icon" />
-          <span v-if="playerState === 'end'" />
-          <span v-else>STOP</span>
+          <Transition>
+            <span v-if="playerState === 'end'" />
+            <span v-else>STOP</span>
+          </Transition>
         </button>
       </div>
     </div>

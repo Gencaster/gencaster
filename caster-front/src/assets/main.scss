@@ -88,6 +88,10 @@ body {
     text-underline-offset: 0.15em !important;
     text-decoration-thickness: 0.1rem !important;
   }
+
+  &.caps {
+    text-transform: uppercase;
+}
 }
 
 
