@@ -57,7 +57,7 @@ const startListening = () => {
               {{ description }}
             </p>
             <div class="button-wrapper">
-              <ElButton class="caps green" size="large" type="default" style="width: 100%;" @click="startListening()">
+              <ElButton class="caps green" size="large" type="default" @click="startListening()">
                 Start
               </ElButton>
             </div>
