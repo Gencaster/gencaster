@@ -11,7 +11,7 @@
 @import '@/assets/variables.scss';
 
 .credits {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;

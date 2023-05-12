@@ -9,6 +9,7 @@ import PlayerVisualizer from "@/components/PlayerVisualizer/PlayerVisualizer.vue
 import PlayerBar from "@/components/PlayerBar/PlayerBar.vue";
 import StreamInfo from "@/components/StreamInfo.vue";
 import EndScreen from "@/components/EndScreen.vue";
+import Content from "@/components/Content.vue";
 
 import type { Graph } from "@/graphql";
 import { useStreamSubscription } from "@/graphql";
@@ -30,8 +31,8 @@ const { data, error, stale } = useStreamSubscription({
 });
 
 const debugOpen = "debug";
-
 const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
+const hasInfo = false;
 
 const startListening = () => {
   play.value = true;
@@ -43,8 +44,8 @@ const startListening = () => {
 <template>
   <div v-loading="stale" class="graph-player">
     <Transition>
-      <div v-if="playerState === 'start'" class="fullscreen-wrapper">
-        <div>
+      <div v-if="playerState === 'start'">
+        <div class="fullscreen-wrapper-relative">
           <div class="graph-title-card">
             <h1 class="title">
               {{ graph.name }}
@@ -58,9 +59,14 @@ const startListening = () => {
               </ElButton>
             </div>
           </div>
+          <GraphPlayerCredits />
         </div>
+      </div>
+    </Transition>
 
-        <GraphPlayerCredits />
+    <Transition>
+      <div v-if="playerState === 'start' && hasInfo" class="info">
+        <Content />
       </div>
     </Transition>
 
@@ -104,6 +110,9 @@ const startListening = () => {
 @import '@/assets/variables.scss';
 
 .graph-player {
+  padding-left: $mobilePadding;
+  padding-right: $mobilePadding;
+
   .graph-title-card {
     margin: 0 auto;
     position: relative;
@@ -151,7 +160,10 @@ const startListening = () => {
   width: 100%;
   padding-left: 24px;
   padding-right: 24px;
-  ;
   margin: 0 auto;
+}
+
+.info {
+  margin-bottom: $spacingXL;
 }
 </style>
