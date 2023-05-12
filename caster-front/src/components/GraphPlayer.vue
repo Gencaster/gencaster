@@ -18,7 +18,7 @@ const props = defineProps<{
   graph: Pick<Graph, "uuid" | "name">
 }>();
 
-const { play, startingTimestamp, playerState } = storeToRefs(usePlayerStore());
+const { play, startingTimestamp, playerState, title, description, infoContent, endContent } = storeToRefs(usePlayerStore());
 
 const router = useRouter();
 const showDebug = computed<boolean>(() => router.currentRoute.value.query.debug === null);
@@ -32,7 +32,10 @@ const { data, error, stale } = useStreamSubscription({
 
 const debugOpen = "debug";
 const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
-const hasInfo = false;
+
+const hasInfo = computed(() => {
+  return infoContent.value.length > 0;
+});
 
 const startListening = () => {
   play.value = true;
@@ -48,10 +51,10 @@ const startListening = () => {
         <div class="fullscreen-wrapper-relative">
           <div class="graph-title-card">
             <h1 class="title">
-              {{ graph.name }}
+              {{ title }}
             </h1>
             <p class="description">
-              Ein GPS basierter Audiowalk entlang des berühmten Wahrzeichens.
+              {{ description }}
             </p>
             <div class="button-wrapper">
               <ElButton class="caps green" size="large" type="default" style="width: 100%;" @click="startListening()">
@@ -66,7 +69,7 @@ const startListening = () => {
 
     <Transition>
       <div v-if="playerState === 'start' && hasInfo" class="info">
-        <Content />
+        <Content :text="infoContent" />
       </div>
     </Transition>
 
@@ -78,13 +81,13 @@ const startListening = () => {
 
     <Transition>
       <div v-if="playerState === 'playing' || playerState === 'end'">
-        <PlayerBar :title="graph.name" />
+        <PlayerBar :title="title" />
       </div>
     </Transition>
 
     <Transition>
       <div v-if="playerState === 'end'">
-        <EndScreen :title="graph.name" />
+        <EndScreen :title="title" />
       </div>
     </Transition>
 
