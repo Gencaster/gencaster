@@ -1,11 +1,14 @@
 import asyncio
 import random
+from typing import Dict, Optional
 
-from asgiref.sync import sync_to_async
+from asgiref.sync import async_to_sync, sync_to_async
 from django.db.utils import IntegrityError
 from django.test import TransactionTestCase
 from mistletoe import Document
 from mixer.backend.django import mixer
+
+from stream.models import StreamVariable
 
 from .engine import Engine
 from .markdown_parser import GencasterRenderer
@@ -233,3 +236,88 @@ class EngineTestCase(TransactionTestCase):
 
         with self.assertRaises(StopAsyncIteration):
             await asyncio.wait_for(engine.start().__aiter__().__anext__(), 4.5)
+
+    def setup_python_script_cell(
+        self, cell_code: str, stream_variables: Optional[Dict] = None
+    ):
+        from stream.tests import StreamTestCase
+
+        self.graph = GraphTestCase.get_graph()
+        self.stream = StreamTestCase.get_stream()
+        entry_node = async_to_sync(self.graph.acreate_entry_node)
+        self.script_cell = ScriptCellTestCase.get_script_cell(
+            node=entry_node, cell_type=CellType.PYTHON, cell_code=cell_code
+        )
+
+    async def test_get_variables(self):
+        await sync_to_async(self.setup_python_script_cell)("vars['a'] = 2+2")
+        engine = Engine(self.graph, self.stream)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 5.5)
+        v = await engine.get_stream_variables()
+        self.assertEqual(v.get("a"), "4")
+
+    async def test_wait_for_variables(self):
+        """Actually this does not wait for the params from the database
+        as I don't know how to sync two async test tasks.
+        Instead we use the time to check if we can wait for a statement.
+        """
+        await sync_to_async(self.setup_python_script_cell)(
+            """now = datetime.now()
+while True:
+    now_now = datetime.now()
+    if((datetime.now() - now).total_seconds() > 0.2):
+        break
+    await asyncio.sleep(0.05)"""
+        )
+        engine = Engine(self.graph, self.stream)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.5)
+
+    async def test_invalid_python_code(self):
+        await sync_to_async(self.setup_python_script_cell)("34+aeu")
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with self.assertRaises(NameError):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 5.5)
+
+    async def test_python_async_sleep_via_timeout(self):
+        await sync_to_async(self.setup_python_script_cell)("await asyncio.sleep(0.5)")
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with self.assertRaises(asyncio.exceptions.TimeoutError):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.2)
+
+    async def test_python_async_sleep_success(self):
+        await sync_to_async(self.setup_python_script_cell)("await asyncio.sleep(0.1)")
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.2)
+
+    async def test_python_self_calls(self):
+        await sync_to_async(self.setup_python_script_cell)(
+            "vars['foo'] = await self.get_stream_variables()"
+        )
+        await StreamVariable.objects.acreate(
+            stream=self.stream,
+            key="hello",
+            value="world",
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.2)
+        v = await engine.get_stream_variables()
+        self.assertEqual(v["foo"], "{'hello': 'world'}")
+
+    async def test_python_w_o_self_calls(self):
+        await sync_to_async(self.setup_python_script_cell)(
+            "vars['foo'] = await get_stream_variables()"
+        )
+        await StreamVariable.objects.acreate(
+            stream=self.stream,
+            key="hello",
+            value="world",
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.2)
+        v = await engine.get_stream_variables()
+        self.assertEqual(v["foo"], "{'hello': 'world'}")
