@@ -52,7 +52,7 @@ class Engine:
         return v
 
     async def wait_for_stream_variable(
-        self, name: str, timeout: int = 100, update_speed: float = 0.5
+        self, name: str, timeout: float = 100.0, update_speed: float = 0.5
     ):
         start_time = datetime.now()
         while True:
