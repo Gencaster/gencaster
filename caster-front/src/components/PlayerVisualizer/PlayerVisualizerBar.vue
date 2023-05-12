@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 function generateRandom(min: number, max: number) {
   const difference = max - min;
   let rand = Math.random();

@@ -6,18 +6,19 @@ import { storeToRefs } from "pinia";
 import Player from "@/components/Player.vue";
 import GraphPlayerCredits from "@/components/GraphPlayerCredits.vue";
 import PlayerVisualizer from "@/components/PlayerVisualizer/PlayerVisualizer.vue";
+import PlayerBar from "@/components/PlayerBar/PlayerBar.vue";
 
 import type { Graph } from "@/graphql";
 import { useStreamSubscription } from "@/graphql";
 import StreamInfo from "@/components/StreamInfo.vue";
 
 import { usePlayerStore } from "@/stores/Player";
-import PlayerButtons from "@/components/PlayerButtons.vue";
+// import PlayerButtons from "@/components/PlayerButtons.vue";
 const props = defineProps<{
   graph: Pick<Graph, "uuid" | "name">
 }>();
 
-const { play } = storeToRefs(usePlayerStore());
+const { play, startingTimestamp, playerState } = storeToRefs(usePlayerStore());
 
 const router = useRouter();
 
@@ -30,15 +31,17 @@ const { data, error, stale } = useStreamSubscription({
 
 const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
 
-const state = ref("start"); // start, playing, end
-
-const showTitle = ref(true);
+const startListening = () => {
+  play.value = true;
+  playerState.value = "playing";
+  startingTimestamp.value = new Date().getTime();
+};
 </script>
 
 <template>
   <div v-loading="stale" class="graph-player">
     <Transition>
-      <div v-if="showTitle" class="fullscreen-wrapper">
+      <div v-if="playerState === 'start'" class="fullscreen-wrapper">
         <div>
           <div class="graph-title-card">
             <h1 class="title">
@@ -48,10 +51,7 @@ const showTitle = ref(true);
               Ein GPS basierter Audiowalk entlang des berühmten Wahrzeichens.
             </p>
             <div class="button-wrapper">
-              <ElButton
-                class="caps green" size="large" type="default" style="width: 100%;"
-                @click="play = !play; showTitle = false; state = 'playing';"
-              >
+              <ElButton class="caps green" size="large" type="default" style="width: 100%;" @click="startListening()">
                 Start
               </ElButton>
             </div>
@@ -63,23 +63,29 @@ const showTitle = ref(true);
     </Transition>
 
     <Transition>
-      <div v-if="state === 'playing'" class="audio-visualizer">
+      <div v-if="playerState === 'playing'" class="audio-visualizer">
         <PlayerVisualizer />
       </div>
     </Transition>
 
-    <div v-if=" data?.streamInfo.__typename === 'StreamInfo' ">
-      <Player ref="playerRef" :stream-point=" data.streamInfo.stream.streamPoint " :stream=" data.streamInfo.stream " />
+    <Transition>
+      <div v-if="playerState === 'playing' || playerState === 'end'">
+        <PlayerBar :title="graph.name" />
+      </div>
+    </Transition>
+
+    <div v-if="data?.streamInfo.__typename === 'StreamInfo'">
+      <Player ref="playerRef" :stream-point="data.streamInfo.stream.streamPoint" :stream="data.streamInfo.stream" />
       <ElCollapse style="margin-top: 10px;">
         <ElCollapseItem title="Debug info">
-          <StreamInfo :stream=" data.streamInfo.stream " :stream-instruction=" data.streamInfo.streamInstruction " />
+          <StreamInfo :stream="data.streamInfo.stream" :stream-instruction="data.streamInfo.streamInstruction" />
         </ElCollapseItem>
       </ElCollapse>
     </div>
-    <div v-if=" data?.streamInfo.__typename === 'NoStreamAvailable' ">
+    <div v-if="data?.streamInfo.__typename === 'NoStreamAvailable'">
       Currently no stream is available, please come back later.
     </div>
-    <div v-if=" error ">
+    <div v-if="error">
       Error: {{ error }}
     </div>
   </div>
@@ -136,7 +142,8 @@ const showTitle = ref(true);
   height: 80px;
   width: 100%;
   padding-left: 24px;
-  padding-right: 24px;;
+  padding-right: 24px;
+  ;
   margin: 0 auto;
 }
 </style>

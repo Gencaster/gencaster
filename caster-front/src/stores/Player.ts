@@ -6,6 +6,8 @@ import type { StreamPoint } from "@/graphql";
 export const usePlayerStore = defineStore("player", () => {
   const micActive: Ref<boolean> = ref(false);
   const play: Ref<boolean> = ref(false);
+  const startingTimestamp: Ref<number> = ref(0);
+  const playerState: Ref<"start" | "playing" | "end"> = ref("start");
 
   const graphUuid: Ref<Scalars["UUID"] | undefined> = ref(undefined);
 
@@ -24,6 +26,8 @@ export const usePlayerStore = defineStore("player", () => {
     streamInfo,
     graphUuid,
     activeStreamPoint,
-    streamGPS
+    streamGPS,
+    startingTimestamp,
+    playerState
   };
 });
