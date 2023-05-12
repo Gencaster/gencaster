@@ -5,9 +5,6 @@
 @import 'typography.scss';
 @import 'elementplus.scss';
 
-
-
-
 html,
 body,
 #app {
@@ -35,9 +32,9 @@ body {
   width: 100%;
 }
 
-.fullscreen-wrapper {
+.fullscreen-wrapper-fixed {
   box-sizing: border-box;
-  position: relative;
+  position: fixed;
   height: 100vh;
   max-height: 100%;
   float: left;
@@ -84,6 +81,12 @@ body {
 
   &:hover {
     transform: scale($buttonScale);
+  }
+
+  &.underline {
+    text-decoration: underline;
+    text-underline-offset: 0.15em !important;
+    text-decoration-thickness: 0.1rem !important;
   }
 }
 

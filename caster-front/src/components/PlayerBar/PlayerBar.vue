@@ -91,6 +91,7 @@ onBeforeUnmount(() => {
 }
 
 .player-bar {
+  z-index: 10;
   box-sizing: border-box;
   position: fixed;
   bottom: 0;

@@ -8,7 +8,6 @@ const numberOfBars = ref(20);
 const distanceBars = ref(22);
 
 const setBars = () => {
-  console.log("setBars");
   const width = wrapper.value?.clientWidth || 0;
   const amount = Math.floor(width / distanceBars.value);
   numberOfBars.value = amount;

@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<{
   showButton: false
 });
 
-const { streamGPS } = storeToRefs(usePlayerStore());
+const { streamGPS, gpsErrored, gpsAllowed } = storeToRefs(usePlayerStore());
 
 const sendStreamVariableMutation = useSendStreamVariableMutation();
 
@@ -23,6 +23,7 @@ const startStreaming = () => {
   console.log("Start GPS streaming");
 
   navigator.geolocation.getCurrentPosition((position) => {
+    gpsAllowed.value = true;
     console.log("New position ", position);
     const streamVariables: StreamVariableInput[] = [];
 
@@ -45,6 +46,7 @@ const startStreaming = () => {
       sendStreamVariableMutation.executeMutation({ streamVariables });
   }, () => {
     console.log("Could not successfully obtain GPS data");
+    gpsErrored.value = true;
   }, {
     enableHighAccuracy: true,
     maximumAge: Infinity

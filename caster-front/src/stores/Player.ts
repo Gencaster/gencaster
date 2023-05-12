@@ -8,7 +8,23 @@ export const usePlayerStore = defineStore("player", () => {
   const play: Ref<boolean> = ref(false);
   const startingTimestamp: Ref<number> = ref(0);
   const playerState: Ref<"start" | "playing" | "end"> = ref("start");
-  const showInfo: Ref<boolean> = ref(false);
+  const showInfoPopup: Ref<boolean> = ref(false);
+
+  // gps
+  const gpsErrored: Ref<boolean> = ref(false);
+  const gpsAllowed: Ref<boolean> = ref(false);
+
+  // popups
+  type UserDataRequestType = "gps" | "string";
+  interface UserDataRequest {
+    name: string
+    description: string
+    key: string
+    type: UserDataRequestType
+    placeholder: string
+  }
+
+  const userDataRequests: Ref<Array<UserDataRequest>> = ref([]);
 
   // content of the graph
   const title: Ref<string> = ref("Title of Graph");
@@ -34,12 +50,15 @@ export const usePlayerStore = defineStore("player", () => {
     graphUuid,
     activeStreamPoint,
     streamGPS,
+    gpsErrored,
+    gpsAllowed,
     startingTimestamp,
     playerState,
     title,
     description,
     infoContent,
     endContent,
-    showInfo
+    showInfoPopup,
+    userDataRequests
   };
 });

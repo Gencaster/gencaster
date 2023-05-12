@@ -2,12 +2,26 @@
 
 /* ============ Element Plus ============ */
 
+// single line input
+.el-input {
+    height: 40px;
+    @include fontStyle('smallHeadline');
+    --el-input-text-color: #{$black};
+    --el-button-active-text-color: #{$black};
+
+    --el-input-border-color: #{$black};
+    --el-input-focus-border-color: #{$green-light};
+
+    margin-bottom: $spacingM;
+
+    .el-input__wrapper {
+        border-radius: $borderRadius;
+        box-shadow: 0 0 0 $lineStandard var(--el-input-border-color,var(--el-border-color)) inset;
+    }
+
+}
+
 // button
-
-// el-button el-button--default
-
-.el-button--large {}
-
 .el-button {
     width: auto !important;
     &.caps {
@@ -18,7 +32,6 @@
         background-color: $green-light;
         border: $lineStandard solid $black;
         --el-button-bg-color: #{$green-light};
-        --el-button-active-text-color: #{$black};
 
         &:hover {
             color: $black;
@@ -26,6 +39,22 @@
             // background-color: white;
             transform: scale($buttonScale);
         }
+    }
+}
+
+.el-button--default {
+    display: inline-block;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: $black;
+    width: auto;
+    padding: 4px 10px 2px 10px;
+    --el-button-size: auto;
+    height: auto;
+
+    span {
+        @include fontStyle('smallHeadline');
+        line-height: 1;
     }
 }
 

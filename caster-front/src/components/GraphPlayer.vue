@@ -10,6 +10,7 @@ import PlayerBar from "@/components/PlayerBar/PlayerBar.vue";
 import StreamInfo from "@/components/StreamInfo.vue";
 import EndScreen from "@/components/EndScreen.vue";
 import Content from "@/components/Content.vue";
+import DataPopups from "@/components/DataPopups.vue";
 
 import type { Graph } from "@/graphql";
 import { useStreamSubscription } from "@/graphql";
@@ -18,7 +19,7 @@ const props = defineProps<{
   graph: Pick<Graph, "uuid" | "name">
 }>();
 
-const { play, startingTimestamp, playerState, title, description, infoContent, endContent } = storeToRefs(usePlayerStore());
+const { play, startingTimestamp, playerState, title, description, infoContent, userDataRequests } = storeToRefs(usePlayerStore());
 
 const router = useRouter();
 const showDebug = computed<boolean>(() => router.currentRoute.value.query.debug === null);
@@ -67,6 +68,12 @@ const startListening = () => {
       </div>
     </Transition>
 
+    <!-- pop up wrapper -->
+    <!-- <div v-if="playerState === 'playing'" class="data-popups"> -->
+    <div class="data-popups">
+      <DataPopups />
+    </div>
+
     <Transition>
       <div v-if="playerState === 'start' && hasInfo" class="info">
         <Content :text="infoContent" />
@@ -90,6 +97,10 @@ const startListening = () => {
         <EndScreen :title="title" />
       </div>
     </Transition>
+
+    <!-- <Transition>
+      <div v-if="showInfoPopup" class="info" />
+    </Transition> -->
 
     <div v-if="data?.streamInfo.__typename === 'StreamInfo'">
       <Player ref="playerRef" :stream-point="data.streamInfo.stream.streamPoint" :stream="data.streamInfo.stream" />
