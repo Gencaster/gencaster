@@ -92,8 +92,8 @@ class EdgeTestCase(TransactionTestCase):
 
 class GencasterMarkdownTestCase(TransactionTestCase):
     @staticmethod
-    def gm_md(text: str) -> str:
-        with GencasterRenderer() as renderer:
+    def gm_md(text: str, variables: Optional[Dict] = None) -> str:
+        with GencasterRenderer(variables) as renderer:
             document = Document(text)
             ssml_text = renderer.render(document)
         return ssml_text  # type: ignore
@@ -138,6 +138,30 @@ baz.
 
     def test_moderate(self):
         self.assertTrue('emphasis level="moderate"' in self.gm_md("{moderate}`foo`"))
+
+    def test_var(self):
+        self.assertEqual(
+            self.SPEAK.format("hello world"),
+            self.gm_md("hello {var}`foo`", {"foo": "world"}),
+        )
+
+    def test_var_unset(self):
+        self.assertEqual(
+            self.SPEAK.format("hello "),
+            self.gm_md("hello {var}`foo`", {}),
+        )
+
+    def test_var_use_fallback(self):
+        self.assertEqual(
+            self.SPEAK.format("hello bar"),
+            self.gm_md("hello {var}`foo|bar`", {}),
+        )
+
+    def test_var_skip_fallback(self):
+        self.assertEqual(
+            self.SPEAK.format("hello world"),
+            self.gm_md("hello {var}`foo|bar`", {"foo": "world"}),
+        )
 
 
 class ScriptCellTestCase(TransactionTestCase):
@@ -237,8 +261,11 @@ class EngineTestCase(TransactionTestCase):
         with self.assertRaises(StopAsyncIteration):
             await asyncio.wait_for(engine.start().__aiter__().__anext__(), 4.5)
 
-    def setup_python_script_cell(
-        self, cell_code: str, stream_variables: Optional[Dict] = None
+    def setup_with_script_cell(
+        self,
+        cell_code: str,
+        stream_variables: Optional[Dict] = None,
+        cell_type: CellType = CellType.PYTHON,
     ):
         from stream.tests import StreamTestCase
 
@@ -250,7 +277,7 @@ class EngineTestCase(TransactionTestCase):
         )
 
     async def test_get_variables(self):
-        await sync_to_async(self.setup_python_script_cell)("vars['a'] = 2+2")
+        await sync_to_async(self.setup_with_script_cell)("vars['a'] = 2+2")
         engine = Engine(self.graph, self.stream)
         with self.assertRaises(StopAsyncIteration):
             await asyncio.wait_for(engine.start().__aiter__().__anext__(), 5.5)
@@ -262,7 +289,7 @@ class EngineTestCase(TransactionTestCase):
         as I don't know how to sync two async test tasks.
         Instead we use the time to check if we can wait for a statement.
         """
-        await sync_to_async(self.setup_python_script_cell)(
+        await sync_to_async(self.setup_with_script_cell)(
             """now = datetime.now()
 while True:
     now_now = datetime.now()
@@ -275,25 +302,25 @@ while True:
             await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.5)
 
     async def test_invalid_python_code(self):
-        await sync_to_async(self.setup_python_script_cell)("34+aeu")
+        await sync_to_async(self.setup_with_script_cell)("34+aeu")
         engine = Engine(self.graph, self.stream, raise_exceptions=True)
         with self.assertRaises(NameError):
             await asyncio.wait_for(engine.start().__aiter__().__anext__(), 5.5)
 
     async def test_python_async_sleep_via_timeout(self):
-        await sync_to_async(self.setup_python_script_cell)("await asyncio.sleep(0.5)")
+        await sync_to_async(self.setup_with_script_cell)("await asyncio.sleep(0.5)")
         engine = Engine(self.graph, self.stream, raise_exceptions=True)
         with self.assertRaises(asyncio.exceptions.TimeoutError):
             await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.2)
 
     async def test_python_async_sleep_success(self):
-        await sync_to_async(self.setup_python_script_cell)("await asyncio.sleep(0.1)")
+        await sync_to_async(self.setup_with_script_cell)("await asyncio.sleep(0.1)")
         engine = Engine(self.graph, self.stream, raise_exceptions=True)
         with self.assertRaises(StopAsyncIteration):
             await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.2)
 
     async def test_python_self_calls(self):
-        await sync_to_async(self.setup_python_script_cell)(
+        await sync_to_async(self.setup_with_script_cell)(
             "vars['foo'] = await self.get_stream_variables()"
         )
         await StreamVariable.objects.acreate(
@@ -308,7 +335,7 @@ while True:
         self.assertEqual(v["foo"], "{'hello': 'world'}")
 
     async def test_python_w_o_self_calls(self):
-        await sync_to_async(self.setup_python_script_cell)(
+        await sync_to_async(self.setup_with_script_cell)(
             "vars['foo'] = await get_stream_variables()"
         )
         await StreamVariable.objects.acreate(

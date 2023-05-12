@@ -19,7 +19,7 @@ Use :func:`~md_to_ssml` to convert markdown text within a Python context.
 import logging
 import re
 from datetime import datetime
-from typing import Callable, Dict
+from typing import Callable, Dict, Optional
 
 from mistletoe import Document, block_token, span_token
 from mistletoe.base_renderer import BaseRenderer
@@ -30,13 +30,13 @@ from stream.models import TextToSpeech
 log = logging.getLogger(__name__)
 
 
-def md_to_ssml(text: str) -> str:
+def md_to_ssml(text: str, stream_variables: Optional[Dict[str, str]] = None) -> str:
     """Converts a md text into
     `SSML <https://en.wikipedia.org/wiki/Speech_Synthesis_Markup_Language>`_.
 
     :param text: Markdown text
     """
-    with GencasterRenderer() as render:
+    with GencasterRenderer(stream_variables) as render:
         document = Document(text)
         ssml_text = render.render(document)
     return ssml_text  # type: ignore
@@ -54,12 +54,16 @@ class GencasterToken(SpanToken):
 class GencasterRenderer(BaseRenderer):
     """ """
 
-    def __init__(self) -> None:
+    def __init__(self, stream_variables: Optional[Dict[str, str]] = None) -> None:
         super().__init__(GencasterToken)
 
         self.d = (
             datetime.now()
         )  # unused but needed so we can access it in a script cell
+
+        self.stream_variables: Dict[str, str] = (
+            stream_variables if stream_variables else {}
+        )
 
         self.gencaster_token_resolver: Dict[str, Callable[[str], str]] = {
             "python": self.eval_python,
@@ -69,6 +73,7 @@ class GencasterRenderer(BaseRenderer):
             "moderate": self.moderate,
             "male": self.male,
             "female": self.female,
+            "var": self.var,
         }
 
     def validate_gencaster_tokens(self, text: str) -> bool:
@@ -190,6 +195,32 @@ class GencasterRenderer(BaseRenderer):
         except Exception as e:
             log.error(f"Could not execute python code: {e}")
         return ""
+
+    def var(self, text: str) -> str:
+        """
+        Refers to the value of a :class:`~story_graph.models.StreamVariable`.
+
+        Example:
+
+        Assuming we have set a streaming variable ``{"foo": "world"}``
+
+        .. code-block:: markdown
+
+            Hello {var}`foo`
+
+        becomes `Hello World`.
+
+        If the streaming variable does not exist it will be replaced with an
+        empty string `""`, but we can provide a fallback value via ``|``.
+
+        .. code-block:: markdown
+
+            Hello {var}`something_unknown|foobar`
+
+        becomes `Hello foobar` if the streaming variable ``something_unknown`` does not exist.
+        """
+        fallback_value = text.split("|")[-1] if text.count("|") else ""
+        return self.stream_variables.get(text.split("|")[0], fallback_value)
 
     def render_gencaster_token(self, token: GencasterToken) -> str:
         try:

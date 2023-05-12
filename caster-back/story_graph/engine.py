@@ -41,7 +41,7 @@ class Engine:
         self.blocking_time: int = 60 * 60 * 3
         self.raise_exceptions = raise_exceptions
 
-    async def get_stream_variables(self) -> Dict:
+    async def get_stream_variables(self) -> Dict[str, str]:
         """Could be a @property but this can be difficult in async contexts
         so we use explicit async via a getter method.
         """
@@ -66,7 +66,7 @@ class Engine:
         """Runs the code of a markdown cell by parsing its content with the
         :class:`~story_graph.markdown_parser.GencasterRenderer`.
         """
-        ssml_text = md_to_ssml(cell_code)
+        ssml_text = md_to_ssml(cell_code, await self.get_stream_variables())
         instruction = await sync_to_async(self.stream.stream_point.speak_on_stream)(
             ssml_text
         )
