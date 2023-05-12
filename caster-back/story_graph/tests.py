@@ -386,6 +386,15 @@ vars['foo'] = 42"""
         v = await engine.get_stream_variables()
         self.assertEqual(v["foo"], "{'hello': 'world'}")
 
+    async def test_python_set_variable(self):
+        await sync_to_async(self.setup_with_script_cell)("vars['foo'] = 'bar'")
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        self.assertEqual(len((await engine.get_stream_variables()).keys()), 0)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.2)
+        v = await engine.get_stream_variables()
+        self.assertEqual(v["foo"], "bar")
+
     async def test_wait_for_no_stream_variable(self):
         await sync_to_async(self.setup_with_script_cell)("")
         await StreamVariable.objects.acreate(
