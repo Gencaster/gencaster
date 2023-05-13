@@ -20,7 +20,15 @@ const props = defineProps<{
   graph: Pick<Graph, "uuid" | "name">
 }>();
 
-const { play, startingTimestamp, playerState, title, description, infoContent, showInfo } = storeToRefs(usePlayerStore());
+const {
+  play,
+  startingTimestamp,
+  playerState,
+  title,
+  description,
+  infoContent,
+  showInfo
+} = storeToRefs(usePlayerStore());
 
 const router = useRouter();
 // const showDebug = computed<boolean>(() => router.currentRoute.value.query.debug === null);
