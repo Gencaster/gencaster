@@ -115,7 +115,11 @@ const startListening = () => {
     </Transition>
 
     <div v-if="data?.streamInfo.__typename === 'StreamInfo'">
-      <Player ref="playerRef" :stream-point="data.streamInfo.stream.streamPoint" :stream="data.streamInfo.stream" />
+      <Player
+        ref="playerRef"
+        :stream-point="data.streamInfo.stream.streamPoint"
+        :stream="data.streamInfo.stream"
+      />
       <ElCollapse v-if="showDebug" v-model="debugOpen" style="margin-top: 100px;">
         <ElCollapseItem title="Debug info" name="debug">
           <StreamInfo :stream="data.streamInfo.stream" :stream-instruction="data.streamInfo.streamInstruction" />
