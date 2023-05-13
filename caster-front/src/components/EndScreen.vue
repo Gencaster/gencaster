@@ -3,9 +3,9 @@ import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/Player";
 import Content from "@/components/Content.vue";
 
-defineProps({
-  title: String
-});
+defineProps<{
+  text: string
+}>();
 
 const { endContent } = storeToRefs(usePlayerStore());
 </script>

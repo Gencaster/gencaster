@@ -2,9 +2,9 @@
 import { onBeforeUnmount, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/Player";
-defineProps({
-  title: String
-});
+defineProps<{
+  text: string
+}>();
 
 const { startingTimestamp, play, playerState, showInfo } = storeToRefs(usePlayerStore());
 
