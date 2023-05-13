@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { debounce } from "lodash";
 import Bar from "@/components/PlayerVisualizer/PlayerVisualizerBar.vue";
 
 const wrapper = ref<HTMLDivElement>();
@@ -13,9 +12,9 @@ const setBars = () => {
   numberOfBars.value = amount;
 };
 
-const debouncedSetBars = debounce((...args) => {
-  setBars();
-}, 250);
+// const debouncedSetBars = debounce((...args) => {
+//   setBars();
+// }, 250);
 
 const resizeObserver = new ResizeObserver(() => {
   // debouncedSetBars();
