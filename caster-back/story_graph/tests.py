@@ -1,13 +1,17 @@
 import asyncio
 import random
+from datetime import datetime
+from typing import Dict, Optional
 
-from asgiref.sync import sync_to_async
+from asgiref.sync import async_to_sync, sync_to_async
 from django.db.utils import IntegrityError
 from django.test import TransactionTestCase
 from mistletoe import Document
 from mixer.backend.django import mixer
 
-from .engine import Engine
+from stream.models import StreamVariable
+
+from .engine import Engine, ScriptCellTimeout
 from .markdown_parser import GencasterRenderer
 from .models import AudioCell, CellType, Edge, Graph, Node, ScriptCell
 
@@ -89,8 +93,8 @@ class EdgeTestCase(TransactionTestCase):
 
 class GencasterMarkdownTestCase(TransactionTestCase):
     @staticmethod
-    def gm_md(text: str) -> str:
-        with GencasterRenderer() as renderer:
+    def gm_md(text: str, variables: Optional[Dict] = None) -> str:
+        with GencasterRenderer(variables) as renderer:
             document = Document(text)
             ssml_text = renderer.render(document)
         return ssml_text  # type: ignore
@@ -135,6 +139,30 @@ baz.
 
     def test_moderate(self):
         self.assertTrue('emphasis level="moderate"' in self.gm_md("{moderate}`foo`"))
+
+    def test_var(self):
+        self.assertEqual(
+            self.SPEAK.format("hello world"),
+            self.gm_md("hello {var}`foo`", {"foo": "world"}),
+        )
+
+    def test_var_unset(self):
+        self.assertEqual(
+            self.SPEAK.format("hello "),
+            self.gm_md("hello {var}`foo`", {}),
+        )
+
+    def test_var_use_fallback(self):
+        self.assertEqual(
+            self.SPEAK.format("hello bar"),
+            self.gm_md("hello {var}`foo|bar`", {}),
+        )
+
+    def test_var_skip_fallback(self):
+        self.assertEqual(
+            self.SPEAK.format("hello world"),
+            self.gm_md("hello {var}`foo|bar`", {"foo": "world"}),
+        )
 
 
 class ScriptCellTestCase(TransactionTestCase):
@@ -233,3 +261,171 @@ class EngineTestCase(TransactionTestCase):
 
         with self.assertRaises(StopAsyncIteration):
             await asyncio.wait_for(engine.start().__aiter__().__anext__(), 4.5)
+
+    def setup_with_script_cell(
+        self,
+        cell_code: str,
+        stream_variables: Optional[Dict] = None,
+        cell_type: CellType = CellType.PYTHON,
+    ):
+        from stream.tests import StreamTestCase
+
+        self.graph = GraphTestCase.get_graph()
+        self.stream = StreamTestCase.get_stream()
+        entry_node = async_to_sync(self.graph.acreate_entry_node)
+        self.script_cell = ScriptCellTestCase.get_script_cell(
+            node=entry_node, cell_type=cell_type, cell_code=cell_code
+        )
+
+    async def helper_create_delayed_stream_variable(
+        self, key: str, value: str, delay_time: float = 0.1
+    ):
+        await asyncio.sleep(delay_time)
+        await StreamVariable.objects.acreate(
+            stream=self.stream,
+            key=key,
+            value=value,
+        )
+
+    async def test_get_variables(self):
+        await sync_to_async(self.setup_with_script_cell)("vars['a'] = 2+2")
+        engine = Engine(self.graph, self.stream)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 5.5)
+        v = await engine.get_stream_variables()
+        self.assertEqual(v.get("a"), "4")
+
+    async def test_wait_for_variables(self):
+        """Actually this does not wait for the params from the database
+        as I don't know how to sync two async test tasks.
+        Instead we use the time to check if we can wait for a statement.
+        """
+        await sync_to_async(self.setup_with_script_cell)(
+            """now = datetime.now()
+while True:
+    now_now = datetime.now()
+    if((datetime.now() - now).total_seconds() > 0.2):
+        break
+    await asyncio.sleep(0.05)"""
+        )
+        engine = Engine(self.graph, self.stream)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.5)
+
+    async def test_wait_for_start_variable(self):
+        await sync_to_async(self.setup_with_script_cell)(
+            """await wait_for_stream_variable('start')
+vars['foo'] = 42"""
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        start_time = datetime.now()
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(
+                asyncio.gather(
+                    engine.start().__aiter__().__anext__(),
+                    self.helper_create_delayed_stream_variable("start", "true", 0.2),
+                ),
+                1.0,
+            )
+        end_time = datetime.now()
+        self.assertTrue((end_time - start_time).total_seconds() > 0.2)
+        v = await engine.get_stream_variables()
+        self.assertEqual(v.get("start"), "true")
+
+    async def test_invalid_python_code(self):
+        await sync_to_async(self.setup_with_script_cell)("34+aeu")
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with self.assertRaises(NameError):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 5.5)
+
+    async def test_invalid_python_code_quiet(self):
+        await sync_to_async(self.setup_with_script_cell)("34+aeu")
+        engine = Engine(self.graph, self.stream, raise_exceptions=False)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 5.5)
+
+    async def test_python_async_sleep_via_timeout(self):
+        await sync_to_async(self.setup_with_script_cell)("await asyncio.sleep(0.5)")
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with self.assertRaises(asyncio.exceptions.TimeoutError):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.2)
+
+    async def test_python_async_sleep_success(self):
+        await sync_to_async(self.setup_with_script_cell)("await asyncio.sleep(0.1)")
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.2)
+
+    async def test_python_self_calls(self):
+        await sync_to_async(self.setup_with_script_cell)(
+            "vars['foo'] = await self.get_stream_variables()"
+        )
+        await StreamVariable.objects.acreate(
+            stream=self.stream,
+            key="hello",
+            value="world",
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.2)
+        v = await engine.get_stream_variables()
+        self.assertEqual(v["foo"], "{'hello': 'world'}")
+
+    async def test_python_w_o_self_calls(self):
+        await sync_to_async(self.setup_with_script_cell)(
+            "vars['foo'] = await get_stream_variables()"
+        )
+        await StreamVariable.objects.acreate(
+            stream=self.stream,
+            key="hello",
+            value="world",
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.2)
+        v = await engine.get_stream_variables()
+        self.assertEqual(v["foo"], "{'hello': 'world'}")
+
+    async def test_python_set_variable(self):
+        await sync_to_async(self.setup_with_script_cell)("vars['foo'] = 'bar'")
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        self.assertEqual(len((await engine.get_stream_variables()).keys()), 0)
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(engine.start().__aiter__().__anext__(), 0.2)
+        v = await engine.get_stream_variables()
+        self.assertEqual(v["foo"], "bar")
+
+    async def test_wait_for_no_stream_variable(self):
+        await sync_to_async(self.setup_with_script_cell)("")
+        await StreamVariable.objects.acreate(
+            stream=self.stream,
+            key="hello",
+            value="world",
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with self.assertRaises(ScriptCellTimeout):
+            await engine.wait_for_stream_variable("foo", timeout=0.1)
+
+    async def test_wait_for_existing_stream_variable(self):
+        await sync_to_async(self.setup_with_script_cell)("")
+        await StreamVariable.objects.acreate(
+            stream=self.stream,
+            key="hello",
+            value="world",
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        await engine.wait_for_stream_variable("hello", timeout=0.1)
+
+    async def test_wait_for_changing_stream_variable(self):
+        await sync_to_async(self.setup_with_script_cell)("")
+        await StreamVariable.objects.acreate(
+            stream=self.stream,
+            key="hello",
+            value="world",
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        job = asyncio.gather(
+            self.helper_create_delayed_stream_variable("start", "true", 0.1),
+            engine.wait_for_stream_variable("start", timeout=1.0, update_speed=0.1),
+        )
+        await asyncio.wait_for(job, timeout=0.5)
