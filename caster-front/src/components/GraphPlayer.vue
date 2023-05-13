@@ -35,7 +35,7 @@ const { data, error, stale } = useStreamSubscription({
 const debugOpen = "debug";
 const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
 
-const hasInfo = computed(() => {
+const hasInfo = computed<boolean>(() => {
   return infoContent.value.length > 0;
 });
 
