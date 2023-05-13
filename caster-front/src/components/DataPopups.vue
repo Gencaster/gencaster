@@ -2,14 +2,21 @@
 import { computed, onMounted, ref } from "vue";
 
 import { storeToRefs } from "pinia";
+import { ElInput } from "element-plus";
 import { usePlayerStore } from "@/stores/Player";
 const { userDataRequests, streamGPS, gpsAllowed } = storeToRefs(usePlayerStore());
 
-const popup = computed(() => {
-  if (userDataRequests.value.length > 0)
-    return userDataRequests.value[userDataRequests.value.length - 1];
-  else
-    return null;
+type UserDataRequestType = "gps" | "string";
+interface UserDataRequest {
+  name: string
+  description: string
+  key: string
+  type: UserDataRequestType
+  placeholder: string
+}
+
+const popup = computed<UserDataRequest | null>(() => {
+  return userDataRequests.value[userDataRequests.value.length - 1] ?? null;
 });
 
 const confirmPopup = () => {
@@ -56,7 +63,7 @@ const userData = ref<string>("");
           </p>
           <div class="data">
             <div v-if="popup?.type === 'string'" class="component string-component">
-              <el-input v-model="userData" :placeholder="popup?.placeholder" />
+              <ElInput v-model="userData" :placeholder="popup?.placeholder" />
             </div>
             <div v-if="popup?.type === 'gps'" class="component gps-component">
               <div class="flex">
@@ -131,6 +138,7 @@ const userData = ref<string>("");
 
   .gps-component {
     margin-bottom: $spacingM;
+
     .checkbox {
       width: 25px;
       height: 25px;
