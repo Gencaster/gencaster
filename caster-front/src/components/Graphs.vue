@@ -12,7 +12,12 @@ const { data, fetching } = useGetGraphsQuery();
     <div class="graphs">
       <h1>Alle Graphen</h1>
       <Transition>
-        <ElTable v-if="data" v-loading="fetching" :data="data?.graphs" :default-sort="{ prop: 'name', order: 'ascending' }">
+        <ElTable
+          v-if="data"
+          v-loading="fetching"
+          :data="data?.graphs"
+          :default-sort="{ prop: 'name', order: 'ascending' }"
+        >
           <ElTableColumn label="Titel" sortable prop="name">
             <template #default="scope">
               <el-button
