@@ -313,7 +313,10 @@ watch(play, (playState) => {
     </div>
 
     <div v-if="showPlayerInfo" class="player-info">
-      <ElDescriptions title="Player info" :column="1" border>
+      <ElDescriptions
+        title="Player info"
+        :column="1" border
+      >
         <ElDescriptionsItem label="SuperCollider port">
           {{ streamPoint.port }}
         </ElDescriptionsItem>
