@@ -36,15 +36,15 @@ onMounted(() => {
 
   // userDataRequests.value.push(testPopup);
 
-  const testPopup2 = {
-    name: "Name",
-    description: "Drifter ist ein dynamisches Hörspiel, das in Echtzeit generiert wird. Hierfür werden noch Informationen über dich benötigt:",
-    key: "username",
-    type: "gps",
-    placeholder: "Name"
-  };
+  // const testPopup2 = {
+  //   name: "Name",
+  //   description: "Drifter ist ein dynamisches Hörspiel, das in Echtzeit generiert wird. Hierfür werden noch Informationen über dich benötigt:",
+  //   key: "username",
+  //   type: "gps",
+  //   placeholder: "Name"
+  // };
 
-  userDataRequests.value.push(testPopup2);
+  // userDataRequests.value.push(testPopup2);
 });
 
 const userData = ref<string>("");

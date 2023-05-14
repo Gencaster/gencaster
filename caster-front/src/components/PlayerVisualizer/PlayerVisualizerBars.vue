@@ -3,21 +3,16 @@ import { onMounted, ref } from "vue";
 import Bar from "@/components/PlayerVisualizer/PlayerVisualizerBar.vue";
 
 const wrapper = ref<HTMLDivElement>();
-const numberOfBars = ref(20);
-const distanceBars = ref(22);
+const numberOfBars = ref<number>(20);
+const distanceBars = ref<number>(22);
 
-const setBars = () => {
+const setBars: VoidFunction = () => {
   const width = wrapper.value?.clientWidth || 0;
   const amount = Math.floor(width / distanceBars.value);
   numberOfBars.value = amount;
 };
 
-// const debouncedSetBars = debounce((...args) => {
-//   setBars();
-// }, 250);
-
-const resizeObserver = new ResizeObserver(() => {
-  // debouncedSetBars();
+const resizeObserver: ResizeObserver = new ResizeObserver(() => {
   setBars();
 });
 
@@ -30,7 +25,7 @@ onMounted(() => {
 
 <template>
   <div ref="wrapper" class="bars-wrapper">
-    <div v-for="(bar, index) in numberOfBars" :key="index" class="bar-wrapper">
+    <div v-for="(index) in numberOfBars" :key="index" class="bar-wrapper">
       <Bar />
     </div>
   </div>

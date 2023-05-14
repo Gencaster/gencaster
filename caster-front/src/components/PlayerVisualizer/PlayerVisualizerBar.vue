@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { type Ref, computed, ref } from "vue";
 
 const generateRandom = (min: number, max: number): number => {
   const difference = max - min;
@@ -10,12 +10,12 @@ const generateRandom = (min: number, max: number): number => {
 };
 
 const barWidth = 4;
-const high = generateRandom(90, 100) / 100;
-const low = generateRandom(5, 15) / 100;
-const duration = ref(0.8);
-const delay = generateRandom(0, 200) / 100;
+const high: number = generateRandom(90, 100) / 100;
+const low: number = generateRandom(5, 15) / 100;
+const duration: Ref<number> = ref(0.8);
+const delay: number = generateRandom(0, 200) / 100;
 
-const cssValue = computed(() => {
+const cssValue = computed((): string => {
   return `
     width: ${barWidth}px;
     animation-duration: ${duration.value}s;
