@@ -27,7 +27,7 @@
 }
 
 // dialog
-.el-dialog{
+.el-dialog {
     border-radius: $borderRadius;
     border: $lineStandard solid $black;
     padding: 20px;
@@ -52,12 +52,12 @@
         color: $black;
         margin-top: $spacingM;
         margin-bottom: $spacingM;
-      }
+    }
 
-      .el-dialog__footer {
+    .el-dialog__footer {
         padding: 0;
         margin-top: $spacingM;
-      }
+    }
 }
 
 // card
@@ -130,6 +130,31 @@
 
 }
 
+// checkbox
+.el-checkbox {
+    .el-checkbox__inner {
+        width: 25px;
+        height: 25px;
+        border: $lineStandard solid $black;
+        border-radius: $borderRadius;
+    }
+
+    .el-checkbox__input.is-checked .el-checkbox__inner  {
+        background-color: $green-light;
+        border-color: $black;
+    }
+
+    .el-checkbox__inner::after {
+        border: 1px solid var($green-light);
+        left: 7px;
+        top: 3px;
+        height: 10px;
+        width: 5px;
+        border-color: $black;
+        border-width: 2px;
+    }
+}
+
 // button
 .el-button {
     width: auto !important;
@@ -166,8 +191,6 @@
             transform: scale($buttonScale);
             background-color: transparent !important;
         }
-
-
     }
 
     &.no-hover {

@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 
 import { storeToRefs } from "pinia";
-import { ElCol, ElDialog, ElInput, ElRow } from "element-plus";
+import { ElDialog, ElInput } from "element-plus";
 import { usePlayerStore } from "@/stores/Player";
 import type { UserDataRequest } from "@/models";
 const { userDataRequests, streamGPS, gpsAllowed } = storeToRefs(usePlayerStore());
@@ -36,15 +36,15 @@ onMounted(() => {
 
   // userDataRequests.value.push(testPopup);
 
-  // const testPopup2 = {
-  //   name: "Name",
-  //   description: "Drifter ist ein dynamisches Hörspiel, das in Echtzeit generiert wird. Hierfür werden noch Informationen über dich benötigt:",
-  //   key: "username",
-  //   type: "gps",
-  //   placeholder: "Name"
-  // };
+  const testPopup2 = {
+    name: "Name",
+    description: "Drifter ist ein dynamisches Hörspiel, das in Echtzeit generiert wird. Hierfür werden noch Informationen über dich benötigt:",
+    key: "username",
+    type: "gps",
+    placeholder: "Name"
+  };
 
-  // userDataRequests.value.push(testPopup2);
+  userDataRequests.value.push(testPopup2);
 });
 
 const userData = ref<string>("");
@@ -53,10 +53,7 @@ const userData = ref<string>("");
 <template>
   <div>
     <ElDialog
-      v-model="showPopup"
-      align-center
-      :show-close="false"
-      :close-on-click-modal="false"
+      v-model="showPopup" align-center :show-close="false" :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
       <p class="description">
@@ -73,9 +70,7 @@ const userData = ref<string>("");
                 GPS Freigeben
               </span>
             </ElButton>
-            <div class="checkbox" :class="{ active: gpsAllowed }" @click="gpsRequest()">
-              <div v-if="gpsAllowed" class="circle" />
-            </div>
+            <el-checkbox v-model="gpsAllowed" :disabled="gpsAllowed" @click="gpsRequest()" />
           </div>
         </div>
       </div>
@@ -104,27 +99,12 @@ const userData = ref<string>("");
     align-items: center;
     gap: 20px;
   }
+}
 
-  .checkbox {
-    width: 25px;
-    height: 25px;
-    border: $lineStandard solid $black;
-    border-radius: $borderRadius;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
+:deep(.el-checkbox) {
 
-    .circle {
-      background-color: $black;
-      border-radius: 100%;
-      width: 12px;
-      height: 12px;
-    }
-
-    &.active {
-      background-color: $green-light;
-    }
+  .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+    border-color: $black;
   }
 }
 </style>
