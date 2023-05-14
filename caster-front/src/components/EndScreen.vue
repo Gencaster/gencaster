@@ -7,8 +7,12 @@ const { endContent } = storeToRefs(usePlayerStore());
 </script>
 
 <template>
-  <div class="end-screen">
-    <Content :text="endContent" />
+  <div>
+    <el-container class="end-screen">
+      <el-main>
+        <Content :text="endContent" class="content" />
+      </el-main>
+    </el-container>
   </div>
 </template>
 
@@ -17,13 +21,15 @@ const { endContent } = storeToRefs(usePlayerStore());
 @import '@/assets/variables.scss';
 
 .end-screen {
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: auto;
   box-sizing: border-box;
-  max-width: $desktopMaxWidthText;
-  margin: 0 auto;
+  background-color: $white;
+  padding-bottom: $playerBarHeight;
 
-  padding-bottom: $spacingXL;
-
-  img {
+  :deep(img) {
     width: 100%;
   }
 }

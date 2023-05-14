@@ -16,7 +16,7 @@ const { infoContent, showInfo } = storeToRefs(usePlayerStore());
           </span>
         </ElButton>
       </el-header>
-      <el-main class="info-screen">
+      <el-main>
         <Content :text="infoContent" class="content" />
       </el-main>
     </el-container>
@@ -46,7 +46,6 @@ const { infoContent, showInfo } = storeToRefs(usePlayerStore());
   margin-top: 0;
   padding-top: $playerBarHeight;
   margin-bottom: $spacingM;
-
 }
 
 :deep(.text) > :first-child {
