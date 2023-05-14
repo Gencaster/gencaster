@@ -7,19 +7,19 @@ import { PlayerState } from "@/models";
 
 const { startingTimestamp, play, playerState, showInfo, title } = storeToRefs(usePlayerStore());
 
-const format = (num: number) => {
+const format = (num: number): string => {
   return num.toString().padStart(2, "0");
 };
 
 let interval: number;
 const duration: Ref<number> = ref(0);
 
-const stopInterval = () => {
+const stopInterval: VoidFunction = () => {
   if (window && interval)
     window.clearInterval(interval);
 };
 
-const initInterval = () => {
+const initInterval: VoidFunction = () => {
   interval = window.setInterval(() => {
     if (playerState.value === PlayerState.End) {
       stopInterval();
@@ -43,7 +43,7 @@ const secondsSinceStart = computed<string>(() => {
   return format(seconds).toString();
 });
 
-const stopPlayer = () => {
+const stopPlayer: VoidFunction = () => {
   play.value = false;
   playerState.value = PlayerState.End;
 };
