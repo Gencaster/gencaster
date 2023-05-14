@@ -30,7 +30,7 @@ const {
 
 const router = useRouter();
 // const showDebug = computed<boolean>(() => router.currentRoute.value.query.debug === null);
-const showDebug = false;
+const showDebug = true;
 
 const { data, error, stale } = useStreamSubscription({
   variables: {
