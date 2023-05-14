@@ -4,11 +4,7 @@ import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/Player";
 import { PlayerState } from "@/models";
 
-defineProps<{
-  title: string
-}>();
-
-const { startingTimestamp, play, playerState, showInfo } = storeToRefs(usePlayerStore());
+const { startingTimestamp, play, playerState, showInfo, title } = storeToRefs(usePlayerStore());
 
 const format = (num: number) => {
   const s = `${num}`;

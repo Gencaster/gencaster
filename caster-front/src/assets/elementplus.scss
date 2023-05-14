@@ -17,6 +17,57 @@
     }
 }
 
+// card
+.el-card {
+    box-sizing: border-box;
+    box-shadow: none !important;
+    border-radius: $borderRadius;
+    border: $lineStandard solid $black;
+    padding: 20px;
+    background-color: $white;
+    width: calc(100% - 2 * $mobilePadding);
+    max-width: $cardMaxWidth;
+    overflow: visible;
+
+
+    .el-card__header {
+        text-align: center;
+        padding: 0;
+        border: none;
+
+        h1 {
+            margin-top: 8px;
+        }
+    }
+
+    .el-card__body {
+        @include fontStyle('smallHeadline');
+        padding: 0;
+        margin: 0;
+        text-align: center;
+        margin-bottom: 0;
+        position: relative;
+        padding-left: 20px;
+        padding-right: 20px;
+
+        .button-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            left: 0;
+            height: 22px;
+
+            .el-button {
+                position: absolute;
+                top: 12px;
+                display: inline-block;
+            }
+        }
+    }
+
+}
+
 // single line input
 .el-input {
     height: 40px;
