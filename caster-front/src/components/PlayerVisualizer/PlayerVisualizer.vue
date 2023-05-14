@@ -3,7 +3,7 @@ import Bars from "@/components/PlayerVisualizer/PlayerVisualizerBars.vue";
 </script>
 
 <template>
-  <div class="visualizer-wrapper">
+  <div class="visualizer-wrapper general-padding">
     <Bars />
   </div>
 </template>
@@ -13,6 +13,7 @@ import Bars from "@/components/PlayerVisualizer/PlayerVisualizerBars.vue";
 @import '@/assets/variables.scss';
 
 .visualizer-wrapper {
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
 }

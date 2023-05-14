@@ -59,10 +59,10 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
-    <h1 v-if="playerState !== PlayerState.End" class="title">
+    <h1 v-if="playerState !== PlayerState.End" class="title general-padding">
       {{ title }}
     </h1>
-    <ElRow class="player-bar">
+    <ElRow class="player-bar general-padding">
       <ElCol :span="8">
         <ElButton class="caps" size="default" text @click="showInfo = true">
           <span>
@@ -92,7 +92,8 @@ onBeforeUnmount(() => {
 
 .title {
   margin: 0;
-  padding: 0;
+  padding-top: 0;
+  padding-bottom: 0;
   position: fixed;
   bottom: 50px;
   max-width: 50%;
@@ -115,8 +116,6 @@ onBeforeUnmount(() => {
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding-left: $mobilePadding;
-  padding-right: $mobilePadding;
   border-top: $lineStandard solid $black;
   background: $white;
   font-size: $mediumFontSize;
@@ -133,14 +132,14 @@ onBeforeUnmount(() => {
   .el-col:last-child {
     justify-content: flex-end;
   }
-}
 
-.stop-icon {
+  .stop-icon {
   width: 18px;
   height: 18px;
   background-color: $black;
   border-radius: $borderRadius;
   transform: translateY(-1px);
   margin-right: 4px;
+}
 }
 </style>

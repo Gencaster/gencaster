@@ -98,6 +98,12 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+// general padding
+.general-padding {
+  padding-left: $mobilePadding;
+  padding-right: $mobilePadding;
+}
+
 
 // transitions
 
