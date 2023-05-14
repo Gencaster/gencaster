@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-function generateRandom(min: number, max: number) {
+
+const generateRandom = (min: number, max: number): number => {
   const difference = max - min;
   let rand = Math.random();
   rand = Math.floor(rand * difference);
   rand = rand + min;
   return rand;
-}
+};
 
 const barWidth = 4;
 const high = generateRandom(90, 100) / 100;
