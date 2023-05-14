@@ -41,7 +41,7 @@ const { data, error, stale } = useStreamSubscription({
   pause: router.currentRoute.value.name !== "graphPlayer"
 });
 
-const accorrdionOpen = "debug";
+const accorrdionNamespaceOpen = "debug";
 const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
 
 const hasInfo = computed<boolean>(() => {
@@ -120,7 +120,7 @@ const startListening = () => {
         :stream-point="data.streamInfo.stream.streamPoint"
         :stream="data.streamInfo.stream"
       />
-      <ElCollapse v-if="showDebug" v-model="accorrdionOpen" style="margin-top: 100px;">
+      <ElCollapse v-if="showDebug" v-model="accorrdionNamespaceOpen" style="margin-top: 100px;">
         <ElCollapseItem title="Debug info" name="debug">
           <StreamInfo :stream="data.streamInfo.stream" :stream-instruction="data.streamInfo.streamInstruction" />
         </ElCollapseItem>
