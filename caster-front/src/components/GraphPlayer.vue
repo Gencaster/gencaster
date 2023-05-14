@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { type Ref, computed, ref } from "vue";
-import { ElButton, ElCollapse, ElCollapseItem } from "element-plus";
+import { ElCollapse, ElCollapseItem } from "element-plus";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
+
 import Player from "@/components/Player.vue";
-import GraphPlayerCredits from "@/components/GraphPlayerCredits.vue";
 import PlayerVisualizer from "@/components/PlayerVisualizer/PlayerVisualizer.vue";
 import PlayerBar from "@/components/PlayerBar/PlayerBar.vue";
 import StreamInfo from "@/components/StreamInfo.vue";
@@ -12,8 +12,9 @@ import EndScreen from "@/components/EndScreen.vue";
 import Content from "@/components/Content.vue";
 import DataPopups from "@/components/DataPopups.vue";
 import AudioInfo from "@/components/AudioInfo.vue";
-import { PlayerState } from "@/models";
+import Intro from "@/components/Intro.vue";
 
+import { PlayerState } from "@/models";
 import type { Graph } from "@/graphql";
 import { useStreamSubscription } from "@/graphql";
 import { usePlayerStore } from "@/stores/Player";
@@ -22,11 +23,7 @@ const props = defineProps<{
 }>();
 
 const {
-  play,
-  startingTimestamp,
   playerState,
-  title,
-  description,
   infoContent,
   showInfo
 } = storeToRefs(usePlayerStore());
@@ -48,34 +45,13 @@ const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
 const hasInfo = computed<boolean>(() => {
   return infoContent.value.length > 0;
 });
-
-const startListening = () => {
-  play.value = true;
-  playerState.value = PlayerState.Playing;
-  startingTimestamp.value = new Date().getTime();
-};
 </script>
 
 <template>
   <div v-loading="stale" class="graph-player">
     <Transition>
       <div v-if="playerState === PlayerState.Start">
-        <div class="fullscreen-wrapper-relative">
-          <div class="graph-title-card">
-            <h1 class="title">
-              {{ title }}
-            </h1>
-            <p class="description">
-              {{ description }}
-            </p>
-            <div class="button-wrapper">
-              <ElButton class="caps green" size="large" type="default" @click="startListening()">
-                Start
-              </ElButton>
-            </div>
-          </div>
-          <GraphPlayerCredits />
-        </div>
+        <Intro />
       </div>
     </Transition>
 
@@ -98,7 +74,7 @@ const startListening = () => {
 
     <Transition>
       <div v-if="playerState === PlayerState.Playing || playerState === PlayerState.End">
-        <PlayerBar :title="title" />
+        <PlayerBar />
       </div>
     </Transition>
 
@@ -115,11 +91,7 @@ const startListening = () => {
     </Transition>
 
     <div v-if="data?.streamInfo.__typename === 'StreamInfo'">
-      <Player
-        ref="playerRef"
-        :stream-point="data.streamInfo.stream.streamPoint"
-        :stream="data.streamInfo.stream"
-      />
+      <Player ref="playerRef" :stream-point="data.streamInfo.stream.streamPoint" :stream="data.streamInfo.stream" />
       <ElCollapse v-if="showDebug" v-model="accorrdionNamespaceOpen" style="margin-top: 100px;">
         <ElCollapseItem title="Debug info" name="debug">
           <StreamInfo :stream="data.streamInfo.stream" :stream-instruction="data.streamInfo.streamInstruction" />
@@ -138,49 +110,6 @@ const startListening = () => {
 <style lang="scss" scoped>
 @import '@/assets/mixins.scss';
 @import '@/assets/variables.scss';
-
-.graph-player {
-  z-index: 1;
-  padding-left: $mobilePadding;
-  padding-right: $mobilePadding;
-
-  .graph-title-card {
-    margin: 0 auto;
-    position: relative;
-    display: block;
-    box-sizing: border-box;
-    border-radius: $borderRadius;
-    border: $lineStandard solid $black;
-    padding: 20px;
-    background-color: $white;
-    width: calc(100% - 2 * $mobilePadding);
-    max-width: $cardMaxWidth;
-
-    .title {
-      margin-top: 0px;
-      text-align: center;
-    }
-
-    .description {
-      text-align: center;
-      margin-bottom: calc($spacingM * 3);
-      @include fontStyle('smallHeadline');
-    }
-
-    .button-wrapper {
-      position: absolute;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      left: 0;
-      bottom: -30px;
-
-      .el-button {
-        display: inline-block;
-      }
-    }
-  }
-}
 
 .audio-visualizer {
   box-sizing: border-box;
