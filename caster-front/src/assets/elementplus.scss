@@ -3,6 +3,20 @@
 /* ============ Element Plus ============ */
 
 // general sizing
+.debug-layout {
+    font-size: 16px;
+
+    .el-collapse-item__header, .cell, .el-button, .is-link {
+        font-size: 16px;
+        span {
+            font-size: 16px !important;
+        }
+    }
+    .el-table {
+        --el-table-border: #{$lineThin} solid var(--el-table-border-color);
+    }
+}
+
 .common-layout {
     .el-container {
         justify-content: center;
@@ -139,7 +153,7 @@
         border-radius: $borderRadius;
     }
 
-    .el-checkbox__input.is-checked .el-checkbox__inner  {
+    .el-checkbox__input.is-checked .el-checkbox__inner {
         background-color: $green-light;
         border-color: $black;
     }

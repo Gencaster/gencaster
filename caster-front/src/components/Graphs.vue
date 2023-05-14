@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ElContainer, ElMain, ElTable, ElTableColumn } from "element-plus";
+import { ElButton, ElContainer, ElMain, ElTable, ElTableColumn } from "element-plus";
 import { useRouter } from "vue-router";
 import { useGetGraphsQuery } from "@/graphql";
 
@@ -19,12 +19,12 @@ const { data, fetching } = useGetGraphsQuery();
           >
             <ElTableColumn label="Titel" sortable prop="name">
               <template #default="scope">
-                <el-button
+                <ElButton
                   link size="small"
                   @click.prevent="$router.push({ name: 'graphPlayer', params: { graphName: scope.row.name } })"
                 >
                   {{ scope.row.name }}
-                </el-button>
+                </ElButton>
               </template>
             </ElTableColumn>
           </ElTable>
