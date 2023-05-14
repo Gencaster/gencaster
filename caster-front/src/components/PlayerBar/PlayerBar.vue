@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
-
+import { ElButton, ElCol, ElRow } from "element-plus";
 import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/Player";
 import { PlayerState } from "@/models";
@@ -62,25 +62,27 @@ onBeforeUnmount(() => {
     <h1 v-if="playerState !== PlayerState.End" class="title">
       {{ title }}
     </h1>
-    <div class="player-bar">
-      <div class="element">
-        <button class="text-btn text-btn-medium" @click="showInfo = true">
-          <span>INFO</span>
-        </button>
-      </div>
-      <div class="element time">
+    <ElRow class="player-bar">
+      <ElCol :span="8">
+        <ElButton class="caps" size="default" text @click="showInfo = true">
+          <span>
+            Info
+          </span>
+        </ElButton>
+      </ElCol>
+      <ElCol class="tabular-nums" :span="8">
         <span>{{ minutesSinceStart }}:{{ secondsSinceStart }}</span>
-      </div>
-      <div class="element">
-        <button class="text-btn text-btn-medium" @click="stopPlayer()">
+      </ElCol>
+      <ElCol :span="8">
+        <ElButton class="caps" size="default" text @click="stopPlayer()">
           <div v-if="playerState !== PlayerState.End" class="stop-icon" />
           <Transition>
             <span v-if="playerState === PlayerState.End" />
             <span v-else>STOP</span>
           </Transition>
-        </button>
-      </div>
-    </div>
+        </ElButton>
+      </ElCol>
+    </ElRow>
   </div>
 </template>
 
@@ -111,37 +113,26 @@ onBeforeUnmount(() => {
   left: 0;
   height: 50px;
   width: 100%;
-  padding-left: $mobilePadding;
-  padding-right: $mobilePadding;
-  ;
-
-  border-top: $lineStandard solid $black;
-
-  display: flex;
   justify-content: space-between;
   align-items: center;
-
+  padding-left: $mobilePadding;
+  padding-right: $mobilePadding;
+  border-top: $lineStandard solid $black;
   background: $white;
-
   font-size: $mediumFontSize;
 
-  .element {
-    width: 32%;
+  .el-col {
     display: flex;
     justify-content: center;
   }
 
-  .element:first-child {
+  .el-col:first-child {
     justify-content: flex-start;
   }
 
-  .element:last-child {
+  .el-col:last-child {
     justify-content: flex-end;
   }
-}
-
-.time {
-  font-variant-numeric: tabular-nums;
 }
 
 .stop-icon {
@@ -150,5 +141,6 @@ onBeforeUnmount(() => {
   background-color: $black;
   border-radius: $borderRadius;
   transform: translateY(-1px);
+  margin-right: 4px;
 }
 </style>

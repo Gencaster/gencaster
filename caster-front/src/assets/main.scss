@@ -8,8 +8,8 @@
 html,
 body,
 #app {
-  margin:0px;
-  height:100%;
+  margin: 0px;
+  height: 100%;
 }
 
 body {
@@ -91,7 +91,11 @@ body {
 
   &.caps {
     text-transform: uppercase;
+  }
 }
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 

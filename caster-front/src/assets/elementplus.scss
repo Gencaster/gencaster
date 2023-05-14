@@ -107,6 +107,17 @@
             transform: scale($buttonScale);
         }
     }
+
+    &.is-text {
+        color: $black;
+        background-color: transparent;
+        padding: 0;
+
+        &:hover {
+            transform: scale($buttonScale);
+            background-color: transparent !important;
+        }
+    }
 }
 
 .el-button--default {
