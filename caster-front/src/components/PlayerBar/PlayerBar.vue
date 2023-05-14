@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/Player";
 defineProps<{
-  text: string
+  title: string
 }>();
 
 const { startingTimestamp, play, playerState, showInfo } = storeToRefs(usePlayerStore());
@@ -15,24 +15,26 @@ const format = (num: number) => {
 
 const duration = ref("00:00");
 
-const interval = setInterval(() => {
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  if (playerState.value === "end" && stopInterval) {
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    stopInterval();
-    return;
-  }
-
-  const now = new Date();
-  const diff = now.getTime() - startingTimestamp.value;
-  const minutes = Math.floor(diff / 60000);
-  const seconds = Math.floor((diff - minutes * 60000) / 1000);
-  duration.value = `${format(minutes)}:${format(seconds)}`;
-}, 1000);
+let interval: number;
 
 const stopInterval = () => {
   if (window && interval)
     window.clearInterval(interval);
+};
+
+const initInterval = () => {
+  interval = window.setInterval(() => {
+    if (playerState.value === "end" && stopInterval) {
+      stopInterval();
+      return;
+    }
+
+    const now = new Date();
+    const diff = now.getTime() - startingTimestamp.value;
+    const minutes = Math.floor(diff / 60000);
+    const seconds = Math.floor((diff - minutes * 60000) / 1000);
+    duration.value = `${format(minutes)}:${format(seconds)}`;
+  }, 1000);
 };
 
 const stopPlayer = () => {
@@ -40,7 +42,10 @@ const stopPlayer = () => {
   playerState.value = "end";
 };
 
-// stop interval on unmount
+onMounted(() => {
+  initInterval();
+});
+
 onBeforeUnmount(() => {
   stopInterval();
 });

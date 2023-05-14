@@ -104,7 +104,7 @@ const startListening = () => {
 
     <Transition>
       <div v-if="playerState === 'end'">
-        <EndScreen :title="title" />
+        <EndScreen />
       </div>
     </Transition>
 

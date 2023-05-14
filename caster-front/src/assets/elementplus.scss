@@ -2,6 +2,21 @@
 
 /* ============ Element Plus ============ */
 
+// general sizing
+.common-layout {
+    .el-container {
+        justify-content: center;
+        padding-left: $mobilePadding;
+        padding-right: $mobilePadding;
+
+    }
+
+    .el-main {
+        --el-main-padding: 0px;
+        max-width: $desktopMaxWidth;
+    }
+}
+
 // single line input
 .el-input {
     height: 40px;
@@ -16,7 +31,7 @@
 
     .el-input__wrapper {
         border-radius: $borderRadius;
-        box-shadow: 0 0 0 $lineStandard var(--el-input-border-color,var(--el-border-color)) inset;
+        box-shadow: 0 0 0 $lineStandard var(--el-input-border-color, var(--el-border-color)) inset;
     }
 
 }
@@ -24,6 +39,7 @@
 // button
 .el-button {
     width: auto !important;
+
     &.caps {
         text-transform: uppercase;
     }
@@ -121,7 +137,7 @@
         --el-button-hover-link-text-color: #{$black};
         --el-button-hover-link-text-color: #{$black};
 
-        width: 100%;
+        width: 100% !important;
         justify-content: flex-start;
         text-decoration: none;
         color: $black;

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
-// import { ElMain } from "element-plus";
 
 const router = useRouter();
 </script>
