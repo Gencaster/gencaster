@@ -37,11 +37,3 @@ const { data, fetching, error } = useGetGraphsQuery({
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-@import '@/assets/variables.scss';
-// .graph-detail {
-//   margin: 0 auto;
-//   width: calc(100% - 2 * $mobilePadding);
-// }
-</style>
