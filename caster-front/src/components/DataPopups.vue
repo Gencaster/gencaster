@@ -4,16 +4,8 @@ import { computed, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { ElInput } from "element-plus";
 import { usePlayerStore } from "@/stores/Player";
+import type { UserDataRequest } from "@/models";
 const { userDataRequests, streamGPS, gpsAllowed } = storeToRefs(usePlayerStore());
-
-type UserDataRequestType = "gps" | "string";
-interface UserDataRequest {
-  name: string
-  description: string
-  key: string
-  type: UserDataRequestType
-  placeholder: string
-}
 
 const popup = computed<UserDataRequest | null>(() => {
   return userDataRequests.value[userDataRequests.value.length - 1] ?? null;

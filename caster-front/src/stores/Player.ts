@@ -2,12 +2,13 @@ import { defineStore } from "pinia";
 import { type Ref, computed, ref } from "vue";
 import { type Scalars, useStreamSubscription } from "@/graphql/graphql";
 import type { StreamPoint } from "@/graphql";
+import type { PlayerState, UserDataRequest } from "@/models";
 
 export const usePlayerStore = defineStore("player", () => {
   const micActive: Ref<boolean> = ref(false);
   const play: Ref<boolean> = ref(false);
   const startingTimestamp: Ref<number> = ref(0);
-  const playerState: Ref<"start" | "playing" | "end"> = ref("start");
+  const playerState: Ref<PlayerState> = ref("start");
   const showInfo: Ref<boolean> = ref(false);
 
   // gps
@@ -15,15 +16,6 @@ export const usePlayerStore = defineStore("player", () => {
   const gpsAllowed: Ref<boolean> = ref(false);
 
   // popups
-  type UserDataRequestType = "gps" | "string";
-  interface UserDataRequest {
-    name: string
-    description: string
-    key: string
-    type: UserDataRequestType
-    placeholder: string
-  }
-
   const userDataRequests: Ref<Array<UserDataRequest>> = ref([]);
 
   // content of the graph
