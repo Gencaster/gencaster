@@ -7,15 +7,19 @@ const { infoContent, showInfo } = storeToRefs(usePlayerStore());
 </script>
 
 <template>
-  <div class="fullscreen-wrapper-fixed">
-    <div class="info-screen">
-      <div class="header">
-        <button class="caps underline text-btn text-btn-medium" @click="showInfo = false">
-          <span>Schließen</span>
-        </button>
-      </div>
-      <Content :text="infoContent" class="content" />
-    </div>
+  <div>
+    <el-container class="info-screen">
+      <el-header class="header">
+        <ElButton class="caps" size="default" text @click="showInfo = false">
+          <span>
+            Schließen
+          </span>
+        </ElButton>
+      </el-header>
+      <el-main class="info-screen">
+        <Content :text="infoContent" class="content" />
+      </el-main>
+    </el-container>
   </div>
 </template>
 
@@ -23,21 +27,14 @@ const { infoContent, showInfo } = storeToRefs(usePlayerStore());
 @import '@/assets/mixins.scss';
 @import '@/assets/variables.scss';
 
-.fullscreen-wrapper-fixed {
-  z-index: 11;
-  background-color: $white;
-  padding: 0;
-}
-
 .info-screen {
-  transform: scale(1);
+  padding: 0;
+  position: relative;
   width: 100%;
-  height: 100%;
-  overflow-y: scroll;
+  height: auto;
   box-sizing: border-box;
-  // max-width: $desktopMaxWidthText;
-  // margin: 0 auto;
-  // height: auto;
+  background-color: $white;
+  padding-bottom: $playerBarHeight;
 
   :deep(img) {
     width: 100%;
@@ -47,21 +44,19 @@ const { infoContent, showInfo } = storeToRefs(usePlayerStore());
 .content {
   width: calc(100% - 2 * $mobilePadding);
   margin-top: 0;
-  margin-bottom: $spacingL;
+  padding-top: $playerBarHeight;
+  margin-bottom: $spacingM;
+
 }
 
-.content> :first-child {
+:deep(.text) > :first-child {
   margin-top: 0;
-  // background-color: yellow;
 }
 
 .header {
-  width: 100%;
-  box-sizing: border-box;
   display: flex;
   justify-content: flex-end;
-  margin-top: $spacingM;
-  padding-left: $mobilePadding ;
-  padding-right: $mobilePadding;
+  align-items: center;
+  background-color: $white;
 }
 </style>

@@ -30,7 +30,7 @@ const {
 
 const router = useRouter();
 // const showDebug = computed<boolean>(() => router.currentRoute.value.query.debug === null);
-const showDebug = true;
+const showDebug = false;
 
 const { data, error, stale } = useStreamSubscription({
   variables: {
@@ -49,9 +49,38 @@ const hasInfo = computed<boolean>(() => {
 
 <template>
   <div v-loading="stale" class="graph-player">
+    <!-- intro card -->
     <Transition>
       <div v-if="playerState === PlayerState.Start">
         <Intro />
+      </div>
+    </Transition>
+
+    <!-- project info -->
+    <Transition>
+      <div v-if="playerState === PlayerState.Start && hasInfo" class="info">
+        <Content :text="infoContent" />
+      </div>
+    </Transition>
+
+    <!-- audio visualizer -->
+    <Transition>
+      <div v-if="playerState === PlayerState.Playing" class="audio-visualizer">
+        <PlayerVisualizer />
+      </div>
+    </Transition>
+
+    <!-- player bar -->
+    <Transition>
+      <div v-if="playerState === PlayerState.Playing || playerState === PlayerState.End">
+        <PlayerBar />
+      </div>
+    </Transition>
+
+    <!-- audio info -->
+    <Transition>
+      <div v-if="showInfo">
+        <AudioInfo />
       </div>
     </Transition>
 
@@ -60,33 +89,10 @@ const hasInfo = computed<boolean>(() => {
       <DataPopups />
     </div>
 
-    <Transition>
-      <div v-if="playerState === PlayerState.Start && hasInfo" class="info">
-        <Content :text="infoContent" />
-      </div>
-    </Transition>
-
-    <Transition>
-      <div v-if="playerState === PlayerState.Playing" class="audio-visualizer">
-        <PlayerVisualizer />
-      </div>
-    </Transition>
-
-    <Transition>
-      <div v-if="playerState === PlayerState.Playing || playerState === PlayerState.End">
-        <PlayerBar />
-      </div>
-    </Transition>
-
+    <!-- end screen -->
     <Transition>
       <div v-if="playerState === PlayerState.End">
         <EndScreen />
-      </div>
-    </Transition>
-
-    <Transition>
-      <div v-if="showInfo">
-        <AudioInfo />
       </div>
     </Transition>
 

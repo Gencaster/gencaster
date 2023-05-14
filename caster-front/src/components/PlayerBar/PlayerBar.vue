@@ -64,7 +64,7 @@ onBeforeUnmount(() => {
     </h1>
     <ElRow class="player-bar general-padding">
       <ElCol :span="8">
-        <ElButton class="caps" size="default" text @click="showInfo = true">
+        <ElButton class="caps" size="default" text @click="showInfo = !showInfo">
           <span>
             Info
           </span>
@@ -95,7 +95,7 @@ onBeforeUnmount(() => {
   padding-top: 0;
   padding-bottom: 0;
   position: fixed;
-  bottom: 50px;
+  bottom: $playerBarHeight;
   max-width: 50%;
   margin-bottom: 8px;
   line-height: 1.2;
@@ -112,7 +112,7 @@ onBeforeUnmount(() => {
   position: fixed;
   bottom: 0;
   left: 0;
-  height: 50px;
+  height: $playerBarHeight;
   width: 100%;
   justify-content: space-between;
   align-items: center;

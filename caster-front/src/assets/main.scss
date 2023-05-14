@@ -34,10 +34,10 @@ body {
 
 .fullscreen-wrapper-fixed {
   box-sizing: border-box;
+  overflow-y: scroll;
   position: fixed;
   height: 100vh;
   max-height: 100%;
-  float: left;
   width: 100%;
   top: 0;
   left: 0;

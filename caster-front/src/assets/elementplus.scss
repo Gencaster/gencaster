@@ -17,6 +17,15 @@
     }
 }
 
+.el-header {
+    width: 100%;
+    background-color: transparent;
+    height: 50px;
+    position: fixed;
+    top: 0;
+    z-index: 12;
+}
+
 // card
 .el-card {
     box-sizing: border-box;
