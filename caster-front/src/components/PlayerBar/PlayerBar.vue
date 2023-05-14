@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { type Ref, computed, onBeforeUnmount, onMounted, ref } from "vue";
+
 import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/Player";
 import { PlayerState } from "@/models";
@@ -7,13 +8,11 @@ import { PlayerState } from "@/models";
 const { startingTimestamp, play, playerState, showInfo, title } = storeToRefs(usePlayerStore());
 
 const format = (num: number) => {
-  const s = `${num}`;
-  return s.length <= 1 ? `0${s}` : s;
+  return num.toString().padStart(2, "0");
 };
 
-const duration = ref("00:00");
-
 let interval: number;
+const duration: Ref<number> = ref(0);
 
 const stopInterval = () => {
   if (window && interval)
@@ -22,18 +21,27 @@ const stopInterval = () => {
 
 const initInterval = () => {
   interval = window.setInterval(() => {
-    if (playerState.value === PlayerState.End && stopInterval) {
+    if (playerState.value === PlayerState.End) {
       stopInterval();
       return;
     }
 
     const now = new Date();
     const diff = now.getTime() - startingTimestamp.value;
-    const minutes = Math.floor(diff / 60000);
-    const seconds = Math.floor((diff - minutes * 60000) / 1000);
-    duration.value = `${format(minutes)}:${format(seconds)}`;
+    duration.value = diff;
   }, 1000);
 };
+
+const minutesSinceStart = computed<string>(() => {
+  const minutes = Math.floor(duration.value / 60000);
+  return format(minutes).toString();
+});
+
+const secondsSinceStart = computed<string>(() => {
+  const minutes = Math.floor(duration.value / 60000);
+  const seconds = Math.floor((duration.value - minutes * 60000) / 1000);
+  return format(seconds).toString();
+});
 
 const stopPlayer = () => {
   play.value = false;
@@ -61,7 +69,7 @@ onBeforeUnmount(() => {
         </button>
       </div>
       <div class="element time">
-        <span>{{ duration }}</span>
+        <span>{{ minutesSinceStart }}:{{ secondsSinceStart }}</span>
       </div>
       <div class="element">
         <button class="text-btn text-btn-medium" @click="stopPlayer()">
