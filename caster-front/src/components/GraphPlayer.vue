@@ -10,7 +10,7 @@ import PlayerBar from "@/components/PlayerBar/PlayerBar.vue";
 import StreamInfo from "@/components/StreamInfo.vue";
 import EndScreen from "@/components/EndScreen.vue";
 import Content from "@/components/Content.vue";
-import DataPopups from "@/components/DataPopups.vue";
+import DataDialogs from "@/components/DataDialogs.vue";
 import AudioInfo from "@/components/AudioInfo.vue";
 import Intro from "@/components/Intro.vue";
 
@@ -84,10 +84,8 @@ const hasInfo = computed<boolean>(() => {
       </div>
     </Transition>
 
-    <!-- pop up wrapper -->
-    <div class="data-popups">
-      <DataPopups />
-    </div>
+    <!-- dialogs  -->
+    <DataDialogs />
 
     <!-- end screen -->
     <Transition>

@@ -26,6 +26,40 @@
     z-index: 12;
 }
 
+// dialog
+.el-dialog{
+    border-radius: $borderRadius;
+    border: $lineStandard solid $black;
+    padding: 20px;
+    padding-top: 10px;
+    background-color: $white;
+    width: calc(100% - 2 * $mobilePadding);
+    max-width: $cardMaxWidth;
+    height: auto;
+    max-height: calc(70vh - 4 * $mobilePadding);
+    // overflow-y: scroll;
+
+    .el-dialog__header {
+        display: none
+    }
+
+    .el-dialog__body {
+        padding: 0
+    }
+
+    .description {
+        @include fontStyle('smallHeadline');
+        color: $black;
+        margin-top: $spacingM;
+        margin-bottom: $spacingM;
+      }
+
+      .el-dialog__footer {
+        padding: 0;
+        margin-top: $spacingM;
+      }
+}
+
 // card
 .el-card {
     box-sizing: border-box;
@@ -117,6 +151,12 @@
         }
     }
 
+    &.underline span {
+        text-decoration: underline;
+        text-underline-offset: 0.15em !important;
+        text-decoration-thickness: 0.1rem !important;
+    }
+
     &.is-text {
         color: $black;
         background-color: transparent;
@@ -125,6 +165,15 @@
         &:hover {
             transform: scale($buttonScale);
             background-color: transparent !important;
+        }
+
+
+    }
+
+    &.no-hover {
+        &:hover {
+            transform: scale(1);
+            text-decoration: none !important;
         }
     }
 }
