@@ -7,4 +7,8 @@ export interface UserDataRequest {
   placeholder: string
 }
 
-export type PlayerState = "start" | "playing" | "end";
+export enum PlayerState {
+  Start = "start",
+  Playing = "playing",
+  End = "end"
+}

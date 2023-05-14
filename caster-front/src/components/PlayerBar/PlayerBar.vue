@@ -2,6 +2,8 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/Player";
+import { PlayerState } from "@/models";
+
 defineProps<{
   title: string
 }>();
@@ -24,7 +26,7 @@ const stopInterval = () => {
 
 const initInterval = () => {
   interval = window.setInterval(() => {
-    if (playerState.value === "end" && stopInterval) {
+    if (playerState.value === PlayerState.End && stopInterval) {
       stopInterval();
       return;
     }
@@ -39,7 +41,7 @@ const initInterval = () => {
 
 const stopPlayer = () => {
   play.value = false;
-  playerState.value = "end";
+  playerState.value = PlayerState.End;
 };
 
 onMounted(() => {
@@ -53,7 +55,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div>
-    <h1 v-if="playerState !== 'end'" class="title">
+    <h1 v-if="playerState !== PlayerState.End" class="title">
       {{ title }}
     </h1>
     <div class="player-bar">
@@ -67,9 +69,9 @@ onBeforeUnmount(() => {
       </div>
       <div class="element">
         <button class="text-btn text-btn-medium" @click="stopPlayer()">
-          <div v-if="playerState !== 'end'" class="stop-icon" />
+          <div v-if="playerState !== PlayerState.End" class="stop-icon" />
           <Transition>
-            <span v-if="playerState === 'end'" />
+            <span v-if="playerState === PlayerState.End" />
             <span v-else>STOP</span>
           </Transition>
         </button>

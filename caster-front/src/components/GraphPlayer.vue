@@ -12,6 +12,7 @@ import EndScreen from "@/components/EndScreen.vue";
 import Content from "@/components/Content.vue";
 import DataPopups from "@/components/DataPopups.vue";
 import AudioInfo from "@/components/AudioInfo.vue";
+import { PlayerState } from "@/models";
 
 import type { Graph } from "@/graphql";
 import { useStreamSubscription } from "@/graphql";
@@ -50,7 +51,7 @@ const hasInfo = computed<boolean>(() => {
 
 const startListening = () => {
   play.value = true;
-  playerState.value = "playing";
+  playerState.value = PlayerState.Playing;
   startingTimestamp.value = new Date().getTime();
 };
 </script>
@@ -58,7 +59,7 @@ const startListening = () => {
 <template>
   <div v-loading="stale" class="graph-player">
     <Transition>
-      <div v-if="playerState === 'start'">
+      <div v-if="playerState === PlayerState.Start">
         <div class="fullscreen-wrapper-relative">
           <div class="graph-title-card">
             <h1 class="title">
@@ -79,31 +80,30 @@ const startListening = () => {
     </Transition>
 
     <!-- pop up wrapper -->
-    <!-- <div v-if="playerState === 'playing'" class="data-popups"> -->
     <div class="data-popups">
       <DataPopups />
     </div>
 
     <Transition>
-      <div v-if="playerState === 'start' && hasInfo" class="info">
+      <div v-if="playerState === PlayerState.Start && hasInfo" class="info">
         <Content :text="infoContent" />
       </div>
     </Transition>
 
     <Transition>
-      <div v-if="playerState === 'playing'" class="audio-visualizer">
+      <div v-if="playerState === PlayerState.Playing" class="audio-visualizer">
         <PlayerVisualizer />
       </div>
     </Transition>
 
     <Transition>
-      <div v-if="playerState === 'playing' || playerState === 'end'">
+      <div v-if="playerState === PlayerState.Playing || playerState === PlayerState.End">
         <PlayerBar :title="title" />
       </div>
     </Transition>
 
     <Transition>
-      <div v-if="playerState === 'end'">
+      <div v-if="playerState === PlayerState.End">
         <EndScreen />
       </div>
     </Transition>
