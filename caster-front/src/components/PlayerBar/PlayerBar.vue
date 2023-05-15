@@ -14,12 +14,12 @@ const format = (num: number): string => {
 let interval: number;
 const duration: Ref<number> = ref(0);
 
-const stopInterval: VoidFunction = () => {
-  if (window && interval)
+const stopInterval = (): void => {
+  if (interval)
     window.clearInterval(interval);
 };
 
-const initInterval: VoidFunction = () => {
+const initInterval = (): void => {
   interval = window.setInterval(() => {
     if (playerState.value === PlayerState.End) {
       stopInterval();
@@ -43,7 +43,7 @@ const secondsSinceStart = computed<string>(() => {
   return format(seconds).toString();
 });
 
-const stopPlayer: VoidFunction = () => {
+const stopPlayer = (): void => {
   play.value = false;
   playerState.value = PlayerState.End;
 };
@@ -75,10 +75,11 @@ onBeforeUnmount(() => {
       </ElCol>
       <ElCol :span="8">
         <ElButton class="caps" size="default" text @click="stopPlayer()">
-          <div v-if="playerState !== PlayerState.End" class="stop-icon" />
           <Transition>
-            <span v-if="playerState === PlayerState.End" />
-            <span v-else>STOP</span>
+            <div v-if="playerState !== PlayerState.End" class="stop-icon" />
+          </Transition>
+          <Transition>
+            <span v-if="playerState !== PlayerState.End">STOP</span>
           </Transition>
         </ElButton>
       </ElCol>

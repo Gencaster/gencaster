@@ -6,7 +6,7 @@ const wrapper = ref<HTMLDivElement>();
 const numberOfBars = ref<number>(20);
 const distanceBars = ref<number>(22);
 
-const setBars: VoidFunction = () => {
+const setBars = (): void => {
   const width = wrapper.value?.clientWidth || 0;
   const amount = Math.floor(width / distanceBars.value);
   numberOfBars.value = amount;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { ElButton, ElContainer, ElHeader, ElMain } from "element-plus";
 import { usePlayerStore } from "@/stores/Player";
 import Content from "@/components/Content.vue";
 
@@ -8,18 +9,18 @@ const { infoContent, showInfo } = storeToRefs(usePlayerStore());
 
 <template>
   <div>
-    <el-container class="info-screen">
-      <el-header class="header">
+    <ElContainer class="info-screen">
+      <ElHeader class="header">
         <ElButton class="caps" size="default" text @click="showInfo = false">
           <span>
             Schließen
           </span>
         </ElButton>
-      </el-header>
-      <el-main>
+      </ElHeader>
+      <ElMain>
         <Content :text="infoContent" class="content" />
-      </el-main>
-    </el-container>
+      </ElMain>
+    </ElContainer>
   </div>
 </template>
 

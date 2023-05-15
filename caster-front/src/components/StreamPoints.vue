@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ElButton, ElTable, ElTableColumn } from "element-plus";
 import type { StreamPoint } from "@/graphql";
 import { useStreamPointsQuery } from "@/graphql";
 
@@ -16,21 +17,21 @@ const { data, fetching } = useStreamPointsQuery();
     style="width: 100%"
     :default-sort="{ prop: 'port', order: 'ascending' }"
   >
-    <el-table-column prop="port" label="Port" />
-    <el-table-column prop="janusInRoom" label="In room" />
-    <el-table-column prop="janusOutRoom" label="Out room" />
-    <el-table-column prop="uuid" label="UUID" />
-    <el-table-column fixed="right" label="Actions">
+    <ElTableColumn prop="port" label="Port" />
+    <ElTableColumn prop="janusInRoom" label="In room" />
+    <ElTableColumn prop="janusOutRoom" label="Out room" />
+    <ElTableColumn prop="uuid" label="UUID" />
+    <ElTableColumn fixed="right" label="Actions">
       <template #default="scope">
-        <el-button
+        <ElButton
           link
           type="primary"
           size="small"
           @click.prevent="emit('selectedStreamPoint', scope.row)"
         >
           Select
-        </el-button>
+        </ElButton>
       </template>
-    </el-table-column>
+    </ElTableColumn>
   </ElTable>
 </template>

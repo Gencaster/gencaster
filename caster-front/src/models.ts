@@ -1,4 +1,8 @@
-export type UserDataRequestType = "gps" | "string";
+export enum UserDataRequestType {
+  Gps = "gps",
+  String = "string"
+}
+
 export interface UserDataRequest {
   name: string
   description: string

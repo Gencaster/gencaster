@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { ElContainer, ElMain } from "element-plus";
 import { usePlayerStore } from "@/stores/Player";
 import Content from "@/components/Content.vue";
 
@@ -8,11 +9,11 @@ const { endContent } = storeToRefs(usePlayerStore());
 
 <template>
   <div>
-    <el-container class="end-screen">
-      <el-main>
+    <ElContainer class="end-screen">
+      <ElMain>
         <Content :text="endContent" class="content" />
-      </el-main>
-    </el-container>
+      </ElMain>
+    </ElContainer>
   </div>
 </template>
 

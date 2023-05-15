@@ -2,8 +2,9 @@
 import { computed, onMounted, ref } from "vue";
 
 import { storeToRefs } from "pinia";
-import { ElDialog, ElInput } from "element-plus";
+import { ElCheckbox, ElDialog, ElInput } from "element-plus";
 import { usePlayerStore } from "@/stores/Player";
+import { UserDataRequestType } from "@/models";
 import type { UserDataRequest } from "@/models";
 const { userDataRequests, streamGPS, gpsAllowed } = storeToRefs(usePlayerStore());
 
@@ -15,12 +16,12 @@ const showPopup = computed<boolean>(() => {
   return popup.value !== null;
 });
 
-const confirmPopup: VoidFunction = () => {
+const confirmPopup = (): void => {
   console.log("confirm");
   userDataRequests.value.shift();
 };
 
-const gpsRequest: VoidFunction = () => {
+const gpsRequest = (): void => {
   if (!gpsAllowed.value)
     streamGPS.value = true;
 };
@@ -52,38 +53,43 @@ const userData = ref<string>("");
 
 <template>
   <div>
-    <ElDialog
-      v-model="showPopup" align-center :show-close="false" :close-on-click-modal="false"
-      :close-on-press-escape="false"
-    >
-      <p class="description">
-        {{ popup?.description }}
-      </p>
-      <div class="data">
-        <div v-if="popup?.type === 'string'" class="component string-component">
-          <ElInput v-model="userData" :placeholder="popup?.placeholder" />
-        </div>
-        <div v-if="popup?.type === 'gps'" class="component gps-component">
-          <div class="gps-wrapper">
-            <ElButton class="underline no-hover" size="default" text @click="gpsRequest()">
-              <span>
-                GPS Freigeben
-              </span>
-            </ElButton>
-            <el-checkbox v-model="gpsAllowed" :disabled="gpsAllowed" @click="gpsRequest()" />
+    <div v-if="popup">
+      <ElDialog
+        v-model="showPopup"
+        align-center
+        :show-close="false"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+      >
+        <p class="description">
+          {{ popup.description }}
+        </p>
+        <div class="data">
+          <div v-if="popup.type === UserDataRequestType.String" class="component string-component">
+            <ElInput v-model="userData" :placeholder="popup.placeholder" />
+          </div>
+          <div v-if="popup.type === UserDataRequestType.Gps" class="component gps-component">
+            <div class="gps-wrapper">
+              <ElButton class="underline no-hover" size="default" text @click="gpsRequest()">
+                <span>
+                  GPS Freigeben
+                </span>
+              </ElButton>
+              <ElCheckbox v-model="gpsAllowed" :disabled="gpsAllowed" @click="gpsRequest()" />
+            </div>
           </div>
         </div>
-      </div>
-      <template #footer>
-        <span class="dialog-footer">
-          <div class="confirm">
-            <ElButton class="caps green" size="default" type="default" @click="confirmPopup()">
-              Ok
-            </ElButton>
-          </div>
-        </span>
-      </template>
-    </ElDialog>
+        <template #footer>
+          <span class="dialog-footer">
+            <div class="confirm">
+              <ElButton class="caps green" size="default" type="default" @click="confirmPopup()">
+                Ok
+              </ElButton>
+            </div>
+          </span>
+        </template>
+      </ElDialog>
+    </div>
   </div>
 </template>
 
