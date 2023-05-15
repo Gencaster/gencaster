@@ -1,33 +1,118 @@
-// import dark theme
 @use 'element-plus/theme-chalk/src/dark/css-vars.scss' as *;
 
-// :root {
-//   --ep-color-primary: red;
-// }
+@import 'variables.scss';
+@import 'mixins.scss';
+@import 'typography.scss';
+@import 'elementplus.scss';
 
 html,
 body,
 #app {
+  margin: 0px;
   height: 100%;
 }
 
 body {
-  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
-    '微软雅黑', Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-color: $white;
+  color: $black;
+}
+
+html {
   margin: 0;
-  font-weight: 300;
+  padding: 0;
+  height: 100%;
 }
 
-a {
-  color: var(--ep-color-primary);
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  max-height: 100%;
+  float: left;
+  width: 100%;
+}
+
+.fullscreen-wrapper-fixed {
+  box-sizing: border-box;
+  overflow-y: scroll;
+  position: fixed;
+  height: 100vh;
+  max-height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 10vh;
+}
+
+.fullscreen-wrapper-relative {
+  box-sizing: border-box;
+  position: relative;
+  height: 100vh;
+  max-height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 10vh;
+}
+
+// general buttons
+.text-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: inherit;
   text-decoration: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: 0.25s ease;
+
+  &:hover {
+    transform: scale($buttonScale);
+  }
+
+  &.underline {
+    text-decoration: underline;
+    text-underline-offset: 0.15em !important;
+    text-decoration-thickness: 0.1rem !important;
+  }
+
+  &.caps {
+    text-transform: uppercase;
+  }
 }
 
-code {
-  border-radius: 2px;
-  padding: 2px 4px;
-  background-color: var(--ep-color-primary-light-9);
-  color: var(--ep-color-primary);
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+// general padding
+.general-padding {
+  padding-left: $mobilePadding;
+  padding-right: $mobilePadding;
+}
+
+
+// transitions
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }

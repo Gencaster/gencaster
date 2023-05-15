@@ -2,7 +2,8 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { useGetGraphsQuery } from "@/graphql";
-import GraphPlayer from "@/components/GraphPlayer.vue";
+import DefaultDetail from "@/components/GraphDetailTemplates/Default.vue";
+import DrifterDetail from "@/components/GraphDetailTemplates/Drifter.vue";
 
 const props = defineProps<{
   graphName: string
@@ -23,8 +24,14 @@ const { data, fetching, error } = useGetGraphsQuery({
     <div v-if="error || (!fetching && (data?.graphs.length !== 1)) || !data" class="error">
       Could not find proper graph
     </div>
+    <!-- @todo use a database field here -->
+    <div v-else-if="data?.graphs[0].name.includes('Drifter')">
+      <DrifterDetail
+        :graph="data.graphs[0]"
+      />
+    </div>
     <div v-else>
-      <GraphPlayer
+      <DefaultDetail
         :graph="data.graphs[0]"
       />
     </div>
