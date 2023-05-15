@@ -15,12 +15,12 @@ const showPopup = computed<boolean>(() => {
   return popup.value !== null;
 });
 
-const confirmPopup: VoidFunction = () => {
+const confirmPopup = (): void => {
   console.log("confirm");
   userDataRequests.value.shift();
 };
 
-const gpsRequest: VoidFunction = () => {
+const gpsRequest = (): void => {
   if (!gpsAllowed.value)
     streamGPS.value = true;
 };

@@ -14,12 +14,12 @@ const format = (num: number): string => {
 let interval: number;
 const duration: Ref<number> = ref(0);
 
-const stopInterval: VoidFunction = () => {
+const stopInterval = (): void => {
   if (window && interval)
     window.clearInterval(interval);
 };
 
-const initInterval: VoidFunction = () => {
+const initInterval = (): void => {
   interval = window.setInterval(() => {
     if (playerState.value === PlayerState.End) {
       stopInterval();
@@ -43,7 +43,7 @@ const secondsSinceStart = computed<string>(() => {
   return format(seconds).toString();
 });
 
-const stopPlayer: VoidFunction = () => {
+const stopPlayer = (): void => {
   play.value = false;
   playerState.value = PlayerState.End;
 };
