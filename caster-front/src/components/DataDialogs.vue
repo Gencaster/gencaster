@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 
 import { storeToRefs } from "pinia";
-import { ElDialog, ElInput } from "element-plus";
+import { ElCheckbox, ElDialog, ElInput } from "element-plus";
 import { usePlayerStore } from "@/stores/Player";
 import type { UserDataRequest } from "@/models";
 const { userDataRequests, streamGPS, gpsAllowed } = storeToRefs(usePlayerStore());
@@ -70,7 +70,7 @@ const userData = ref<string>("");
                 GPS Freigeben
               </span>
             </ElButton>
-            <el-checkbox v-model="gpsAllowed" :disabled="gpsAllowed" @click="gpsRequest()" />
+            <ElCheckbox v-model="gpsAllowed" :disabled="gpsAllowed" @click="gpsRequest()" />
           </div>
         </div>
       </div>

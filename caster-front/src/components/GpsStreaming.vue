@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { type Ref, ref, watch } from "vue";
+import { ElButton } from "element-plus";
 import { usePlayerStore } from "@/stores/Player";
 import type { Stream, StreamVariableInput } from "@/graphql";
 import { useSendStreamVariableMutation } from "@/graphql";
@@ -66,12 +67,12 @@ watch(streamGPS, () => {
 </script>
 
 <template>
-  <el-button
+  <ElButton
     v-if="showButton"
     class="button"
     type="warning"
     @click="() => streamGPS = !streamGPS"
   >
     {{ streamGPS ? "Disable" : "Activate" }} GPS streaming
-  </el-button>
+  </ElButton>
 </template>
