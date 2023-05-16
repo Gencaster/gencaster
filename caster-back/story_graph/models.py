@@ -31,6 +31,10 @@ class Graph(models.Model):
         ONE_USER_ONE_STREAM = "one_user_one_stream", _("Each user gets its own stream")
         DEACTIVATE = "deactivate", _("No stream assignment")
 
+    class GraphDetailTemplate(models.TextChoices):
+        DEFAULT = "default", _("Default template")
+        DRIFTER = "drifter", _("Drifter template")
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -45,11 +49,71 @@ class Graph(models.Model):
         unique=True,
     )
 
+    display_name = models.CharField(
+        max_length=512,
+        verbose_name=_("Display name"),
+        help_text=_("Will be used as a display name in the frontend"),
+    )
+
+    slug_name = models.SlugField(
+        verbose_name=_("Slug name"),
+        max_length=256,
+        unique=True,
+        help_text=_("Will be used as a URL"),
+    )
+
     stream_assignment_policy = models.CharField(
         max_length=255,
         help_text=_("Manages the stream assignment for this graph"),
         choices=StreamAssignmentPolicy.choices,
         default=StreamAssignmentPolicy.ONE_USER_ONE_STREAM,
+    )
+
+    public_visible = models.BooleanField(
+        verbose_name=_("Public visible?"),
+        help_text=_(
+            "If the graph is not public it will not be listed in the frontend, yet it is still accessible via URL"
+        ),
+        default=True,
+        null=False,
+        blank=False,
+    )
+
+    template_name = models.CharField(
+        max_length=255,
+        verbose_name=_("Frontend template"),
+        help_text=_(
+            "Allows to switch to a different template in the frontend with different connection flows or UI"
+        ),
+        choices=GraphDetailTemplate.choices,
+        default=GraphDetailTemplate.DEFAULT,
+        blank=False,
+        null=False,
+    )
+
+    start_text = models.TextField(
+        verbose_name=_("Start text (markdown)"),
+        help_text=_(
+            "Text about the graph which will be displayed at the start of a stream - only if this is set"
+        ),
+        default="",
+        null=False,
+    )
+
+    about_text = models.TextField(
+        verbose_name=_("About text (markdown)"),
+        help_text=_(
+            "Text about the graph which can be accessed during a stream - only if this is set"
+        ),
+        default="",
+        null=False,
+    )
+
+    end_text = models.TextField(
+        verbose_name=_("End text (markdown)"),
+        help_text=_("Text which will be displayed at the end of a stream"),
+        default="",
+        null=False,
     )
 
     async def aget_entry_node(self) -> "Node":
