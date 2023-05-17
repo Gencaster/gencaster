@@ -21,7 +21,7 @@ const { data, fetching } = useGetGraphsQuery();
               <template #default="scope">
                 <ElButton
                   link size="small"
-                  @click.prevent="$router.push({ name: 'graphPlayer', params: { graphName: scope.row.name } })"
+                  @click.prevent="$router.push({ name: 'graphPlayer', params: { graphSlug: scope.row.slugName } })"
                 >
                   {{ scope.row.name }}
                 </ElButton>

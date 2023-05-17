@@ -1,24 +1,28 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { ElButton, ElContainer, ElHeader, ElMain } from "element-plus";
-import { usePlayerStore } from "@/stores/Player";
 import Content from "@/components/Content.vue";
 
-const { infoContent, showInfo } = storeToRefs(usePlayerStore());
+defineProps<{
+  text: string
+}>();
+
+const emit = defineEmits<{
+  (e: "clicked-close"): void
+}>();
 </script>
 
 <template>
   <div>
     <ElContainer class="info-screen">
       <ElHeader class="header">
-        <ElButton class="caps" size="default" text @click="showInfo = false">
+        <ElButton class="caps" size="default" text @click="emit('clicked-close')">
           <span>
             Schließen
           </span>
         </ElButton>
       </ElHeader>
       <ElMain>
-        <Content :text="infoContent" class="content" />
+        <Content :text="text" class="content" />
       </ElMain>
     </ElContainer>
   </div>

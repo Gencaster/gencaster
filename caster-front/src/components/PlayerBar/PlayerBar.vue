@@ -4,8 +4,18 @@ import { ElButton, ElCol, ElRow } from "element-plus";
 import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/Player";
 import { PlayerState } from "@/models";
+import type { Graph } from "@/graphql";
+import AudioInfo from "@/components/AudioInfo.vue";
 
-const { startingTimestamp, play, playerState, showInfo, title } = storeToRefs(usePlayerStore());
+defineProps<{
+  graph: Pick<Graph, "displayName" | "aboutText">
+}>();
+
+const emit = defineEmits<{
+  (e: "clicked-stop"): void
+}>();
+
+const { startingTimestamp, play, playerState } = storeToRefs(usePlayerStore());
 
 const format = (num: number): string => {
   return num.toString().padStart(2, "0");
@@ -55,13 +65,23 @@ onMounted(() => {
 onBeforeUnmount(() => {
   stopInterval();
 });
+
+const showInfo: Ref<boolean> = ref(false);
 </script>
 
 <template>
   <div>
     <h1 v-if="playerState !== PlayerState.End" class="title general-padding">
-      {{ title }}
+      {{ graph.displayName }}
     </h1>
+    <Transition>
+      <div v-if="showInfo">
+        <AudioInfo
+          :text="graph.aboutText"
+          @clicked-close="() => showInfo = false"
+        />
+      </div>
+    </Transition>
     <ElRow class="player-bar general-padding">
       <ElCol :span="8">
         <ElButton class="caps" size="default" text @click="showInfo = !showInfo">
@@ -79,7 +99,10 @@ onBeforeUnmount(() => {
             <div v-if="playerState !== PlayerState.End" class="stop-icon" />
           </Transition>
           <Transition>
-            <span v-if="playerState !== PlayerState.End">STOP</span>
+            <span
+              v-if="playerState !== PlayerState.End"
+              @click="emit('clicked-stop')"
+            >STOP</span>
           </Transition>
         </ElButton>
       </ElCol>

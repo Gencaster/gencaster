@@ -1,22 +1,23 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
 import { ElButton, ElCard } from "element-plus";
-import { usePlayerStore } from "@/stores/Player";
-import { PlayerState } from "@/models";
+import MarkdownIt from "markdown-it";
+import { computed } from "vue";
 import GraphPlayerCredits from "@/components/GraphPlayerCredits.vue";
-const {
-  title,
-  startingTimestamp,
-  description,
-  playerState,
-  play
-} = storeToRefs(usePlayerStore());
 
-const startListening = () => {
-  play.value = true;
-  playerState.value = PlayerState.Playing;
-  startingTimestamp.value = new Date().getTime();
-};
+const props = defineProps<{
+  title: string
+  descriptionText: string
+  buttonText: string
+}>();
+
+const emit = defineEmits<{
+  (e: "buttonClicked"): void
+}>();
+
+const description = computed<string>(() => {
+  const md = new MarkdownIt();
+  return md?.render(props.descriptionText);
+});
 </script>
 
 <template>
@@ -29,12 +30,10 @@ const startListening = () => {
           </h1>
         </div>
       </template>
-      <p class="description">
-        {{ description }}
-      </p>
+      <p class="description" v-html="description" />
       <div class="button-wrapper">
-        <ElButton class="caps green" size="large" type="default" @click="startListening()">
-          Start
+        <ElButton class="caps green" size="large" type="default" @click="emit('buttonClicked')">
+          {{ buttonText }}
         </ElButton>
       </div>
     </ElCard>
