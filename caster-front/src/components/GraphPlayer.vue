@@ -29,17 +29,10 @@ const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
     <h2>{{ graph.name }}</h2>
     <div v-if="data?.streamInfo.__typename === 'StreamInfo'">
       <PlayerButtons />
-      <Player
-        ref="playerRef"
-        :stream-point="data.streamInfo.stream.streamPoint"
-        :stream="data.streamInfo.stream"
-      />
-      <ElCollapse style="margin-top: 10px;">
+      <Player ref="playerRef" :stream-point="data.streamInfo.stream.streamPoint" :stream="data.streamInfo.stream" />
+      <ElCollapse class="debug-info-wrapper">
         <ElCollapseItem title="Debug info">
-          <StreamInfo
-            :stream="data.streamInfo.stream"
-            :stream-instruction="data.streamInfo.streamInstruction"
-          />
+          <StreamInfo :stream="data.streamInfo.stream" :stream-instruction="data.streamInfo.streamInstruction" />
         </ElCollapseItem>
       </ElCollapse>
     </div>
@@ -51,3 +44,12 @@ const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import '@/assets/mixins.scss';
+@import '@/assets/variables.scss';
+
+.debug-info-wrapper {
+  margin-top: 10px;
+}
+</style>

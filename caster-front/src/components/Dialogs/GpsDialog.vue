@@ -52,7 +52,7 @@ setInterval(async () => {
 }, 100);
 
 const gpsRequest = async () => {
-  // as it makaes only sense to have one GPS stream we refer to
+  // as it makes only sense to have one GPS stream we refer to
   // it via the global store.
   streamGPS.value = true;
 };

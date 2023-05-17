@@ -70,18 +70,18 @@ const startStream = async () => {
 // @todo how to figure out if our subscription is finished?
 const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
   {
-    name: "askName",
-    description: "Please enter your name",
-    key: "name",
-    type: UserDataRequestType.String,
-    placeholder: "Your name"
-  },
-  {
     name: "askGps",
     description: "Can we ask for your position?",
     key: "gps",
     type: UserDataRequestType.Gps,
     placeholder: ""
+  },
+  {
+    name: "askName",
+    description: "Please enter your name",
+    key: "name",
+    type: UserDataRequestType.String,
+    placeholder: "Your name"
   }
 ]);
 
@@ -157,7 +157,7 @@ const topDialog = computed<UserDataRequest | undefined>(() => dialogsToShow.valu
           <ElCollapse
             v-if="showDebug"
             v-model="activeAccordionTab"
-            style="margin-top: 100px;"
+            class="debug-info"
           >
             <ElCollapseItem title="Debug info" name="debug">
               <StreamInfo
@@ -186,6 +186,10 @@ const topDialog = computed<UserDataRequest | undefined>(() => dialogsToShow.valu
   padding-left: 24px;
   padding-right: 24px;
   margin: 0 auto;
+}
+
+.debug-info {
+  margin-top: 25px;
 }
 
 .info {
