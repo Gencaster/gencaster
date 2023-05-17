@@ -97,6 +97,7 @@ class Graph(models.Model):
             "Text about the graph which will be displayed at the start of a stream - only if this is set"
         ),
         default="",
+        blank=True,
         null=False,
     )
 
@@ -106,6 +107,7 @@ class Graph(models.Model):
             "Text about the graph which can be accessed during a stream - only if this is set"
         ),
         default="",
+        blank=True,
         null=False,
     )
 
@@ -113,6 +115,7 @@ class Graph(models.Model):
         verbose_name=_("End text (markdown)"),
         help_text=_("Text which will be displayed at the end of a stream"),
         default="",
+        blank=True,
         null=False,
     )
 

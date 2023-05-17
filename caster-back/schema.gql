@@ -21,6 +21,38 @@ The story graph is a core concept and can be edited with a native editor.
 input AddGraphInput {
   """Name of the graph"""
   name: String!
+
+  """Will be used as a display name in the frontend"""
+  displayName: String!
+
+  """Will be used as a URL"""
+  slugName: String!
+
+  """
+  Text about the graph which will be displayed at the start of a stream - only if this is set
+  """
+  startText: String
+
+  """
+  Text about the graph which can be accessed during a stream - only if this is set
+  """
+  aboutText: String
+
+  """Text which will be displayed at the end of a stream"""
+  endText: String
+
+  """
+  If the graph is not public it will not be listed in the frontend, yet it is still accessible via URL
+  """
+  publicVisible: Boolean
+
+  """Manages the stream assignment for this graph"""
+  streamAssignmentPolicy: String
+
+  """
+  Allows to switch to a different template in the frontend with different connection flows or UI
+  """
+  templateName: GraphDetailTemplate
 }
 
 """AudioCell(uuid, playback, audio_file, volume)"""
@@ -147,8 +179,38 @@ type Graph {
 
   """Name of the graph"""
   name: String!
+
+  """Will be used as a display name in the frontend"""
+  displayName: String!
+
+  """Will be used as a URL"""
+  slugName: String!
+
+  """
+  Allows to switch to a different template in the frontend with different connection flows or UI
+  """
+  templateName: GraphDetailTemplate!
+
+  """
+  Text about the graph which will be displayed at the start of a stream - only if this is set
+  """
+  startText: String!
+
+  """
+  Text about the graph which can be accessed during a stream - only if this is set
+  """
+  aboutText: String!
+
+  """Text which will be displayed at the end of a stream"""
+  endText: String!
   nodes: [Node!]!
   edges: [Edge!]!
+}
+
+"""An enumeration."""
+enum GraphDetailTemplate {
+  DEFAULT
+  DRIFTER
 }
 
 """
@@ -167,6 +229,9 @@ The story graph is a core concept and can be edited with a native editor.
 input GraphFilter {
   """Name of the graph"""
   name: StrFilterLookup
+
+  """Will be used as a URL"""
+  slugName: StrFilterLookup
 }
 
 input IntFilterLookup {
@@ -440,7 +505,8 @@ input StreamPointFilter {
 }
 
 """
-StreamVariable(uuid, created_date, modified_date, stream, key, value, stream_to_sc)
+Allows to store variables in a stream session as a key/value pair.
+Due to database constraints we will store any value a string.
 """
 type StreamVariable {
   uuid: UUID!

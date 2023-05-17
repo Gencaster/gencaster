@@ -359,6 +359,13 @@ class Mutation:
 
         graph = await story_graph_models.Graph.objects.acreate(
             name=graph_input.name,
+            display_name=graph_input.display_name,
+            slug_name=graph_input.slug_name,
+            start_text=graph_input.start_text,
+            about_text=graph_input.about_text,
+            end_text=graph_input.end_text,
+            public_visible=graph_input.public_visible,
+            stream_assignment_policy=graph_input.stream_assignment_policy,
         )
         await graph.acreate_entry_node()
         # need a refresh - in django 4.2 this will be available, see
