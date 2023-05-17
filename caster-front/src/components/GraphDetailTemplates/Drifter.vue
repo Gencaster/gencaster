@@ -90,8 +90,8 @@ const topDialog = computed<UserDataRequest | undefined>(() => dialogsToShow.valu
 
 <template>
   <!-- this should not be default-graph! -->
-  <div class="default-graph-detail">
-    <h1>Drifter</h1>
+  <div class="drifter-graph-detail">
+    <!-- <h1>Drifter</h1> -->
     <div v-loading="stale" class="graph-player">
       <div v-if="data?.streamInfo.__typename === 'NoStreamAvailable'">
         Sorry, no stream available. Come back later.
