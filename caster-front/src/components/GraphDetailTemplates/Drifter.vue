@@ -84,8 +84,6 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
     placeholder: "Your name"
   }
 ]);
-
-const topDialog = computed<UserDataRequest | undefined>(() => dialogsToShow.value[0] ?? undefined);
 </script>
 
 <template>
