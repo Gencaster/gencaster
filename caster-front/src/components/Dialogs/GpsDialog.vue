@@ -23,9 +23,12 @@ const dialogVisible: Ref<boolean> = ref(true);
 
 watch(gpsSuccess, () => {
   console.log("Received first GPS signal - connection successful");
-  emit("submitted");
   dialogVisible.value = false;
 });
+
+const closedDialog = () => {
+  emit("submitted");
+};
 
 watch(gpsError, () => {
   if (gpsError.value) {
@@ -40,7 +43,7 @@ watch(gpsError, () => {
 
 const granted: Ref<boolean> = ref(false);
 
-setInterval(async () => {
+const refreshIntervalId = setInterval(async () => {
   // i don't have a clue if this works properly b/c I always receive a GPS location first
   // but "in theory" it should also help us
   const { state } = await navigator.permissions.query({ name: "geolocation" });
@@ -48,6 +51,7 @@ setInterval(async () => {
   if (state === "granted") {
     granted.value = true;
     gpsSuccess.value = true;
+    clearInterval(refreshIntervalId);
   }
 }, 100);
 
@@ -65,6 +69,9 @@ const gpsRequest = async () => {
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
+      align-center
+      lock-scroll
+      @closed="closedDialog()"
     >
       <p class="description">
         {{ request.description }}
