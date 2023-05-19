@@ -17,7 +17,7 @@ const emit = defineEmits<{
 
 <template>
   <div>
-    <div>
+    <div v-if="request.type === UserDataRequestType.String">
       <StringDialog
         :stream-uuid="streamUuid"
         :request="request"
@@ -27,6 +27,7 @@ const emit = defineEmits<{
     <div v-if="request.type === UserDataRequestType.Gps">
       <GpsDialog
         :request="request"
+        @submitted="() => $emit('submitted')"
       />
     </div>
   </div>

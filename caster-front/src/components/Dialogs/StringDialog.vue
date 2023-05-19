@@ -27,8 +27,11 @@ const execute = async () => {
       value: userInput.value
     }]
   });
-  emit("submitted");
   dialogVisible.value = false;
+};
+
+const closedDialog = () => {
+  emit("submitted");
 };
 </script>
 
@@ -41,6 +44,7 @@ const execute = async () => {
       :close-on-press-escape="false"
       align-center
       lock-scroll
+      @closed="closedDialog()"
     >
       <p class="description">
         {{ request.description }}

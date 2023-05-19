@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Ref, computed, ref } from "vue";
+import { type Ref, computed, nextTick, ref } from "vue";
 import { ElCollapse, ElCollapseItem, ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -70,21 +70,42 @@ const startStream = async () => {
 
 // @todo how to figure out if our subscription is finished?
 const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
-  // {
-  //   name: "askGps",
-  //   description: "Can we ask for your position?",
-  //   key: "gps",
-  //   type: UserDataRequestType.Gps,
-  //   placeholder: ""
-  // },
-  // {
-  //   name: "askName",
-  //   description: "Please enter your name",
-  //   key: "name",
-  //   type: UserDataRequestType.String,
-  //   placeholder: "Your name"
-  // }
+  {
+    name: "askGps",
+    description: "Drifter ist ein dynamisches Hörspiel, das in Echtzeit generiert wird. Hierfür werden noch Informationen über dich benötigt:",
+    key: "gps",
+    type: UserDataRequestType.Gps,
+    placeholder: ""
+  },
+  {
+    name: "askName",
+    description: "What would you like to be called?",
+    key: "name",
+    type: UserDataRequestType.String,
+    placeholder: "Your name"
+  },
+  {
+    name: "askName",
+    description: "Please enter your name 2.",
+    key: "name",
+    type: UserDataRequestType.String,
+    placeholder: "Your name"
+  }
 ]);
+
+const renderDialog = ref(true);
+
+// we need short delays
+const shiftDialogs = () => {
+  if (dialogsToShow.value.length > 0) {
+    // toggle renderDialog to re-render next dialog
+    renderDialog.value = false;
+    dialogsToShow.value.shift();
+    nextTick(() => {
+      renderDialog.value = true;
+    });
+  }
+};
 </script>
 
 <template>
@@ -128,11 +149,11 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
 
         <!-- modals -->
         <div v-if="drifterStatus === DrifterStatus.WaitForUserInput">
-          <div v-if="dialogsToShow[0]">
+          <div v-if="dialogsToShow[0] && renderDialog">
             <MetaDialog
               :request="dialogsToShow[0]"
               :stream-uuid="data.streamInfo.stream.uuid"
-              @submitted="() => dialogsToShow.shift()"
+              @submitted="() => shiftDialogs()"
             />
           </div>
         </div>
