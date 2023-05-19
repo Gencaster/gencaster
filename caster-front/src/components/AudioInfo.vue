@@ -1,14 +1,21 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { ElButton, ElContainer, ElHeader, ElMain } from "element-plus";
+import MarkdownIt from "markdown-it";
 import Content from "@/components/Content.vue";
 
-defineProps<{
+const props = defineProps<{
   text: string
 }>();
 
 const emit = defineEmits<{
   (e: "clicked-close"): void
 }>();
+
+const description = computed<string>(() => {
+  const md = new MarkdownIt();
+  return md?.render(props.text);
+});
 </script>
 
 <template>
@@ -22,7 +29,7 @@ const emit = defineEmits<{
         </ElButton>
       </ElHeader>
       <ElMain>
-        <Content :text="text" class="content" />
+        <Content :text="description" class="content" />
       </ElMain>
     </ElContainer>
   </div>

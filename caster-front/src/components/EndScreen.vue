@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { ElContainer, ElMain } from "element-plus";
 import MarkdownIt from "markdown-it";
-import { computed } from "vue";
 import Content from "@/components/Content.vue";
 
 const props = defineProps<{

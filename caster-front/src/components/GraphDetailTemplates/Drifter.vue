@@ -76,13 +76,13 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
   //   type: UserDataRequestType.Gps,
   //   placeholder: ""
   // },
-  {
-    name: "askName",
-    description: "Please enter your name",
-    key: "name",
-    type: UserDataRequestType.String,
-    placeholder: "Your name"
-  }
+  // {
+  //   name: "askName",
+  //   description: "Please enter your name",
+  //   key: "name",
+  //   type: UserDataRequestType.String,
+  //   placeholder: "Your name"
+  // }
 ]);
 </script>
 
