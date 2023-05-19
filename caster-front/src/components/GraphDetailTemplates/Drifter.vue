@@ -11,6 +11,7 @@ import StreamInfo from "@/components/StreamInfo.vue";
 import EndScreen from "@/components/EndScreen.vue";
 import MetaDialog from "@/components/Dialogs/MetaDialog.vue";
 import Intro from "@/components/Intro.vue";
+import IntroInfo from "@/components/IntroInfo.vue";
 
 import type { UserDataRequest } from "@/models";
 import { DrifterStatus, PlayerState, UserDataRequestType } from "@/models";
@@ -108,6 +109,11 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
               button-text="Start"
               @button-clicked="startStream()"
             />
+            <div v-if="graph.aboutText">
+              <IntroInfo
+                :text="graph.aboutText"
+              />
+            </div>
           </div>
         </Transition>
 
