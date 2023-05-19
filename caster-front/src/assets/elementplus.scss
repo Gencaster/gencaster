@@ -56,7 +56,7 @@
     max-width: $cardMaxWidth;
     height: auto;
     max-height: calc(70vh - 4 * $mobilePadding);
-    // overflow-y: scroll;
+    overflow-y: scroll;
 
     .el-dialog__header {
         display: none
