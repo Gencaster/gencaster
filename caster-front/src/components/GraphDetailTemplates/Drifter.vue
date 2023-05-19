@@ -99,8 +99,8 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
         Error: {{ error }}
       </div>
       <div v-else>
+        <!-- start screen -->
         <Transition>
-          <!-- interface states -->
           <div v-if="drifterStatus === DrifterStatus.WaitForStart">
             <Intro
               :title="graph.displayName"
@@ -109,25 +109,29 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
               @button-clicked="startStream()"
             />
           </div>
-          <div v-else-if="drifterStatus === DrifterStatus.WaitForUserInput">
-            <Transition>
-              <div v-if="dialogsToShow[0]">
-                <MetaDialog
-                  :request="dialogsToShow[0]"
-                  :stream-uuid="data.streamInfo.stream.uuid"
-                  @submitted="() => dialogsToShow.shift()"
-                />
-              </div>
-            </Transition>
-          </div>
-          <div v-else-if="drifterStatus === DrifterStatus.ShowEndScreen">
+        </Transition>
+
+        <!-- end screen -->
+        <Transition>
+          <div v-if="drifterStatus === DrifterStatus.ShowEndScreen">
             <EndScreen
               :text="graph.endText"
             />
           </div>
         </Transition>
 
-        <!-- plaer -->
+        <!-- modals -->
+        <div v-if="drifterStatus === DrifterStatus.WaitForUserInput">
+          <div v-if="dialogsToShow[0]">
+            <MetaDialog
+              :request="dialogsToShow[0]"
+              :stream-uuid="data.streamInfo.stream.uuid"
+              @submitted="() => dialogsToShow.shift()"
+            />
+          </div>
+        </div>
+
+        <!-- player -->
         <div v-if="data">
           <Player
             :stream-point="data.streamInfo.stream.streamPoint"
@@ -152,6 +156,7 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
           </div>
         </Transition>
 
+        <!-- debug -->
         <div v-if="showDebug" class="debug-wrapper">
           <ElCollapse
             v-model="activeAccordionTab"
@@ -189,12 +194,13 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
 }
 
 .debug-wrapper {
+  position: fixed;
+  z-index: 0;
   width: 100%;
   height: auto;
   padding-left: 20px;
   padding-right: 20px;
   box-sizing: border-box;
-  position: fixed;
   top: 120px;
   left: 0px;
 }

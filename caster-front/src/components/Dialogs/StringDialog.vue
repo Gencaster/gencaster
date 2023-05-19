@@ -39,6 +39,8 @@ const execute = async () => {
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
+      align-center
+      lock-scroll
     >
       <p class="description">
         {{ request.description }}
