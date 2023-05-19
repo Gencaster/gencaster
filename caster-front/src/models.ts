@@ -16,3 +16,10 @@ export enum PlayerState {
   Playing = "playing",
   End = "end"
 }
+
+export enum DrifterStatus {
+  WaitForStart = "waitForStart",
+  WaitForUserInput = "waitForUserInput",
+  DisplayPlayer = "displayPlayer",
+  ShowEndScreen = "showEndScreen"
+}

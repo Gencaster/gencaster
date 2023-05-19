@@ -1,20 +1,20 @@
 <!-- eslint-disable vue/attribute-hyphenation -->
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { useGetGraphsQuery } from "@/graphql";
+import { GraphDetailTemplate, useGetGraphsMetaQuery } from "@/graphql";
 import DefaultDetail from "@/components/GraphDetailTemplates/Default.vue";
 import DrifterDetail from "@/components/GraphDetailTemplates/Drifter.vue";
 
 const props = defineProps<{
-  graphName: string
+  graphSlug: string
   fullView: Boolean
 }>();
 
 const router = useRouter();
 
-const { data, fetching, error } = useGetGraphsQuery({
+const { data, fetching, error } = useGetGraphsMetaQuery({
   variables: {
-    name: props.graphName
+    slug: props.graphSlug
   }
 });
 </script>
@@ -24,8 +24,7 @@ const { data, fetching, error } = useGetGraphsQuery({
     <div v-if="error || (!fetching && (data?.graphs.length !== 1)) || !data" class="error">
       Could not find proper graph
     </div>
-    <!-- @todo use a database field here -->
-    <div v-else-if="data?.graphs[0].name.includes('Drifter')">
+    <div v-else-if="data?.graphs[0].templateName === GraphDetailTemplate.Drifter">
       <DrifterDetail
         :graph="data.graphs[0]"
       />

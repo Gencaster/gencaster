@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { ElButton, ElContainer, ElHeader, ElMain } from "element-plus";
+import { ElContainer, ElMain } from "element-plus";
 import MarkdownIt from "markdown-it";
 import Content from "@/components/Content.vue";
 
 const props = defineProps<{
   text: string
-}>();
-
-const emit = defineEmits<{
-  (e: "clicked-close"): void
 }>();
 
 const description = computed<string>(() => {
@@ -20,14 +16,7 @@ const description = computed<string>(() => {
 
 <template>
   <div>
-    <ElContainer class="info-screen">
-      <ElHeader class="header">
-        <ElButton class="caps" size="default" text @click="emit('clicked-close')">
-          <span>
-            Schließen
-          </span>
-        </ElButton>
-      </ElHeader>
+    <ElContainer class="intro-info-screen">
       <ElMain>
         <Content :text="description" class="content" />
       </ElMain>
@@ -39,7 +28,7 @@ const description = computed<string>(() => {
 @import '@/assets/mixins.scss';
 @import '@/assets/variables.scss';
 
-.info-screen {
+.intro-info-screen {
   padding: 0;
   position: relative;
   width: 100%;
@@ -51,23 +40,5 @@ const description = computed<string>(() => {
   :deep(img) {
     width: 100%;
   }
-}
-
-.content {
-  width: calc(100% - 2 * $mobilePadding);
-  margin-top: 0;
-  padding-top: $playerBarHeight;
-  margin-bottom: $spacingM;
-}
-
-:deep(.text) > :first-child {
-  margin-top: 0;
-}
-
-.header {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  background-color: $white;
 }
 </style>

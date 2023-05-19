@@ -2,6 +2,21 @@ query GetGraphs($name:String) {
   graphs(filters: {name: {iContains: $name}}) {
     uuid
     name
+    slugName
+    templateName
+  }
+}
+
+query GetGraphsMeta($slug: String!) {
+  graphs(filters: {slugName: {exact: $slug}}) {
+    aboutText
+    displayName
+    endText
+    name
+    startText
+    templateName
+    uuid
+    slugName
   }
 }
 

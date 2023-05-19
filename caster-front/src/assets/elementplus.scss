@@ -6,12 +6,17 @@
 .debug-layout {
     font-size: 16px;
 
-    .el-collapse-item__header, .cell, .el-button, .is-link {
+    .el-collapse-item__header,
+    .cell,
+    .el-button,
+    .is-link {
         font-size: 16px;
+
         span {
             font-size: 16px !important;
         }
     }
+
     .el-table {
         --el-table-border: #{$lineThin} solid var(--el-table-border-color);
     }
@@ -51,7 +56,7 @@
     max-width: $cardMaxWidth;
     height: auto;
     max-height: calc(70vh - 4 * $mobilePadding);
-    // overflow-y: scroll;
+    overflow-y: scroll;
 
     .el-dialog__header {
         display: none
@@ -71,6 +76,12 @@
     .el-dialog__footer {
         padding: 0;
         margin-top: $spacingM;
+    }
+}
+
+.el-overlay-dialog {
+    .is-align-center {
+        transform: translateY(-5vh) !important;
     }
 }
 
