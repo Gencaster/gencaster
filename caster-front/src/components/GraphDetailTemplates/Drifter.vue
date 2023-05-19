@@ -69,13 +69,13 @@ const startStream = async () => {
 
 // @todo how to figure out if our subscription is finished?
 const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
-  {
-    name: "askGps",
-    description: "Can we ask for your position?",
-    key: "gps",
-    type: UserDataRequestType.Gps,
-    placeholder: ""
-  },
+  // {
+  //   name: "askGps",
+  //   description: "Can we ask for your position?",
+  //   key: "gps",
+  //   type: UserDataRequestType.Gps,
+  //   placeholder: ""
+  // },
   {
     name: "askName",
     description: "Please enter your name",
@@ -87,10 +87,9 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
 </script>
 
 <template>
-  <!-- this should not be default-graph! -->
   <div class="drifter-graph-detail">
-    <!-- <h1>Drifter</h1> -->
     <div v-loading="stale" class="graph-player">
+      <!-- error handling -->
       <div v-if="data?.streamInfo.__typename === 'NoStreamAvailable'">
         Sorry, no stream available. Come back later.
       </div>
@@ -101,6 +100,7 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
       </div>
       <div v-else>
         <Transition>
+          <!-- interface states -->
           <div v-if="drifterStatus === DrifterStatus.WaitForStart">
             <Intro
               :title="graph.displayName"
@@ -118,9 +118,6 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
                   @submitted="() => dialogsToShow.shift()"
                 />
               </div>
-              <div v-else>
-                <h1>Hello</h1>
-              </div>
             </Transition>
           </div>
           <div v-else-if="drifterStatus === DrifterStatus.ShowEndScreen">
@@ -129,6 +126,14 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
             />
           </div>
         </Transition>
+
+        <!-- plaer -->
+        <div v-if="data">
+          <Player
+            :stream-point="data.streamInfo.stream.streamPoint"
+            :stream="data.streamInfo.stream"
+          />
+        </div>
 
         <!-- audio visualizer -->
         <Transition>
@@ -147,15 +152,9 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
           </div>
         </Transition>
 
-        <div v-if="showDebug">
-          <Player
-            :stream-point="data.streamInfo.stream.streamPoint"
-            :stream="data.streamInfo.stream"
-          />
+        <div v-if="showDebug" class="debug-wrapper">
           <ElCollapse
-            v-if="showDebug"
             v-model="activeAccordionTab"
-            class="debug-info"
           >
             <ElCollapseItem title="Debug info" name="debug">
               <StreamInfo
@@ -185,12 +184,18 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
   padding-right: 24px;
   margin: 0 auto;
 }
-
-.debug-info {
-  margin-top: 25px;
-}
-
 .info {
   margin-bottom: $spacingXL;
+}
+
+.debug-wrapper {
+  width: 100%;
+  height: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+  position: fixed;
+  top: 120px;
+  left: 0px;
 }
 </style>

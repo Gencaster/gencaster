@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ElDialog } from "element-plus";
-import { type Ref, ref } from "vue";
 import type { UserDataRequest } from "@/models";
 import { UserDataRequestType } from "@/models";
 import GpsDialog from "@/components/Dialogs/GpsDialog.vue";
