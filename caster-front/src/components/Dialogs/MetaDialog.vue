@@ -4,7 +4,7 @@ import { type Ref, ref } from "vue";
 import type { UserDataRequest } from "@/models";
 import { UserDataRequestType } from "@/models";
 import GpsDialog from "@/components/Dialogs/GpsDialog.vue";
-import NameDialog from "@/components/Dialogs/NameDialog.vue";
+import StringDialog from "@/components/Dialogs/StringDialog.vue";
 import type { Scalars } from "@/graphql";
 
 defineProps<{
@@ -20,7 +20,7 @@ const emit = defineEmits<{
 <template>
   <div>
     <div>
-      <NameDialog
+      <StringDialog
         :stream-uuid="streamUuid"
         :request="request"
         @submitted="() => $emit('submitted')"
