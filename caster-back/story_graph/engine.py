@@ -8,6 +8,7 @@ import asyncio
 import logging
 import time
 from copy import deepcopy
+from datetime import datetime, timedelta
 from typing import Any, AsyncGenerator, Dict
 
 from asgiref.sync import sync_to_async
@@ -20,6 +21,10 @@ from .models import AudioCell, CellType, Graph, Node, ScriptCell
 log = logging.getLogger(__name__)
 
 
+class ScriptCellTimeout(Exception):
+    pass
+
+
 class Engine:
     """An engine executes a :class:`~story_graph.models.Graph` on a
     :class:`~stream.models.StreamPoint`, therefore
@@ -27,13 +32,16 @@ class Engine:
     This is written in a purely async manner so we can handle many streams at once.
     """
 
-    def __init__(self, graph: Graph, stream: Stream) -> None:
+    def __init__(
+        self, graph: Graph, stream: Stream, raise_exceptions: bool = False
+    ) -> None:
         self.graph: Graph = graph
         self.stream = stream
         self._current_node: Node
         self.blocking_time: int = 60 * 60 * 3
+        self.raise_exceptions = raise_exceptions
 
-    async def get_stream_variables(self) -> Dict:
+    async def get_stream_variables(self) -> Dict[str, str]:
         """Could be a @property but this can be difficult in async contexts
         so we use explicit async via a getter method.
         """
@@ -43,11 +51,22 @@ class Engine:
             v[stream_variable.key] = stream_variable.value
         return v
 
+    async def wait_for_stream_variable(
+        self, name: str, timeout: float = 100.0, update_speed: float = 0.5
+    ):
+        start_time = datetime.now()
+        while True:
+            if (datetime.now() - start_time).seconds > timeout:
+                raise ScriptCellTimeout()
+            if name in (await self.get_stream_variables()).keys():
+                break
+            await asyncio.sleep(update_speed)
+
     async def execute_markdown_code(self, cell_code: str):
         """Runs the code of a markdown cell by parsing its content with the
         :class:`~story_graph.markdown_parser.GencasterRenderer`.
         """
-        ssml_text = md_to_ssml(cell_code)
+        ssml_text = md_to_ssml(cell_code, await self.get_stream_variables())
         instruction = await sync_to_async(self.stream.stream_point.speak_on_stream)(
             ssml_text
         )
@@ -86,8 +105,10 @@ class Engine:
         old_stream_variables = deepcopy(stream_variables)
         loop = asyncio.get_running_loop()
         try:
+            loc: Dict = {}
             exec(
-                cell_code,
+                f"async def __ex(): "
+                + "".join(f"\n {l}" for l in cell_code.split("\n")),
                 {
                     "__builtins__": {
                         "asyncio": asyncio,
@@ -95,13 +116,21 @@ class Engine:
                         "loop": loop,
                         "print": print,
                         "time": time,
+                        "vars": stream_variables,
+                        "self": self,
+                        "datetime": datetime,
+                        "timedelta": timedelta,
+                        "get_stream_variables": self.get_stream_variables,
+                        "wait_for_stream_variable": self.wait_for_stream_variable,
                     }
                 },
-                stream_variables,
+                loc,
             )
+            await loc["__ex"]()
         except Exception as e:
-            print(f"Occured an exception during graph engine execution: {e}")
-            raise e
+            log.error(f"Occured an exception during graph engine execution: {e}")
+            if self.raise_exceptions:
+                raise e
 
         # @todo
         # * skip functions / only use scalars

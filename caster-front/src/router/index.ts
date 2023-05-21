@@ -17,11 +17,11 @@ const router = createRouter({
       component: DebugPlayer
     },
     {
-      path: "/listen/:graphName/",
+      path: "/listen/:graphSlug/",
       name: "graphPlayer",
       component: GraphDetail,
       props: route => ({
-        graphName: route.params.graphName,
+        graphSlug: route.params.graphSlug,
         fullView: false
       })
     }

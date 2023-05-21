@@ -42,8 +42,24 @@ export interface AddAudioFile {
  * The story graph is a core concept and can be edited with a native editor.
  */
 export interface AddGraphInput {
+  /** Text about the graph which can be accessed during a stream - only if this is set */
+  aboutText?: InputMaybe<Scalars["String"]>
+  /** Will be used as a display name in the frontend */
+  displayName: Scalars["String"]
+  /** Text which will be displayed at the end of a stream */
+  endText?: InputMaybe<Scalars["String"]>
   /** Name of the graph */
   name: Scalars["String"]
+  /** If the graph is not public it will not be listed in the frontend, yet it is still accessible via URL */
+  publicVisible?: InputMaybe<Scalars["Boolean"]>
+  /** Will be used as a URL */
+  slugName: Scalars["String"]
+  /** Text about the graph which will be displayed at the start of a stream - only if this is set */
+  startText?: InputMaybe<Scalars["String"]>
+  /** Manages the stream assignment for this graph */
+  streamAssignmentPolicy?: InputMaybe<Scalars["String"]>
+  /** Allows to switch to a different template in the frontend with different connection flows or UI */
+  templateName?: InputMaybe<GraphDetailTemplate>
 }
 
 /** AudioCell(uuid, playback, audio_file, volume) */
@@ -161,11 +177,29 @@ export interface EdgeInput {
  * The story graph is a core concept and can be edited with a native editor.
  */
 export interface Graph {
+  /** Text about the graph which can be accessed during a stream - only if this is set */
+  aboutText: Scalars["String"]
+  /** Will be used as a display name in the frontend */
+  displayName: Scalars["String"]
   edges: Array<Edge>
+  /** Text which will be displayed at the end of a stream */
+  endText: Scalars["String"]
   /** Name of the graph */
   name: Scalars["String"]
   nodes: Array<Node>
+  /** Will be used as a URL */
+  slugName: Scalars["String"]
+  /** Text about the graph which will be displayed at the start of a stream - only if this is set */
+  startText: Scalars["String"]
+  /** Allows to switch to a different template in the frontend with different connection flows or UI */
+  templateName: GraphDetailTemplate
   uuid: Scalars["UUID"]
+}
+
+/** An enumeration. */
+export enum GraphDetailTemplate {
+  Default = "DEFAULT",
+  Drifter = "DRIFTER"
 }
 
 /**
@@ -184,6 +218,8 @@ export interface Graph {
 export interface GraphFilter {
   /** Name of the graph */
   name?: InputMaybe<StrFilterLookup>
+  /** Will be used as a URL */
+  slugName?: InputMaybe<StrFilterLookup>
 }
 
 export interface IntFilterLookup {
@@ -525,7 +561,10 @@ export interface StreamPointFilter {
   uuid?: InputMaybe<UuidFilterLookup>
 }
 
-/** StreamVariable(uuid, created_date, modified_date, stream, key, value, stream_to_sc) */
+/**
+ * Allows to store variables in a stream session as a key/value pair.
+ * Due to database constraints we will store any value a string.
+ */
 export interface StreamVariable {
   key: Scalars["String"]
   stream: Stream
@@ -607,7 +646,13 @@ export type GetGraphsQueryVariables = Exact<{
   name?: InputMaybe<Scalars["String"]>
 }>;
 
-export interface GetGraphsQuery { graphs: Array<{ uuid: any; name: string }> }
+export interface GetGraphsQuery { graphs: Array<{ uuid: any; name: string; slugName: string; templateName: GraphDetailTemplate }> }
+
+export type GetGraphsMetaQueryVariables = Exact<{
+  slug: Scalars["String"]
+}>;
+
+export interface GetGraphsMetaQuery { graphs: Array<{ aboutText: string; displayName: string; endText: string; name: string; startText: string; templateName: GraphDetailTemplate; uuid: any; slugName: string }> }
 
 export type CreateEdgeMutationVariables = Exact<{
   nodeInUuid: Scalars["UUID"]
@@ -719,12 +764,32 @@ export const GetGraphsDocument = gql`
   graphs(filters: {name: {iContains: $name}}) {
     uuid
     name
+    slugName
+    templateName
   }
 }
     `;
 
 export function useGetGraphsQuery(options: Omit<Urql.UseQueryArgs<never, GetGraphsQueryVariables>, "query"> = {}) {
   return Urql.useQuery<GetGraphsQuery>({ query: GetGraphsDocument, ...options });
+}
+export const GetGraphsMetaDocument = gql`
+    query GetGraphsMeta($slug: String!) {
+  graphs(filters: {slugName: {exact: $slug}}) {
+    aboutText
+    displayName
+    endText
+    name
+    startText
+    templateName
+    uuid
+    slugName
+  }
+}
+    `;
+
+export function useGetGraphsMetaQuery(options: Omit<Urql.UseQueryArgs<never, GetGraphsMetaQueryVariables>, "query"> = {}) {
+  return Urql.useQuery<GetGraphsMetaQuery>({ query: GetGraphsMetaDocument, ...options });
 }
 export const CreateEdgeDocument = gql`
     mutation createEdge($nodeInUuid: UUID!, $nodeOutUuid: UUID!) {

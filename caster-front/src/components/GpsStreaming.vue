@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
 import { type Ref, ref, watch } from "vue";
+import { ElButton } from "element-plus";
 import { usePlayerStore } from "@/stores/Player";
 import type { Stream, StreamVariableInput } from "@/graphql";
 import { useSendStreamVariableMutation } from "@/graphql";
@@ -12,7 +13,7 @@ const props = withDefaults(defineProps<{
   showButton: false
 });
 
-const { streamGPS } = storeToRefs(usePlayerStore());
+const { streamGPS, gpsError, gpsSuccess } = storeToRefs(usePlayerStore());
 
 const sendStreamVariableMutation = useSendStreamVariableMutation();
 
@@ -22,7 +23,8 @@ const sendNull: Ref<boolean> = ref(false);
 const startStreaming = () => {
   console.log("Start GPS streaming");
 
-  navigator.geolocation.getCurrentPosition((position) => {
+  watcherId.value = navigator.geolocation.watchPosition((position) => {
+    gpsSuccess.value = true;
     console.log("New position ", position);
     const streamVariables: StreamVariableInput[] = [];
 
@@ -43,8 +45,9 @@ const startStreaming = () => {
 
     if (streamVariables.length > 0)
       sendStreamVariableMutation.executeMutation({ streamVariables });
-  }, () => {
+  }, (e) => {
     console.log("Could not successfully obtain GPS data");
+    gpsError.value = e;
   }, {
     enableHighAccuracy: true,
     maximumAge: Infinity
@@ -64,12 +67,12 @@ watch(streamGPS, () => {
 </script>
 
 <template>
-  <el-button
+  <ElButton
     v-if="showButton"
     class="button"
     type="warning"
     @click="() => streamGPS = !streamGPS"
   >
     {{ streamGPS ? "Disable" : "Activate" }} GPS streaming
-  </el-button>
+  </ElButton>
 </template>

@@ -29,46 +29,38 @@ const resetStreamPoint = () => {
 </script>
 
 <template>
-  <div class="debug-player">
-    <h4>Debug Player</h4>
-
-    <ElCollapse>
-      <ElCollapseItem title="Streaming points">
-        <StreamPoints
-          @selected-stream-point="(streamPoint) => selectedStreamPoint = streamPoint"
-        />
-        <ElButton
-          style="width: 100%; margin-top: 10px;"
-          @click="resetStreamPoint()"
-        >
-          Reset streaming point
-        </ElButton>
-      </ElCollapseItem>
-      <ElCollapseItem title="Player">
-        <div v-if="selectedStreamPoint">
-          <PlayerButtons
-            play-button
-            mic-button
-            gps-button
-          />
-          <Player
-            :stream-point="selectedStreamPoint"
-          />
-        </div>
-        <div v-else>
-          Please select a streaming point first
-        </div>
-      </ElCollapseItem>
-      <ElCollapseItem title="Debug info">
-        <div v-if="selectedStreamPoint">
-          <StreamInfo
-            :stream="streamInfo"
-          />
-        </div>
-        <div v-else>
-          <span>No stream selected</span>
-        </div>
-      </ElCollapseItem>
-    </ElCollapse>
+  <div class="debug-layout">
+    <ElContainer justify="center">
+      <ElMain>
+        <h1>Debug Player</h1>
+        <Transition>
+          <ElCollapse>
+            <ElCollapseItem title="Streaming points">
+              <StreamPoints @selected-stream-point="(streamPoint) => selectedStreamPoint = streamPoint" />
+              <ElButton style="width: 100%; margin-top: 10px;" @click="resetStreamPoint()">
+                Reset streaming point
+              </ElButton>
+            </ElCollapseItem>
+            <ElCollapseItem title="Player">
+              <div v-if="selectedStreamPoint">
+                <PlayerButtons play-button mic-button gps-button />
+                <Player :stream-point="selectedStreamPoint" />
+              </div>
+              <div v-else>
+                Please select a streaming point first
+              </div>
+            </ElCollapseItem>
+            <ElCollapseItem title="Debug info">
+              <div v-if="selectedStreamPoint">
+                <StreamInfo :stream="streamInfo" />
+              </div>
+              <div v-else>
+                <span>No stream selected</span>
+              </div>
+            </ElCollapseItem>
+          </ElCollapse>
+        </Transition>
+      </ElMain>
+    </ElContainer>
   </div>
 </template>

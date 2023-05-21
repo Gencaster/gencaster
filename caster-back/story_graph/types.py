@@ -20,6 +20,7 @@ from . import models
 # error: Cannot assign multiple types to name "CellType" without an explicit "Type[...]" annotation  [misc]
 CellType = strawberry.enum(models.CellType)  # type: ignore
 PlaybackType = strawberry.enum(models.AudioCell.PlaybackChoices)  # type: ignore
+TemplateType = strawberry.enum(models.Graph.GraphDetailTemplate)  # type: ignore
 
 
 @strawberry.input
@@ -49,12 +50,19 @@ class EdgeInput:
 @strawberry.django.filters.filter(models.Graph, lookups=True)
 class GraphFilter:
     name: auto
+    slug_name: auto
 
 
 @strawberry.django.type(models.Graph)
 class Graph:
     uuid: auto
     name: auto
+    display_name: auto
+    slug_name: auto
+    template_name: TemplateType
+    start_text: auto
+    about_text: auto
+    end_text: auto
     nodes: List["Node"]
 
     @strawberry.django.field
@@ -126,3 +134,11 @@ class ScriptCellInput:
 @strawberry.django.input(models.Graph)
 class AddGraphInput:
     name: auto
+    display_name: auto
+    slug_name: auto
+    start_text: auto
+    about_text: auto
+    end_text: auto
+    public_visible: auto
+    stream_assignment_policy: auto
+    template_name: TemplateType

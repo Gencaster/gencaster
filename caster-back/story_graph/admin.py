@@ -30,8 +30,18 @@ class GraphAdmin(admin.ModelAdmin):
     inlines = [NodeInline]
     list_display = [
         "name",
+        "display_name",
+        "slug_name",
         "uuid",
+        "public_visible",
     ]
+
+    prepopulated_fields = {
+        "slug_name": ["name"],
+        "display_name": ["name"],
+    }
+
+    list_filter = ["public_visible"]
 
 
 @admin.register(Node)
