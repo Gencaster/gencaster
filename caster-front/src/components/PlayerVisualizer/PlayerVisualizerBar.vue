@@ -26,7 +26,10 @@ const cssValue = computed((): string => {
 </script>
 
 <template>
-  <div :style="cssValue" class="bar" />
+  <div
+    :style="cssValue"
+    class="bar"
+  />
 </template>
 
 <style lang="scss" scoped>

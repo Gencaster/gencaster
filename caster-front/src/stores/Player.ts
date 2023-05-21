@@ -30,6 +30,6 @@ export const usePlayerStore = defineStore("player", () => {
     startingTimestamp,
     playerState,
     gpsError,
-    gpsSuccess
+    gpsSuccess,
   };
 });

@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { ElButton, ElContainer, ElHeader, ElMain } from "element-plus";
 import MarkdownIt from "markdown-it";
-import Content from "@/components/Content.vue";
+import Content from "@/components/ContentParser.vue";
 
 const props = defineProps<{
   text: string
@@ -22,14 +22,22 @@ const description = computed<string>(() => {
   <div>
     <ElContainer class="info-screen">
       <ElHeader class="header">
-        <ElButton class="caps" size="default" text @click="emit('clicked-close')">
+        <ElButton
+          class="caps"
+          size="default"
+          text
+          @click="emit('clicked-close')"
+        >
           <span>
             Schließen
           </span>
         </ElButton>
       </ElHeader>
       <ElMain>
-        <Content :text="description" class="content" />
+        <Content
+          :text="description"
+          class="content"
+        />
       </ElMain>
     </ElContainer>
   </div>
@@ -60,7 +68,7 @@ const description = computed<string>(() => {
   margin-bottom: $spacingM;
 }
 
-:deep(.text) > :first-child {
+:deep(.text)> :first-child {
   margin-top: 0;
 }
 

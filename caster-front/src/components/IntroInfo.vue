@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { ElContainer, ElMain } from "element-plus";
 import MarkdownIt from "markdown-it";
-import Content from "@/components/Content.vue";
+import Content from "@/components/ContentParser.vue";
 
 const props = defineProps<{
   text: string
@@ -18,7 +18,10 @@ const description = computed<string>(() => {
   <div>
     <ElContainer class="intro-info-screen">
       <ElMain>
-        <Content :text="description" class="content" />
+        <Content
+          :text="description"
+          class="content"
+        />
       </ElMain>
     </ElContainer>
   </div>

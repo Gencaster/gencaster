@@ -14,14 +14,21 @@ const { data, fetching } = useGetGraphsQuery();
         <h1>Alle Graphen</h1>
         <Transition>
           <ElTable
-            v-if="data" v-loading="fetching" :data="data?.graphs"
+            v-if="data"
+            v-loading="fetching"
+            :data="data?.graphs"
             :default-sort="{ prop: 'name', order: 'ascending' }"
           >
-            <ElTableColumn label="Titel" sortable prop="name">
+            <ElTableColumn
+              label="Titel"
+              sortable
+              prop="name"
+            >
               <template #default="scope">
                 <ElButton
-                  link size="small"
-                  @click.prevent="$router.push({ name: 'graphPlayer', params: { graphSlug: scope.row.slugName } })"
+                  link
+                  size="small"
+                  @click.prevent="router.push({ name: 'graphPlayer', params: { graphSlug: scope.row.slugName } })"
                 >
                   {{ scope.row.name }}
                 </ElButton>

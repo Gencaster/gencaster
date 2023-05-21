@@ -21,6 +21,7 @@ const description = computed<string>(() => {
 </script>
 
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <div class="fullscreen-wrapper-relative">
     <ElCard class="title-card">
       <template #header>
@@ -30,9 +31,17 @@ const description = computed<string>(() => {
           </h1>
         </div>
       </template>
-      <p class="description" v-html="description" />
+      <p
+        class="description"
+        v-html="description"
+      />
       <div class="button-wrapper">
-        <ElButton class="caps green" size="large" type="default" @click="emit('buttonClicked')">
+        <ElButton
+          class="caps green"
+          size="large"
+          type="default"
+          @click="emit('buttonClicked')"
+        >
           {{ buttonText }}
         </ElButton>
       </div>

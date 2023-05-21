@@ -21,13 +21,13 @@ const emit = defineEmits<{
       <StringDialog
         :stream-uuid="streamUuid"
         :request="request"
-        @submitted="() => $emit('submitted')"
+        @submitted="() => emit('submitted')"
       />
     </div>
     <div v-if="request.type === UserDataRequestType.Gps">
       <GpsDialog
         :request="request"
-        @submitted="() => $emit('submitted')"
+        @submitted="() => emit('submitted')"
       />
     </div>
   </div>

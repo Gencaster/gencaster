@@ -18,7 +18,8 @@ const props = withDefaults(defineProps<{
   showPlayer: false,
   showRawControls: false,
   showPlayerInfo: false,
-  showGpsStreaming: false
+  showGpsStreaming: false,
+  stream: undefined,
 });
 
 const { micActive, play, streamGPS } = storeToRefs(usePlayerStore());
@@ -52,8 +53,8 @@ const switchAudioBridgeRoom = (roomId: number) => {
   audioBridge.send({
     message: {
       request: audioBridgeConnected.value ? "changeroom" : "join",
-      room: roomId
-    }
+      room: roomId,
+    },
   });
   audioBridgeConnected.value = true;
 };
@@ -66,20 +67,20 @@ const makeJanusMicOffer = () => {
         // Make sure that our offer contains stereo too
         jsep.sdp = jsep.sdp.replace(
           "useinbandfec=1",
-          "useinbandfec=1;stereo=1"
+          "useinbandfec=1;stereo=1",
         );
       }
     },
     success(jsep: any) {
       const publish = {
         request: "configure",
-        muted: false
+        muted: false,
       };
       audioBridge.send({ message: publish, jsep });
     },
     error(error: any) {
       Janus.error(`WebRTC error: ${error}`);
-    }
+    },
   });
 };
 
@@ -107,7 +108,7 @@ const setupJanusAudioBridge = () => {
       }
       if (jsep)
         audioBridge.handleRemoteJsep({ jsep });
-    }
+    },
   });
 };
 
@@ -116,31 +117,31 @@ const switchStream = (streamId: number) => {
     message: {
       // on first connection we need to use the watch endpoint
       request: streamingConnected.value ? "switch" : "watch",
-      id: streamId
-    }
+      id: streamId,
+    },
   });
   streamingConnected.value = true;
 };
 
-const getJanusStreamPoints = () => {
-  /* Legacy function which queries janus directly
-  for all streaming channels.
-  This may be interesting when using Gencaster without backend
-  as in its current state the backend is responsible to assign
-  a stream point to a user.
-  */
-  streaming.send({
-    message: { request: "list" },
-    success(result: any) {
-      if (!result) {
-        console.log("Got no response to our query for available streams");
-        return;
-      }
-      if (result.list)
-        console.log("Got a list of available streams", result.list);
-    }
-  });
-};
+// const getJanusStreamPoints = () => {
+//   /* Legacy function which queries janus directly
+//   for all streaming channels.
+//   This may be interesting when using Gencaster without backend
+//   as in its current state the backend is responsible to assign
+//   a stream point to a user.
+//   */
+//   streaming.send({
+//     message: { request: "list" },
+//     success(result: any) {
+//       if (!result) {
+//         console.log("Got no response to our query for available streams");
+//         return;
+//       }
+//       if (result.list)
+//         console.log("Got a list of available streams", result.list);
+//     }
+//   });
+// };
 
 const setupJanusStreaming = () => {
   console.log("Setup streaming");
@@ -168,13 +169,12 @@ const setupJanusStreaming = () => {
           // We want recvonly audio/video and, if negotiated, datachannels
           media: { audioSend: false, videoSend: false, data: true },
           customizeSdp(jsep: RTCSessionDescription) {
-            // eslint-disable-next-line unicorn/prefer-includes
             if (jsep.sdp.indexOf("stereo=1") === -1) {
               // Make sure that our offer contains stereo too
               // @ts-expect-error: sdp seems readonly but we ignore it
               jsep.sdp = jsep.sdp.replace(
                 "useinbandfec=1",
-                "useinbandfec=1;stereo=1"
+                "useinbandfec=1;stereo=1",
               );
             }
           },
@@ -184,7 +184,7 @@ const setupJanusStreaming = () => {
           },
           error(error: any) {
             console.error("WebRTC error:", error);
-          }
+          },
         });
       }
     },
@@ -195,7 +195,7 @@ const setupJanusStreaming = () => {
     },
     oncleanup() {
       console.log(" ::: Got a cleanup notification :::");
-    }
+    },
   });
 };
 
@@ -217,9 +217,9 @@ const initJanus = () => {
         },
         error: (error: any) => {
           console.log(error);
-        }
+        },
       });
-    }
+    },
   });
 };
 
@@ -227,8 +227,8 @@ const stopMicStreaming = () => {
   console.log("Stop mic streaming");
   audioBridge.send({
     message: {
-      request: "leave"
-    }
+      request: "leave",
+    },
   });
 };
 
@@ -236,8 +236,8 @@ const stopStreaming = () => {
   console.log("Stop streaming");
   streaming.send({
     message: {
-      request: "stop"
-    }
+      request: "stop",
+    },
   });
 };
 
@@ -291,13 +291,26 @@ watch(play, (playState) => {
 
 <template>
   <div>
-    <audio ref="audioPlayer" controls :hidden="showPlayer ? false : true" />
+    <audio
+      ref="audioPlayer"
+      controls
+      :hidden="showPlayer ? false : true"
+    />
 
-    <div v-if="showRawControls" class="player-control">
-      <button :disabled="streamPoint === null" @click="() => { play = true }">
+    <div
+      v-if="showRawControls"
+      class="player-control"
+    >
+      <button
+        :disabled="streamPoint === null"
+        @click="() => { play = true }"
+      >
         Play
       </button>
-      <button :disabled="streamPoint === null" @click="() => { play = false }">
+      <button
+        :disabled="streamPoint === null"
+        @click="() => { play = false }"
+      >
         Pause
       </button>
       <button @click="() => { micActive = !micActive }">
@@ -312,10 +325,14 @@ watch(play, (playState) => {
       GPS works only on a Gencaster stream
     </div>
 
-    <div v-if="showPlayerInfo" class="player-info">
+    <div
+      v-if="showPlayerInfo"
+      class="player-info"
+    >
       <ElDescriptions
         title="Player info"
-        :column="1" border
+        :column="1"
+        border
       >
         <ElDescriptionsItem label="SuperCollider port">
           {{ streamPoint.port }}

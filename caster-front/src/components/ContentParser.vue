@@ -1,3 +1,5 @@
+
+
 <script setup lang="ts">
 defineProps<{
   text: string
@@ -5,8 +7,12 @@ defineProps<{
 </script>
 
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <div class="content-screen">
-    <div class="text" v-html="text" />
+    <div
+      class="text"
+      v-html="text"
+    />
   </div>
 </template>
 

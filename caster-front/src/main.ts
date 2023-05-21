@@ -16,14 +16,14 @@ app.use(urql, {
   url: `${import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081"}/graphql`,
   requestPolicy: "network-only",
   fetchOptions: {
-    credentials: "include"
+    credentials: "include",
   },
   exchanges: [
     fetchExchange,
     subscriptionExchange({
-      forwardSubscription: operation => new SubscriptionClient((`${import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081"}/graphql`).replace("https", "wss").replace("http", "ws"), { reconnect: true }).request(operation)
-    })
-  ]
+      forwardSubscription: operation => new SubscriptionClient((`${import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081"}/graphql`).replace("https", "wss").replace("http", "ws"), { reconnect: true }).request(operation),
+    }),
+  ],
 });
 app.use(createPinia());
 app.use(router);

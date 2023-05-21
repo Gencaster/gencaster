@@ -16,7 +16,10 @@ const { play, micActive, streamGPS } = storeToRefs(usePlayerStore());
 
 <template>
   <div class="stream-info">
-    <ElDescriptions :column="1" border>
+    <ElDescriptions
+      :column="1"
+      border
+    >
       <ElDescriptionsItem label="Stream UUID">
         {{ stream?.uuid }}
       </ElDescriptionsItem>

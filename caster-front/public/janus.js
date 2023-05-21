@@ -380,7 +380,7 @@ function Janus(gatewayCallbacks) {
 				}
 				eventHandler();
 			},
-			dataType: "json"
+			dataType: "json",
 		});
 	}
 
@@ -647,7 +647,7 @@ function Janus(gatewayCallbacks) {
 					connected = false;
 					// FIXME What if this is called when the page is closed?
 					gatewayCallbacks.error("Lost connection to the gateway (is it down?)");
-				}
+				},
 			};
 
 			for(var eventName in wsHandlers) {
@@ -696,7 +696,7 @@ function Janus(gatewayCallbacks) {
 				else
 					callbacks.error(textStatus + ": " + errorThrown);
 			},
-			dataType: "json"
+			dataType: "json",
 		});
 	}
 
@@ -788,7 +788,7 @@ function Janus(gatewayCallbacks) {
 				callbacks.success();
 				gatewayCallbacks.destroyed();
 			},
-			dataType: "json"
+			dataType: "json",
 		});
 	}
 
@@ -862,7 +862,7 @@ function Janus(gatewayCallbacks) {
 							sdpSent : false,
 							volume : {
 								value : null,
-								timer : null
+								timer : null,
 							},
 							bitrate : {
 								value : null,
@@ -870,8 +870,8 @@ function Janus(gatewayCallbacks) {
 								bsbefore : null,
 								tsnow : null,
 								tsbefore : null,
-								timer : null
-							}
+								timer : null,
+							},
 						},
 						getId : function() { return handleId; },
 						getPlugin : function() { return plugin; },
@@ -902,7 +902,7 @@ function Janus(gatewayCallbacks) {
 						oncleanup : callbacks.oncleanup,
 						ondetached : callbacks.ondetached,
 						hangup : function(sendRequest) { cleanupWebrtc(handleId, sendRequest === true); },
-						detach : function(callbacks) { destroyHandle(handleId, callbacks); }
+						detach : function(callbacks) { destroyHandle(handleId, callbacks); },
 					}
 				pluginHandles[handleId] = pluginHandle;
 				callbacks.success(pluginHandle);
@@ -947,7 +947,7 @@ function Janus(gatewayCallbacks) {
 							sdpSent : false,
 							volume : {
 								value : null,
-								timer : null
+								timer : null,
 							},
 							bitrate : {
 								value : null,
@@ -955,8 +955,8 @@ function Janus(gatewayCallbacks) {
 								bsbefore : null,
 								tsnow : null,
 								tsbefore : null,
-								timer : null
-							}
+								timer : null,
+							},
 						},
 						getId : function() { return handleId; },
 						getPlugin : function() { return plugin; },
@@ -987,7 +987,7 @@ function Janus(gatewayCallbacks) {
 						oncleanup : callbacks.oncleanup,
 						ondetached : callbacks.ondetached,
 						hangup : function(sendRequest) { cleanupWebrtc(handleId, sendRequest === true); },
-						detach : function(callbacks) { destroyHandle(handleId, callbacks); }
+						detach : function(callbacks) { destroyHandle(handleId, callbacks); },
 					}
 				pluginHandles[handleId] = pluginHandle;
 				callbacks.success(pluginHandle);
@@ -995,7 +995,7 @@ function Janus(gatewayCallbacks) {
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				Janus.error(textStatus + ": " + errorThrown);	// FIXME
 			},
-			dataType: "json"
+			dataType: "json",
 		});
 	}
 
@@ -1098,7 +1098,7 @@ function Janus(gatewayCallbacks) {
 				Janus.error(textStatus + ": " + errorThrown);	// FIXME
 				callbacks.error(textStatus + ": " + errorThrown);
 			},
-			dataType: "json"
+			dataType: "json",
 		});
 	}
 
@@ -1139,7 +1139,7 @@ function Janus(gatewayCallbacks) {
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				Janus.error(textStatus + ": " + errorThrown);	// FIXME
 			},
-			dataType: "json"
+			dataType: "json",
 		});
 	}
 
@@ -1276,7 +1276,7 @@ function Janus(gatewayCallbacks) {
 				delete pluginHandles[handleId];
 				callbacks.success();
 			},
-			dataType: "json"
+			dataType: "json",
 		});
 	}
 
@@ -1295,7 +1295,7 @@ function Janus(gatewayCallbacks) {
 		var pc_config = {"iceServers": iceServers, "iceTransportPolicy": iceTransportPolicy};
 		//~ var pc_constraints = {'mandatory': {'MozDontOfferDataChannel':true}};
 		var pc_constraints = {
-			"optional": [{"DtlsSrtpKeyAgreement": true}]
+			"optional": [{"DtlsSrtpKeyAgreement": true}],
 		};
 		if(ipv6Support === true) {
 			// FIXME This is only supported in Chrome right now
@@ -1337,7 +1337,7 @@ function Janus(gatewayCallbacks) {
 				var candidate = {
 					"candidate": event.candidate.candidate,
 					"sdpMid": event.candidate.sdpMid,
-					"sdpMLineIndex": event.candidate.sdpMLineIndex
+					"sdpMLineIndex": event.candidate.sdpMLineIndex,
 				};
 				if(config.trickle === true) {
 					// Send candidate
@@ -1505,14 +1505,14 @@ function Janus(gatewayCallbacks) {
 							videoSupport = {
 								'require': ['height', 'width'],
 								'height': {'max': maxHeight, 'min': height},
-								'width':  {'max': width,  'min': width}
+								'width':  {'max': width,  'min': width},
 							};
 						} else {
 							// http://stackoverflow.com/questions/28282385/webrtc-firefox-constraints/28911694#28911694
 							// https://github.com/meetecho/janus-gateway/pull/246
 							videoSupport = {
 								'height': {'ideal': height},
-								'width':  {'ideal': width}
+								'width':  {'ideal': width},
 							};
 						}
 					} else {
@@ -1521,9 +1521,9 @@ function Janus(gatewayCallbacks) {
 						        'maxHeight': maxHeight,
 						        'minHeight': height,
 						        'maxWidth':  width,
-						        'minWidth':  width
+						        'minWidth':  width,
 						    },
-						    'optional': []
+						    'optional': [],
 						};
 					}
 					if(typeof media.video === 'object') {
@@ -1585,10 +1585,10 @@ function Janus(gatewayCallbacks) {
 										maxHeight: window.screen.height,
 										minFrameRate: media.screenshareFrameRate,
 										maxFrameRate: media.screenshareFrameRate,
-										chromeMediaSource: 'screen'
-									}
+										chromeMediaSource: 'screen',
+									},
 								},
-								audio: isAudioSendEnabled(media)
+								audio: isAudioSendEnabled(media),
 							};
 							getScreenMedia(constraints, callbackUserMedia);
 						} else {
@@ -1610,9 +1610,9 @@ function Janus(gatewayCallbacks) {
 							constraints = {
 								video: {
 									mozMediaSource: media.video,
-									mediaSource: media.video
+									mediaSource: media.video,
 								},
-								audio: isAudioSendEnabled(media)
+								audio: isAudioSendEnabled(media),
 							};
 							getScreenMedia(constraints, function (err, stream) {
 								callbackUserMedia(err, stream);
@@ -1669,9 +1669,9 @@ function Janus(gatewayCallbacks) {
 										},
 										optional: [
 											{googLeakyBucket: true},
-											{googTemporalLayeredScreencast: true}
-										]
-									}
+											{googTemporalLayeredScreencast: true},
+										],
+									},
 								};
 								constraints.video.mandatory.chromeMediaSourceId = event.data.sourceId;
 								getScreenMedia(constraints, callback, isAudioSendEnabled(media));
@@ -1732,9 +1732,9 @@ function Janus(gatewayCallbacks) {
                             noiseSuppression: false,
                             sampleRate: 48000,
                             sampleSize: 16,
-                            volume: 1.0
+                            volume: 1.0,
                           } : false,
-						video: videoExist ? videoSupport : false
+						video: videoExist ? videoSupport : false,
 					})
 					.then(function(stream) { pluginHandle.consentDialog(false); streamsDone(handleId, jsep, media, callbacks, stream); })
 					.catch(function(error) { pluginHandle.consentDialog(false); callbacks.error({code: error.code, name: error.name, message: error.message}); });
@@ -1802,14 +1802,14 @@ function Janus(gatewayCallbacks) {
 		if(adapter.browserDetails.browser == "firefox" || adapter.browserDetails.browser == "edge") {
 			mediaConstraints = {
 				'offerToReceiveAudio':isAudioRecvEnabled(media),
-				'offerToReceiveVideo':isVideoRecvEnabled(media)
+				'offerToReceiveVideo':isVideoRecvEnabled(media),
 			};
 		} else {
 			mediaConstraints = {
 				'mandatory': {
 					'OfferToReceiveAudio':isAudioRecvEnabled(media),
-					'OfferToReceiveVideo':isVideoRecvEnabled(media)
-				}
+					'OfferToReceiveVideo':isVideoRecvEnabled(media),
+				},
 			};
 		}
 		Janus.debug(mediaConstraints);
@@ -1837,7 +1837,7 @@ function Janus(gatewayCallbacks) {
 				// See https://code.google.com/p/chromium/issues/detail?id=467366
 				var jsep = {
 					"type": offer.type,
-					"sdp": offer.sdp
+					"sdp": offer.sdp,
 				};
 				callbacks.success(jsep);
 			}, callbacks.error, mediaConstraints);
@@ -1860,14 +1860,14 @@ function Janus(gatewayCallbacks) {
 		if(adapter.browserDetails.browser == "firefox" || adapter.browserDetails.browser == "edge") {
 			mediaConstraints = {
 				'offerToReceiveAudio':isAudioRecvEnabled(media),
-				'offerToReceiveVideo':isVideoRecvEnabled(media)
+				'offerToReceiveVideo':isVideoRecvEnabled(media),
 			};
 		} else {
 			mediaConstraints = {
 				'mandatory': {
 					'OfferToReceiveAudio':isAudioRecvEnabled(media),
-					'OfferToReceiveVideo':isVideoRecvEnabled(media)
-				}
+					'OfferToReceiveVideo':isVideoRecvEnabled(media),
+				},
 			};
 		}
 		Janus.debug(mediaConstraints);
@@ -1893,7 +1893,7 @@ function Janus(gatewayCallbacks) {
 				// See https://code.google.com/p/chromium/issues/detail?id=467366
 				var jsep = {
 					"type": answer.type,
-					"sdp": answer.sdp
+					"sdp": answer.sdp,
 				};
 				callbacks.success(jsep);
 			}, callbacks.error, mediaConstraints);
@@ -1917,7 +1917,7 @@ function Janus(gatewayCallbacks) {
 		}
 		config.mySdp = {
 			"type": config.pc.localDescription.type,
-			"sdp": config.pc.localDescription.sdp
+			"sdp": config.pc.localDescription.sdp,
 		};
 		if(config.sdpSent) {
 			Janus.log("Offer/Answer SDP already sent, not sending it again");
@@ -2175,7 +2175,7 @@ function Janus(gatewayCallbacks) {
 						cache: false,
 						contentType: "application/json",
 						data: JSON.stringify(request),
-						dataType: "json"
+						dataType: "json",
 					});
 				}
 			}

@@ -6,7 +6,7 @@ import StreamInfo from "./StreamInfo.vue";
 import StreamPoints from "@/components/StreamPoints.vue";
 import type { StreamPoint } from "@/graphql";
 import PlayerButtons from "@/components/PlayerButtons.vue";
-import Player from "@/components/Player.vue";
+import Player from "@/components/PlayerComponent.vue";
 import { usePlayerStore } from "@/stores/Player";
 
 const selectedStreamPoint: Ref<StreamPoint | undefined> = ref();
@@ -16,7 +16,7 @@ const { micActive, streamGPS, play } = storeToRefs(usePlayerStore());
 const streamInfo = computed(() => {
   return {
     uuid: "",
-    streamPoint: selectedStreamPoint.value
+    streamPoint: selectedStreamPoint.value,
   };
 });
 
@@ -37,13 +37,20 @@ const resetStreamPoint = () => {
           <ElCollapse>
             <ElCollapseItem title="Streaming points">
               <StreamPoints @selected-stream-point="(streamPoint) => selectedStreamPoint = streamPoint" />
-              <ElButton style="width: 100%; margin-top: 10px;" @click="resetStreamPoint()">
+              <ElButton
+                style="width: 100%; margin-top: 10px;"
+                @click="resetStreamPoint()"
+              >
                 Reset streaming point
               </ElButton>
             </ElCollapseItem>
             <ElCollapseItem title="Player">
               <div v-if="selectedStreamPoint">
-                <PlayerButtons play-button mic-button gps-button />
+                <PlayerButtons
+                  play-button
+                  mic-button
+                  gps-button
+                />
                 <Player :stream-point="selectedStreamPoint" />
               </div>
               <div v-else>
