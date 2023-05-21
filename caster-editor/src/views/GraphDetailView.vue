@@ -18,12 +18,12 @@ const graphSubscription = useGraphSubscription({
   variables: {
     uuid: route.params.uuid,
   },
-  pause: route.params.uuid === undefined
+  pause: route.params.uuid === undefined,
 });
 
 const nodeSubscription = useNodeSubscription({
   variables: {
-    uuid: computed(() => {console.log(`New uuid is ${selectedNodeUUIDs.value}`); return selectedNodeUUIDs.value[0]})
+    uuid: computed(() => {console.log(`New uuid is ${selectedNodeUUIDs.value}`); return selectedNodeUUIDs.value[0]}),
   },
   pause: computed(() => selectedNodeUUIDs.value.length==0 && scriptCellsModified.value),
 });
@@ -44,7 +44,7 @@ const nodeData = computed<NodeSubscription['node'] | undefined>({
       nodeSubscription.data.value.node = value;
     }
     return value;
-  }
+  },
 });
 
 const scriptCellMutation = useCreateUpdateScriptCellsMutation();
@@ -69,8 +69,8 @@ const saveNode = async () => {
         'uuid': domCell.audioCell.uuid,
         'playback': domCell.audioCell.playback,
         'audioFile': {
-          'uuid': domCell.audioCell.audioFile.uuid
-        }
+          'uuid': domCell.audioCell.audioFile.uuid,
+        },
       }
     }
     return input;
@@ -78,7 +78,7 @@ const saveNode = async () => {
 
   const {error} = await scriptCellMutation.executeMutation({
     nodeUuid: nodeData.value.uuid,
-    scriptCellInputs: scriptCellInputs
+    scriptCellInputs: scriptCellInputs,
   });
 
   if(error) {

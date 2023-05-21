@@ -40,7 +40,7 @@ const doSubmit = async() => {
     name: form.name ?? (Math.random() + 1).toString(36).substring(7),
     description: form.description ?? "",
     fileName: fileList.value[0].name,
-    file: fileList.value[0].raw as File
+    file: fileList.value[0].raw as File,
   };
 
   const { data, error } = await audioFileUpload.executeMutation({addAudioFile: audioUpload});

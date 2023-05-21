@@ -128,7 +128,7 @@ const audioCellData = computed<AudioScriptCellData['audioCell']>({
     console.log('current audio cell internal', value);
     emit('update:audioCell', value);
     return value;
-  }
+  },
 });
 
 const textData = computed<string>({
@@ -138,7 +138,7 @@ const textData = computed<string>({
   set(value) {
     emit('update:text', value);
     return value;
-  }
+  },
 });
 
 // State

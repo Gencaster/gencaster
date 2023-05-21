@@ -143,7 +143,7 @@ const eventHandlers: GraphEventHandlers = {
     for (const p in dragEvent) {
 
       const draggedNode = props.graph.nodes.find(
-        (x) => x.uuid === p
+        (x) => x.uuid === p,
       );
       if (draggedNode === undefined) {
         console.log(`Dragged unknown node ${p}`);

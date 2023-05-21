@@ -58,7 +58,7 @@ const createNode = async () => {
     color: "primary",
     positionX,
     positionY,
-    graphUuid: props.graph.uuid
+    graphUuid: props.graph.uuid,
   });
   if(error) {
     alert(`Could not create node: ${error.message}`)

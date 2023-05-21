@@ -56,7 +56,7 @@ const scriptText = computed<string>({
   set(value) {
     emit('update:text', value);
     return value;
-  }
+  },
 });
 
 const emitCodemirror = (eventType?: string) => {

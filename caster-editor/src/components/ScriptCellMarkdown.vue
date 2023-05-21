@@ -46,7 +46,7 @@ const scriptCellText = computed<string>({
   set(value) {
       emit('update:text', value);
       return value;
-  }
+  },
 });
 
 onMounted(() => {

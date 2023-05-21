@@ -48,7 +48,7 @@ const moveableScriptCells = computed<NodeSubscription['node']['scriptCells']>({
         scriptCellsModified.value = true;
         emit('update:scriptCells', value)
         return value;
-    }
+    },
 });
 
 </script>

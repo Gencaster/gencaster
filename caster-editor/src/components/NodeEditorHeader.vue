@@ -99,7 +99,7 @@ const addScriptCell = async (cellType: CellType) => {
       scriptCellInputs: [{
         cellType: cellType,
         cellCode: '',
-      }]
+      }],
     });
     if(error) {
       ElMessage.error(`Error on creating script cell: ${error.message}`);
@@ -112,13 +112,13 @@ const createAudioCell = async (audioFile: Pick<AudioFile, 'uuid'>) => {
     scriptCellInputs: [{
       audioCell: {
         audioFile: {
-          uuid: audioFile.uuid
+          uuid: audioFile.uuid,
         },
         playback: PlaybackChoices.AsyncPlayback,
       },
       cellCode: '',
       cellType: CellType.Audio,
-    }]
+    }],
   });
   if(error) {
     alert(`Error on creating audio cell: ${error.message}`)

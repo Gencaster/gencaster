@@ -85,7 +85,7 @@ const scriptCellText = computed<string>({
     newCell.cellCode = value;
     emit('update:scriptCell', newCell);
     return value;
-  }
+  },
 });
 
 // const sriptCellAudioCell = computed<ScriptCellData['audioCell']>({
@@ -111,7 +111,7 @@ const displayError = async(message: string) => {
 const deleteScriptCellMutation = useDeleteScriptCellMutation();
 const deleteScriptCell = async (uuid: Scalars['UUID']) => {
   const {error} = await deleteScriptCellMutation.executeMutation({
-    scriptCellUuid: uuid
+    scriptCellUuid: uuid,
   });
   if(error) {
     displayError(error.message);

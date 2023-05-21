@@ -49,7 +49,7 @@ const udpateNodeMutation = useUpdateNodeMutation();
 const renameNode = async () => {
     const { error } = await udpateNodeMutation.executeMutation({
         name: newName.value,
-        nodeUuid: props.node.uuid
+        nodeUuid: props.node.uuid,
     });
     if(error) {
         alert(`Could not rename node: ${error.message}`)

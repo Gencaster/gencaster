@@ -13,7 +13,7 @@ watch(error, (e) => {
       closeOnClickModal: false,
       closeOnPressEscape: false,
       showClose: false,
-      showConfirmButton: false
+      showConfirmButton: false,
     });
   }
 });
