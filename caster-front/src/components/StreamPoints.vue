@@ -17,11 +17,26 @@ const { data, fetching } = useStreamPointsQuery();
     style="width: 100%"
     :default-sort="{ prop: 'port', order: 'ascending' }"
   >
-    <ElTableColumn prop="port" label="Port" />
-    <ElTableColumn prop="janusInRoom" label="In room" />
-    <ElTableColumn prop="janusOutRoom" label="Out room" />
-    <ElTableColumn prop="uuid" label="UUID" />
-    <ElTableColumn fixed="right" label="Actions">
+    <ElTableColumn
+      prop="port"
+      label="Port"
+    />
+    <ElTableColumn
+      prop="janusInRoom"
+      label="In room"
+    />
+    <ElTableColumn
+      prop="janusOutRoom"
+      label="Out room"
+    />
+    <ElTableColumn
+      prop="uuid"
+      label="UUID"
+    />
+    <ElTableColumn
+      fixed="right"
+      label="Actions"
+    >
       <template #default="scope">
         <ElButton
           link

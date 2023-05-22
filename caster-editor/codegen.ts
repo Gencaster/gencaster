@@ -12,7 +12,7 @@ const config: CodegenConfig = {
             overwrite: true,
             schema: '../caster-back/schema.gql',
             config: {
-                skipTypename: true
+                skipTypename: true,
             },
         },
     },

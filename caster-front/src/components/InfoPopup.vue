@@ -5,8 +5,12 @@ defineProps<{
 </script>
 
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <div class="info-popup">
-    <div class="text" v-html="text" />
+    <div
+      class="text"
+      v-html="text"
+    />
   </div>
 </template>
 

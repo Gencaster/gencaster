@@ -25,14 +25,14 @@ const rules = reactive<FormRules>({
 });
 
 const submitUpload = async () => {
-  if (!formRef.value) return
+  if (!formRef.value) return;
   await formRef.value.validate((valid) => {
     if (valid) {
       doSubmit();
     } else {
       ElMessage.error("Input is missing");
     }
-  })
+  });
 };
 
 const doSubmit = async() => {
@@ -40,7 +40,7 @@ const doSubmit = async() => {
     name: form.name ?? (Math.random() + 1).toString(36).substring(7),
     description: form.description ?? "",
     fileName: fileList.value[0].name,
-    file: fileList.value[0].raw as File
+    file: fileList.value[0].raw as File,
   };
 
   const { data, error } = await audioFileUpload.executeMutation({addAudioFile: audioUpload});
@@ -55,7 +55,7 @@ const doSubmit = async() => {
     form.description = undefined;
     form.name = undefined;
   }
-}
+};
 </script>
 
 <template>

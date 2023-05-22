@@ -48,6 +48,6 @@ const exitGraph = () => {
     router.push({
         path: "/graph",
     });
-}
+};
 
 </script>

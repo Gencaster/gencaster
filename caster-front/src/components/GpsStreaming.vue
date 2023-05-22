@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<{
   showButton?: boolean
   stream: Pick<Stream, "uuid">
 }>(), {
-  showButton: false
+  showButton: false,
 });
 
 const { streamGPS, gpsError, gpsSuccess } = storeToRefs(usePlayerStore());
@@ -39,7 +39,7 @@ const startStreaming = () => {
         streamUuid: props.stream.uuid,
         key: k,
         value: String(v),
-        streamToSc: !isNaN(v)
+        streamToSc: !isNaN(v),
       });
     });
 
@@ -50,7 +50,7 @@ const startStreaming = () => {
     gpsError.value = e;
   }, {
     enableHighAccuracy: true,
-    maximumAge: Infinity
+    maximumAge: Infinity,
   });
 };
 

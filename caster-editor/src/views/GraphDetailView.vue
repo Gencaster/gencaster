@@ -6,7 +6,7 @@ import Graph from "@/components/Graph.vue";
 import Menu from "@/components/Menu.vue";
 import NodeEditor from "@/components/NodeEditor.vue";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
-import { useCreateUpdateScriptCellsMutation, useGraphSubscription, useNodeSubscription, type NodeSubscription, type ScriptCellInput } from "@/graphql"
+import { useCreateUpdateScriptCellsMutation, useGraphSubscription, useNodeSubscription, type NodeSubscription, type ScriptCellInput } from "@/graphql";
 import { ElMessage } from "element-plus";
 
 const { showNodeEditor, selectedNodeUUIDs, scriptCellsModified } = storeToRefs(useInterfaceStore());
@@ -18,12 +18,12 @@ const graphSubscription = useGraphSubscription({
   variables: {
     uuid: route.params.uuid,
   },
-  pause: route.params.uuid === undefined
+  pause: route.params.uuid === undefined,
 });
 
 const nodeSubscription = useNodeSubscription({
   variables: {
-    uuid: computed(() => {console.log(`New uuid is ${selectedNodeUUIDs.value}`); return selectedNodeUUIDs.value[0]})
+    uuid: computed(() => {console.log(`New uuid is ${selectedNodeUUIDs.value}`); return selectedNodeUUIDs.value[0];}),
   },
   pause: computed(() => selectedNodeUUIDs.value.length==0 && scriptCellsModified.value),
 });
@@ -37,14 +37,14 @@ watch(graphSubscription.error, () => {
 
 const nodeData = computed<NodeSubscription['node'] | undefined>({
   get() {
-    return nodeSubscription.data.value?.node
+    return nodeSubscription.data.value?.node;
   },
   set(value) {
     if(value && nodeSubscription.data.value?.node) {
       nodeSubscription.data.value.node = value;
     }
     return value;
-  }
+  },
 });
 
 const scriptCellMutation = useCreateUpdateScriptCellsMutation();
@@ -69,16 +69,16 @@ const saveNode = async () => {
         'uuid': domCell.audioCell.uuid,
         'playback': domCell.audioCell.playback,
         'audioFile': {
-          'uuid': domCell.audioCell.audioFile.uuid
-        }
-      }
+          'uuid': domCell.audioCell.audioFile.uuid,
+        },
+      };
     }
     return input;
   });
 
   const {error} = await scriptCellMutation.executeMutation({
     nodeUuid: nodeData.value.uuid,
-    scriptCellInputs: scriptCellInputs
+    scriptCellInputs: scriptCellInputs,
   });
 
   if(error) {

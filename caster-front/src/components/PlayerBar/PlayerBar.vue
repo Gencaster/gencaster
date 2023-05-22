@@ -71,7 +71,10 @@ const showInfo: Ref<boolean> = ref(false);
 
 <template>
   <div>
-    <h1 v-if="playerState !== PlayerState.End" class="title general-padding">
+    <h1
+      v-if="playerState !== PlayerState.End"
+      class="title general-padding"
+    >
       {{ graph.displayName }}
     </h1>
     <Transition>
@@ -84,19 +87,35 @@ const showInfo: Ref<boolean> = ref(false);
     </Transition>
     <ElRow class="player-bar general-padding">
       <ElCol :span="8">
-        <ElButton class="caps" size="default" text @click="showInfo = !showInfo">
+        <ElButton
+          class="caps"
+          size="default"
+          text
+          @click="showInfo = !showInfo"
+        >
           <span>
             Info
           </span>
         </ElButton>
       </ElCol>
-      <ElCol class="tabular-nums" :span="8">
+      <ElCol
+        class="tabular-nums"
+        :span="8"
+      >
         <span>{{ minutesSinceStart }}:{{ secondsSinceStart }}</span>
       </ElCol>
       <ElCol :span="8">
-        <ElButton class="caps" size="default" text @click="stopPlayer()">
+        <ElButton
+          class="caps"
+          size="default"
+          text
+          @click="stopPlayer()"
+        >
           <Transition>
-            <div v-if="playerState !== PlayerState.End" class="stop-icon" />
+            <div
+              v-if="playerState !== PlayerState.End"
+              class="stop-icon"
+            />
           </Transition>
           <Transition>
             <span

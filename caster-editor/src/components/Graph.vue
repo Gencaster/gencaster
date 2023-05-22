@@ -40,7 +40,7 @@ import { nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
 import type { GraphSubscription, Scalars } from "@/graphql";
-import { useUpdateNodeMutation } from "@/graphql"
+import { useUpdateNodeMutation } from "@/graphql";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 import * as vNG from "v-network-graph";
 import { VNetworkGraph } from "v-network-graph";
@@ -127,9 +127,9 @@ const eventHandlers: GraphEventHandlers = {
     nextNodeDoubleClicked.value = node;
 
     if (showNodeEditor.value && scriptCellsModified.value) { // already open
-      switchNodeDialog.value = true
+      switchNodeDialog.value = true;
       selectedNodeUUIDs.value = [lastNodeDoubleClicked.value];
-      return
+      return;
     }
 
     lastNodeDoubleClicked.value = node;
@@ -143,7 +143,7 @@ const eventHandlers: GraphEventHandlers = {
     for (const p in dragEvent) {
 
       const draggedNode = props.graph.nodes.find(
-        (x) => x.uuid === p
+        (x) => x.uuid === p,
       );
       if (draggedNode === undefined) {
         console.log(`Dragged unknown node ${p}`);
@@ -154,7 +154,7 @@ const eventHandlers: GraphEventHandlers = {
         nodeUuid: draggedNode.uuid,
         positionX: dragEvent[p].x,
         positionY: dragEvent[p].y,
-      })
+      });
     }
   },
 };
@@ -205,8 +205,8 @@ const eventHandlers: GraphEventHandlers = {
   }
 
 // Dialogs
-const lastNodeDoubleClicked = ref<Scalars["UUID"]>("")
-const nextNodeDoubleClicked = ref<Scalars["UUID"]>("")
+const lastNodeDoubleClicked = ref<Scalars["UUID"]>("");
+const nextNodeDoubleClicked = ref<Scalars["UUID"]>("");
 const switchNodeDialog: Ref<boolean> = ref(false);
 
 const graphSettings = {

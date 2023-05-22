@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Ref, computed, ref, watch } from "vue";
+import { type Ref, ref, watch } from "vue";
 import { ElMessage } from "element-plus";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
@@ -79,19 +79,33 @@ const gpsRequest = async () => {
       <div class="data">
         <div class="component string-component">
           <div class="gps-wrapper">
-            <ElButton class="underline no-hover" size="default" text @click="gpsRequest()">
+            <ElButton
+              class="underline no-hover"
+              size="default"
+              text
+              @click="gpsRequest()"
+            >
               <span>
                 GPS Freigeben
               </span>
             </ElButton>
-            <ElCheckbox v-model="gpsAllowed" :disabled="gpsSuccess" @click="gpsRequest()" />
+            <ElCheckbox
+              v-model="gpsAllowed"
+              :disabled="gpsSuccess"
+              @click="gpsRequest()"
+            />
           </div>
         </div>
       </div>
       <template #footer>
         <span class="dialog-footer">
           <div class="confirm">
-            <ElButton class="caps green" size="default" type="default" @click="gpsRequest()">
+            <ElButton
+              class="caps green"
+              size="default"
+              type="default"
+              @click="gpsRequest()"
+            >
               Ok
             </ElButton>
           </div>

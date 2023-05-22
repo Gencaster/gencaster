@@ -35,7 +35,7 @@ const scriptCells = computed({
     nodeUpdate.scriptCells = value;
     emit('update:node', nodeUpdate);
     return value;
-  }
+  },
 });
 
 </script>

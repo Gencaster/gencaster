@@ -6,15 +6,15 @@ const config: CodegenConfig = {
       plugins: [
         "typescript",
         "typescript-operations",
-        "typescript-vue-urql"
+        "typescript-vue-urql",
       ],
       documents: "../caster-back/operations.gql",
       overwrite: true,
       schema: "../caster-back/schema.gql",
       config: {
-        skipTypename: true
-      }
-    }
-  }
+        skipTypename: true,
+      },
+    },
+  },
 };
 export default config;

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, type Ref } from "vue";
 import AudioFileUpload from "./AudioFileUpload.vue";
-import MediaPlayer from "./AudioFilePlayer.vue"
+import MediaPlayer from "./AudioFilePlayer.vue";
 import { useAudioFilesQuery, type AudioFile, type DjangoFileType, type AudioFilesQuery } from "@/graphql";
 import { ElButton } from "element-plus";
 

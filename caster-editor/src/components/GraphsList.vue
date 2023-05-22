@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Graph } from "@/graphql"
+import type { Graph } from "@/graphql";
 import AddGraph from "@/components/DialogAddGraph.vue";
 import { ref, type Ref } from "vue";
 

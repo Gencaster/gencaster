@@ -89,7 +89,7 @@
 <script lang="ts" setup>
 import { computed, ref, type Ref } from "vue";
 import Browser from "@/components/AudioFileBrowser.vue";
-import AudioPlayer from "./AudioFilePlayer.vue"
+import AudioPlayer from "./AudioFilePlayer.vue";
 import ScriptCellMarkdown from './ScriptCellMarkdown.vue';
 import { ElSelect, ElOption, ElSlider } from "element-plus";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -122,13 +122,13 @@ const emit = defineEmits<{
 
 const audioCellData = computed<AudioScriptCellData['audioCell']>({
   get() {
-    return props.audioCell
+    return props.audioCell;
   },
   set(value) {
     console.log('current audio cell internal', value);
     emit('update:audioCell', value);
     return value;
-  }
+  },
 });
 
 const textData = computed<string>({
@@ -138,7 +138,7 @@ const textData = computed<string>({
   set(value) {
     emit('update:text', value);
     return value;
-  }
+  },
 });
 
 // State

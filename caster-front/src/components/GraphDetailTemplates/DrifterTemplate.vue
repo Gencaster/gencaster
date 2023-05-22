@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { type Ref, computed, nextTick, ref } from "vue";
+import { type Ref, nextTick, ref } from "vue";
 import { ElCollapse, ElCollapseItem, ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 
-import Player from "@/components/Player.vue";
+import Player from "@/components/PlayerComponent.vue";
 import PlayerVisualizer from "@/components/PlayerVisualizer/PlayerVisualizer.vue";
 import PlayerBar from "@/components/PlayerBar/PlayerBar.vue";
 import StreamInfo from "@/components/StreamInfo.vue";
 import EndScreen from "@/components/EndScreen.vue";
 import MetaDialog from "@/components/Dialogs/MetaDialog.vue";
-import Intro from "@/components/Intro.vue";
+import Intro from "@/components/IntroCard.vue";
 import IntroInfo from "@/components/IntroInfo.vue";
 
 import type { UserDataRequest } from "@/models";
@@ -25,7 +25,7 @@ const props = defineProps<{
 const {
   playerState,
   play,
-  startingTimestamp
+  startingTimestamp,
 } = storeToRefs(usePlayerStore());
 
 const router = useRouter();
@@ -34,9 +34,9 @@ const showDebug: Ref<boolean> = ref(true);
 
 const { data, error, stale } = useStreamSubscription({
   variables: {
-    graphUuid: props.graph.uuid
+    graphUuid: props.graph.uuid,
   },
-  pause: (router.currentRoute.value.name !== "graphPlayer") || (!props.graph.uuid)
+  pause: (router.currentRoute.value.name !== "graphPlayer") || (!props.graph.uuid),
 });
 
 const drifterStatus: Ref<DrifterStatus> = ref(DrifterStatus.WaitForStart);
@@ -55,8 +55,8 @@ const startStream = async () => {
       streamUuid: data.value?.streamInfo.stream.uuid,
       key: "start",
       value: "1.0",
-      streamToSc: true
-    }
+      streamToSc: true,
+    },
   });
   if (error) {
     ElMessage.error(`Something went wrong ${error.message}`);
@@ -75,22 +75,15 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
     description: "Drifter ist ein dynamisches Hörspiel, das in Echtzeit generiert wird. Hierfür werden noch Informationen über dich benötigt:",
     key: "gps",
     type: UserDataRequestType.Gps,
-    placeholder: ""
+    placeholder: "",
   },
   {
     name: "askName",
     description: "What would you like to be called?",
     key: "name",
     type: UserDataRequestType.String,
-    placeholder: "Your name"
+    placeholder: "Your name",
   },
-  {
-    name: "askName",
-    description: "Please enter your name 2.",
-    key: "name",
-    type: UserDataRequestType.String,
-    placeholder: "Your name"
-  }
 ]);
 
 const renderDialog = ref(true);
@@ -110,7 +103,10 @@ const shiftDialogs = () => {
 
 <template>
   <div class="drifter-graph-detail">
-    <div v-loading="stale" class="graph-player">
+    <div
+      v-loading="stale"
+      class="graph-player"
+    >
       <!-- error handling -->
       <div v-if="data?.streamInfo.__typename === 'NoStreamAvailable'">
         Sorry, no stream available. Come back later.
@@ -168,7 +164,10 @@ const shiftDialogs = () => {
 
         <!-- audio visualizer -->
         <Transition>
-          <div v-if="playerState === PlayerState.Playing" class="audio-visualizer">
+          <div
+            v-if="playerState === PlayerState.Playing"
+            class="audio-visualizer"
+          >
             <PlayerVisualizer />
           </div>
         </Transition>
@@ -184,11 +183,17 @@ const shiftDialogs = () => {
         </Transition>
 
         <!-- debug -->
-        <div v-if="showDebug" class="debug-wrapper">
+        <div
+          v-if="showDebug"
+          class="debug-wrapper"
+        >
           <ElCollapse
             v-model="activeAccordionTab"
           >
-            <ElCollapseItem title="Debug info" name="debug">
+            <ElCollapseItem
+              title="Debug info"
+              name="debug"
+            >
               <StreamInfo
                 :stream="data.streamInfo.stream"
                 :stream-instruction="data.streamInfo.streamInstruction"

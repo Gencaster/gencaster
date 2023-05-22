@@ -2,7 +2,12 @@
 
 <template>
   <div class="credits">
-    <p>made with <a href="https://gencaster.org/" target="_blank">gencaster</a></p>
+    <p>
+      made with <a
+        href="https://gencaster.org/"
+        target="_blank"
+      >gencaster</a>
+    </p>
   </div>
 </template>
 

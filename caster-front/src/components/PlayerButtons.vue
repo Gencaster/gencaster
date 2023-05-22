@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<{
 }>(), {
   playButton: true,
   micButton: false,
-  gpsButton: false
+  gpsButton: false,
 });
 
 const { play, micActive, streamGPS } = storeToRefs(usePlayerStore());
@@ -24,14 +24,18 @@ const showMicButton = computed<boolean>(() => router.currentRoute.value.query.mi
 const showGpsButton = computed<boolean>(() => router.currentRoute.value.query.gps === null || props.gpsButton);
 
 const spanWidth = computed<number>(() =>
-  24 / (Number(showPlayButton.value) + Number(showMicButton.value) + Number(showGpsButton.value))
+  24 / (Number(showPlayButton.value) + Number(showMicButton.value) + Number(showGpsButton.value)),
 );
 </script>
 
 <template>
   <div class="player-buttons">
     <ElRow :gutter="10">
-      <ElCol v-if="showPlayButton" :xs="24" :span="spanWidth">
+      <ElCol
+        v-if="showPlayButton"
+        :xs="24"
+        :span="spanWidth"
+      >
         <ElButton
           size="large"
           type="default"
@@ -41,7 +45,11 @@ const spanWidth = computed<number>(() =>
           {{ play ? "Stop" : "Play" }} Stream
         </ElButton>
       </ElCol>
-      <ElCol v-if="showMicButton" :xs="24" :span="spanWidth">
+      <ElCol
+        v-if="showMicButton"
+        :xs="24"
+        :span="spanWidth"
+      >
         <ElButton
           size="large"
           type="default"
@@ -51,7 +59,11 @@ const spanWidth = computed<number>(() =>
           {{ !micActive ? "Activate" : "Disable" }} Microphone
         </ElButton>
       </ElCol>
-      <ElCol v-if="showGpsButton" :xs="24" :span="spanWidth">
+      <ElCol
+        v-if="showGpsButton"
+        :xs="24"
+        :span="spanWidth"
+      >
         <ElButton
           size="large"
           type="default"

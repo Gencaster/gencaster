@@ -35,7 +35,7 @@ app.use(urql, {
             `${import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081"}/graphql`
             .replace("https", "wss")
             .replace("http", "ws"),
-          { reconnect: true }
+          { reconnect: true },
         ).request(operation),
     }),
   ],

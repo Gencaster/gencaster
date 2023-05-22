@@ -50,12 +50,12 @@ const showDialog: Ref<boolean> = ref(true);
 const deleteNodeMutation = useDeleteNodeMutation();
 
 const deleteNode = async () => {
-    const { error } = await deleteNodeMutation.executeMutation({nodeUuid: props.node.uuid})
+    const { error } = await deleteNodeMutation.executeMutation({nodeUuid: props.node.uuid});
     if(error) {
-        alert(`Failed to delete Node: ${error.message}`)
+        alert(`Failed to delete Node: ${error.message}`);
     } else {
-        emit('deleted')
+        emit('deleted');
     }
-}
+};
 
 </script>

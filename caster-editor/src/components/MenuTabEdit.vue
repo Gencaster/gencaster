@@ -27,7 +27,7 @@
 import type { Graph } from '@/graphql';
 import { useCreateNodeMutation, useCreateEdgeMutation, useDeleteEdgeMutation, useDeleteNodeMutation } from "@/graphql";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
-import { ElMessage } from "element-plus"
+import { ElMessage } from "element-plus";
 import { storeToRefs } from 'pinia';
 
 
@@ -58,12 +58,12 @@ const createNode = async () => {
     color: "primary",
     positionX,
     positionY,
-    graphUuid: props.graph.uuid
+    graphUuid: props.graph.uuid,
   });
   if(error) {
-    alert(`Could not create node: ${error.message}`)
+    alert(`Could not create node: ${error.message}`);
   }
-}
+};
 
 const deleteNodeMutation = useDeleteNodeMutation();
 const deleteEdgeMutation = useDeleteEdgeMutation();
@@ -92,7 +92,7 @@ const removeSelection = async () => {
       displayError(`Could not delete edge ${edgeUuid}: ${error.message}`);
     }
   });
-}
+};
 
 const displayError = async(message: string) => {
   ElMessage({
@@ -100,7 +100,7 @@ const displayError = async(message: string) => {
       type: "error",
       customClass: "messages-editor",
     });
-}
+};
 
 const createEdgeMutation = useCreateEdgeMutation();
 const createEdge = async () => {
@@ -116,7 +116,7 @@ const createEdge = async () => {
   if(error) {
     alert(`Could not create edege: ${error.message}`);
   }
-}
+};
 
 // is it maybe better to always have this
 // clickable and show an error message on how you can use it?

@@ -24,8 +24,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="wrapper" class="bars-wrapper">
-    <div v-for="(index) in numberOfBars" :key="index" class="bar-wrapper">
+  <div
+    ref="wrapper"
+    class="bars-wrapper"
+  >
+    <div
+      v-for="(index) in numberOfBars"
+      :key="index"
+      class="bar-wrapper"
+    >
       <Bar />
     </div>
   </div>

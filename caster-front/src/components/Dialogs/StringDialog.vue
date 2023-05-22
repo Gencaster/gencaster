@@ -24,8 +24,8 @@ const execute = async () => {
       streamUuid: props.streamUuid,
       streamToSc: false,
       key: props.request.key,
-      value: userInput.value
-    }]
+      value: userInput.value,
+    }],
   });
   dialogVisible.value = false;
 };
@@ -60,7 +60,12 @@ const closedDialog = () => {
       <template #footer>
         <span class="dialog-footer">
           <div class="confirm">
-            <ElButton class="caps green" size="default" type="default" @click="execute()">
+            <ElButton
+              class="caps green"
+              size="default"
+              type="default"
+              @click="execute()"
+            >
               Ok
             </ElButton>
           </div>

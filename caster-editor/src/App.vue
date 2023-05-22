@@ -2,7 +2,7 @@
 import { RouterView } from "vue-router";
 import { ElMessageBox } from "element-plus";
 
-import { useIsAuthenticatedQuery } from "@/graphql"
+import { useIsAuthenticatedQuery } from "@/graphql";
 import { watch } from "vue";
 
 const { error, fetching } = useIsAuthenticatedQuery();
@@ -13,7 +13,7 @@ watch(error, (e) => {
       closeOnClickModal: false,
       closeOnPressEscape: false,
       showClose: false,
-      showConfirmButton: false
+      showConfirmButton: false,
     });
   }
 });
