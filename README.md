@@ -72,3 +72,7 @@ The `host` method has the disadvantage that every port we expose within our cont
 
 As WebRTC only works within a SSL environment we use a nginx reverse proxy to forward the port `8089` to the local port `8088` which is the http version of the Janus server.
 By doing this we can let nginx handle the SSL context and not need to embed this into Janus.
+
+## License
+
+APGL-3.0
