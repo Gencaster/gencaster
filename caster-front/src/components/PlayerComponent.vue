@@ -123,25 +123,26 @@ const switchStream = (streamId: number) => {
   streamingConnected.value = true;
 };
 
-// const getJanusStreamPoints = () => {
-//   /* Legacy function which queries janus directly
-//   for all streaming channels.
-//   This may be interesting when using Gencaster without backend
-//   as in its current state the backend is responsible to assign
-//   a stream point to a user.
-//   */
-//   streaming.send({
-//     message: { request: "list" },
-//     success(result: any) {
-//       if (!result) {
-//         console.log("Got no response to our query for available streams");
-//         return;
-//       }
-//       if (result.list)
-//         console.log("Got a list of available streams", result.list);
-//     }
-//   });
-// };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const getJanusStreamPoints = () => {
+  /* Legacy function which queries janus directly
+  for all streaming channels.
+  This may be interesting when using Gencaster without backend
+  as in its current state the backend is responsible to assign
+  a stream point to a user.
+  */
+  streaming.send({
+    message: { request: "list" },
+    success(result: any) {
+      if (!result) {
+        console.log("Got no response to our query for available streams");
+        return;
+      }
+      if (result.list)
+        console.log("Got a list of available streams", result.list);
+    },
+  });
+};
 
 const setupJanusStreaming = () => {
   console.log("Setup streaming");
