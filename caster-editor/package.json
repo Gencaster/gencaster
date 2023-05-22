@@ -25,7 +25,7 @@
     "@urql/exchange-multipart-fetch": "^1.0.1",
     "@urql/vue": "^1.0.4",
     "codemirror": "^6.0.1",
-    "element-plus": "^2.2.36",
+    "element-plus": "^2.3.5",
     "graphql": "^16.6.0",
     "gsap": "^3.11.4",
     "pinia": "^2.0.33",
