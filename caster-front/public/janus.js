@@ -132,7 +132,7 @@ Janus.init = function(options) {
 				Janus.warn("navigator.mediaDevices unavailable");
 				callback([]);
 			}
-		}
+		};
 		// Helper methods to attach/reattach a stream to a video element (previously part of adapter.js)
 		Janus.attachMediaStream = function(element, stream) {
 			if(adapter.browserDetails.browser === 'chrome') {
@@ -237,7 +237,7 @@ Janus.init = function(options) {
 			}
 			if(oldOBF && typeof oldOBF == "function")
 				oldOBF();
-		}
+		};
 		Janus.initDone = true;
 		options.callback();
 	}
@@ -258,7 +258,7 @@ Janus.randomString = function(len) {
 		randomString += charSet.substring(randomPoz,randomPoz+1);
 	}
 	return randomString;
-}
+};
 
 
 // Janus session object
@@ -903,7 +903,7 @@ function Janus(gatewayCallbacks) {
 						ondetached : callbacks.ondetached,
 						hangup : function(sendRequest) { cleanupWebrtc(handleId, sendRequest === true); },
 						detach : function(callbacks) { destroyHandle(handleId, callbacks); },
-					}
+					};
 				pluginHandles[handleId] = pluginHandle;
 				callbacks.success(pluginHandle);
 			};
@@ -988,7 +988,7 @@ function Janus(gatewayCallbacks) {
 						ondetached : callbacks.ondetached,
 						hangup : function(sendRequest) { cleanupWebrtc(handleId, sendRequest === true); },
 						detach : function(callbacks) { destroyHandle(handleId, callbacks); },
-					}
+					};
 				pluginHandles[handleId] = pluginHandle;
 				callbacks.success(pluginHandle);
 			},
@@ -1362,18 +1362,18 @@ function Janus(gatewayCallbacks) {
 			var onDataChannelMessage = function(event) {
 				Janus.log('Received message on data channel: ' + event.data);
 				pluginHandle.ondata(event.data);	// FIXME
-			}
+			};
 			var onDataChannelStateChange = function() {
 				var dcState = config.dataChannel !== null ? config.dataChannel.readyState : "null";
 				Janus.log('State change on data channel: ' + dcState);
 				if(dcState === 'open') {
 					pluginHandle.ondataopen();	// FIXME
 				}
-			}
+			};
 			var onDataChannelError = function(error) {
 				Janus.error('Got error on data channel:', error);
 				// TODO
-			}
+			};
 			// Until we implement the proxying of open requests within the Janus core, we open a channel ourselves whatever the case
 			config.dataChannel = config.pc.createDataChannel("JanusDataChannel", {ordered:false});	// FIXME Add options (ordered, maxRetransmits, etc.)
 			config.dataChannel.onmessage = onDataChannelMessage;
@@ -1563,7 +1563,7 @@ function Janus(gatewayCallbacks) {
 									.then(function (audioStream) {
 										stream.addTrack(audioStream.getAudioTracks()[0]);
 										gsmCallback(null, stream);
-									})
+									});
 								} else {
 									gsmCallback(null, stream);
 								}

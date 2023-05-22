@@ -38,7 +38,7 @@ const props = defineProps<{
 const drag: Ref<boolean> = ref(false);
 const {scriptCellsModified} = storeToRefs(useInterfaceStore());
 
-const emit = defineEmits(['update:scriptCells'])
+const emit = defineEmits(['update:scriptCells']);
 
 const moveableScriptCells = computed<NodeSubscription['node']['scriptCells']>({
     get() {
@@ -46,7 +46,7 @@ const moveableScriptCells = computed<NodeSubscription['node']['scriptCells']>({
     },
     set(value) {
         scriptCellsModified.value = true;
-        emit('update:scriptCells', value)
+        emit('update:scriptCells', value);
         return value;
     },
 });

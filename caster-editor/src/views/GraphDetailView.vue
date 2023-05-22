@@ -6,7 +6,7 @@ import Graph from "@/components/Graph.vue";
 import Menu from "@/components/Menu.vue";
 import NodeEditor from "@/components/NodeEditor.vue";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
-import { useCreateUpdateScriptCellsMutation, useGraphSubscription, useNodeSubscription, type NodeSubscription, type ScriptCellInput } from "@/graphql"
+import { useCreateUpdateScriptCellsMutation, useGraphSubscription, useNodeSubscription, type NodeSubscription, type ScriptCellInput } from "@/graphql";
 import { ElMessage } from "element-plus";
 
 const { showNodeEditor, selectedNodeUUIDs, scriptCellsModified } = storeToRefs(useInterfaceStore());
@@ -23,7 +23,7 @@ const graphSubscription = useGraphSubscription({
 
 const nodeSubscription = useNodeSubscription({
   variables: {
-    uuid: computed(() => {console.log(`New uuid is ${selectedNodeUUIDs.value}`); return selectedNodeUUIDs.value[0]}),
+    uuid: computed(() => {console.log(`New uuid is ${selectedNodeUUIDs.value}`); return selectedNodeUUIDs.value[0];}),
   },
   pause: computed(() => selectedNodeUUIDs.value.length==0 && scriptCellsModified.value),
 });
@@ -37,7 +37,7 @@ watch(graphSubscription.error, () => {
 
 const nodeData = computed<NodeSubscription['node'] | undefined>({
   get() {
-    return nodeSubscription.data.value?.node
+    return nodeSubscription.data.value?.node;
   },
   set(value) {
     if(value && nodeSubscription.data.value?.node) {
@@ -71,7 +71,7 @@ const saveNode = async () => {
         'audioFile': {
           'uuid': domCell.audioCell.audioFile.uuid,
         },
-      }
+      };
     }
     return input;
   });

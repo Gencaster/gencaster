@@ -78,10 +78,10 @@ const emit = defineEmits<{
 
 const scriptCellText = computed<string>({
   get() {
-    return props.scriptCell.cellCode
+    return props.scriptCell.cellCode;
   },
   set(value) {
-    const newCell = {...props.scriptCell}
+    const newCell = {...props.scriptCell};
     newCell.cellCode = value;
     emit('update:scriptCell', newCell);
     return value;
@@ -106,7 +106,7 @@ const displayError = async(message: string) => {
       type: "error",
       customClass: "messages-editor",
     });
-}
+};
 
 const deleteScriptCellMutation = useDeleteScriptCellMutation();
 const deleteScriptCell = async (uuid: Scalars['UUID']) => {
@@ -116,7 +116,7 @@ const deleteScriptCell = async (uuid: Scalars['UUID']) => {
   if(error) {
     displayError(error.message);
   }
-}
+};
 
 const playScriptCell = () => {
   displayError("Script cell playback not yet implemented");

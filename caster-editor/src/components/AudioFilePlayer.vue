@@ -3,8 +3,8 @@ import { watch, ref, onMounted, computed, type Ref } from "vue";
 import type { AudioFile, DjangoFileType } from "@/graphql";
 import { ElSlider } from "element-plus";
 
-const audioPlayer: Ref<HTMLAudioElement | undefined> = ref()
-const audioPlaying = ref(false)
+const audioPlayer: Ref<HTMLAudioElement | undefined> = ref();
+const audioPlaying = ref(false);
 const position: Ref<number> = ref(0.0);
 
 const props = defineProps<{
@@ -19,50 +19,50 @@ const props = defineProps<{
 const baseURL: string = import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081";
 
 const toggleAudio = () => {
-  if (audioPlayer.value === null) return
+  if (audioPlayer.value === null) return;
 
   if (audioPlaying.value) {
-    audioPlaying.value = false
+    audioPlaying.value = false;
     if (audioPlayer.value) {
-      audioPlayer.value.pause()
+      audioPlayer.value.pause();
       audioPlayer.value.currentTime = 0;
     }
   } else {
-    audioPlaying.value = true
+    audioPlaying.value = true;
     if (audioPlayer.value) {
-      audioPlayer.value.play()
+      audioPlayer.value.play();
     }
   }
-}
+};
 
 const normalizedVolume = computed(() => {
   if (props.volume !== undefined && props.volume <= 1 && props.volume >= 0) {
-    return props.volume
+    return props.volume;
   } else {
-    return 1
+    return 1;
   }
-})
+});
 
 watch(normalizedVolume, () => {
-  setVolume()
-})
+  setVolume();
+});
 
 const updatePosition = () => {
   position.value = ((audioPlayer.value?.currentTime ?? 0.0) / (audioPlayer.value?.duration ?? 1.0));
-}
+};
 
 const setVolume = () => {
-  if (audioPlayer.value === undefined) return
-  audioPlayer.value.volume = normalizedVolume.value
-}
+  if (audioPlayer.value === undefined) return;
+  audioPlayer.value.volume = normalizedVolume.value;
+};
 
 onMounted(() => {
   audioPlayer.value?.addEventListener('ended', () => {
-    audioPlaying.value = false
-  })
+    audioPlaying.value = false;
+  });
 
-  setVolume()
-})
+  setVolume();
+});
 
 </script>
 

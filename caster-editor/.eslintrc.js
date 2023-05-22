@@ -9,6 +9,7 @@ module.exports = {
   rules: {
     "no-console": "off",
     "no-alert": "off",
+    "semi": ['error', 'always'],
     "vue/component-tags-order": ["error", {
       "order": [ [ "script", "template" ], "style" ],
     }],
@@ -22,4 +23,4 @@ module.exports = {
       "functions": "always-multiline",
   }],
   },
-}
+};

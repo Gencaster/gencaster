@@ -51,7 +51,7 @@ const domReady: Ref<boolean> = ref(false);
 
 const scriptText = computed<string>({
   get() {
-    return props.text
+    return props.text;
   },
   set(value) {
     emit('update:text', value);

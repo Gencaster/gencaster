@@ -43,7 +43,7 @@
 import { storeToRefs } from "pinia";
 import type { Graph } from "@/graphql";
 import { ref, type Ref } from "vue";
-import { Tab, useInterfaceStore } from "@/stores/InterfaceStore"
+import { Tab, useInterfaceStore } from "@/stores/InterfaceStore";
 import MenuTab from "./MenuTabHeader.vue";
 import MenuTabEdit from "./MenuTabEdit.vue";
 import DialogExitGraph from "./DialogExitGraph.vue";

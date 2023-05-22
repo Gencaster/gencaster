@@ -25,14 +25,14 @@ const rules = reactive<FormRules>({
 });
 
 const submitUpload = async () => {
-  if (!formRef.value) return
+  if (!formRef.value) return;
   await formRef.value.validate((valid) => {
     if (valid) {
       doSubmit();
     } else {
       ElMessage.error("Input is missing");
     }
-  })
+  });
 };
 
 const doSubmit = async() => {
@@ -55,7 +55,7 @@ const doSubmit = async() => {
     form.description = undefined;
     form.name = undefined;
   }
-}
+};
 </script>
 
 <template>

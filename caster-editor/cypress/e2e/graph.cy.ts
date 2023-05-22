@@ -4,7 +4,7 @@ describe('Landing page', () => {
   beforeEach(() => {
     cy.intercept('POST', 'http://127.0.0.1:8081/graphql', (req) => {
       // Queries
-      aliasQuery(req, 'GetGraph')
+      aliasQuery(req, 'GetGraph');
     });
   });
 
@@ -13,4 +13,4 @@ describe('Landing page', () => {
     cy.visit('/graph/b611fdaf-331f-4853-b10f-f593e181f115');
     // cy.contains("Add node");
   });
-})
+});

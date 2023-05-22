@@ -52,10 +52,10 @@ const renameNode = async () => {
         nodeUuid: props.node.uuid,
     });
     if(error) {
-        alert(`Could not rename node: ${error.message}`)
-        return
+        alert(`Could not rename node: ${error.message}`);
+        return;
     }
     emit('renamed');
-}
+};
 
 </script>

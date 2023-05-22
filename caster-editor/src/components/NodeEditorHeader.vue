@@ -104,7 +104,7 @@ const addScriptCell = async (cellType: CellType) => {
     if(error) {
       ElMessage.error(`Error on creating script cell: ${error.message}`);
     }
-}
+};
 
 const createAudioCell = async (audioFile: Pick<AudioFile, 'uuid'>) => {
   const { error } = await createScriptCellMutation.executeMutation({
@@ -121,10 +121,10 @@ const createAudioCell = async (audioFile: Pick<AudioFile, 'uuid'>) => {
     }],
   });
   if(error) {
-    alert(`Error on creating audio cell: ${error.message}`)
+    alert(`Error on creating audio cell: ${error.message}`);
   }
   showAudioFileBrowser.value = false;
-}
+};
 
 </script>
 
