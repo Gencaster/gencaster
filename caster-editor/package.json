@@ -21,7 +21,7 @@
     "@codemirror/lang-python": "^6.1.2",
     "@element-plus/icons-vue": "^2.1.0",
     "@rah-emil/vite-plugin-vue-type-imports": "^0.2.5",
-    "@toast-ui/editor": "^3.2.1",
+    "@toast-ui/editor": "^3.2.2",
     "@urql/exchange-multipart-fetch": "^1.0.1",
     "@urql/vue": "^1.0.4",
     "codemirror": "^6.0.1",
