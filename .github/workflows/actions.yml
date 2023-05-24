@@ -45,12 +45,12 @@ jobs:
           reporter: java-junit
       - run: make -C docs html
         name: "Build documentation"
-      # - uses: actions/upload-artifact@v2
-      #   if: success() || failure()
-      #   with:
-      #     name: docs
-      #     path: |
-      #       docs/_build/html
+      - name: Deploy docs
+        uses: peaceiris/actions-gh-pages@v3
+        if: success() && github.ref == 'refs/heads/main' # only deploy main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_build/html
 
   editor:
     name: "Check Editor"
