@@ -20,7 +20,7 @@ The audio streams have a low latency (about 150ms) and can be listened to in any
 For further information please visit
 
 * [Project website gencaster.org](https://gencaster.org)
-* [Documentation](https://gencaster.github.io/gencaster)
+* [Documentation](https://docs.gencaster.org)
 
 ## Documentation
 
