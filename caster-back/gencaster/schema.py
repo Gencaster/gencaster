@@ -66,7 +66,7 @@ class IsAuthenticated(strawberry.BasePermission):
     message = "User is not authenticated"
 
     async def has_permission(self, source: Any, info: Info, **kwargs) -> bool:
-        if await sync_to_async(lambda: info.context.request.user.is_authenticated)():
+        if await sync_to_async(lambda: info.context.request.user.is_authenticated)():  # type: ignore
             return True
         return False
 
@@ -87,7 +87,7 @@ async def graphql_check_authenticated(info: Info):
     This would be better a decorator but strawberry is not nice in these regards, see
     `Stack Overflow <https://stackoverflow.com/a/72796313/3475778>`_.
     """
-    auth = await sync_to_async(lambda: info.context.request.user.is_authenticated)()
+    auth = await sync_to_async(lambda: info.context.request.user.is_authenticated)()  # type: ignore
     if auth is False:
         raise PermissionDenied()
 
