@@ -4,7 +4,7 @@
   <img width="200" height="200" src="./docs/_static/logo.svg">
 </p>
 
-**Gencaster** is a non-linear audio streaming framework for real-time radiophonic experiences and live music and consists of multiple services.
+**Gencaster** is a non-linear audio streaming framework for real-time radiophonic experiences and live music. It consists of multiple services which represent all the necessary building blocks.
 
 The audio streams have a low latency (about 150ms) and can be listened to in any modern browser, and can dynamically render audio content based on a given *story graph* that can react to user input such as name, time, GPS position, or even microphone streaming after permissions have been granted.
 
@@ -17,7 +17,7 @@ The audio streams have a low latency (about 150ms) and can be listened to in any
 * *caster-editor* is a web-editor in which the actions of a stream, called a *story graph*, can be created, edited and tweaked using Python or SuperCollider, and is also written in [Vue](https://vuejs.org/)
 
 
-For further information please visit
+For further information please visit:
 
 * [Project website gencaster.org](https://gencaster.org)
 * [Documentation](https://docs.gencaster.org)
