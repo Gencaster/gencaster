@@ -1,0 +1,852 @@
+
+
+<!DOCTYPE html>
+
+
+<html >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>gencaster.schema &#8212; Gencaster  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/gencaster/schema';</script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="None"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/spiral.svg" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../_static/spiral.svg" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../story_graph.html">Story Graph</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../back/index.html">Caster back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../back/osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/graphql.html">GraphQL</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../back/api/story_graph.html">Story Graph</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../back/api/stream.html">Stream</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../back/api/gencaster.html">GenCaster config</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../editor.html">Caster editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../front.html">Caster front</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sound.html">Caster sound</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../deployment.html">Deployment</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/gencaster/gencaster" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <h1>Source code for gencaster.schema</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Schema</span>
+<span class="sd">======</span>
+
+<span class="sd">Here we define all the endpoints for GraphQL.</span>
+
+<span class="sd">For a specific details of the types consider the</span>
+<span class="sd">`GraphiQL &lt;https://github.com/graphql/graphiql&gt;`_</span>
+<span class="sd">page available under the `/graphql` endpoint of</span>
+<span class="sd">the running backend.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">AsyncGenerator</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">strawberry</span>
+<span class="kn">import</span> <span class="nn">strawberry.django</span>
+<span class="kn">from</span> <span class="nn">asgiref.sync</span> <span class="kn">import</span> <span class="n">sync_to_async</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span> <span class="k">as</span> <span class="n">UserModel</span>
+<span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">PermissionDenied</span>
+<span class="kn">from</span> <span class="nn">django.core.files</span> <span class="kn">import</span> <span class="n">File</span>
+<span class="kn">from</span> <span class="nn">django.http.request</span> <span class="kn">import</span> <span class="n">HttpRequest</span>
+<span class="kn">from</span> <span class="nn">strawberry</span> <span class="kn">import</span> <span class="n">auto</span>
+<span class="kn">from</span> <span class="nn">strawberry.types</span> <span class="kn">import</span> <span class="n">Info</span>
+<span class="kn">from</span> <span class="nn">strawberry_django.fields.field</span> <span class="kn">import</span> <span class="n">StrawberryDjangoField</span>
+
+<span class="kn">import</span> <span class="nn">story_graph.models</span> <span class="k">as</span> <span class="nn">story_graph_models</span>
+<span class="kn">import</span> <span class="nn">stream.models</span> <span class="k">as</span> <span class="nn">stream_models</span>
+<span class="kn">from</span> <span class="nn">story_graph.engine</span> <span class="kn">import</span> <span class="n">Engine</span>
+<span class="kn">from</span> <span class="nn">story_graph.types</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AddGraphInput</span><span class="p">,</span>
+    <span class="n">AudioCellInput</span><span class="p">,</span>
+    <span class="n">EdgeInput</span><span class="p">,</span>
+    <span class="n">Graph</span><span class="p">,</span>
+    <span class="n">GraphFilter</span><span class="p">,</span>
+    <span class="n">Node</span><span class="p">,</span>
+    <span class="n">NodeCreate</span><span class="p">,</span>
+    <span class="n">NodeUpdate</span><span class="p">,</span>
+    <span class="n">ScriptCell</span><span class="p">,</span>
+    <span class="n">ScriptCellInput</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">stream.exceptions</span> <span class="kn">import</span> <span class="n">NoStreamAvailableException</span>
+<span class="kn">from</span> <span class="nn">stream.types</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AddAudioFile</span><span class="p">,</span>
+    <span class="n">AudioFile</span><span class="p">,</span>
+    <span class="n">AudioFileUploadResponse</span><span class="p">,</span>
+    <span class="n">InvalidAudioFile</span><span class="p">,</span>
+    <span class="n">NoStreamAvailable</span><span class="p">,</span>
+    <span class="n">StreamInfo</span><span class="p">,</span>
+    <span class="n">StreamInfoResponse</span><span class="p">,</span>
+    <span class="n">StreamPoint</span><span class="p">,</span>
+    <span class="n">StreamVariable</span><span class="p">,</span>
+    <span class="n">StreamVariableInput</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.distributor</span> <span class="kn">import</span> <span class="n">GenCasterChannel</span><span class="p">,</span> <span class="n">GraphQLWSConsumerInjector</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="IsAuthenticated"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.IsAuthenticated">[docs]</a><span class="k">class</span> <span class="nc">IsAuthenticated</span><span class="p">(</span><span class="n">strawberry</span><span class="o">.</span><span class="n">BasePermission</span><span class="p">):</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;User is not authenticated&quot;</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">has_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">)():</span>  <span class="c1"># type: ignore</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="AuthStrawberryDjangoField"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.AuthStrawberryDjangoField">[docs]</a><span class="k">class</span> <span class="nc">AuthStrawberryDjangoField</span><span class="p">(</span><span class="n">StrawberryDjangoField</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Allows us to restrict certain actions to logged in users.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">resolver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">request</span><span class="p">:</span> <span class="n">HttpRequest</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">request</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PermissionDenied</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">resolver</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="graphql_check_authenticated"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.graphql_check_authenticated">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to determine if we are loggin in an async manner.</span>
+
+<span class="sd">    This would be better a decorator but strawberry is not nice in these regards, see</span>
+<span class="sd">    `Stack Overflow &lt;https://stackoverflow.com/a/72796313/3475778&gt;`_.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">auth</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">)()</span>  <span class="c1"># type: ignore</span>
+    <span class="k">if</span> <span class="n">auth</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">PermissionDenied</span><span class="p">()</span></div>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">update_or_create_audio_cell</span><span class="p">(</span>
+    <span class="n">audio_cell_input</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AudioCellInput</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">story_graph_models</span><span class="o">.</span><span class="n">AudioCell</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">audio_cell_input</span><span class="p">:</span>
+        <span class="p">(</span>
+            <span class="n">audio_cell</span><span class="p">,</span>
+            <span class="n">created</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">AudioCell</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aupdate_or_create</span><span class="p">(</span>
+            <span class="n">uuid</span><span class="o">=</span><span class="n">audio_cell_input</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+            <span class="n">defaults</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;playback&quot;</span><span class="p">:</span> <span class="n">audio_cell_input</span><span class="o">.</span><span class="n">playback</span><span class="p">,</span>
+                <span class="s2">&quot;audio_file_id&quot;</span><span class="p">:</span> <span class="n">audio_cell_input</span><span class="o">.</span><span class="n">audio_file</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+                <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="n">audio_cell_input</span><span class="o">.</span><span class="n">volume</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">created</span><span class="p">:</span>
+            <span class="c1"># @todo access .uuid directly to avoid fk access</span>
+            <span class="c1"># in async mode</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created audio cell </span><span class="si">{</span><span class="n">audio_cell</span><span class="o">.</span><span class="n">uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">audio_cell</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">audio_cell</span>
+
+
+<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.User">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">django</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">UserModel</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+    <span class="n">username</span><span class="p">:</span> <span class="n">auto</span>
+    <span class="n">is_staff</span><span class="p">:</span> <span class="n">auto</span>
+    <span class="n">is_active</span><span class="p">:</span> <span class="n">auto</span>
+    <span class="n">first_name</span><span class="p">:</span> <span class="n">auto</span>
+    <span class="n">last_name</span><span class="p">:</span> <span class="n">auto</span>
+    <span class="n">email</span><span class="p">:</span> <span class="n">auto</span></div>
+
+
+<div class="viewcode-block" id="Query"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Query">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
+<span class="k">class</span> <span class="nc">Query</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Queries for Gencaster.&quot;&quot;&quot;</span>
+
+    <span class="n">stream_point</span><span class="p">:</span> <span class="n">StreamPoint</span> <span class="o">=</span> <span class="n">strawberry</span><span class="o">.</span><span class="n">django</span><span class="o">.</span><span class="n">field</span><span class="p">()</span>
+    <span class="n">stream_points</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">StreamPoint</span><span class="p">]</span> <span class="o">=</span> <span class="n">strawberry</span><span class="o">.</span><span class="n">django</span><span class="o">.</span><span class="n">field</span><span class="p">()</span>
+    <span class="n">graphs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Graph</span><span class="p">]</span> <span class="o">=</span> <span class="n">strawberry</span><span class="o">.</span><span class="n">django</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="n">GraphFilter</span><span class="p">)</span>
+    <span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span> <span class="o">=</span> <span class="n">AuthStrawberryDjangoField</span><span class="p">()</span>
+    <span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Node</span><span class="p">]</span> <span class="o">=</span> <span class="n">AuthStrawberryDjangoField</span><span class="p">()</span>
+    <span class="n">node</span><span class="p">:</span> <span class="n">Node</span> <span class="o">=</span> <span class="n">AuthStrawberryDjangoField</span><span class="p">()</span>
+    <span class="n">audio_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AudioFile</span><span class="p">]</span> <span class="o">=</span> <span class="n">AuthStrawberryDjangoField</span><span class="p">()</span>
+    <span class="n">audio_file</span><span class="p">:</span> <span class="n">AudioFile</span> <span class="o">=</span> <span class="n">AuthStrawberryDjangoField</span><span class="p">()</span>
+    <span class="n">stream_variable</span><span class="p">:</span> <span class="n">StreamVariable</span> <span class="o">=</span> <span class="n">AuthStrawberryDjangoField</span><span class="p">()</span>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">permission_classes</span><span class="o">=</span><span class="p">[</span><span class="n">IsAuthenticated</span><span class="p">])</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">is_authenticated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>  <span class="c1"># type: ignore</span></div>
+
+
+<div class="viewcode-block" id="Mutation"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
+<span class="k">class</span> <span class="nc">Mutation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mutations for Gencaster via GraphQL.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Mutation.add_node"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.add_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="n">new_node</span><span class="p">:</span> <span class="n">NodeCreate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a new :class:`~story_graph.models.Node` in a given</span>
+<span class="sd">        ~class:`~story_graph.models.Graph`.</span>
+<span class="sd">        Although it creates a new node with UUID we don&#39;t hand it back yet.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+        <span class="n">graph</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">new_node</span><span class="o">.</span><span class="n">graph_uuid</span><span class="p">)</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">new_node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># transfer from new_node to node model if attribute is not none</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;position_x&quot;</span><span class="p">,</span> <span class="s2">&quot;position_y&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">new_value</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">new_node</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
+
+        <span class="c1"># asave not yet implemented in django 4.1</span>
+        <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">save</span><span class="p">)()</span>
+
+        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_graph_update</span><span class="p">(</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
+            <span class="n">graph_uuid</span><span class="o">=</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Mutation.update_node"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.update_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">update_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="n">node_update</span><span class="p">:</span> <span class="n">NodeUpdate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates a given :class:`~story_graph.models.Node` which can be used</span>
+<span class="sd">        for renaming or moving it across the canvas.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+        <span class="n">node</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;graph&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span>
+            <span class="n">uuid</span><span class="o">=</span><span class="n">node_update</span><span class="o">.</span><span class="n">uuid</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;position_x&quot;</span><span class="p">,</span> <span class="s2">&quot;position_y&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">new_value</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node_update</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
+
+        <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">save</span><span class="p">)()</span>
+
+        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_graph_update</span><span class="p">(</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
+            <span class="n">graph_uuid</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_node_update</span><span class="p">(</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
+            <span class="n">node_uuid</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Mutation.add_edge"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.add_edge">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="n">new_edge</span><span class="p">:</span> <span class="n">EdgeInput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a :class:`~story_graph.models.Edge` for a given</span>
+<span class="sd">        :class:`~story_graph.models.Graph`.</span>
+<span class="sd">        It does not return the created edge.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="n">in_node</span><span class="p">:</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;graph&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span>
+                <span class="n">uuid</span><span class="o">=</span><span class="n">new_edge</span><span class="o">.</span><span class="n">node_in_uuid</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">out_node</span><span class="p">:</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span>
+            <span class="n">uuid</span><span class="o">=</span><span class="n">new_edge</span><span class="o">.</span><span class="n">node_out_uuid</span>
+        <span class="p">)</span>
+        <span class="n">edge</span><span class="p">:</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Edge</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Edge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">acreate</span><span class="p">(</span>
+            <span class="n">in_node</span><span class="o">=</span><span class="n">in_node</span><span class="p">,</span>
+            <span class="n">out_node</span><span class="o">=</span><span class="n">out_node</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_graph_update</span><span class="p">(</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
+            <span class="n">graph_uuid</span><span class="o">=</span><span class="n">in_node</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Mutation.delete_edge"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.delete_edge">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">edge_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes a given :class:`~story_graph.models.Edge`.&quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">edge</span><span class="p">:</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Edge</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Edge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span>
+                    <span class="s2">&quot;in_node__graph&quot;</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">edge_uuid</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Edge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">edge_uuid</span><span class="p">)</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not delete edge </span><span class="si">{</span><span class="n">edge_uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_graph_update</span><span class="p">(</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
+            <span class="n">graph_uuid</span><span class="o">=</span><span class="n">edge</span><span class="o">.</span><span class="n">in_node</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Mutation.delete_node"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.delete_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">node_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes a given :class:`~story_graph.models.Node`.&quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">node</span><span class="p">:</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;graph&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span>
+                    <span class="n">uuid</span><span class="o">=</span><span class="n">node_uuid</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">node_uuid</span><span class="p">)</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could delete node </span><span class="si">{</span><span class="n">node_uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_graph_update</span><span class="p">(</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
+            <span class="n">graph_uuid</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_node_update</span><span class="p">(</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
+            <span class="n">node_uuid</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Mutation.create_update_script_cells"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.create_update_script_cells">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_update_script_cells</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">script_cell_inputs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ScriptCellInput</span><span class="p">],</span> <span class="n">node_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ScriptCell</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates or updates a given :class:`~story_graph.models.ScriptCell` to change its content.&quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">node</span><span class="p">:</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span>
+                <span class="n">uuid</span><span class="o">=</span><span class="n">node_uuid</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Received update on unknown node </span><span class="si">{</span><span class="n">node_uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># @todo return error</span>
+            <span class="k">raise</span> <span class="n">e</span>
+
+        <span class="n">script_cells</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">story_graph_models</span><span class="o">.</span><span class="n">ScriptCell</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">script_cell_input</span> <span class="ow">in</span> <span class="n">script_cell_inputs</span><span class="p">:</span>
+            <span class="n">audio_cell</span> <span class="o">=</span> <span class="k">await</span> <span class="n">update_or_create_audio_cell</span><span class="p">(</span><span class="n">script_cell_input</span><span class="o">.</span><span class="n">audio_cell</span><span class="p">)</span>
+
+            <span class="c1"># if no cell order is given we add it to the end of the current node</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">script_cell_input</span><span class="o">.</span><span class="n">cell_order</span><span class="p">:</span>
+                <span class="n">cur_max_cell_order</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">ScriptCell</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="n">node</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;-cell_order&quot;</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">afirst</span><span class="p">()</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">cur_max_cell_order</span><span class="p">:</span>
+                    <span class="n">script_cell_input</span><span class="o">.</span><span class="n">cell_order</span> <span class="o">=</span> <span class="n">cur_max_cell_order</span><span class="o">.</span><span class="n">cell_order</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">script_cell_input</span><span class="o">.</span><span class="n">cell_order</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="p">(</span>
+                <span class="n">script_cell</span><span class="p">,</span>
+                <span class="n">created</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">ScriptCell</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aupdate_or_create</span><span class="p">(</span>
+                <span class="n">uuid</span><span class="o">=</span><span class="n">script_cell_input</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+                <span class="n">defaults</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;cell_order&quot;</span><span class="p">:</span> <span class="n">script_cell_input</span><span class="o">.</span><span class="n">cell_order</span><span class="p">,</span>
+                    <span class="s2">&quot;cell_type&quot;</span><span class="p">:</span> <span class="n">script_cell_input</span><span class="o">.</span><span class="n">cell_type</span><span class="p">,</span>
+                    <span class="s2">&quot;cell_code&quot;</span><span class="p">:</span> <span class="n">script_cell_input</span><span class="o">.</span><span class="n">cell_code</span><span class="p">,</span>
+                    <span class="s2">&quot;node&quot;</span><span class="p">:</span> <span class="n">node</span><span class="p">,</span>
+                    <span class="s2">&quot;audio_cell&quot;</span><span class="p">:</span> <span class="n">audio_cell</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">created</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created script cell </span><span class="si">{</span><span class="n">script_cell</span><span class="o">.</span><span class="n">uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">script_cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">script_cell</span><span class="p">)</span>
+
+        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_node_update</span><span class="p">(</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span> <span class="n">node_uuid</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">script_cells</span>  <span class="c1"># type: ignore</span></div>
+
+<div class="viewcode-block" id="Mutation.delete_script_cell"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.delete_script_cell">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_script_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">script_cell_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes a given :class:`~story_graph.models.ScriptCell`.&quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+        <span class="c1"># first get the node before the cell is deleted</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">script_cells__uuid</span><span class="o">=</span><span class="n">script_cell_uuid</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">afirst</span><span class="p">()</span>
+
+        <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">ScriptCell</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="n">uuid</span><span class="o">=</span><span class="n">script_cell_uuid</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">node</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_node_update</span><span class="p">(</span>
+                <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
+                <span class="n">node_uuid</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">graph_input</span><span class="p">:</span> <span class="n">AddGraphInput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Graph</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+        <span class="n">graph</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">acreate</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">graph_input</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">display_name</span><span class="o">=</span><span class="n">graph_input</span><span class="o">.</span><span class="n">display_name</span><span class="p">,</span>
+            <span class="n">slug_name</span><span class="o">=</span><span class="n">graph_input</span><span class="o">.</span><span class="n">slug_name</span><span class="p">,</span>
+            <span class="n">start_text</span><span class="o">=</span><span class="n">graph_input</span><span class="o">.</span><span class="n">start_text</span><span class="p">,</span>
+            <span class="n">about_text</span><span class="o">=</span><span class="n">graph_input</span><span class="o">.</span><span class="n">about_text</span><span class="p">,</span>
+            <span class="n">end_text</span><span class="o">=</span><span class="n">graph_input</span><span class="o">.</span><span class="n">end_text</span><span class="p">,</span>
+            <span class="n">public_visible</span><span class="o">=</span><span class="n">graph_input</span><span class="o">.</span><span class="n">public_visible</span><span class="p">,</span>
+            <span class="n">stream_assignment_policy</span><span class="o">=</span><span class="n">graph_input</span><span class="o">.</span><span class="n">stream_assignment_policy</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">await</span> <span class="n">graph</span><span class="o">.</span><span class="n">acreate_entry_node</span><span class="p">()</span>
+        <span class="c1"># need a refresh - in django 4.2 this will be available, see</span>
+        <span class="c1"># https://docs.djangoproject.com/en/4.2/ref/models/instances/#django.db.models.Model.arefresh_from_db</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">add_audio_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">new_audio_file</span><span class="p">:</span> <span class="n">AddAudioFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AudioFileUploadResponse</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+        <span class="k">if</span> <span class="n">new_audio_file</span><span class="o">.</span><span class="n">file</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_audio_file</span><span class="o">.</span><span class="n">file</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">InvalidAudioFile</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="s2">&quot;Received empty audio file&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">new_audio_file</span><span class="o">.</span><span class="n">file_name</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;.flac&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;.wav&quot;</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="k">return</span> <span class="n">InvalidAudioFile</span><span class="p">(</span><span class="n">error</span><span class="o">=</span><span class="s2">&quot;Only support flac and wav files&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">audio_file</span> <span class="o">=</span> <span class="k">await</span> <span class="n">stream_models</span><span class="o">.</span><span class="n">AudioFile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">acreate</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">new_audio_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">File</span><span class="p">(</span><span class="n">new_audio_file</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">new_audio_file</span><span class="o">.</span><span class="n">file_name</span><span class="p">),</span>
+                <span class="n">description</span><span class="o">=</span><span class="n">new_audio_file</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                <span class="n">auto_generated</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">InvalidAudioFile</span><span class="p">(</span>
+                <span class="n">error</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Unexpected error, could not save audio file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">audio_file</span>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">create_update_stream_variable</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">stream_variables</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">StreamVariableInput</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">StreamVariable</span><span class="p">]:</span>
+        <span class="n">stream_vars</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">stream_models</span><span class="o">.</span><span class="n">StreamVariable</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">stream_variable</span> <span class="ow">in</span> <span class="n">stream_variables</span><span class="p">:</span>
+            <span class="p">(</span>
+                <span class="n">stream_var</span><span class="p">,</span>
+                <span class="n">_</span><span class="p">,</span>
+            <span class="p">)</span> <span class="o">=</span> <span class="k">await</span> <span class="n">stream_models</span><span class="o">.</span><span class="n">StreamVariable</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aupdate_or_create</span><span class="p">(</span>
+                <span class="n">stream</span><span class="o">=</span><span class="k">await</span> <span class="n">stream_models</span><span class="o">.</span><span class="n">Stream</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span>
+                    <span class="n">uuid</span><span class="o">=</span><span class="n">stream_variable</span><span class="o">.</span><span class="n">stream_uuid</span>
+                <span class="p">),</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">stream_variable</span><span class="o">.</span><span class="n">key</span><span class="p">,</span>
+                <span class="n">defaults</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">stream_variable</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="s2">&quot;stream_to_sc&quot;</span><span class="p">:</span> <span class="n">stream_variable</span><span class="o">.</span><span class="n">stream_to_sc</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">stream_variable</span><span class="o">.</span><span class="n">stream_to_sc</span><span class="p">:</span>
+                <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="n">stream_var</span><span class="o">.</span><span class="n">send_to_sc</span><span class="p">)()</span>
+            <span class="n">stream_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stream_var</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">stream_vars</span>  <span class="c1"># type: ignore</span></div>
+
+
+<div class="viewcode-block" id="Subscription"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Subscription">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
+<span class="k">class</span> <span class="nc">Subscription</span><span class="p">:</span>
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">subscription</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">i</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">subscription</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">graph</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span>
+        <span class="n">graph_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">Graph</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">graph_uuid</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">graph</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">graph_update</span> <span class="ow">in</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">receive_graph_updates</span><span class="p">(</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">ws</span><span class="p">,</span> <span class="n">graph_uuid</span>
+        <span class="p">):</span>
+            <span class="k">yield</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">graph_update</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">subscription</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">node</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span>
+        <span class="n">node_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">Node</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">node_uuid</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">node</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">node_update</span> <span class="ow">in</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">receive_node_updates</span><span class="p">(</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">ws</span><span class="p">,</span> <span class="n">node_uuid</span>
+        <span class="p">):</span>
+            <span class="k">yield</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">node_update</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">subscription</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">stream_info</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span>
+        <span class="n">graph_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">StreamInfoResponse</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>  <span class="c1"># type: ignore</span>
+        <span class="n">consumer</span><span class="p">:</span> <span class="n">GraphQLWSConsumerInjector</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">ws</span>
+
+        <span class="n">graph</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">graph_uuid</span><span class="p">)</span><span class="o">.</span><span class="n">afirst</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;could not find graph!&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">stream</span> <span class="o">=</span> <span class="k">await</span> <span class="n">stream_models</span><span class="o">.</span><span class="n">Stream</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget_free_stream</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">NoStreamAvailableException</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">NoStreamAvailable</span><span class="p">()</span>
+            <span class="k">return</span>
+
+        <span class="k">await</span> <span class="n">stream</span><span class="o">.</span><span class="n">increment_num_listeners</span><span class="p">()</span>
+
+        <span class="n">engine</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">(</span>
+            <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
+            <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">cleanup</span><span class="p">():</span>
+            <span class="k">await</span> <span class="n">stream</span><span class="o">.</span><span class="n">decrement_num_listeners</span><span class="p">()</span>
+
+        <span class="k">async</span> <span class="k">def</span> <span class="nf">cleanup_on_stop</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A helper function which scans for a &quot;stop&quot; signal send via the websocket connection of our</span>
+<span class="sd">            graphql subscription as this is the indication from urql that we paused the subscription.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">text_data</span> <span class="o">:=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text_data&quot;</span><span class="p">):</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">text_data</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+                <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;stop&quot;</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Stop a stream due to a stop signal&quot;</span><span class="p">)</span>
+                    <span class="k">await</span> <span class="n">cleanup</span><span class="p">()</span>
+
+        <span class="n">consumer</span><span class="o">.</span><span class="n">disconnect_callback</span> <span class="o">=</span> <span class="n">cleanup</span>
+        <span class="n">consumer</span><span class="o">.</span><span class="n">receive_callback</span> <span class="o">=</span> <span class="n">cleanup_on_stop</span>
+
+        <span class="k">async</span> <span class="k">for</span> <span class="n">instruction</span> <span class="ow">in</span> <span class="n">engine</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">max_steps</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">10e4</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="n">StreamInfo</span><span class="p">(</span>
+                <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+                <span class="n">stream_instruction</span><span class="o">=</span><span class="n">instruction</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
+            <span class="p">)</span></div>
+
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">strawberry</span><span class="o">.</span><span class="n">Schema</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="n">Query</span><span class="p">,</span>
+    <span class="n">mutation</span><span class="o">=</span><span class="n">Mutation</span><span class="p">,</span>
+    <span class="n">subscription</span><span class="o">=</span><span class="n">Subscription</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gencaster
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023 Vinzenz Aubry and Dennis Scheiba.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

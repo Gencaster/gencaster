@@ -1,0 +1,902 @@
+
+
+<!DOCTYPE html>
+
+
+<html >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>OSC Server &#8212; Gencaster  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'back/osc_server';</script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GraphQL" href="graphql.html" />
+    <link rel="prev" title="Caster back" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="None"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/spiral.svg" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/spiral.svg" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../story_graph.html">Story Graph</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../services.html">Services</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Caster back</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="graphql.html">GraphQL</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/story_graph.html">Story Graph</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/stream.html">Stream</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/gencaster.html">GenCaster config</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../editor.html">Caster editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../front.html">Caster front</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sound.html">Caster sound</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment.html">Deployment</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/gencaster/gencaster" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/gencaster/gencaster/blob/main/docs/back/osc_server.rst?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/back/osc_server.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>OSC Server</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-osc_server">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#server">Server</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#models">Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oscauthmixin">OSCAuthMixin</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#scacknowledgemessage">SCAcknowledgeMessage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#scbeaconmessage">SCBeaconMessage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#remoteactionmessage">RemoteActionMessage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="osc-server">
+<span id="id1"></span><h1>OSC Server<a class="headerlink" href="#osc-server" title="Permalink to this headline">#</a></h1>
+<section id="module-osc_server">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-osc_server" title="Permalink to this headline">#</a></h2>
+<p>The OSC server handles the backend communication from SuperCollider.
+As OSC useses UDP and it is designed in an async manner we have to send back any result
+from SuperCollider via a new OSC message.
+As Django does not natively understand UDP messages and OSC is a rather restrictive
+protocol we created this server which is able to receive this messages and makes it available
+to our Django app by using its ORM.</p>
+<p>Each SuperCollider instance sends a beacon in order to get discovered by the backend as a
+<a class="reference internal" href="api/stream.html#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>.</p>
+<p>This is <strong>not</strong> a Django app but an application on its own.</p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>A long term goal would be to include this into the Django process but it seems gunicorn
+only runs when a request hits, making the necessary polling for received messages not working
+properly.</p>
+</div>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#server" id="id4">Server</a></p></li>
+<li><p><a class="reference internal" href="#models" id="id5">Models</a></p>
+<ul>
+<li><p><a class="reference internal" href="#oscauthmixin" id="id6">OSCAuthMixin</a></p></li>
+<li><p><a class="reference internal" href="#scacknowledgemessage" id="id7">SCAcknowledgeMessage</a></p></li>
+<li><p><a class="reference internal" href="#scbeaconmessage" id="id8">SCBeaconMessage</a></p></li>
+<li><p><a class="reference internal" href="#remoteactionmessage" id="id9">RemoteActionMessage</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<span class="target" id="module-osc_server.server"></span><section id="server">
+<h3><a class="toc-backref" href="#id4">Server</a><a class="headerlink" href="#server" title="Permalink to this headline">#</a></h3>
+<p>A naive server to receive OSC messages from SuperCollider.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="osc_server.server.OSCServer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">osc_server.server.</span></span><span class="sig-name descname"><span class="pre">OSCServer</span></span><a class="reference internal" href="../_modules/osc_server/server.html#OSCServer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osc_server.server.OSCServer" title="Permalink to this definition">#</a></dt>
+<dd><p>Uses pythonosc to map the routes</p>
+<table class="table" id="id3">
+<caption><span class="caption-text">Routes</span><a class="headerlink" href="#id3" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>route</p></th>
+<th class="head"><p>method</p></th>
+<th class="head"><p>message</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>/beacon</cite></p></td>
+<td><p><a class="reference internal" href="#osc_server.server.OSCServer.beacon_handler" title="osc_server.server.OSCServer.beacon_handler"><code class="xref py py-func docutils literal notranslate"><span class="pre">beacon_handler()</span></code></a></p></td>
+<td><p><a class="reference internal" href="#osc-beacon-message"><span class="std std-ref">SCBeaconMessage</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>/acknowledge_handler</cite></p></td>
+<td><p><a class="reference internal" href="#osc_server.server.OSCServer.acknowledge_handler" title="osc_server.server.OSCServer.acknowledge_handler"><code class="xref py py-func docutils literal notranslate"><span class="pre">acknowledge_handler()</span></code></a></p></td>
+<td><p><a class="reference internal" href="#osc-acknowledge-message"><span class="std std-ref">SCAcknowledgeMessage</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><cite>/remote/action</cite></p></td>
+<td><p><a class="reference internal" href="#osc_server.server.OSCServer.remote_action_handler" title="osc_server.server.OSCServer.remote_action_handler"><code class="xref py py-func docutils literal notranslate"><span class="pre">remote_action_handler()</span></code></a></p></td>
+<td><p><a class="reference internal" href="#osc-remote-action-message"><span class="std std-ref">RemoteActionMessage</span></a></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="osc_server.server.OSCServer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/osc_server/server.html#OSCServer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osc_server.server.OSCServer.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osc_server.server.OSCServer.acknowledge_handler">
+<span class="sig-name descname"><span class="pre">acknowledge_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">osc_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/osc_server/server.html#OSCServer.acknowledge_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osc_server.server.OSCServer.acknowledge_handler" title="Permalink to this definition">#</a></dt>
+<dd><p>Acknowledges a message and updates its associated
+<code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osc_server.server.OSCServer.beacon_handler">
+<span class="sig-name descname"><span class="pre">beacon_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">osc_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/osc_server/server.html#OSCServer.beacon_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osc_server.server.OSCServer.beacon_handler" title="Permalink to this definition">#</a></dt>
+<dd><p>Accepts a beacon from SuperCollider and creates a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code> from it so it gets discovered by the backend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="osc_server.server.OSCServer.remote_action_handler">
+<span class="sig-name descname"><span class="pre">remote_action_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">osc_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/osc_server/server.html#OSCServer.remote_action_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osc_server.server.OSCServer.remote_action_handler" title="Permalink to this definition">#</a></dt>
+<dd><p>Remote actions are used to trigger actions on a SuperCollider instance
+and can be send in form of a <a class="reference internal" href="api/stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>
+or raw from a local running SuperCollider instance which
+can be used to live code the SuperCollider instances managed by Gencaster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<span class="target" id="module-osc_server.models"></span><section id="models">
+<h3><a class="toc-backref" href="#id5">Models</a><a class="headerlink" href="#models" title="Permalink to this headline">#</a></h3>
+<p>Allows to use some static type checks for messages receiving from SuperCollider.</p>
+<section id="oscauthmixin">
+<span id="osc-auth-mixin"></span><h4><a class="toc-backref" href="#id6">OSCAuthMixin</a><a class="headerlink" href="#oscauthmixin" title="Permalink to this headline">#</a></h4>
+<table class="table">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="3"><p>Allows to validate a given password for backends.</p></td>
+</tr>
+<tr class="row-even"><td><p>type</p></td>
+<td colspan="2"><p><em>object</em></p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p>properties</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>password</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Password</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>string</em></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="scacknowledgemessage">
+<span id="osc-acknowledge-message"></span><h4><a class="toc-backref" href="#id7">SCAcknowledgeMessage</a><a class="headerlink" href="#scacknowledgemessage" title="Permalink to this headline">#</a></h4>
+<table class="table">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="3"><p>See <a class="reference internal" href="api/stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p>type</p></td>
+<td colspan="2"><p><em>object</em></p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p>properties</p></td>
+</tr>
+<tr class="row-even"><td rowspan="3"><ul class="simple">
+<li><p><strong>uuid</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Uuid</em></p></td>
+</tr>
+<tr class="row-odd"><td colspan="2"><p>UUID from <a class="reference internal" href="api/stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">stream.models.StreamInstruction</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>type</p></td>
+<td><p><em>string</em></p></td>
+</tr>
+<tr class="row-odd"><td><ul class="simple">
+<li><p><strong>status</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><span class="xref std std-ref">#/definitions/GenCasterStatusEnum</span></p></td>
+</tr>
+<tr class="row-even"><td rowspan="3"><ul class="simple">
+<li><p>return_value</p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Return Value</em></p></td>
+</tr>
+<tr class="row-odd"><td colspan="2"><p>Allows to store a return value in the database if given.</p></td>
+</tr>
+<tr class="row-even"><td><p>type</p></td>
+<td><p><em>string</em></p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p>definitions</p></td>
+</tr>
+<tr class="row-even"><td rowspan="4"><ul class="simple">
+<li><p>GenCasterStatusEnum</p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>GenCasterStatusEnum</em></p></td>
+</tr>
+<tr class="row-odd"><td colspan="2"><p>Status of our callback.</p></td>
+</tr>
+<tr class="row-even"><td><p>type</p></td>
+<td><p><em>string</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>enum</p></td>
+<td><p>SUCCESS, FAILURE, READY, FINISHED, BEACON, RECEIVED</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="scbeaconmessage">
+<span id="osc-beacon-message"></span><h4><a class="toc-backref" href="#id8">SCBeaconMessage</a><a class="headerlink" href="#scbeaconmessage" title="Permalink to this headline">#</a></h4>
+<table class="table">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="3"><p>Will create a <a class="reference internal" href="api/stream.html#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p>type</p></td>
+<td colspan="2"><p><em>object</em></p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p>properties</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>name</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Name</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>string</em></p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>synth_port</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Synth Port</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>integer</em></p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>lang_port</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Lang Port</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>integer</em></p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>janus_out_port</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Janus Out Port</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>integer</em></p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>janus_in_port</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Janus In Port</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>integer</em></p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>janus_out_room</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Janus Out Room</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>integer</em></p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>janus_in_room</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Janus In Room</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>integer</em></p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>janus_public_ip</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Janus Public Ip</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>string</em></p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>use_input</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Use Input</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>boolean</em></p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>osc_backend_host</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Osc Backend Host</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>string</em></p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>osc_backend_port</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Osc Backend Port</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>integer</em></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="remoteactionmessage">
+<span id="osc-remote-action-message"></span><h4><a class="toc-backref" href="#id9">RemoteActionMessage</a><a class="headerlink" href="#remoteactionmessage" title="Permalink to this headline">#</a></h4>
+<table class="table">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td colspan="3"><p>Sends message to SuperCollider cluster.</p></td>
+</tr>
+<tr class="row-even"><td><p>type</p></td>
+<td colspan="2"><p><em>object</em></p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p>properties</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><ul class="simple">
+<li><p><strong>password</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Password</em></p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>string</em></p></td>
+</tr>
+<tr class="row-even"><td><ul class="simple">
+<li><p><strong>action</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><span class="xref std std-ref">#/definitions/RemoteActionType</span></p></td>
+</tr>
+<tr class="row-odd"><td rowspan="2"><ul class="simple">
+<li><p><strong>cmd</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Cmd</em></p></td>
+</tr>
+<tr class="row-even"><td><p>type</p></td>
+<td><p><em>string</em></p></td>
+</tr>
+<tr class="row-odd"><td rowspan="2"><ul class="simple">
+<li><p>target</p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Target</em></p></td>
+</tr>
+<tr class="row-even"><td><p>type</p></td>
+<td><p><em>string</em></p></td>
+</tr>
+<tr class="row-odd"><td rowspan="3"><ul class="simple">
+<li><p><strong>protocol_version</strong></p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>Protocol Version</em></p></td>
+</tr>
+<tr class="row-even"><td colspan="2"><p>Can be used to upgrade our communication by rejecting older clients/messages</p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>string</em></p></td>
+</tr>
+<tr class="row-even"><td colspan="3"><p>definitions</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><ul class="simple">
+<li><p>RemoteActionType</p></li>
+</ul>
+</td>
+<td colspan="2"><p><em>RemoteActionType</em></p></td>
+</tr>
+<tr class="row-even"><td colspan="2"><p>Requests an action on SuperCollider instance.</p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td><p><em>string</em></p></td>
+</tr>
+<tr class="row-even"><td><p>enum</p></td>
+<td><p>code, speak</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<span class="target" id="module-osc_server.exceptions"></span><dl class="py exception">
+<dt class="sig sig-object py" id="osc_server.exceptions.MalformedOscMessage">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">osc_server.exceptions.</span></span><span class="sig-name descname"><span class="pre">MalformedOscMessage</span></span><a class="reference internal" href="../_modules/osc_server/exceptions.html#MalformedOscMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osc_server.exceptions.MalformedOscMessage" title="Permalink to this definition">#</a></dt>
+<dd><p>OSC message has wrong layout.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="osc_server.exceptions.OscBackendAuthException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">osc_server.exceptions.</span></span><span class="sig-name descname"><span class="pre">OscBackendAuthException</span></span><a class="reference internal" href="../_modules/osc_server/exceptions.html#OscBackendAuthException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osc_server.exceptions.OscBackendAuthException" title="Permalink to this definition">#</a></dt>
+<dd><p>Authentication failed.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Caster back</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="graphql.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">GraphQL</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-osc_server">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#server">Server</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#models">Models</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#oscauthmixin">OSCAuthMixin</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#scacknowledgemessage">SCAcknowledgeMessage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#scbeaconmessage">SCBeaconMessage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#remoteactionmessage">RemoteActionMessage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gencaster
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023 Vinzenz Aubry and Dennis Scheiba.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
