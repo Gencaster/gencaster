@@ -14,9 +14,7 @@ main.bd-main {
 
     --pst-color-white-link: var(--blue) !important;
     --pst-color-black-link: var(--green) !important;
-    --pst-color-white-primary: var(--blue) !important;
-    --pst-color-black-primary: var(--green) !important;
-
+    --pst-color-primary: var(--blue) !important;
 
     --pst-color-warning: var(--green) !important;
     --pst-color-attention: var(--green) !important;
