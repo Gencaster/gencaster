@@ -6,8 +6,9 @@
       made with <a
         href="https://gencaster.org/"
         target="_blank"
-      >gencaster</a>
+      >gencaster</a> - mehr Info ↓
     </p>
+    <p />
   </div>
 </template>
 
