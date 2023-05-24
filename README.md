@@ -70,4 +70,4 @@ By doing this we can let nginx handle the SSL context and not need to embed this
 
 ## License
 
-APGL-3.0
+AGPL-3.0
