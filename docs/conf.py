@@ -23,7 +23,7 @@ django.setup()
 # -- Project information -----------------------------------------------------
 
 project = "Gencaster"
-copyright = "2023, Gencaster"
+copyright = "2023 Vinzenz Aubry and Dennis Scheiba"
 author = "Gencaster"
 
 # The full version, including alpha/beta/rc tags
