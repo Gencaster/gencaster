@@ -1,49 +1,50 @@
-# GenCaster
+# [Gencaster](https://gencaster.org)
 
-An web environment for generative audio streams with low latency and device agnostic thanks to WebRTC.
+<p align="center">
+  <img width="200" height="200" src="./docs/_static/logo.png">
+</p>
 
-## Services
+**Gencaster** is a non-linear audio streaming framework for real-time radiophonic experiences and live music and consists of multiple services.
 
-To give an overview of the project we will state the function of the different services described in the `docker-compose.yaml` file.
-For service specific details check the `README.md` within each folder.
+The audio streams have a low latency (about 150ms) and can be listened to in any modern browser, and can dynamically render audio content based on a given *story graph* that can react to user input such as name, time, GPS position, or even microphone streaming after permissions have been granted.
 
-Service | Folder | Port | Comment
---- | --- | --- | ---
-`backend` | `caster-back` | `8081` | Django backend with database management for streams
-`osc_backend` | `caster-back` | `57130` | OSC server to receive OSC messages from SuperCollider and insert them into the database
-`editor` | `caster-editor` | `3001` | Editor fronted for story graphs
-`frontend` | `caster-front` | `3000` | Nuxt frontend for user interaction
-`sound` | `caster-sound` | `57120`, `8088` | SuperCollider server which can be listened to via WebRTC.
-`database` | | `5432` | A postgres database.
-`redis` | | | In memory database to distribute messages in our backend
+* *caster-sound* is a service that handles all streaming and audio rendering functionality, using [SuperCollider](https://supercollider.github.io/) to generate audio and [Janus](https://janus.conf.meetecho.com) to distribute audio to listeners via [WebRTC](https://janus.conf.meetecho.com)
+
+* *caster-back* is a web backend to manage the streams of *caster-sound*, written in [Django](https://www.djangoproject.com/)
+
+* *caster-front* is a web frontend that allows users to listen to the streams of *caster-sound*, written in [Vue](https://vuejs.org/)
+
+* *caster-editor* is a web-editor in which the actions of a stream, called a *story graph*, can be created, edited and tweaked using Python or SuperCollider, and is also written in [Vue](https://vuejs.org/)
+
+
+For further information please visit
+
+* [Project website gencaster.org](https://gencaster.org)
+* [Documentation](https://gencaster.github.io/gencaster)
 
 ## Documentation
 
-This project is documented via Sphinx.
-The documentation sources are in the folder `docs` and the documentation
-can be build by executing
+Gencaster uses [Sphinx](https://www.sphinx-doc.org/en/master/) for documentation and can be accessed online via GitHub pages at [gencaster.github.io/gencaster](https://gencaster.github.io/gencaster).
+The sources for the documentation are located in the `./docs` directory and can be build locally by executing
 
 ```shell
 make docs
 ```
 
-Be sure to run this in the proper Python environment (e.g. virtualenv).
-
 ## Development
 
-Please install [`pre-commit`](https://pre-commit.com/) and set it up via `pre-commit install` before committing to the repository.
-
-After a commit on the `main` branch it will trigger a re-deployment on the development server.
+In order to have consistent styles and a good history Gencaster uses [`pre-commit`](https://pre-commit.com/).
+After installation of pre-commit and cloning the repository the necessary scripts can be set up via `pre-commit install`.
 
 ### Local development
 
-To start a local instance of GenCaster with all its services simply type use `make`
+To start a local instance of Gencaster with all its services using [Docker](https://www.docker.com/) simply use
 
 ```shell
 make docker-local
 ```
 
-You can use the following flags to modify the stack
+There are additional flags to control which services are spawned
 
 flag | comment
 --- | ---
@@ -53,17 +54,7 @@ flag | comment
 
 **Example:** `make no-editor=1 no-frontend=1 docker-local` starts without editor and frontend.
 
-This allows you to use your local host machine in place to develop with auto reload as Docker and NodeJS is not a nice tandem because of the dependence of the `node_modules` folder.
-
-### Server setup
-
-The deployment server requires the following dependencies installed
-
-* `git`
-* `make`
-* `docker` (with `docker compose`)
-
-Also `nginx` as a reverse proxy is recommended.
+This allows e.g. to have access to the Gencaster backend but use the host environment to develop the editor and frontend as development with NodeJS within Docker is a bit complicated due to the shared `node_modules` directory.
 
 ### Network
 
@@ -72,3 +63,11 @@ The `host` method has the disadvantage that every port we expose within our cont
 
 As WebRTC only works within a SSL environment we use a nginx reverse proxy to forward the port `8089` to the local port `8088` which is the http version of the Janus server.
 By doing this we can let nginx handle the SSL context and not need to embed this into Janus.
+
+## Copyright
+
+© 2023 Vinzenz Aubry and Dennis Scheiba
+
+## License
+
+APGL-3.0

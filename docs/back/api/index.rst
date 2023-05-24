@@ -8,11 +8,3 @@ API
     ./story_graph.rst
     ./stream.rst
     ./gencaster.rst
-
-
-Global model graph
-------------------
-
-.. figure:: ../../graphs/global.png
-
-    Global model graph

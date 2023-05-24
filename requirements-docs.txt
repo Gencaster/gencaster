@@ -1,8 +1,8 @@
 -r "caster-back/requirements-test.txt"
 
 sphinx==4.4.0
-sphinx-rtd-theme==1.0.0
 sphinx-autodoc-typehints==1.17.0
 sphinx-pydantic==0.1.1
 sphinx-jsonschema==1.15
 sphinxcontrib-django==2.0
+sphinx-book-theme==1.0.1
