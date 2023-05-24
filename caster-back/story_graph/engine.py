@@ -94,8 +94,9 @@ class Engine:
             This does not respect the different Playback formats
 
         """
+        # text field has no enum restrictions but the database enforces this
         instruction = await sync_to_async(self.stream.stream_point.play_audio_file)(
-            audio_cell.audio_file, audio_cell.playback
+            audio_cell.audio_file, audio_cell.playback  # type: ignore
         )
         yield instruction
         await self.wait_for_finished_instruction(instruction)
