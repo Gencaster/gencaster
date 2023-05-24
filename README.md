@@ -1,7 +1,7 @@
 # [Gencaster](https://gencaster.org)
 
 <p align="center">
-  <img width="200" height="200" src="./docs/_static/logo.png">
+  <img width="200" height="200" src="./docs/_static/logo.svg">
 </p>
 
 **Gencaster** is a non-linear audio streaming framework for real-time radiophonic experiences and live music and consists of multiple services.
