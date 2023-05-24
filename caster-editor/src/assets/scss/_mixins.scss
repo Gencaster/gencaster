@@ -68,6 +68,14 @@
     }
   }
 
+  @if $fontStyle == mediumHeadline {
+    font-size: $h2FontSizeMobile;
+    line-height: 1.3;
+    @include onScreen('tablet-portrait-up') {
+      font-size: $largeFontSize;
+    }
+  }
+
   @if $fontStyle == headlineLarger {
     font-size: $largerFontSizeMobile;
     line-height: 1.05;

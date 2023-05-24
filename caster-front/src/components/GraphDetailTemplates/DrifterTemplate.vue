@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Ref, nextTick, ref } from "vue";
+import { type Ref, nextTick, ref, computed } from "vue";
 import { ElCollapse, ElCollapseItem, ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -29,8 +29,8 @@ const {
 } = storeToRefs(usePlayerStore());
 
 const router = useRouter();
-// const showDebug = computed<boolean>(() => router.currentRoute.value.query.debug === null);
-const showDebug: Ref<boolean> = ref(true);
+const showDebug = computed<boolean>(() => router.currentRoute.value.query.debug === null);
+// const showDebug: Ref<boolean> = ref(true);
 
 const { data, error, stale } = useStreamSubscription({
   variables: {

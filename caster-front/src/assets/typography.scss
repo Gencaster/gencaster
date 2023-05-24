@@ -112,6 +112,7 @@ p {
 ol,
 ul {
   padding-left: 1.5em;
+
   p {
     margin: 0;
   }
@@ -123,6 +124,24 @@ ol {
 
 ul {
   list-style-type: disc;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  tr {
+    border-bottom: $lineThin solid $black;
+  }
+
+  td {
+    padding: 0;
+    width: 50%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    // background-color: red;
+  }
 }
 
 .no-underline {
