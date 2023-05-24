@@ -114,3 +114,13 @@ const gpsRequest = async () => {
     </ElDialog>
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import '@/assets/mixins.scss';
+@import '@/assets/variables.scss';
+
+.gps-wrapper {
+  display: flex;
+  gap: 12px;
+}
+</style>
