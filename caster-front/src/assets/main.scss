@@ -102,8 +102,12 @@ body {
 .general-padding {
   padding-left: $mobilePadding;
   padding-right: $mobilePadding;
-}
 
+  @include onScreen('tablet-portrait-up') {
+    padding-left: calc($mobilePadding * 2);
+    padding-right: calc($mobilePadding * 2);
+  }
+}
 
 // transitions
 

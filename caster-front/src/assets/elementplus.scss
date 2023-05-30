@@ -45,6 +45,20 @@
     z-index: 12;
 }
 
+// accordion
+.el-collapse {
+    font-size: $baseFontSize ;
+    background-color: transparent;
+    --el-collapse-header-bg-color: transparent;
+    --el-collapse-content-bg-color: transparent;
+    --el-collapse-border-color: #{$black};
+    border-top: $lineThin solid $black;
+
+    .el-collapse-item__header,  .el-collapse-item__content {
+        font-size: $baseFontSize;
+    }
+}
+
 // dialog
 .el-dialog {
     border-radius: $borderRadius;
