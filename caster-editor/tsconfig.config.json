@@ -2,7 +2,6 @@
   "extends": "@vue/tsconfig/tsconfig.node.json",
   "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "playwright.config.*"],
   "compilerOptions": {
-    "verbatimModuleSyntax": true,
     "composite": true,
     "types": ["node", "vite/client"]
   }
