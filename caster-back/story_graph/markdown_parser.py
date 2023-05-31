@@ -76,6 +76,7 @@ class GencasterRenderer(BaseRenderer):
             "male": self.male,
             "female": self.female,
             "var": self.var,
+            "raw_ssml": self.raw_ssml,
         }
 
     def validate_gencaster_tokens(self, text: str) -> bool:
@@ -122,7 +123,7 @@ class GencasterRenderer(BaseRenderer):
             hello {female}`world`
 
         """
-        return f'<voice name="{TextToSpeech.VoiceNameChoices.DE_STANDARD_A__FEMALE}">{text}</voice>'
+        return f'<voice name="{TextToSpeech.VoiceNameChoices.DE_NEURAL2_C__FEMALE}">{text}</voice>'
 
     def male(self, text: str) -> str:
         """
@@ -133,7 +134,7 @@ class GencasterRenderer(BaseRenderer):
             hello {male}`world`
 
         """
-        return f'<voice name="{TextToSpeech.VoiceNameChoices.DE_STANDARD_B__MALE}">{text}</voice>'
+        return f'<voice name="{TextToSpeech.VoiceNameChoices.DE_NEURAL2_B__MALE}">{text}</voice>'
 
     # break is native word in python
     def add_break(self, text: str) -> str:
@@ -220,6 +221,18 @@ class GencasterRenderer(BaseRenderer):
         """
         fallback_value = text.split("|")[-1] if text.count("|") else ""
         return self.stream_variables.get(text.split("|")[0], fallback_value)
+
+    def raw_ssml(self, text: str) -> str:
+        """
+        Allows to use raw ssml statements to extend functionality that may not be covered by this parser.
+
+        Example:
+
+        .. code-block:: markdown
+
+            Hello {raw_ssml}`<emphasis level="moderate">world</emphasis>`
+        """
+        return text
 
     def render_gencaster_token(self, token: GencasterToken) -> str:
         try:
