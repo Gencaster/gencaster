@@ -4,20 +4,20 @@ updates:
   - package-ecosystem: "pip"
     directory: "/caster-back"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     target-branch: "main"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     target-branch: "main"
   - package-ecosystem: "npm"
     directory: "/caster-front"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     target-branch: "main"
   - package-ecosystem: "npm"
     directory: "/caster-editor"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     target-branch: "main"
