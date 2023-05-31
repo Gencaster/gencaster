@@ -164,6 +164,12 @@ baz.
             self.gm_md("hello {var}`foo|bar`", {"foo": "world"}),
         )
 
+    def test_raw_ssml(self):
+        self.assertEqual(
+            self.SPEAK.format('Hello <emphasis level="moderate">world</emphasis>'),
+            self.gm_md('Hello {raw_ssml}`<emphasis level="moderate">world</emphasis>`'),
+        )
+
 
 class ScriptCellTestCase(TransactionTestCase):
     @staticmethod
