@@ -613,6 +613,21 @@ in GC docs.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="story_graph.markdown_parser.GencasterRenderer.raw_ssml">
+<span class="sig-name descname"><span class="pre">raw_ssml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/markdown_parser.html#GencasterRenderer.raw_ssml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.markdown_parser.GencasterRenderer.raw_ssml" title="Permalink to this definition">#</a></dt>
+<dd><p>Allows to use raw ssml statements to extend functionality that may not be covered by this parser.</p>
+<p>Example:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>Hello {raw_ssml}`&lt;emphasis level=&quot;moderate&quot;&gt;world&lt;/emphasis&gt;`
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="story_graph.markdown_parser.GencasterRenderer.validate_gencaster_tokens">
 <span class="sig-name descname"><span class="pre">validate_gencaster_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/markdown_parser.html#GencasterRenderer.validate_gencaster_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.markdown_parser.GencasterRenderer.validate_gencaster_tokens" title="Permalink to this definition">#</a></dt>
 <dd><p>Validates if the used tags are known to Gencaster</p>

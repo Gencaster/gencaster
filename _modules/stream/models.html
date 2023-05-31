@@ -810,7 +810,14 @@ document.write(`
         <span class="n">DE_WAVENET_C__FEMALE</span> <span class="o">=</span> <span class="s2">&quot;de-DE-Wavenet-C&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;de-DE-Wavenet-C__FEMALE&quot;</span><span class="p">)</span>
         <span class="n">DE_WAVENET_D__MALE</span> <span class="o">=</span> <span class="s2">&quot;de-DE-Wavenet-D&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;de-DE-Wavenet-D__MALE&quot;</span><span class="p">)</span>
         <span class="n">DE_WAVENET_E__MALE</span> <span class="o">=</span> <span class="s2">&quot;de-DE-Wavenet-E&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;de-DE-Wavenet-E__MALE&quot;</span><span class="p">)</span>
-        <span class="n">DE_WAVENET_F__FEMALE</span> <span class="o">=</span> <span class="s2">&quot;de-DE-Wavenet-F&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;de-DE-Wavenet-F__FEMALE&quot;</span><span class="p">)</span></div>
+        <span class="n">DE_WAVENET_F__FEMALE</span> <span class="o">=</span> <span class="s2">&quot;de-DE-Wavenet-F&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;de-DE-Wavenet-F__FEMALE&quot;</span><span class="p">)</span>
+
+        <span class="n">DE_NEURAL2_B__MALE</span> <span class="o">=</span> <span class="s2">&quot;de-DE-Neural2-B&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;de-DE-Neural2-B__MALE&quot;</span><span class="p">)</span>
+        <span class="n">DE_NEURAL2_C__FEMALE</span> <span class="o">=</span> <span class="s2">&quot;de-DE-Neural2-C&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;de-DE-Neural2-C__FEMALE&quot;</span><span class="p">)</span>
+        <span class="n">DE_NEURAL2_D__MALE</span> <span class="o">=</span> <span class="s2">&quot;de-DE-Neural2-D&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;de-DE-Neural2-D__MALE&quot;</span><span class="p">)</span>
+        <span class="n">DE_NEURAL2_F__FEMALE</span> <span class="o">=</span> <span class="s2">&quot;de-DE-Neural2-F&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;de-DE-Neural2-F__FEMALE&quot;</span><span class="p">)</span>
+
+        <span class="n">DE_POLYGLOT_1__MALE</span> <span class="o">=</span> <span class="s2">&quot;de-DE-Polyglot-1&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;de-DE-Polyglot-1__MALE&quot;</span><span class="p">)</span></div>
 
     <span class="n">uuid</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">UUIDField</span><span class="p">(</span>
         <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -840,14 +847,14 @@ document.write(`
         <span class="n">max_length</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
         <span class="n">verbose_name</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Name of voice used to generate&quot;</span><span class="p">),</span>
         <span class="n">choices</span><span class="o">=</span><span class="n">VoiceNameChoices</span><span class="o">.</span><span class="n">choices</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="n">VoiceNameChoices</span><span class="o">.</span><span class="n">DE_STANDARD_D__MALE</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">VoiceNameChoices</span><span class="o">.</span><span class="n">DE_NEURAL2_C__FEMALE</span><span class="p">,</span>
     <span class="p">)</span>
 
 <div class="viewcode-block" id="TextToSpeech.create_from_text"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.TextToSpeech.create_from_text">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_from_text</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">ssml_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">voice_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">VoiceNameChoices</span><span class="o">.</span><span class="n">DE_STANDARD_D__MALE</span><span class="p">,</span>
+        <span class="n">voice_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">VoiceNameChoices</span><span class="o">.</span><span class="n">DE_NEURAL2_C__FEMALE</span><span class="p">,</span>
         <span class="n">force_new</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TextToSpeech&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -868,10 +875,10 @@ document.write(`
 <span class="sd">            with the same text.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">force_new</span><span class="p">:</span>
-            <span class="n">existing_text</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+            <span class="k">if</span> <span class="n">existing_text</span> <span class="o">:=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
                 <span class="n">text</span><span class="o">=</span><span class="n">ssml_text</span><span class="p">,</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">existing_text</span><span class="p">:</span>
+                <span class="n">voice_name</span><span class="o">=</span><span class="n">voice_name</span><span class="p">,</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">():</span>
                 <span class="k">return</span> <span class="n">existing_text</span>
 
         <span class="n">client</span> <span class="o">=</span> <span class="n">texttospeech</span><span class="o">.</span><span class="n">TextToSpeechClient</span><span class="p">()</span>

@@ -343,6 +343,7 @@ document.write(`
             <span class="s2">&quot;male&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">male</span><span class="p">,</span>
             <span class="s2">&quot;female&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">female</span><span class="p">,</span>
             <span class="s2">&quot;var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="p">,</span>
+            <span class="s2">&quot;raw_ssml&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_ssml</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="GencasterRenderer.validate_gencaster_tokens"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.validate_gencaster_tokens">[docs]</a>    <span class="k">def</span> <span class="nf">validate_gencaster_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -389,7 +390,7 @@ document.write(`
 <span class="sd">            hello {female}`world`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;voice name=&quot;</span><span class="si">{</span><span class="n">TextToSpeech</span><span class="o">.</span><span class="n">VoiceNameChoices</span><span class="o">.</span><span class="n">DE_STANDARD_A__FEMALE</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/voice&gt;&#39;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;voice name=&quot;</span><span class="si">{</span><span class="n">TextToSpeech</span><span class="o">.</span><span class="n">VoiceNameChoices</span><span class="o">.</span><span class="n">DE_NEURAL2_C__FEMALE</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/voice&gt;&#39;</span></div>
 
 <div class="viewcode-block" id="GencasterRenderer.male"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.male">[docs]</a>    <span class="k">def</span> <span class="nf">male</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -400,7 +401,7 @@ document.write(`
 <span class="sd">            hello {male}`world`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;voice name=&quot;</span><span class="si">{</span><span class="n">TextToSpeech</span><span class="o">.</span><span class="n">VoiceNameChoices</span><span class="o">.</span><span class="n">DE_STANDARD_B__MALE</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/voice&gt;&#39;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;voice name=&quot;</span><span class="si">{</span><span class="n">TextToSpeech</span><span class="o">.</span><span class="n">VoiceNameChoices</span><span class="o">.</span><span class="n">DE_NEURAL2_B__MALE</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/voice&gt;&#39;</span></div>
 
     <span class="c1"># break is native word in python</span>
 <div class="viewcode-block" id="GencasterRenderer.add_break"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.add_break">[docs]</a>    <span class="k">def</span> <span class="nf">add_break</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -487,6 +488,18 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fallback_value</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream_variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fallback_value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GencasterRenderer.raw_ssml"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.raw_ssml">[docs]</a>    <span class="k">def</span> <span class="nf">raw_ssml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Allows to use raw ssml statements to extend functionality that may not be covered by this parser.</span>
+
+<span class="sd">        Example:</span>
+
+<span class="sd">        .. code-block:: markdown</span>
+
+<span class="sd">            Hello {raw_ssml}`&lt;emphasis level=&quot;moderate&quot;&gt;world&lt;/emphasis&gt;`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">text</span></div>
 
     <span class="k">def</span> <span class="nf">render_gencaster_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">:</span> <span class="n">GencasterToken</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
