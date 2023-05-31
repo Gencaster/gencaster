@@ -545,6 +545,13 @@ class TextToSpeech(models.Model):
         DE_WAVENET_E__MALE = "de-DE-Wavenet-E", _("de-DE-Wavenet-E__MALE")
         DE_WAVENET_F__FEMALE = "de-DE-Wavenet-F", _("de-DE-Wavenet-F__FEMALE")
 
+        DE_NEURAL2_B__MALE = "de-DE-Neural2-B", _("de-DE-Neural2-B__MALE")
+        DE_NEURAL2_C__FEMALE = "de-DE-Neural2-C", _("de-DE-Neural2-C__FEMALE")
+        DE_NEURAL2_D__MALE = "de-DE-Neural2-D", _("de-DE-Neural2-D__MALE")
+        DE_NEURAL2_F__FEMALE = "de-DE-Neural2-F", _("de-DE-Neural2-F__FEMALE")
+
+        DE_POLYGLOT_1__MALE = "de-DE-Polyglot-1", _("de-DE-Polyglot-1__MALE")
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -573,14 +580,14 @@ class TextToSpeech(models.Model):
         max_length=64,
         verbose_name=_("Name of voice used to generate"),
         choices=VoiceNameChoices.choices,
-        default=VoiceNameChoices.DE_STANDARD_D__MALE,
+        default=VoiceNameChoices.DE_NEURAL2_C__FEMALE,
     )
 
     @classmethod
     def create_from_text(
         cls,
         ssml_text: str,
-        voice_name: str = VoiceNameChoices.DE_STANDARD_D__MALE,
+        voice_name: str = VoiceNameChoices.DE_NEURAL2_C__FEMALE,
         force_new: bool = False,
     ) -> "TextToSpeech":
         """
