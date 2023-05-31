@@ -105,10 +105,10 @@ class GencasterMarkdownTestCase(TransactionTestCase):
         self.assertEqual(self.SPEAK.format("Hello World"), self.gm_md("Hello World"))
 
     def test_female(self):
-        self.assertTrue("de-DE-Standard-A" in self.gm_md("{female}`foo`"))
+        self.assertTrue("de-DE-Neural2-C" in self.gm_md("{female}`foo`"))
 
     def test_male(self):
-        self.assertTrue("de-DE-Standard-B" in self.gm_md("{male}`foo`"))
+        self.assertTrue("de-DE-Neural2-B" in self.gm_md("{male}`foo`"))
 
     def test_break(self):
         self.assertEqual(

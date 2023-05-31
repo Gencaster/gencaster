@@ -122,7 +122,7 @@ class GencasterRenderer(BaseRenderer):
             hello {female}`world`
 
         """
-        return f'<voice name="{TextToSpeech.VoiceNameChoices.DE_STANDARD_A__FEMALE}">{text}</voice>'
+        return f'<voice name="{TextToSpeech.VoiceNameChoices.DE_NEURAL2_C__FEMALE}">{text}</voice>'
 
     def male(self, text: str) -> str:
         """
@@ -133,7 +133,7 @@ class GencasterRenderer(BaseRenderer):
             hello {male}`world`
 
         """
-        return f'<voice name="{TextToSpeech.VoiceNameChoices.DE_STANDARD_B__MALE}">{text}</voice>'
+        return f'<voice name="{TextToSpeech.VoiceNameChoices.DE_NEURAL2_B__MALE}">{text}</voice>'
 
     # break is native word in python
     def add_break(self, text: str) -> str:
