@@ -608,10 +608,10 @@ class TextToSpeech(models.Model):
             with the same text.
         """
         if not force_new:
-            existing_text = cls.objects.filter(
+            if existing_text := cls.objects.filter(
                 text=ssml_text,
-            ).first()
-            if existing_text:
+                voice_name=voice_name,
+            ).first():
                 return existing_text
 
         client = texttospeech.TextToSpeechClient()
