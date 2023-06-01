@@ -23,7 +23,7 @@
     "@rah-emil/vite-plugin-vue-type-imports": "^0.2.5",
     "@toast-ui/editor": "^3.2.2",
     "@urql/exchange-multipart-fetch": "^1.0.1",
-    "@urql/vue": "^1.0.4",
+    "@urql/vue": "^1.1.2",
     "codemirror": "^6.0.1",
     "element-plus": "^2.3.5",
     "graphql": "^16.6.0",
