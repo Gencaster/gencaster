@@ -37,7 +37,7 @@ watch(gpsError, () => {
       ElMessage.error("Plesae allow GPS :>");
     else if (gpsError.value.POSITION_UNAVAILABLE || gpsError.value.PERMISSION_DENIED)
       ElMessage.error(`Could not obtain a GPS position: ${gpsError.value.message}`);
-    router.push("/gpsError");
+    router.push("/gps-error");
   }
 });
 

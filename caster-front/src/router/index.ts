@@ -18,8 +18,8 @@ const router = createRouter({
       component: DebugPlayer,
     },
     {
-      path: "/gpsError",
-      name: "gpsError",
+      path: "/gps-error",
+      name: "gps-error",
       component: GpsError,
     },
     {
