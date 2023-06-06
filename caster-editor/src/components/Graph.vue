@@ -54,8 +54,8 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
 
   // get click position
   const clickPos = {
-    x: event.offsetX,
-    y: event.offsetY,
+    x: event.offsetX || 0,
+    y: event.offsetY || 0,
   };
 
 
@@ -63,8 +63,8 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
   const { height: gHeight, width: gWidth } = vNetworkGraph.value.getSizes();
 
   // screen aim
-  let aimPos;
-  let moveBy;
+  let aimPos: { x: number; y: number };
+  let moveBy: { x: number; y: number };
 
   switch (location) {
     case graphPanType.NodeEditor:
