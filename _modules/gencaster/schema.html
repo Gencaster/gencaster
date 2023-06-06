@@ -287,6 +287,8 @@ document.write(`
 <span class="kn">import</span> <span class="nn">strawberry</span>
 <span class="kn">import</span> <span class="nn">strawberry.django</span>
 <span class="kn">from</span> <span class="nn">asgiref.sync</span> <span class="kn">import</span> <span class="n">sync_to_async</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">authenticate</span><span class="p">,</span> <span class="n">login</span><span class="p">,</span> <span class="n">logout</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">AbstractBaseUser</span>
 <span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span> <span class="k">as</span> <span class="n">UserModel</span>
 <span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">PermissionDenied</span>
 <span class="kn">from</span> <span class="nn">django.core.files</span> <span class="kn">import</span> <span class="n">File</span>
@@ -333,6 +335,8 @@ document.write(`
     <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;User is not authenticated&quot;</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">has_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
         <span class="k">if</span> <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">)():</span>  <span class="c1"># type: ignore</span>
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
@@ -408,13 +412,51 @@ document.write(`
     <span class="n">stream_variable</span><span class="p">:</span> <span class="n">StreamVariable</span> <span class="o">=</span> <span class="n">AuthStrawberryDjangoField</span><span class="p">()</span>
 
     <span class="nd">@strawberry</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">permission_classes</span><span class="o">=</span><span class="p">[</span><span class="n">IsAuthenticated</span><span class="p">])</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">is_authenticated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>  <span class="c1"># type: ignore</span></div>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">is_authenticated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="c1"># type issue https://github.com/python/mypy/issues/9590</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_anonymous</span><span class="p">)():</span>  <span class="c1"># type: ignore</span>
+            <span class="k">return</span> <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span>  <span class="c1"># type: ignore</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="LoginError"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.LoginError">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
+<span class="k">class</span> <span class="nc">LoginError</span><span class="p">:</span>
+    <span class="n">error_message</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<span class="n">LoginRequest</span> <span class="o">=</span> <span class="n">strawberry</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="s2">&quot;LoginRequestResponse&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">LoginError</span><span class="p">,</span> <span class="n">User</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="Mutation"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
 <span class="k">class</span> <span class="nc">Mutation</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Mutations for Gencaster via GraphQL.&quot;&quot;&quot;</span>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">auth_login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">username</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LoginRequest</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+        <span class="c1"># user type is Optional[AbstractBaseUser] but we return user which is similar</span>
+        <span class="n">user</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AbstractBaseUser</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="n">authenticate</span><span class="p">)(</span>
+                <span class="n">request</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">request</span><span class="p">,</span>
+                <span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span>
+                <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">PermissionDenied</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LoginError</span><span class="p">(</span>
+                <span class="n">error_message</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="n">login</span><span class="p">)(</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">user</span>  <span class="c1"># type: ignore</span>
+
+        <span class="k">return</span> <span class="n">LoginError</span><span class="p">(</span>
+            <span class="n">error_message</span><span class="o">=</span><span class="s2">&quot;Wrong credentials&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">auth_logout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="n">logout</span><span class="p">)(</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="Mutation.add_node"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.add_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="n">new_node</span><span class="p">:</span> <span class="n">NodeCreate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
