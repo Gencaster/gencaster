@@ -21,6 +21,7 @@ import strawberry
 import strawberry.django
 from asgiref.sync import sync_to_async
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import User as UserModel
 from django.core.exceptions import PermissionDenied
 from django.core.files import File
@@ -145,8 +146,8 @@ class Query:
 
     @strawberry.field(permission_classes=[IsAuthenticated])
     async def is_authenticated(self, info) -> Optional[User]:
-        # print(info.context.request.user)
-        if not await sync_to_async(lambda: info.context.request.user.is_anonymous)():
+        # type issue https://github.com/python/mypy/issues/9590
+        if not await sync_to_async(lambda: info.context.request.user.is_anonymous)():  # type: ignore
             return info.context.request.user  # type: ignore
         return None
 
@@ -165,7 +166,8 @@ class Mutation:
 
     @strawberry.mutation
     async def auth_login(self, info, username: str, password: str) -> LoginRequest:  # type: ignore
-        user: Optional[User]
+        # user type is Optional[AbstractBaseUser] but we return user which is similar
+        user: Optional[AbstractBaseUser]
         try:
             user = await sync_to_async(authenticate)(
                 request=info.context.request,
@@ -178,7 +180,7 @@ class Mutation:
             )
         if user is not None:
             await sync_to_async(login)(info.context.request, user)
-            return user
+            return user  # type: ignore
 
         return LoginError(
             error_message="Wrong credentials",
