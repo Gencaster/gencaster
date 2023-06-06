@@ -1,30 +1,4 @@
 <!-- eslint-disable vue/no-v-model-argument -->
-<template>
-  <div>
-    <VNetworkGraph
-      ref="vNetworkGraph"
-      v-model:selected-nodes="selectedNodeUUIDs"
-      v-model:selected-edges="selectedEdgeUUIDs"
-      class="graph"
-      :nodes="nodes()"
-      :edges="edges()"
-      :configs="graphSettings.standard"
-      :layouts="layouts()"
-      :event-handlers="eventHandlers"
-    />
-
-    <div
-      v-if="!showNodeEditor"
-      class="stats"
-    >
-      <p>
-        Nodes: {{ graph.nodes.length }} &nbsp; Edges:
-        {{ graph.edges.length }}
-      </p>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
 
 import type {
@@ -35,8 +9,7 @@ import type {
   Nodes as GraphNodes,
 } from "v-network-graph";
 
-import { ref, type Ref } from "vue";
-import { nextTick } from "vue";
+import { ref, type Ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
 import type { GraphSubscription, Scalars } from "@/graphql";
@@ -59,33 +32,67 @@ const {
   scriptCellsModified,
 } = storeToRefs(useInterfaceStore());
 
-const centerClickLeftToEditor = (event: MouseEvent) => {
+
+
+watch(showNodeEditor, (visible) => {
+  if (visible) {
+    graphPan(graphPanType.NodeEditor, lastNodeClick.value);
+  } else {
+    graphPan(graphPanType.Center, lastNodeClick.value);
+  }
+});
+
+const lastNodeClick = ref<MouseEvent>();
+const lastPanMove = ref({x:0, y:0});
+enum graphPanType {
+  NodeEditor = 'NODEEDITOR',
+  Center = 'CENTER',
+}
+
+const graphPan = (location: graphPanType, event?: MouseEvent) => {
   if (!vNetworkGraph.value) return;
 
   // get click position
   const clickPos = {
-    x: event.offsetX,
-    y: event.offsetY,
+    x: event?.offsetX || 0,
+    y: event?.offsetY || 0,
   };
+
 
   // get canvas size
   const { height: gHeight, width: gWidth } = vNetworkGraph.value.getSizes();
 
-  // get editor width - @todo FIX THIS
-  // const editorWidth = editorDom.value?.offsetWidth || 0;
-  const editorWidth = 0;
-
   // screen aim
-  const aimPos = {
-    x: (gWidth - editorWidth) / 2,
-    y: gHeight / 2,
-  };
+  let aimPos: { x: number; y: number };
+  let moveBy: { x: number; y: number };
 
-  // move by
-  const moveBy = {
-    x: aimPos.x - clickPos.x,
-    y: aimPos.y - clickPos.y,
-  };
+  switch (location) {
+    case graphPanType.NodeEditor:
+      const editorWidth = document.getElementsByClassName('node-editor')[0]?.clientWidth || 0;
+      aimPos = {
+        x: (gWidth - editorWidth) / 2,
+        y: gHeight / 2 * 0.9, // 0.9 to visually center vertical
+      };
+
+      moveBy = {
+        x: aimPos.x - clickPos.x,
+        y: aimPos.y - clickPos.y,
+      };
+
+      lastPanMove.value = moveBy;
+      break;
+    case graphPanType.Center:
+      aimPos = {
+        x: gWidth / 2,
+        y: gHeight / 2 * 0.9, // 0.9 to visually center vertical
+      };
+
+      moveBy = {
+        x: -lastPanMove.value.x,
+        y: -lastPanMove.value.y,
+      };
+      break;
+  }
 
   const progress = {
     absolute: 0,
@@ -133,11 +140,10 @@ const eventHandlers: GraphEventHandlers = {
     }
 
     lastNodeDoubleClicked.value = node;
-    selectedNodeUUIDs.value =  [node];
+    selectedNodeUUIDs.value = [node];
 
     showNodeEditor.value = true;
-    await nextTick();
-    centerClickLeftToEditor(event);
+    lastNodeClick.value = event;
   },
   "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
     for (const p in dragEvent) {
@@ -159,50 +165,50 @@ const eventHandlers: GraphEventHandlers = {
   },
 };
 
-  /*
-    transforms the edges, nodes and layout from our StoryGraph model to
-    v-network-graph model. Maybe this can be done in a nicer,
-    two way support via urql as some kind of type transformation?
-  */
-  function nodes(): GraphNodes {
-    const n: GraphNodes = {};
-    props.graph.nodes.forEach((node) => {
-      const graphNode: GraphNode = {
-        name: node.name,
-        color: node.color,
-        scriptCells: node.scriptCells,
-      };
-      n[node.uuid] = graphNode;
-    });
-    return n;
-  }
-
-  function edges(): GraphEdges {
-    const e: GraphEdges = {};
-    props.graph.edges.forEach((edge) => {
-      const graphEdge: GraphEdge = {
-        source: edge.inNode.uuid,
-        target: edge.outNode.uuid,
-      };
-      e[edge.uuid] = graphEdge;
-    });
-    return e;
-  }
-
-  function layouts(): GraphNodes {
-    const n: GraphNodes = {};
-    props.graph.nodes.forEach((node) => {
-      const graphNode: GraphNode = {
-        x: node.positionX,
-        y: node.positionY,
-      };
-      n[node.uuid] = graphNode;
-    });
-    const layout = {
-      nodes: n,
+/*
+  transforms the edges, nodes and layout from our StoryGraph model to
+  v-network-graph model. Maybe this can be done in a nicer,
+  two way support via urql as some kind of type transformation?
+*/
+function nodes(): GraphNodes {
+  const n: GraphNodes = {};
+  props.graph.nodes.forEach((node) => {
+    const graphNode: GraphNode = {
+      name: node.name,
+      color: node.color,
+      scriptCells: node.scriptCells,
     };
-    return layout;
-  }
+    n[node.uuid] = graphNode;
+  });
+  return n;
+}
+
+function edges(): GraphEdges {
+  const e: GraphEdges = {};
+  props.graph.edges.forEach((edge) => {
+    const graphEdge: GraphEdge = {
+      source: edge.inNode.uuid,
+      target: edge.outNode.uuid,
+    };
+    e[edge.uuid] = graphEdge;
+  });
+  return e;
+}
+
+function layouts(): GraphNodes {
+  const n: GraphNodes = {};
+  props.graph.nodes.forEach((node) => {
+    const graphNode: GraphNode = {
+      x: node.positionX,
+      y: node.positionY,
+    };
+    n[node.uuid] = graphNode;
+  });
+  const layout = {
+    nodes: n,
+  };
+  return layout;
+}
 
 // Dialogs
 const lastNodeDoubleClicked = ref<Scalars["UUID"]>("");
@@ -307,6 +313,7 @@ const graphSettings = {
       },
     },
     view: {
+      zoomEnabled: false,
       grid: {
         visible: false,
         interval: 30,
@@ -328,23 +335,48 @@ const graphSettings = {
 };
 </script>
 
+<template>
+  <div>
+    <VNetworkGraph
+      ref="vNetworkGraph"
+      v-model:selected-nodes="selectedNodeUUIDs"
+      v-model:selected-edges="selectedEdgeUUIDs"
+      class="graph"
+      :nodes="nodes()"
+      :edges="edges()"
+      :configs="graphSettings.standard"
+      :layouts="layouts()"
+      :event-handlers="eventHandlers"
+    />
+
+    <div
+      v-if="!showNodeEditor"
+      class="stats"
+    >
+      <p>
+        Nodes: {{ graph.nodes.length }} &nbsp; Edges:
+        {{ graph.edges.length }}
+      </p>
+    </div>
+  </div>
+</template>
+
 <style lang="scss" scoped>
 @import '@/assets/scss/variables.module.scss';
 
 .graph {
-    position: relative;
-    width: 100%;
-    height: calc(100vh - 64px);
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 64px);
+}
+
+.stats {
+  position: fixed;
+  bottom: 10px;
+  right: 15px;
+
+  p {
+    margin: 0;
   }
-
-  .stats {
-    position: fixed;
-    bottom: 10px;
-    right: 15px;
-    p {
-      margin: 0;
-    }
-  }
-
-
+}
 </style>
