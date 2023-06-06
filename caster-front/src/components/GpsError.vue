@@ -73,10 +73,9 @@ const activeName = ref('');
           <p>Ortungsdienste für deinen Browser einschalten:</p>
           <p>
             <ol>
-              <li>Öffnen Sie auf Ihrem Android-Gerät die Einstellungen</li>
-              <li>Tippen Sie auf Standort App-Berechtigung.</li>
-              <li>Tippen Sie auf die App, die Sie als Browser verwenden, z. B. Google Chrome</li>
-              <li>Setzen Sie für diese App den Standortzugriff auf “Zulassen”</li>
+              <li>Öffnen Sie auf Ihrem Desktop-Gerät die Einstellungen des Browsers</li>
+              <li>Suchen Sie nach Berechtigungen oder Privacy.</li>
+              <li>Setzen Sie für diese Webseite den Standortzugriff auf “Zulassen”</li>
             </ol>
           </p>
         </div>
