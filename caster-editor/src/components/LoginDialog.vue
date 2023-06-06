@@ -31,12 +31,12 @@ const tryLogin = async () => {
   }
   if (data?.authLogin) {
     if(data.authLogin.__typename === 'LoginError') {
-        ElMessage.error(`Benutzername / Password stimmen nicht überein`);
+        ElMessage.error(`Username / Password do not match`);
         loginFormRef.value?.resetFields();
         return;
     }
     showLoginScreen.value = false;
-    ElMessage.success(`Erfolgreich angemeldet`);
+    ElMessage.success(`Successfully logged in`);
     user.value = data.authLogin;
   }
 };
