@@ -148,6 +148,7 @@ class Query:
         # print(info.context.request.user)
         if not await sync_to_async(lambda: info.context.request.user.is_anonymous)():
             return info.context.request.user  # type: ignore
+        return None
 
 
 @strawberry.type
@@ -164,6 +165,7 @@ class Mutation:
 
     @strawberry.mutation
     async def auth_login(self, info, username: str, password: str) -> LoginRequest:  # type: ignore
+        user: Optional[User]
         try:
             user = await sync_to_async(authenticate)(
                 request=info.context.request,
@@ -174,7 +176,6 @@ class Mutation:
             return LoginError(
                 error_message=str(e),
             )
-
         if user is not None:
             await sync_to_async(login)(info.context.request, user)
             return user
