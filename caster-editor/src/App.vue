@@ -44,6 +44,8 @@ watch(error, (e) => {
     >
       <LoginDialog />
     </div>
-    <RouterView />
+    <div v-else>
+      <RouterView />
+    </div>
   </div>
 </template>
