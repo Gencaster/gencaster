@@ -1,54 +1,74 @@
 /* ============ Element Plus ============ */
 
 .el-radio-group {
- .el-radio-button {
-  text-align: left;
-  height: 23px !important;
-  margin-right: $buttonMargin;
+  .el-radio-button {
+    text-align: left;
+    height: 23px !important;
+    margin-right: $buttonMargin;
 
-  --el-radio-button-checked-bg-color: #{$grey};
-  --el-radio-button-checked-text-color: #{$black};
-  --el-radio-button-checked-border-color: #{$grey};
-  --el-menu-hover-text-color: #{$black};
+    --el-radio-button-checked-bg-color: #{$grey};
+    --el-radio-button-checked-text-color: #{$black};
+    --el-radio-button-checked-border-color: #{$grey};
+    --el-menu-hover-text-color: #{$black};
 
-  .el-radio-button__inner {
-    border-radius: 2px !important;
-    font-size: 15px;
-    padding: 4px 8px 4px 8px;
-    margin: 0;
-    color: #{$black};
-    background-color: transparent;
-    border: none;
-    border-left: none !important;
-
-    &:hover {
+    .el-radio-button__inner {
+      border-radius: 2px !important;
+      font-size: 15px;
+      padding: 4px 8px 4px 8px;
+      margin: 0;
       color: #{$black};
-      background-color: $grey;
+      background-color: transparent;
+      border: none;
+      border-left: none !important;
+
+      &:hover {
+        color: #{$black};
+        background-color: $grey;
+      }
     }
   }
- }
 }
 
 /* MODALS */
-.el-overlay-dialog, .el-overlay {
-  border: 1px solid black;
-  .el-dialog__header {
-    margin: 0;
-    padding-top: 30px;
-    --el-dialog-title-font-size: 21px;
+.el-overlay-dialog,
+.el-overlay {
+
+  .el-dialog {
+    border: 2px solid black;
+    width: calc(100% - 2 * $mobilePadding);
+    max-width: 600px;
+    border-radius: $borderRadius;
   }
 
-  .el-dialog--center .el-dialog__body {
-    padding: 5px 35px 20px 35px;
+  .el-dialog__header {
+    margin: 0;
+    --el-dialog-title-font-size: 21px;
+    padding: 35px 35px 10px 35px;
+  }
+
+  .el-dialog--center,
+  .el-dialog__body {
+    padding: 15px 35px 10px 35px;
     width: 100%;
     text-align: center;
     word-break: break-word;
   }
 
-.el-dialog__body, .el-dialog__footer {
+  .el-dialog__body {
     --el-dialog-content-font-size: 15px;
   }
+
+  .el-dialog__footer {
+    --el-dialog-content-font-size: 15px;
+    margin-bottom: 15px;
+    padding: 0px 35px 15px 35px;
+  }
+
+  label {
+    font-size: 15px;
+  }
 }
+
 /* SLIDER */
 
 .el-slider {
@@ -58,6 +78,18 @@
 
   .el-slider__button {
     border-color: $grey-dark;
+  }
+}
+
+/* BUTTONS */
+.el-button {
+  --el-button-text-color: #{$black};
+  --el-button-hover-text-color: #{$black};
+  --el-button-hover-border-color: #{$green-light};
+  --el-button-hover-bg-color: #{$green-light};
+
+  &:hover {
+    transform: scale($buttonScale);
   }
 }
 

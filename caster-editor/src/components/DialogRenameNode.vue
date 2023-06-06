@@ -2,7 +2,6 @@
   <div class="rename-node-dialog">
     <ElDialog
       v-model="showDialog"
-      width="25%"
       title="Rename Node"
       :show-close="false"
     >

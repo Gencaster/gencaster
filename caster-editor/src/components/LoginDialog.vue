@@ -48,8 +48,8 @@ const showLoginScreen = ref<boolean>(true);
   <div class="login-form">
     <ElDialog
       v-model="showLoginScreen"
-      title="Bitte einloggen"
-      width="40%"
+      title="Please log in"
+      lock-scroll
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -58,11 +58,10 @@ const showLoginScreen = ref<boolean>(true);
         ref="loginFormRef"
         v-loading="runLogin"
         :model="loginForm"
-        label-width="40%"
         @submit.prevent="tryLogin"
       >
         <ElFormItem
-          label="Benutzername"
+          label="Username"
           prop="username"
         >
           <ElInput
@@ -71,7 +70,7 @@ const showLoginScreen = ref<boolean>(true);
           />
         </ElFormItem>
         <ElFormItem
-          label="Passwort"
+          label="Password"
           prop="password"
         >
           <ElInput
@@ -84,7 +83,7 @@ const showLoginScreen = ref<boolean>(true);
       </ElForm>
       <template #footer>
         <span class="dialog-footer">
-          <ElButton disabled>Passwort vergessen</ElButton>
+          <ElButton disabled>Forgot password</ElButton>
           <ElButton
             type="primary"
             @click="tryLogin()"
