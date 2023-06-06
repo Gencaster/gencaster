@@ -43,7 +43,7 @@ const scriptCells = computed({
 <style lang="scss" scoped>
 @import '@/assets/scss/variables.module.scss';
 .node-editor {
-  z-index: 2;
+  z-index: 1;
   background-color: white;
   position: fixed;
   width: 800px;
