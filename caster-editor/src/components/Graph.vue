@@ -1,30 +1,4 @@
 <!-- eslint-disable vue/no-v-model-argument -->
-<template>
-  <div>
-    <VNetworkGraph
-      ref="vNetworkGraph"
-      v-model:selected-nodes="selectedNodeUUIDs"
-      v-model:selected-edges="selectedEdgeUUIDs"
-      class="graph"
-      :nodes="nodes()"
-      :edges="edges()"
-      :configs="graphSettings.standard"
-      :layouts="layouts()"
-      :event-handlers="eventHandlers"
-    />
-
-    <div
-      v-if="!showNodeEditor"
-      class="stats"
-    >
-      <p>
-        Nodes: {{ graph.nodes.length }} &nbsp; Edges:
-        {{ graph.edges.length }}
-      </p>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
 
 import type {
@@ -59,7 +33,12 @@ const {
   scriptCellsModified,
 } = storeToRefs(useInterfaceStore());
 
-const centerClickLeftToEditor = (event: MouseEvent) => {
+enum graphPanType {
+  NodeEditor = 'NODEEDITOR',
+  Center = 'CENTER',
+}
+
+const graphPan = (location: graphPanType, event?: MouseEvent) => {
   if (!vNetworkGraph.value) return;
 
   // get click position
@@ -68,18 +47,29 @@ const centerClickLeftToEditor = (event: MouseEvent) => {
     y: event.offsetY,
   };
 
+
   // get canvas size
   const { height: gHeight, width: gWidth } = vNetworkGraph.value.getSizes();
 
-  // get editor width - @todo FIX THIS
-  // const editorWidth = editorDom.value?.offsetWidth || 0;
-  const editorWidth = 0;
+  const editorWidth = document.getElementsByClassName('node-editor')[0].clientWidth || 0;
 
   // screen aim
-  const aimPos = {
-    x: (gWidth - editorWidth) / 2,
-    y: gHeight / 2,
-  };
+  let aimPos;
+
+  switch (location) {
+    case graphPanType.NodeEditor:
+      aimPos = {
+        x: (gWidth - editorWidth) / 2,
+        y: gHeight / 2 * 0.9, // 0.9 to visually center vertical
+      };
+      break;
+    case graphPanType.Center:
+      aimPos = {
+        x: gWidth / 2,
+        y: gHeight / 2 * 0.9, // 0.9 to visually center vertical
+      };
+      break;
+  }
 
   // move by
   const moveBy = {
@@ -137,7 +127,7 @@ const eventHandlers: GraphEventHandlers = {
 
     showNodeEditor.value = true;
     await nextTick();
-    centerClickLeftToEditor(event);
+    graphPan(graphPanType.NodeEditor, event);
   },
   "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
     for (const p in dragEvent) {
@@ -327,6 +317,32 @@ const graphSettings = {
   }),
 };
 </script>
+
+<template>
+  <div>
+    <VNetworkGraph
+      ref="vNetworkGraph"
+      v-model:selected-nodes="selectedNodeUUIDs"
+      v-model:selected-edges="selectedEdgeUUIDs"
+      class="graph"
+      :nodes="nodes()"
+      :edges="edges()"
+      :configs="graphSettings.standard"
+      :layouts="layouts()"
+      :event-handlers="eventHandlers"
+    />
+
+    <div
+      v-if="!showNodeEditor"
+      class="stats"
+    >
+      <p>
+        Nodes: {{ graph.nodes.length }} &nbsp; Edges:
+        {{ graph.edges.length }}
+      </p>
+    </div>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 @import '@/assets/scss/variables.module.scss';
