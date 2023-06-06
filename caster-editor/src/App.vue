@@ -26,7 +26,7 @@ watch(data, (d) => {
 
 watch(error, (e) => {
   if(e?.message) {
-    ElMessage.error(`Bitte einloggen: ${e.message}`);
+    ElMessage.error(`Please log in: ${e.message}`);
   }
   resolvedLoginState.value = true;
 });
