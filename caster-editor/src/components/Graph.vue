@@ -54,8 +54,8 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
 
   // get click position
   const clickPos = {
-    x: event.offsetX || 0,
-    y: event.offsetY || 0,
+    x: event?.offsetX || 0,
+    y: event?.offsetY || 0,
   };
 
 
