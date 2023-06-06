@@ -3,7 +3,6 @@
     <ElDialog
       v-model="showDialog"
       title="Careful"
-      width="25%"
       center
       lock-scroll
       :show-close="false"

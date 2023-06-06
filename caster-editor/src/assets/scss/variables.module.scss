@@ -8,6 +8,8 @@ $spacingM: 1rem;
 $spacingL: 2.5rem;
 $spacingXL: 6rem;
 
+$mobilePadding: 12px;
+
 // font sizes
 $smallFontSizeMobile: 0.8rem;
 $smallFontSize: 0.8rem;
@@ -21,6 +23,7 @@ $largerFontSizeMobile: 2.5rem;
 $largerFontSize: 3.5rem;
 
 // colors
+$hover-color: #5200FF;
 $green-light: #ADFF00;
 $grey: #CDCDCD;
 $grey-medium: #E4E4E4;
@@ -34,6 +37,10 @@ $white08: rgba(255, 255, 255, 0.8);
 // paddings
 $paddingSidesDesktop: 15px;
 $buttonMargin: 10px;
+
+// other
+$borderRadius: 4px;
+$buttonScale: 1.1;
 
 // menu
 $menuHeight: 32px;

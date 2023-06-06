@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { type Ref, ref } from "vue";
-import type { Node } from "@/graphql";
+import type { Node, User } from "@/graphql";
 import type { Instance as GraphInstance } from "v-network-graph";
 
 export enum Tab {
@@ -26,6 +26,8 @@ export const useInterfaceStore = defineStore("interface", () => {
 
   const scriptCellsModified: Ref<boolean> = ref(false);
 
+  const user: Ref<User | undefined> = ref(undefined);
+
   return {
     showNodeEditor,
     selectedNode,
@@ -34,5 +36,6 @@ export const useInterfaceStore = defineStore("interface", () => {
     tab,
     vNetworkGraph,
     scriptCellsModified,
+    user,
   };
 });

@@ -2,7 +2,6 @@
   <div>
     <ElDialog
       v-model="showDialog"
-      width="25%"
       title="Create graph"
       :show-close="false"
     >
