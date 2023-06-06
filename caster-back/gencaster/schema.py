@@ -20,6 +20,7 @@ from typing import Any, AsyncGenerator, Dict, List, Optional
 import strawberry
 import strawberry.django
 from asgiref.sync import sync_to_async
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User as UserModel
 from django.core.exceptions import PermissionDenied
 from django.core.files import File
@@ -66,6 +67,8 @@ class IsAuthenticated(strawberry.BasePermission):
     message = "User is not authenticated"
 
     async def has_permission(self, source: Any, info: Info, **kwargs) -> bool:
+        return True
+
         if await sync_to_async(lambda: info.context.request.user.is_authenticated)():  # type: ignore
             return True
         return False
@@ -141,13 +144,49 @@ class Query:
     stream_variable: StreamVariable = AuthStrawberryDjangoField()
 
     @strawberry.field(permission_classes=[IsAuthenticated])
-    async def is_authenticated(self, info) -> User:
-        return info.context.request.user  # type: ignore
+    async def is_authenticated(self, info) -> Optional[User]:
+        # print(info.context.request.user)
+        if not await sync_to_async(lambda: info.context.request.user.is_anonymous)():
+            return info.context.request.user  # type: ignore
+
+
+@strawberry.type
+class LoginError:
+    error_message: Optional[str] = None
+
+
+LoginRequest = strawberry.union("LoginRequestResponse", [LoginError, User])
 
 
 @strawberry.type
 class Mutation:
     """Mutations for Gencaster via GraphQL."""
+
+    @strawberry.mutation
+    async def auth_login(self, info, username: str, password: str) -> LoginRequest:  # type: ignore
+        try:
+            user = await sync_to_async(authenticate)(
+                request=info.context.request,
+                username=username,
+                password=password,
+            )
+        except PermissionDenied as e:
+            return LoginError(
+                error_message=str(e),
+            )
+
+        if user is not None:
+            await sync_to_async(login)(info.context.request, user)
+            return user
+
+        return LoginError(
+            error_message="Wrong credentials",
+        )
+
+    @strawberry.mutation
+    async def auth_logout(self, info) -> bool:
+        await sync_to_async(logout)(info.context.request)
+        return True
 
     @strawberry.mutation
     async def add_node(self, info: Info, new_node: NodeCreate) -> None:

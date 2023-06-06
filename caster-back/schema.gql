@@ -259,8 +259,17 @@ type InvalidAudioFile {
   error: String!
 }
 
+type LoginError {
+  errorMessage: String
+}
+
+union LoginRequestResponse = LoginError | User
+
 """Mutations for Gencaster via GraphQL."""
 type Mutation {
+  authLogin(username: String!, password: String!): LoginRequestResponse!
+  authLogout: Boolean!
+
   """
   Creates a new :class:`~story_graph.models.Node` in a given
   ~class:`~story_graph.models.Graph`.
@@ -365,7 +374,7 @@ type Query {
   audioFiles(filters: AudioFileFilter, pagination: OffsetPaginationInput): [AudioFile!]!
   audioFile(pk: ID!, pagination: OffsetPaginationInput): AudioFile!
   streamVariable(pk: ID!): StreamVariable!
-  isAuthenticated: User!
+  isAuthenticated: User
 }
 
 """
