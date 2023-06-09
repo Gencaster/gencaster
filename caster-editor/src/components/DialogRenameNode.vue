@@ -4,6 +4,8 @@
       v-model="showDialog"
       title="Rename Node"
       :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <ElInput
         v-model="newName"
@@ -13,8 +15,8 @@
         <span class="dialog-footer">
           <ElButton @click="emit('cancel')">Cancel</ElButton>
           <ElButton
-            color="#ADFF00"
             type="primary"
+            color="#ADFF00"
             @click="renameNode()"
           >
             Confirm

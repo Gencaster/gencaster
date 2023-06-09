@@ -87,6 +87,7 @@ onUnmounted(() => {
 
   :deep(.toastui-editor-defaultUI) {
     border: none;
+    z-index: 1;
 
     .toastui-editor {
       min-height: 60px !important;
