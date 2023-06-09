@@ -114,7 +114,7 @@ const createAudioCell = async (audioFile: Pick<AudioFile, 'uuid'>) => {
         audioFile: {
           uuid: audioFile.uuid,
         },
-        playback: PlaybackChoices.AsyncPlayback,
+        playback: PlaybackChoices.SyncPlayback,
       },
       cellCode: '',
       cellType: CellType.Audio,
