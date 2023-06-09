@@ -1,28 +1,3 @@
-<!-- eslint-disable vue/no-unused-vars -->
-<template>
-  <div class="blocks">
-    <draggable
-      v-model="moveableScriptCells"
-      group="blocks"
-      item-key="uuid"
-      @start="drag=true"
-      @end="drag=false"
-    >
-      <!-- hack is necessary to track v-for with v-model, see
-        https://stackoverflow.com/a/71378972
-      -->
-      <template #item="{element, index}">
-        <div>
-          <NodeEditorCell
-            v-if="moveableScriptCells[index]"
-            v-model:script-cell="moveableScriptCells[index]"
-          />
-        </div>
-      </template>
-    </draggable>
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { NodeSubscription } from "@/graphql";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
@@ -52,6 +27,31 @@ const moveableScriptCells = computed<NodeSubscription['node']['scriptCells']>({
 });
 
 </script>
+
+<template>
+  <div class="blocks">
+    <draggable
+      v-model="moveableScriptCells"
+      group="blocks"
+      item-key="uuid"
+      @start="drag=true"
+      @end="drag=false"
+    >
+      <!-- hack is necessary to track v-for with v-model, see
+        https://stackoverflow.com/a/71378972
+      -->
+      <template #item="{element, index}">
+        <div>
+          <NodeEditorCell
+            v-if="moveableScriptCells[index]"
+            v-model:script-cell="moveableScriptCells[index]"
+            v-bind="{ item: element }"
+          /> <!--  binding an empty item to prevent the linter from complaining -->
+        </div>
+      </template>
+    </draggable>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 @import '@/assets/scss/variables.module.scss';

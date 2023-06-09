@@ -1,16 +1,3 @@
-<template>
-  <div class="node-editor">
-    <NodeEditorHeader
-      :node="node"
-      @save-node="emit('saveNode')"
-    />
-    <div class="editor-header-spacer" />
-    <NodeEditorCells
-      v-model:script-cells="scriptCells"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import NodeEditorHeader from "@/components/NodeEditorHeader.vue";
 import NodeEditorCells from "./NodeEditorCells.vue";
@@ -39,6 +26,19 @@ const scriptCells = computed({
 });
 
 </script>
+
+<template>
+  <div class="node-editor">
+    <NodeEditorHeader
+      :node="node"
+      @save-node="emit('saveNode')"
+    />
+    <div class="editor-header-spacer" />
+    <NodeEditorCells
+      v-model:script-cells="scriptCells"
+    />
+  </div>
+</template>
 
 <style lang="scss" scoped>
 @import '@/assets/scss/variables.module.scss';
