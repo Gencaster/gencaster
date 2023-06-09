@@ -77,9 +77,7 @@ const saveNode = async () => {
   });
 
   // recalculate the order of the script cells
-  for(let i=0; i<scriptCellInputs.length; i++) {
-    scriptCellInputs[i].cellOrder = i + 1; // expects lead to be 1
-  }
+  scriptCellInputs.forEach((cell, i) => {cell.cellOrder = i+1;}); // expects lead to be 1
 
   const {error} = await scriptCellMutation.executeMutation({
     nodeUuid: nodeData.value.uuid,
