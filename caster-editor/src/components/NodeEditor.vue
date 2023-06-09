@@ -10,7 +10,8 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:node', node: NodeSubscription['node']): void,
-  (e: 'saveNode'): void
+  (e: 'updateScriptCells'): void,
+  (e: 'saveNode'): void,
 }>();
 
 const scriptCells = computed({
@@ -36,6 +37,7 @@ const scriptCells = computed({
     <div class="editor-header-spacer" />
     <NodeEditorCells
       v-model:script-cells="scriptCells"
+      @update:script-cells="emit('updateScriptCells')"
     />
   </div>
 </template>

@@ -49,6 +49,11 @@ const nodeData = computed<NodeSubscription['node'] | undefined>({
 
 const scriptCellMutation = useCreateUpdateScriptCellsMutation();
 
+const updateScriptCells = () => {
+  scriptCellsModified.value = true;
+  saveNode();
+};
+
 const saveNode = async () => {
   console.log("I should now save the node");
   if(!nodeData.value) {
@@ -110,6 +115,7 @@ const saveNode = async () => {
       v-model:node="nodeData"
       class="node-editor-outer"
       @save-node="saveNode()"
+      @update-script-cells="updateScriptCells()"
     />
   </div>
   <div
