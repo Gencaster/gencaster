@@ -26,6 +26,7 @@ const {
   playerState,
   play,
   startingTimestamp,
+  playerMounted,
 } = storeToRefs(usePlayerStore());
 
 const router = useRouter();
@@ -99,27 +100,65 @@ const shiftDialogs = () => {
     });
   }
 };
+
+const waitingTimeout = ref(false);
+
+const showLoading = computed<boolean>(() => {
+  if (stale.value) {
+    return true;
+  } else if (!playerMounted.value) {
+    return true;
+  } else {
+    return false;
+  }
+});
+
+const showError = computed<boolean>(() => {
+  if (waitingTimeout.value) {
+      if(!data.value || data.value?.streamInfo.__typename === 'NoStreamAvailable' || data.value.streamInfo.stream.streamPoint === undefined ) {
+        return true;
+      } else {
+        return false;
+      }
+  } else {
+    return false;
+  }
+});
+
+// wait 3 seconds before showing error
+setTimeout(() => {
+  waitingTimeout.value = true;
+}, 3000);
+
 </script>
 
 <template>
   <div class="drifter-graph-detail">
+    <!-- error handling -->
     <div
-      v-loading="stale"
-      class="graph-player"
+      v-if="showError"
+      class="error general-padding"
     >
-      <!-- error handling -->
       <div v-if="data?.streamInfo.__typename === 'NoStreamAvailable'">
-        Sorry, no stream available. Come back later.
+        <p>
+          Sorry, no stream available right now. Please come back later. <br>
+          In case this error persists, please contact us <a href="mailto:contact@gencaster.org">here</a>.
+        </p>
       </div>
       <div v-else-if="!data">
         Some error :/
         Data is empty: {{ data }}
         Error: {{ error }}
       </div>
-      <div v-else>
+    </div>
+    <div
+      v-loading="showLoading"
+      class="graph-player"
+    >
+      <div v-if="data">
         <!-- start screen -->
         <Transition>
-          <div v-if="drifterStatus === DrifterStatus.WaitForStart">
+          <div v-if="drifterStatus === DrifterStatus.WaitForStart && playerMounted">
             <Intro
               :title="graph.displayName"
               :description-text="graph.startText"
@@ -127,19 +166,16 @@ const shiftDialogs = () => {
               @button-clicked="startStream()"
             />
             <div v-if="graph.aboutText">
-              <IntroInfo
-                :text="graph.aboutText"
-              />
+              <IntroInfo :text="graph.aboutText" />
             </div>
           </div>
         </Transition>
 
+
         <!-- end screen -->
         <Transition>
           <div v-if="drifterStatus === DrifterStatus.ShowEndScreen">
-            <EndScreen
-              :text="graph.endText"
-            />
+            <EndScreen :text="graph.endText" />
           </div>
         </Transition>
 
@@ -155,7 +191,7 @@ const shiftDialogs = () => {
         </div>
 
         <!-- player -->
-        <div v-if="data">
+        <div v-if="data.streamInfo.stream">
           <Player
             :stream-point="data.streamInfo.stream.streamPoint"
             :stream="data.streamInfo.stream"
@@ -187,9 +223,7 @@ const shiftDialogs = () => {
           v-if="showDebug"
           class="debug-wrapper"
         >
-          <ElCollapse
-            v-model="activeAccordionTab"
-          >
+          <ElCollapse v-model="activeAccordionTab">
             <ElCollapseItem
               title="Debug info"
               name="debug"
@@ -210,6 +244,11 @@ const shiftDialogs = () => {
 @import '@/assets/mixins.scss';
 @import '@/assets/variables.scss';
 
+.graph-player {
+  min-height: 100vh;
+  max-height: 100vh;
+}
+
 .audio-visualizer {
   box-sizing: border-box;
   position: absolute;
@@ -221,6 +260,7 @@ const shiftDialogs = () => {
   padding-right: 24px;
   margin: 0 auto;
 }
+
 .info {
   margin-bottom: $spacingXL;
 }
