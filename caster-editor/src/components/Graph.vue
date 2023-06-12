@@ -9,7 +9,7 @@ import type {
   Nodes as GraphNodes,
 } from "v-network-graph";
 
-import { ref, type Ref, watch } from "vue";
+import { ref, type Ref, watch, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
 import type { GraphSubscription, Scalars } from "@/graphql";
@@ -123,12 +123,25 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
   });
 };
 
+const panToFirstNode = async () => {
+  const nodes = props.graph.nodes;
+  const firstNode = nodes[0];
+  const viewBox = vNetworkGraph.value?.getViewBox() || {left: 0, right: 0, top: 0, bottom: 0};
+  
+  await nextTick();
+  vNetworkGraph.value?.panTo({
+    x: -firstNode.positionX + (Math.abs(viewBox.left - viewBox.right)) / 2,
+    y: -firstNode.positionY + (Math.abs(viewBox.top - viewBox.bottom)) / 2 * 0.9,
+  });
+};
+
+
 const updateNodeMutation = useUpdateNodeMutation();
 
 const eventHandlers: GraphEventHandlers = {
   // see https://dash14.github.io/v-network-graph/reference/events.html#events-with-event-handlers
   "view:load": () => {
-    vNetworkGraph.value?.fitToContents();
+    panToFirstNode();
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   "node:dblclick": async ({ node, event }) => {
