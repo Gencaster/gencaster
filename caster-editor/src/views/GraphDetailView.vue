@@ -102,12 +102,14 @@ const saveNode = async () => {
       :graph="graphSubscription.data.value.graph"
     />
 
-    <NodeEditor
-      v-if="showNodeEditor && nodeData"
-      v-model:node="nodeData"
-      class="node-editor-outer"
-      @save-node="saveNode()"
-    />
+    <Transition name="slide">
+      <NodeEditor
+        v-if="showNodeEditor && nodeData"
+        v-model:node="nodeData"
+        class="node-editor-outer"
+        @save-node="saveNode()"
+      />
+    </Transition>
   </div>
   <div
     v-else

@@ -68,7 +68,8 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
 
   switch (location) {
     case graphPanType.NodeEditor:
-      const editorWidth = document.getElementsByClassName('node-editor')[0]?.clientWidth || 0;
+      // const editorWidth = document.getElementsByClassName('node-editor')[0]?.clientWidth || 0;
+      const editorWidth = 800; // this needs to be hard coded for transition purposes
       aimPos = {
         x: (gWidth - editorWidth) / 2,
         y: gHeight / 2 * 0.9, // 0.9 to visually center vertical
@@ -114,7 +115,7 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
   // animate
   gsap.to(progress, {
     absolute: 1,
-    duration: 0.4,
+    duration: 0.3,
     ease: "power3.inOut",
     onUpdate: () => {
       moveGraph();

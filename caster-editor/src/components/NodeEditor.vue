@@ -5,9 +5,7 @@
       @save-node="emit('saveNode')"
     />
     <div class="editor-header-spacer" />
-    <NodeEditorCells
-      v-model:script-cells="scriptCells"
-    />
+    <NodeEditorCells v-model:script-cells="scriptCells" />
   </div>
 </template>
 
@@ -18,7 +16,7 @@ import type { NodeSubscription } from '@/graphql';
 import { computed } from "vue";
 
 const props = defineProps<{
-    node: NodeSubscription['node']
+  node: NodeSubscription['node']
 }>();
 
 const emit = defineEmits<{
@@ -31,7 +29,7 @@ const scriptCells = computed({
     return props.node.scriptCells;
   },
   set(value) {
-    let nodeUpdate = {...props.node};
+    let nodeUpdate = { ...props.node };
     nodeUpdate.scriptCells = value;
     emit('update:node', nodeUpdate);
     return value;
@@ -42,6 +40,7 @@ const scriptCells = computed({
 
 <style lang="scss" scoped>
 @import '@/assets/scss/variables.module.scss';
+
 .node-editor {
   z-index: 1;
   background-color: white;
@@ -56,8 +55,23 @@ const scriptCells = computed({
 }
 
 .editor-header-spacer {
-    width: inherit;
-    height: calc($menuHeight*2);
-    margin-bottom: 30px;
-  }
+  width: inherit;
+  height: calc($menuHeight*2);
+  margin-bottom: 30px;
+}
+
+// transition
+.slide-enter-active {
+  transition: all 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000); /* easeOutCubic */
+}
+
+.slide-leave-active {
+  transition: all 0.3s cubic-bezier(0.550, 0.055, 0.675, 0.190); /* easeInCubic */
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(900px);
+  opacity: 1;
+}
 </style>
