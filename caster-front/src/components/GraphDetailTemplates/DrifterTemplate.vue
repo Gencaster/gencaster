@@ -155,7 +155,7 @@ setTimeout(() => {
       v-loading="showLoading"
       class="graph-player"
     >
-      <div v-if="data">
+      <div v-if="data?.streamInfo.__typename === 'StreamInfo'">
         <!-- start screen -->
         <Transition>
           <div v-if="drifterStatus === DrifterStatus.WaitForStart && playerMounted">
@@ -170,7 +170,6 @@ setTimeout(() => {
             </div>
           </div>
         </Transition>
-
 
         <!-- end screen -->
         <Transition>
