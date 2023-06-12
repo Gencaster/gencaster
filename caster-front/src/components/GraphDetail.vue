@@ -39,7 +39,8 @@ setTimeout(() => {
     >
       <div v-if="loadingDebounced">
         <p>
-          Could not find proper graph
+          Could not find proper graph <br>
+          In case this error persists, please contact us <a href="mailto:contact@gencaster.org">here</a>.
         </p>
       </div>
     </div>
