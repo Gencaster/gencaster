@@ -125,7 +125,7 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
 
 const panToFirstNode = async () => {
   const nodes = props.graph.nodes;
-  const firstNode = nodes[0];
+  const firstNode = nodes.find((x) => x.name=='Start') || nodes[0];
   const viewBox = vNetworkGraph.value?.getViewBox() || {left: 0, right: 0, top: 0, bottom: 0};
 
   await nextTick();
