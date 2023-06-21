@@ -5,9 +5,7 @@
       @save-node="emit('saveNode')"
     />
     <div class="editor-header-spacer" />
-    <NodeEditorCells
-      v-model:script-cells="scriptCells"
-    />
+    <NodeEditorCells v-model:script-cells="scriptCells" />
   </div>
 </template>
 
@@ -18,7 +16,7 @@ import type { NodeSubscription } from '@/graphql';
 import { computed } from "vue";
 
 const props = defineProps<{
-    node: NodeSubscription['node']
+  node: NodeSubscription['node']
 }>();
 
 const emit = defineEmits<{
@@ -31,7 +29,7 @@ const scriptCells = computed({
     return props.node.scriptCells;
   },
   set(value) {
-    let nodeUpdate = {...props.node};
+    let nodeUpdate = { ...props.node };
     nodeUpdate.scriptCells = value;
     emit('update:node', nodeUpdate);
     return value;
@@ -42,6 +40,7 @@ const scriptCells = computed({
 
 <style lang="scss" scoped>
 @import '@/assets/scss/variables.module.scss';
+
 .node-editor {
   z-index: 1;
   background-color: white;
@@ -56,8 +55,9 @@ const scriptCells = computed({
 }
 
 .editor-header-spacer {
-    width: inherit;
-    height: calc($menuHeight*2);
-    margin-bottom: 30px;
-  }
+  width: inherit;
+  height: calc($menuHeight*2);
+  margin-bottom: 30px;
+}
+
 </style>

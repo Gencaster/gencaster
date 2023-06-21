@@ -102,12 +102,14 @@ const saveNode = async () => {
       :graph="graphSubscription.data.value.graph"
     />
 
-    <NodeEditor
-      v-if="showNodeEditor && nodeData"
-      v-model:node="nodeData"
-      class="node-editor-outer"
-      @save-node="saveNode()"
-    />
+    <Transition name="slide">
+      <NodeEditor
+        v-if="showNodeEditor && nodeData"
+        v-model:node="nodeData"
+        class="node-editor-outer"
+        @save-node="saveNode()"
+      />
+    </Transition>
   </div>
   <div
     v-else
@@ -119,6 +121,20 @@ const saveNode = async () => {
 <style lang="scss" scoped>
 @import '@/assets/scss/variables.module.scss';
 
+// transition
+.slide-enter-active {
+  transition: all 0.3s cubic-bezier(0.215, 0.610, 0.355, 1.000); /* easeOutCubic */
+}
+
+.slide-leave-active {
+  transition: all 0.3s cubic-bezier(0.550, 0.055, 0.675, 0.190); /* easeInCubic */
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(900px);
+  opacity: 1;
+}
 .edit-page {
   overflow-y: hidden;
 }
