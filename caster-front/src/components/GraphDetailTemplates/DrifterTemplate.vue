@@ -114,12 +114,8 @@ const showLoading = computed<boolean>(() => {
 });
 
 const showError = computed<boolean>(() => {
-  if (waitingTimeout.value) {
-      if(!data.value || data.value?.streamInfo.__typename === 'NoStreamAvailable' || data.value.streamInfo.stream.streamPoint === undefined ) {
-        return true;
-      } else {
-        return false;
-      }
+  if (waitingTimeout.value && (!data.value || data.value?.streamInfo.__typename === 'NoStreamAvailable' || data.value.streamInfo.stream.streamPoint === undefined)) {
+    return true;
   } else {
     return false;
   }
