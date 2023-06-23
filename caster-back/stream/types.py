@@ -76,6 +76,12 @@ class AddAudioFile:
     name: str
 
 
+@strawberry.input
+class UpdateAudioFile:
+    description: Optional[str]
+    name: Optional[str]
+
+
 @strawberry.django.type(models.StreamInstruction)
 class StreamInstruction:
     uuid: auto
