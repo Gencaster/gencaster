@@ -1,13 +1,12 @@
 <script lang="ts" setup>
-import { ref, type Ref } from "vue";
+import { computed, ref, type Ref } from "vue";
 import AudioFileUpload from "./AudioFileUpload.vue";
 import MediaPlayer from "./AudioFilePlayer.vue";
+import DialogUpdateAudioFile from "@/components/DialogUpdateAudioFile.vue";
 import { useAudioFilesQuery, type AudioFile, type DjangoFileType, type AudioFilesQuery } from "@/graphql";
-import { ElButton } from "element-plus";
+import { ElButton, ElTable, ElTableColumn } from "element-plus";
 
 export type AudioFilePicker = Pick<AudioFile, 'name' | 'uuid'> & {file?: Pick<DjangoFileType, 'url'> | undefined | null};
-
-
 
 const emit = defineEmits<{
   (e: 'selectedAudioFile', audioFile: AudioFilesQuery['audioFiles'][0]): void
@@ -15,7 +14,29 @@ const emit = defineEmits<{
 }>();
 
 const audioNameFilter: Ref<string> = ref("");
-const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audioNameFilter } });
+const showUpdateAudioFileDialog: Ref<boolean> = ref(false);
+const selectedAudioFile: Ref<AudioFile | undefined> = ref(undefined);
+
+const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: {
+  audioNameFilter,
+} });
+
+const tableData = computed(() => {
+  if(!data.value) {
+    return [];
+  };
+  return data.value.audioFiles.map((x) => {
+    return {
+      ...x,
+      'createdDate': new Date(x.createdDate).toISOString().slice(0, 10),
+    };
+  });
+});
+
+const updated = () => {
+  showUpdateAudioFileDialog.value = false;
+  executeQuery();
+};
 </script>
 
 <template>
@@ -31,7 +52,21 @@ const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audio
             v-model="audioNameFilter"
             placeholder="Search"
           />
+          <ElButton
+            type="primary"
+            @click="emit('cancel')"
+          >
+            Cancel
+          </ElButton>
         </div>
+      </div>
+      <div class="update-dialog">
+        <DialogUpdateAudioFile
+          v-if="showUpdateAudioFileDialog && selectedAudioFile"
+          :audio-file="selectedAudioFile"
+          @cancel="showUpdateAudioFileDialog = false"
+          @updated="showUpdateAudioFileDialog = false && executeQuery()"
+        />
       </div>
       <div class="content">
         <div class="left">
@@ -46,29 +81,64 @@ const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audio
             class="list-wrapper"
           >
             <div v-if="data?.audioFiles">
-              <div
-                v-for="(file, index) in data?.audioFiles"
-                :key="index"
-                class="row"
+              <ElTable
+                :data="tableData"
+                style="width: 100%;"
               >
-                <MediaPlayer
-                  :type="'browser'"
-                  :audio-file="file"
+                <ElTableColumn
+                  prop="name"
+                  label="Name"
+                  width="120"
                 />
-                <button @click="emit('selectedAudioFile', file)">
-                  <p>Select</p>
-                </button>
-              </div>
+                <ElTableColumn
+                  prop="createdDate"
+                  label="Created at"
+                  width="150"
+                />
+                <ElTableColumn
+                  prop="description"
+                  label="Description"
+                  width="150"
+                />
+                <ElTableColumn
+                  fixed="right"
+                  label="Operations"
+                  width="220"
+                >
+                  <template #default="scope">
+                    <MediaPlayer
+                      type="browser"
+                      :audio-file="scope.row.file"
+                    />
+                    <ElButton
+                      type="primary"
+                      size="small"
+                      @click="emit('selectedAudioFile', scope.row)"
+                    >
+                      Choose
+                    </ElButton>
+                    <ElButton
+                      type="primary"
+                      size="small"
+                      @click="emit('selectedAudioFile', scope.row)"
+                    >
+                      Choose
+                    </ElButton>
+                    <ElButton
+                      type="primary"
+                      size="small"
+                      @click="() => {
+                        selectedAudioFile = scope.row,
+                        showUpdateAudioFileDialog = true;
+                      }"
+                    >
+                      Edit
+                    </ElButton>
+                  </template>
+                </ElTableColumn>
+              </ElTable>
             </div>
           </div>
-        </div>
-        <div class="bottom">
-          <ElButton
-            type="primary"
-            @click="emit('cancel')"
-          >
-            Cancel
-          </ElButton>
         </div>
       </div>
     </div>
