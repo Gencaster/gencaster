@@ -120,13 +120,6 @@ const updated = () => {
                     <ElButton
                       type="primary"
                       size="small"
-                      @click="emit('selectedAudioFile', scope.row)"
-                    >
-                      Choose
-                    </ElButton>
-                    <ElButton
-                      type="primary"
-                      size="small"
                       @click="() => {
                         selectedAudioFile = scope.row,
                         showUpdateAudioFileDialog = true;
