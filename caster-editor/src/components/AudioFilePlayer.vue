@@ -82,9 +82,6 @@ onMounted(() => {
           alt="Play button"
         >
       </button>
-      <p>{{ audioFile.name }}</p>
-      <!-- <p>{{ audioFile.createdDate }}</p> -->
-
       <audio
         v-if="audioFile.file"
         ref="audioPlayer"
