@@ -1,13 +1,12 @@
 <script lang="ts" setup>
-import { ref, type Ref } from "vue";
+import { computed, ref, type Ref } from "vue";
 import AudioFileUpload from "./AudioFileUpload.vue";
 import MediaPlayer from "./AudioFilePlayer.vue";
+import DialogUpdateAudioFile from "@/components/DialogUpdateAudioFile.vue";
 import { useAudioFilesQuery, type AudioFile, type DjangoFileType, type AudioFilesQuery } from "@/graphql";
-import { ElButton } from "element-plus";
+import { ElButton, ElTable, ElTableColumn } from "element-plus";
 
 export type AudioFilePicker = Pick<AudioFile, 'name' | 'uuid'> & {file?: Pick<DjangoFileType, 'url'> | undefined | null};
-
-
 
 const emit = defineEmits<{
   (e: 'selectedAudioFile', audioFile: AudioFilesQuery['audioFiles'][0]): void
@@ -15,7 +14,29 @@ const emit = defineEmits<{
 }>();
 
 const audioNameFilter: Ref<string> = ref("");
-const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audioNameFilter } });
+const showUpdateAudioFileDialog: Ref<boolean> = ref(false);
+const selectedAudioFile: Ref<AudioFile | undefined> = ref(undefined);
+
+const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: {
+  audioNameFilter,
+} });
+
+const tableData = computed(() => {
+  if(!data.value) {
+    return [];
+  };
+  return data.value.audioFiles.map((x) => {
+    return {
+      ...x,
+      'createdDate': new Date(x.createdDate).toISOString().slice(0, 10),
+    };
+  });
+});
+
+// const updated = () => {
+//   showUpdateAudioFileDialog.value = false;
+//   executeQuery();
+// };
 </script>
 
 <template>
@@ -26,12 +47,25 @@ const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audio
           <p>Upload Audio</p>
         </div>
         <div class="right">
-          <p>Files</p>
           <ElInput
             v-model="audioNameFilter"
             placeholder="Search"
           />
+          <ElButton
+            type="info"
+            @click="emit('cancel')"
+          >
+            Cancel
+          </ElButton>
         </div>
+      </div>
+      <div class="update-dialog">
+        <DialogUpdateAudioFile
+          v-if="showUpdateAudioFileDialog && selectedAudioFile"
+          :audio-file="selectedAudioFile"
+          @cancel="showUpdateAudioFileDialog = false"
+          @updated="showUpdateAudioFileDialog = false && executeQuery()"
+        />
       </div>
       <div class="content">
         <div class="left">
@@ -46,29 +80,54 @@ const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audio
             class="list-wrapper"
           >
             <div v-if="data?.audioFiles">
-              <div
-                v-for="(file, index) in data?.audioFiles"
-                :key="index"
-                class="row"
+              <ElTable
+                :data="tableData"
+                :fit="true"
               >
-                <MediaPlayer
-                  :type="'browser'"
-                  :audio-file="file"
+                <ElTableColumn
+                  prop="name"
+                  label="Name"
                 />
-                <button @click="emit('selectedAudioFile', file)">
-                  <p>Select</p>
-                </button>
-              </div>
+                <ElTableColumn
+                  prop="description"
+                  label="Description"
+                />
+                <ElTableColumn
+                  prop="createdDate"
+                  label="Created"
+                />
+                <ElTableColumn
+                  fixed="right"
+                  label="Operations"
+                  class-name="operations-column"
+                >
+                  <template #default="scope">
+                    <MediaPlayer
+                      type="browser"
+                      :audio-file="scope.row"
+                    />
+                    <ElButton
+                      type="info"
+                      size="small"
+                      @click="() => {
+                        selectedAudioFile = scope.row,
+                        showUpdateAudioFileDialog = true;
+                      }"
+                    >
+                      Edit
+                    </ElButton>
+                    <ElButton
+                      type="primary"
+                      size="small"
+                      @click="emit('selectedAudioFile', scope.row)"
+                    >
+                      Choose
+                    </ElButton>
+                  </template>
+                </ElTableColumn>
+              </ElTable>
             </div>
           </div>
-        </div>
-        <div class="bottom">
-          <ElButton
-            type="primary"
-            @click="emit('cancel')"
-          >
-            Cancel
-          </ElButton>
         </div>
       </div>
     </div>
@@ -79,22 +138,23 @@ const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audio
 @import '@/assets/scss/variables.module.scss';
 
 .audio-selector-wrapper {
-  width: 70%;
+  width: 100%;
   height: 100%;
   position: fixed;
   top: 0;
-  left: 15%;
+  left: 0;
   z-index: 999;
   background-color: rgba($white, 0.8);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0;
 
   .audio-selector-inner {
-    width: 100%;
-    height: 100%;
-    max-width: 1200px;
-    max-height: 520px;
+    width: calc(100% - $menuHeight);
+    height: calc(100vh - 100px);
+    margin-top: calc(2.5 * $menuHeight);
     border: 1px solid $black;
     background-color: $white;
   }
@@ -107,6 +167,10 @@ const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audio
     .left,
     .right {
       align-items: center;
+    }
+
+    .right {
+      gap: $spacingM;
     }
   }
 
@@ -123,12 +187,12 @@ const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audio
   }
 
   .left {
-    flex: 1;
+    width: calc(100%/3);
     border-right: 1px solid $black;
   }
 
   .right {
-    flex: 2;
+    width: calc(100%/3*2);
   }
 
   .content {
@@ -140,36 +204,17 @@ const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audio
       padding-top: $spacingM;
       padding-bottom: $spacingM;
       height: 100%;
+      flex-shrink: 0;
     }
 
     .list-wrapper {
       width: 100%;
+      overflow-y: scroll;
 
-      .row {
-        width: 100%;
-        display: flex;
-        padding-top: 4px;
-        padding-bottom: 4px;
-
-
-        &:hover {
-          background-color: $grey-light;
-        }
-
-
-        button {
-          all: unset;
-          cursor: pointer;
-          width: auto;
-          height: 26px;
-          background: $green-light;
-          border-radius: 4px;
-
+      :deep(.operations-column) {
+       display: flex;
+        .cell {
           display: flex;
-          align-items: center;
-          justify-content: center;
-          padding-left: 8px;
-          padding-right: 8px;
         }
       }
     }

@@ -47,8 +47,8 @@ const scriptCells = computed({
   position: fixed;
   width: 800px;
   height: calc(100vh - 100px);
-  right: 10px;
-  top: 80px;
+  right: calc($menuHeight * 0.5);
+  top: calc(2.5 * $menuHeight);
   transition: right 0.3s ease-in-out;
   overflow-x: hidden;
   border: 1px solid $black;
