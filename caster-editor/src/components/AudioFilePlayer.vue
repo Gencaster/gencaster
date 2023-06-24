@@ -129,7 +129,6 @@ onMounted(() => {
 .media-player {
   display: flex;
   height: 26px;
-  width: 100%;
 
   div {
     align-items: center;

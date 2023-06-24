@@ -33,10 +33,10 @@ const tableData = computed(() => {
   });
 });
 
-const updated = () => {
-  showUpdateAudioFileDialog.value = false;
-  executeQuery();
-};
+// const updated = () => {
+//   showUpdateAudioFileDialog.value = false;
+//   executeQuery();
+// };
 </script>
 
 <template>
@@ -47,13 +47,12 @@ const updated = () => {
           <p>Upload Audio</p>
         </div>
         <div class="right">
-          <p>Files</p>
           <ElInput
             v-model="audioNameFilter"
             placeholder="Search"
           />
           <ElButton
-            type="primary"
+            type="info"
             @click="emit('cancel')"
           >
             Cancel
@@ -83,42 +82,37 @@ const updated = () => {
             <div v-if="data?.audioFiles">
               <ElTable
                 :data="tableData"
-                style="width: 100%;"
+                :fit="true"
               >
                 <ElTableColumn
                   prop="name"
                   label="Name"
-                  width="120"
-                />
-                <ElTableColumn
-                  prop="createdDate"
-                  label="Created at"
-                  width="150"
+                  min-width="100"
                 />
                 <ElTableColumn
                   prop="description"
                   label="Description"
-                  width="150"
+                  min-width="200"
+                />
+                <ElTableColumn
+                  prop="createdDate"
+                  label="Created"
+                  min-width="100"
                 />
                 <ElTableColumn
                   fixed="right"
                   label="Operations"
-                  width="220"
+                  class-name="operations-column"
+                  min-width="100"
                 >
                   <template #default="scope">
                     <MediaPlayer
                       type="browser"
                       :audio-file="scope.row.file"
                     />
+
                     <ElButton
-                      type="primary"
-                      size="small"
-                      @click="emit('selectedAudioFile', scope.row)"
-                    >
-                      Choose
-                    </ElButton>
-                    <ElButton
-                      type="primary"
+                      type="info"
                       size="small"
                       @click="() => {
                         selectedAudioFile = scope.row,
@@ -126,6 +120,13 @@ const updated = () => {
                       }"
                     >
                       Edit
+                    </ElButton>
+                    <ElButton
+                      type="primary"
+                      size="small"
+                      @click="emit('selectedAudioFile', scope.row)"
+                    >
+                      Choose
                     </ElButton>
                   </template>
                 </ElTableColumn>
@@ -142,22 +143,23 @@ const updated = () => {
 @import '@/assets/scss/variables.module.scss';
 
 .audio-selector-wrapper {
-  width: 70%;
+  width: 100%;
   height: 100%;
   position: fixed;
   top: 0;
-  left: 15%;
+  left: 0;
   z-index: 999;
   background-color: rgba($white, 0.8);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0;
 
   .audio-selector-inner {
-    width: 100%;
-    height: 100%;
-    max-width: 1200px;
-    max-height: 520px;
+    width: calc(100% - $menuHeight);
+    height: calc(100vh - 100px);
+    margin-top: calc(2.5 * $menuHeight);
     border: 1px solid $black;
     background-color: $white;
   }
@@ -170,6 +172,10 @@ const updated = () => {
     .left,
     .right {
       align-items: center;
+    }
+
+    .right {
+      gap: $spacingM;
     }
   }
 
@@ -207,32 +213,12 @@ const updated = () => {
 
     .list-wrapper {
       width: 100%;
+      overflow-y: scroll;
 
-      .row {
-        width: 100%;
-        display: flex;
-        padding-top: 4px;
-        padding-bottom: 4px;
-
-
-        &:hover {
-          background-color: $grey-light;
-        }
-
-
-        button {
-          all: unset;
-          cursor: pointer;
-          width: auto;
-          height: 26px;
-          background: $green-light;
-          border-radius: 4px;
-
+      :deep(.operations-column) {
+       display: flex;
+        .cell {
           display: flex;
-          align-items: center;
-          justify-content: center;
-          padding-left: 8px;
-          padding-right: 8px;
         }
       }
     }
