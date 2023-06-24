@@ -87,30 +87,25 @@ const tableData = computed(() => {
                 <ElTableColumn
                   prop="name"
                   label="Name"
-                  min-width="100"
                 />
                 <ElTableColumn
                   prop="description"
                   label="Description"
-                  min-width="200"
                 />
                 <ElTableColumn
                   prop="createdDate"
                   label="Created"
-                  min-width="100"
                 />
                 <ElTableColumn
                   fixed="right"
                   label="Operations"
                   class-name="operations-column"
-                  min-width="100"
                 >
                   <template #default="scope">
                     <MediaPlayer
                       type="browser"
-                      :audio-file="scope.row.file"
+                      :audio-file="scope.row"
                     />
-
                     <ElButton
                       type="info"
                       size="small"
@@ -192,12 +187,12 @@ const tableData = computed(() => {
   }
 
   .left {
-    flex: 1;
+    width: calc(100%/3);
     border-right: 1px solid $black;
   }
 
   .right {
-    flex: 2;
+    width: calc(100%/3*2);
   }
 
   .content {
@@ -209,6 +204,7 @@ const tableData = computed(() => {
       padding-top: $spacingM;
       padding-bottom: $spacingM;
       height: 100%;
+      flex-shrink: 0;
     }
 
     .list-wrapper {
