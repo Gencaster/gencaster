@@ -54,6 +54,7 @@ const doSubmit = async() => {
     emit('uploadedNewFile', data.addAudioFile.uuid);
     form.description = undefined;
     form.name = undefined;
+    fileList.value = [];
   }
 };
 </script>
