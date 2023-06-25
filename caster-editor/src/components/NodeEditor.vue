@@ -6,11 +6,16 @@
     />
     <div class="editor-header-spacer" />
     <NodeEditorCells v-model:script-cells="scriptCells" />
+    <NodeEditorDevInfo
+      :node="node"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import NodeEditorHeader from "@/components/NodeEditorHeader.vue";
+import NodeEditorDevInfo from "@/components/NodeEditorDevInfo.vue";
+
 import NodeEditorCells from "./NodeEditorCells.vue";
 import type { NodeSubscription } from '@/graphql';
 import { computed } from "vue";
@@ -59,5 +64,4 @@ const scriptCells = computed({
   height: calc($menuHeight*2);
   margin-bottom: 30px;
 }
-
 </style>
