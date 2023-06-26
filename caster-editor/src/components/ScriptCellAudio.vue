@@ -67,6 +67,7 @@
         <ScriptCellMarkdown
           v-model:text="textData"
           :cell-type="CellType.Comment"
+          :uuid="uuid"
         />
       </div>
     </div>
@@ -74,14 +75,17 @@
     <Browser
       v-if="showBrowser"
       @cancel="showBrowser = false"
-      @selected-audio-file="(audioFile) => {
-        audioCellData.audioFile.name = audioFile.name;
-        audioCellData.audioFile.uuid = audioFile.uuid;
-        if(audioCellData.audioFile.file?.url && audioFile.file) {
-          audioCellData.audioFile.file.url = audioFile.file.url
+      @selected-audio-file="
+        (audioFile) => {
+          audioCellData.audioFile.name = audioFile.name;
+          audioCellData.audioFile.uuid = audioFile.uuid;
+          if (audioCellData.audioFile.file?.url && audioFile.file) {
+            audioCellData.audioFile.file.url = audioFile.file.url;
+          }
+
+          showBrowser = false;
         }
-        showBrowser = false;
-      }"
+      "
     />
   </div>
 </template>
@@ -90,43 +94,64 @@
 import { computed, ref, type Ref } from "vue";
 import Browser from "@/components/AudioFileBrowser.vue";
 import AudioPlayer from "./AudioFilePlayer.vue";
-import ScriptCellMarkdown from './ScriptCellMarkdown.vue';
+import ScriptCellMarkdown from "./ScriptCellMarkdown.vue";
 import { ElSelect, ElOption, ElSlider } from "element-plus";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { type ScriptCell, type AudioCell, type AudioFile, PlaybackChoices, type Scalars, type DjangoFileType } from "@/graphql";
+import {
+  type ScriptCell,
+  type AudioCell,
+  type AudioFile,
+  PlaybackChoices,
+  type DjangoFileType,
+} from "@/graphql";
 import { CellType } from "@/graphql";
-
+import { storeToRefs } from "pinia";
+import { useInterfaceStore } from "@/stores/InterfaceStore";
 
 // Props and Types
 
 type Maybe<T> = T | undefined | null;
 
-type AudioScriptCellData = Pick<ScriptCell, 'cellCode' | 'cellType'> & {
-  audioCell: Pick<AudioCell, 'uuid' | 'volume' | 'playback'> & {
-    audioFile: Pick<AudioFile, 'name' | 'uuid'> & {
-      file?: Maybe<Pick<DjangoFileType, 'url'>>
-    }
-  }
-}
+type AudioScriptCellData = Pick<ScriptCell, "cellCode" | "cellType"> & {
+  audioCell: Pick<AudioCell, "uuid" | "volume" | "playback"> & {
+    audioFile: Pick<AudioFile, "name" | "uuid"> & {
+      file?: Maybe<Pick<DjangoFileType, "url">>;
+    };
+  };
+};
 
 const props = defineProps<{
-  text: string,
-  audioCell: AudioScriptCellData['audioCell']
+  text: string;
+  audioCell: AudioScriptCellData["audioCell"];
+  uuid: string;
 }>();
+
+const { newScriptCellUpdates } = storeToRefs(useInterfaceStore());
 
 // Mutations
 const emit = defineEmits<{
-  (e: "update:audioCell", scriptCell: AudioScriptCellData['audioCell']): void
-  (e: "update:text", text: string): void
+  (e: "update:audioCell", scriptCell: AudioScriptCellData["audioCell"]): void;
+  (e: "update:text", text: string): void;
 }>();
 
-const audioCellData = computed<AudioScriptCellData['audioCell']>({
+const audioCellData = computed<AudioScriptCellData["audioCell"]>({
   get() {
     return props.audioCell;
   },
   set(value) {
-    console.log('current audio cell internal', value);
-    emit('update:audioCell', value);
+    console.log("current audio cell internal", value);
+    emit("update:audioCell", value);
+
+    let update = newScriptCellUpdates.value.get(props.uuid);
+
+    if (update) {
+      update.audioCell = value;
+    } else {
+      newScriptCellUpdates.value.set(props.uuid, {
+        uuid: props.uuid,
+        audioCell: value,
+      });
+    }
     return value;
   },
 });
@@ -136,14 +161,24 @@ const textData = computed<string>({
     return props.text;
   },
   set(value) {
-    emit('update:text', value);
+    emit("update:text", value);
+
+    let update = newScriptCellUpdates.value.get(props.uuid);
+
+    if (update) {
+      update.cellCode = value;
+    } else {
+      newScriptCellUpdates.value.set(props.uuid, {
+        uuid: props.uuid,
+        cellCode: value,
+      });
+    }
     return value;
   },
 });
 
 // State
 const showBrowser: Ref<boolean> = ref(false);
-
 </script>
 
 <style lang="scss" scoped>
@@ -215,7 +250,6 @@ const showBrowser: Ref<boolean> = ref(false);
     .content {
       display: flex;
       align-items: end;
-
     }
   }
 
@@ -234,7 +268,6 @@ const showBrowser: Ref<boolean> = ref(false);
             overflow-wrap: anywhere;
           }
         }
-
       }
     }
   }

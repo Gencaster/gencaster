@@ -1,6 +1,5 @@
 <!-- eslint-disable vue/no-v-model-argument -->
 <script lang="ts" setup>
-
 import type {
   EventHandlers as GraphEventHandlers,
   Edge as GraphEdge,
@@ -18,21 +17,21 @@ import { useInterfaceStore } from "@/stores/InterfaceStore";
 import * as vNG from "v-network-graph";
 import { VNetworkGraph } from "v-network-graph";
 import variables from "@/assets/scss/variables.module.scss";
+import DialogExitNode from "@/components/DialogExitNode.vue";
 
 const props = defineProps<{
-  graph: GraphSubscription['graph']
+  graph: GraphSubscription["graph"];
 }>();
 
-// Store
+const interfaceStore = useInterfaceStore();
 const {
   showNodeEditor,
   vNetworkGraph,
   selectedNodeUUIDs,
   selectedEdgeUUIDs,
-  scriptCellsModified,
-} = storeToRefs(useInterfaceStore());
-
-
+  newScriptCellUpdates,
+  selectedNodeForEditorUuid,
+} = storeToRefs(interfaceStore);
 
 watch(showNodeEditor, (visible) => {
   if (visible) {
@@ -43,10 +42,10 @@ watch(showNodeEditor, (visible) => {
 });
 
 const lastNodeClick = ref<MouseEvent>();
-const lastPanMove = ref({x:0, y:0});
+const lastPanMove = ref({ x: 0, y: 0 });
 enum graphPanType {
-  NodeEditor = 'NODEEDITOR',
-  Center = 'CENTER',
+  NodeEditor = "NODE_EDITOR",
+  Center = "CENTER",
 }
 
 const graphPan = (location: graphPanType, event?: MouseEvent) => {
@@ -58,7 +57,6 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
     y: event?.offsetY || 0,
   };
 
-
   // get canvas size
   const { height: gHeight, width: gWidth } = vNetworkGraph.value.getSizes();
 
@@ -68,10 +66,11 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
 
   switch (location) {
     case graphPanType.NodeEditor:
-      const editorWidth = document.getElementsByClassName('node-editor')[0]?.clientWidth || 0;
+      const editorWidth =
+        document.getElementsByClassName("node-editor")[0]?.clientWidth || 0;
       aimPos = {
         x: (gWidth - editorWidth) / 2,
-        y: gHeight / 2 * 0.9, // 0.9 to visually center vertical
+        y: (gHeight / 2) * 0.9, // 0.9 to visually center vertical
       };
 
       moveBy = {
@@ -84,7 +83,7 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
     case graphPanType.Center:
       aimPos = {
         x: gWidth / 2,
-        y: gHeight / 2 * 0.9, // 0.9 to visually center vertical
+        y: (gHeight / 2) * 0.9, // 0.9 to visually center vertical
       };
 
       moveBy = {
@@ -133,9 +132,8 @@ const eventHandlers: GraphEventHandlers = {
   "node:dblclick": async ({ node, event }) => {
     nextNodeDoubleClicked.value = node;
 
-    if (showNodeEditor.value && scriptCellsModified.value) { // already open
-      switchNodeDialog.value = true;
-      selectedNodeUUIDs.value = [lastNodeDoubleClicked.value];
+    if (showNodeEditor.value && newScriptCellUpdates.value.size > 0) {
+      showSwitchNodeDialog.value = true;
       return;
     }
 
@@ -143,14 +141,12 @@ const eventHandlers: GraphEventHandlers = {
     selectedNodeUUIDs.value = [node];
 
     showNodeEditor.value = true;
+    selectedNodeForEditorUuid.value = node;
     lastNodeClick.value = event;
   },
   "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
     for (const p in dragEvent) {
-
-      const draggedNode = props.graph.nodes.find(
-        (x) => x.uuid === p,
-      );
+      const draggedNode = props.graph.nodes.find((x) => x.uuid === p);
       if (draggedNode === undefined) {
         console.log(`Dragged unknown node ${p}`);
         continue;
@@ -213,7 +209,7 @@ function layouts(): GraphNodes {
 // Dialogs
 const lastNodeDoubleClicked = ref<Scalars["UUID"]>("");
 const nextNodeDoubleClicked = ref<Scalars["UUID"]>("");
-const switchNodeDialog: Ref<boolean> = ref(false);
+const showSwitchNodeDialog: Ref<boolean> = ref(false);
 
 const graphSettings = {
   standard: vNG.defineConfigs({
@@ -358,11 +354,33 @@ const graphSettings = {
         {{ graph.edges.length }}
       </p>
     </div>
+    <DialogExitNode
+      v-if="showSwitchNodeDialog"
+      @cancel="
+        () => {
+          showSwitchNodeDialog = false;
+        }
+      "
+      @save="
+        async () => {
+          await interfaceStore.executeScriptCellUpdates();
+          selectedNodeForEditorUuid = nextNodeDoubleClicked;
+          showSwitchNodeDialog = false;
+        }
+      "
+      @no-save="
+        () => {
+          interfaceStore.resetScriptCellUpdates();
+          selectedNodeForEditorUuid = nextNodeDoubleClicked;
+          showSwitchNodeDialog = false;
+        }
+      "
+    />
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/variables.module.scss';
+@import "@/assets/scss/variables.module.scss";
 
 .graph {
   position: relative;

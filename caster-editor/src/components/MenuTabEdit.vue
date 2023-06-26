@@ -2,110 +2,84 @@
   <div>
     <button
       class="unstyled"
-      @click="createNode()"
+      @click="showAddNodeDialog = true"
     >
       Add Scene
     </button>
     <button
       class="unstyled"
-      :class="{ lighter: hideConnectionButton }"
       @click="createEdge()"
     >
       Add Connection
     </button>
     <button
       class="unstyled"
-      :class="{ lighter: hideRemoveButton }"
       @click="removeSelection()"
     >
       Remove
     </button>
+    <DialogAddNode
+      v-if="showAddNodeDialog"
+      :graph-uuid="graph.uuid"
+      @closed="showAddNodeDialog = false"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Graph } from '@/graphql';
-import { useCreateNodeMutation, useCreateEdgeMutation, useDeleteEdgeMutation, useDeleteNodeMutation } from "@/graphql";
+import type { Graph } from "@/graphql";
+import {
+  useCreateEdgeMutation,
+  useDeleteEdgeMutation,
+  useDeleteNodeMutation,
+} from "@/graphql";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 import { ElMessage } from "element-plus";
-import { storeToRefs } from 'pinia';
+import { storeToRefs } from "pinia";
+import { ref, type Ref } from "vue";
+import DialogAddNode from "./DialogAddNode.vue";
 
+export type GraphEdit = Pick<Graph, "uuid">;
 
-export type GraphEdit = Pick<Graph, 'uuid'>
-
-const props = defineProps<{
-  graph: GraphEdit
+defineProps<{
+  graph: GraphEdit;
 }>();
 
-const { selectedNodeUUIDs, selectedEdgeUUIDs, vNetworkGraph } = storeToRefs(useInterfaceStore());
+const { selectedNodeUUIDs, selectedEdgeUUIDs } = storeToRefs(
+  useInterfaceStore(),
+);
 
-const createNodeMutation = useCreateNodeMutation();
-const createNode = async () => {
-  let positionX = 0;
-  let positionY = 0;
-  if(vNetworkGraph.value) {
-    const { height, width } = vNetworkGraph.value.getSizes();
-    const pos = vNetworkGraph.value.translateFromDomToSvgCoordinates({
-      x: width/2,
-      y: height/2,
-    });
-    positionX = pos.x;
-    positionY = pos.y;
-  }
-
-  const { error } = await createNodeMutation.executeMutation({
-    name: "new scene",
-    color: "primary",
-    positionX,
-    positionY,
-    graphUuid: props.graph.uuid,
-  });
-  if(error) {
-    alert(`Could not create node: ${error.message}`);
-  }
-};
+const showAddNodeDialog: Ref<boolean> = ref(false);
 
 const deleteNodeMutation = useDeleteNodeMutation();
 const deleteEdgeMutation = useDeleteEdgeMutation();
 
 const removeSelection = async () => {
-  if (selectedNodeUUIDs.value.length==0 && selectedEdgeUUIDs.value.length == 0) {
-    displayError("Please select max one scene or one connection.");
-  }
-
   selectedNodeUUIDs.value.forEach(async (nodeUuid) => {
-    console.log(`Delete node ${nodeUuid}`);
-    const { error } = await  deleteNodeMutation.executeMutation({
+    const { error } = await deleteNodeMutation.executeMutation({
       nodeUuid,
     });
-    if(error) {
-      displayError(`Could not delete node ${nodeUuid}: ${error.message}`);
+    if (error) {
+      ElMessage.error(`Could not delete node ${nodeUuid}: ${error.message}`);
     }
+    ElMessage.info(`Deleted node ${nodeUuid}`);
   });
 
   selectedEdgeUUIDs.value.forEach(async (edgeUuid) => {
-    console.log(`Delete node ${edgeUuid}`);
-    const { error } = await  deleteEdgeMutation.executeMutation({
+    const { error } = await deleteEdgeMutation.executeMutation({
       edgeUuid,
     });
-    if(error) {
-      displayError(`Could not delete edge ${edgeUuid}: ${error.message}`);
+    if (error) {
+      ElMessage.error(`Could not delete edge ${edgeUuid}: ${error.message}`);
     }
+    ElMessage.info(`Deleted edge ${edgeUuid}`);
   });
-};
-
-const displayError = async(message: string) => {
-  ElMessage({
-      message: message,
-      type: "error",
-      customClass: "messages-editor",
-    });
 };
 
 const createEdgeMutation = useCreateEdgeMutation();
 const createEdge = async () => {
   if (selectedNodeUUIDs.value.length !== 2) {
-    displayError("requires exactly 2 scenes selected.");
+    ElMessage.info("Creating a connection requires exactly 2 selected scenes.");
     return;
   }
   const [nodeInUuid, nodeOutUuid] = selectedNodeUUIDs.value;
@@ -113,15 +87,9 @@ const createEdge = async () => {
     nodeInUuid,
     nodeOutUuid,
   });
-  if(error) {
-    alert(`Could not create edege: ${error.message}`);
+  if (error) {
+    ElMessage.error(`Could not create edge: ${error.message}`);
   }
+  ElMessage.success(`Created new edge`);
 };
-
-// is it maybe better to always have this
-// clickable and show an error message on how you can use it?
-// otherwise people may not know how to activate the buttons
-const hideConnectionButton = false;
-const hideRemoveButton = false;
-
 </script>
