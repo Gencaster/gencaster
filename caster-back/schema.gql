@@ -299,7 +299,8 @@ type Mutation {
   """
   Creates or updates a given :class:`~story_graph.models.ScriptCell` to change its content.
   """
-  createUpdateScriptCells(scriptCellInputs: [ScriptCellInput!]!, nodeUuid: UUID!): [ScriptCell!]!
+  createScriptCells(scriptCellInputs: [ScriptCellInputCreate!]!, nodeUuid: UUID!): [ScriptCell!]!
+  updateScriptCells(scriptCellInputs: [ScriptCellInputUpdate!]!): [ScriptCell!]!
 
   """Deletes a given :class:`~story_graph.models.ScriptCell`."""
   deleteScriptCell(scriptCellUuid: UUID!): Void
@@ -396,11 +397,23 @@ Stores a script which can be executed
 with our :class:`~story_graph.engine.Engine` on a
 :class:`~stream.models.Stream`.
 """
-input ScriptCellInput {
-  uuid: UUID = null
+input ScriptCellInputCreate {
   cellType: CellType
   cellCode: String!
   cellOrder: Int = null
+  audioCell: AudioCellInput
+}
+
+"""
+Stores a script which can be executed
+with our :class:`~story_graph.engine.Engine` on a
+:class:`~stream.models.Stream`.
+"""
+input ScriptCellInputUpdate {
+  uuid: UUID = "<class 'uuid.UUID'>"
+  cellType: CellType
+  cellCode: String
+  cellOrder: Int
   audioCell: AudioCellInput
 }
 
