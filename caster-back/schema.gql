@@ -270,6 +270,9 @@ type Mutation {
   authLogin(username: String!, password: String!): LoginRequestResponse!
   authLogout: Boolean!
 
+  """Update metadata of an :class:`~stream.models.AudioFile` via a UUID"""
+  updateAudioFile(uuid: UUID!, updateAudioFile: UpdateAudioFile!): AudioFile!
+
   """
   Creates a new :class:`~story_graph.models.Node` in a given
   ~class:`~story_graph.models.Graph`.
@@ -574,6 +577,11 @@ input UUIDFilterLookup {
   isNull: Boolean
   regex: String
   iRegex: String
+}
+
+input UpdateAudioFile {
+  description: String
+  name: String
 }
 
 scalar Upload

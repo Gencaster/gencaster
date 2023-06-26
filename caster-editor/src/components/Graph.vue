@@ -8,7 +8,7 @@ import type {
   Nodes as GraphNodes,
 } from "v-network-graph";
 
-import { ref, type Ref, watch } from "vue";
+import { ref, type Ref, watch, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
 import type { GraphSubscription, Scalars } from "@/graphql";
@@ -66,8 +66,8 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
 
   switch (location) {
     case graphPanType.NodeEditor:
-      const editorWidth =
-        document.getElementsByClassName("node-editor")[0]?.clientWidth || 0;
+      // const editorWidth = document.getElementsByClassName('node-editor')[0]?.clientWidth || 0;
+      const editorWidth = 800; // this needs to be hard coded for transition purposes
       aimPos = {
         x: (gWidth - editorWidth) / 2,
         y: (gHeight / 2) * 0.9, // 0.9 to visually center vertical
@@ -113,7 +113,7 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
   // animate
   gsap.to(progress, {
     absolute: 1,
-    duration: 0.4,
+    duration: 0.3,
     ease: "power3.inOut",
     onUpdate: () => {
       moveGraph();
@@ -121,12 +121,25 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
   });
 };
 
+const panToFirstNode = async () => {
+  const nodes = props.graph.nodes;
+  const firstNode = nodes.find((x) => x.name=='Start') || nodes[0];
+  const viewBox = vNetworkGraph.value?.getViewBox() || {left: 0, right: 0, top: 0, bottom: 0};
+
+  await nextTick();
+  vNetworkGraph.value?.panTo({
+    x: -firstNode.positionX + (Math.abs(viewBox.left - viewBox.right)) / 2,
+    y: -firstNode.positionY + (Math.abs(viewBox.top - viewBox.bottom)) / 2 * 0.9,
+  });
+};
+
+
 const updateNodeMutation = useUpdateNodeMutation();
 
 const eventHandlers: GraphEventHandlers = {
   // see https://dash14.github.io/v-network-graph/reference/events.html#events-with-event-handlers
   "view:load": () => {
-    vNetworkGraph.value?.fitToContents();
+    panToFirstNode();
   },
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   "node:dblclick": async ({ node, event }) => {

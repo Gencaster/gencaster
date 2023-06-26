@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import NodeEditorHeader from "@/components/NodeEditorHeader.vue";
+import NodeEditorDevInfo from "@/components/NodeEditorDevInfo.vue";
+
 import NodeEditorCells from "./NodeEditorCells.vue";
 import { useNodeSubscription } from "@/graphql";
 import { computed, watch, type Ref, toRef } from "vue";
@@ -57,14 +59,15 @@ watch(error, (x) => {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variables.module.scss";
+
 .node-editor {
-  z-index: 2;
+  z-index: 1;
   background-color: white;
   position: fixed;
   width: 800px;
   height: calc(100vh - 100px);
-  right: 10px;
-  top: 80px;
+  right: calc($menuHeight * 0.5);
+  top: calc(2.5 * $menuHeight);
   transition: right 0.3s ease-in-out;
   overflow-x: hidden;
   border: 1px solid $black;
@@ -72,7 +75,7 @@ watch(error, (x) => {
 
 .editor-header-spacer {
   width: inherit;
-  height: calc($menuHeight * 2);
+  height: calc($menuHeight*2);
   margin-bottom: 30px;
 }
 </style>

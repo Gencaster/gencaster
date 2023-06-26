@@ -6,6 +6,7 @@ import { PlayerState } from "@/models";
 export const usePlayerStore = defineStore("player", () => {
   const micActive: Ref<boolean> = ref(false);
   const play: Ref<boolean> = ref(false);
+  const playerMounted: Ref<boolean> = ref(false);
   const startingTimestamp: Ref<number> = ref(0);
   const playerState: Ref<PlayerState> = ref(PlayerState.Start);
   const graphUuid: Ref<Scalars["UUID"] | undefined> = ref(undefined);
@@ -24,6 +25,7 @@ export const usePlayerStore = defineStore("player", () => {
   return {
     micActive,
     play,
+    playerMounted,
     graphUuid,
     activeStreamPoint,
     streamGPS,

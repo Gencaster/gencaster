@@ -58,6 +58,7 @@ from stream.types import (
     StreamPoint,
     StreamVariable,
     StreamVariableInput,
+    UpdateAudioFile,
 )
 
 from .distributor import GenCasterChannel, GraphQLWSConsumerInjector
@@ -192,6 +193,21 @@ class Mutation:
     async def auth_logout(self, info) -> bool:
         await sync_to_async(logout)(info.context.request)
         return True
+
+    @strawberry.mutation
+    async def update_audio_file(
+        self, info, uuid: uuid.UUID, update_audio_file: UpdateAudioFile
+    ) -> AudioFile:
+        """Update metadata of an :class:`~stream.models.AudioFile` via a UUID"""
+        await graphql_check_authenticated(info)
+
+        audio_file = await stream_models.AudioFile.objects.aget(uuid=uuid)
+        if update_audio_file.name:
+            audio_file.name = update_audio_file.name
+        if update_audio_file.description:
+            audio_file.description = update_audio_file.description
+        await sync_to_async(audio_file.save)()
+        return audio_file  # type: ignore
 
     @strawberry.mutation
     async def add_node(self, info: Info, new_node: NodeCreate) -> None:

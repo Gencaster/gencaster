@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<{
   stream: undefined,
 });
 
-const { micActive, play, streamGPS } = storeToRefs(usePlayerStore());
+const { micActive, play, streamGPS, playerMounted } = storeToRefs(usePlayerStore());
 
 let audioBridgeWebRtcUp = false;
 const { hostname, protocol } = window.location;
@@ -248,6 +248,7 @@ onBeforeRouteLeave(() => {
   stopMicStreaming();
   stopStreaming();
   play.value = false;
+  playerMounted.value = false;
   micActive.value = false;
   streamGPS.value = false;
 });
@@ -271,6 +272,7 @@ onMounted(async () => {
   await initJanus();
   // todo this is rather nasty way of setting things up
   await setTimeout(() => {
+    playerMounted.value = true;
     switchStream(props.streamPoint.janusOutRoom ?? 0);
   }, 1000.0);
 });

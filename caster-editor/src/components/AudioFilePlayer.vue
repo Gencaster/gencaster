@@ -66,6 +66,11 @@ onMounted(() => {
 
   setVolume();
 });
+
+const url = computed(() => {
+  return `${baseURL}${props.audioFile?.file?.url}`;
+});
+
 </script>
 
 <template>
@@ -84,13 +89,10 @@ onMounted(() => {
           alt="Play button"
         >
       </button>
-      <p>{{ audioFile.name }}</p>
-      <!-- <p>{{ audioFile.createdDate }}</p> -->
-
       <audio
         v-if="audioFile.file"
         ref="audioPlayer"
-        :src="`${baseURL}${audioFile.file.url}`"
+        :src="url"
       />
     </div>
     <div
@@ -135,7 +137,6 @@ onMounted(() => {
 .media-player {
   display: flex;
   height: 26px;
-  width: 100%;
 
   div {
     align-items: center;

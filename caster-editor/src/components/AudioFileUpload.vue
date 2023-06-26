@@ -73,6 +73,7 @@ const doSubmit = async () => {
     emit("uploadedNewFile", data.addAudioFile.uuid);
     form.description = undefined;
     form.name = undefined;
+    fileList.value = [];
   }
 };
 </script>
@@ -130,7 +131,7 @@ const doSubmit = async () => {
         style="margin-top: 10px"
         @click="submitUpload()"
       >
-        upload to server
+        Upload
       </ElButton>
     </ElForm>
   </div>
@@ -140,5 +141,12 @@ const doSubmit = async () => {
 @import "@/assets/scss/variables.module.scss";
 
 .uploader {
+  .el-upload__text {
+    color: $black;
+    em {
+      text-decoration: underline;
+      color: $black;
+    }
+  }
 }
 </style>
