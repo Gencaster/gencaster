@@ -28,7 +28,7 @@ repos:
         name: "Linting editor"
         files: caster-editor
         language: system
-        entry: /bin/sh -c "cd caster-editor && npm run lint"
+        entry: /bin/sh -c "cd caster-editor && npm run format && npm run lint:fix"
       - id: frontend-lint
         name: "Linting frontend"
         files: caster-front
