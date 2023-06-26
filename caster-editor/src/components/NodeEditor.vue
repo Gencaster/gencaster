@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import NodeEditorHeader from "@/components/NodeEditorHeader.vue";
-import NodeEditorDevInfo from "@/components/NodeEditorDevInfo.vue";
 
 import NodeEditorCells from "./NodeEditorCells.vue";
 import { useNodeSubscription } from "@/graphql";
@@ -75,7 +74,7 @@ watch(error, (x) => {
 
 .editor-header-spacer {
   width: inherit;
-  height: calc($menuHeight*2);
+  height: calc($menuHeight * 2);
   margin-bottom: 30px;
 }
 </style>

@@ -24,18 +24,20 @@ const audioNameFilter: Ref<string> = ref("");
 const showUpdateAudioFileDialog: Ref<boolean> = ref(false);
 const selectedAudioFile: Ref<AudioFile | undefined> = ref(undefined);
 
-const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: {
-  audioNameFilter,
-} });
+const { data, executeQuery, fetching } = useAudioFilesQuery({
+  variables: {
+    audioNameFilter,
+  },
+});
 
 const tableData = computed(() => {
-  if(!data.value) {
+  if (!data.value) {
     return [];
-  };
+  }
   return data.value.audioFiles.map((x) => {
     return {
       ...x,
-      'createdDate': new Date(x.createdDate).toISOString().slice(0, 10),
+      createdDate: new Date(x.createdDate).toISOString().slice(0, 10),
     };
   });
 });
@@ -116,10 +118,12 @@ const tableData = computed(() => {
                     <ElButton
                       type="info"
                       size="small"
-                      @click="() => {
-                        selectedAudioFile = scope.row,
-                        showUpdateAudioFileDialog = true;
-                      }"
+                      @click="
+                        () => {
+                          (selectedAudioFile = scope.row),
+                          (showUpdateAudioFileDialog = true);
+                        }
+                      "
                     >
                       Edit
                     </ElButton>
@@ -194,12 +198,12 @@ const tableData = computed(() => {
   }
 
   .left {
-    width: calc(100%/3);
+    width: calc(100% / 3);
     border-right: 1px solid $black;
   }
 
   .right {
-    width: calc(100%/3*2);
+    width: calc(100% / 3 * 2);
   }
 
   .content {
@@ -219,7 +223,7 @@ const tableData = computed(() => {
       overflow-y: scroll;
 
       :deep(.operations-column) {
-       display: flex;
+        display: flex;
         .cell {
           display: flex;
         }

@@ -70,7 +70,6 @@ onMounted(() => {
 const url = computed(() => {
   return `${baseURL}${props.audioFile?.file?.url}`;
 });
-
 </script>
 
 <template>
