@@ -2,20 +2,27 @@
 import { ref, type Ref } from "vue";
 import AudioFileUpload from "./AudioFileUpload.vue";
 import MediaPlayer from "./AudioFilePlayer.vue";
-import { useAudioFilesQuery, type AudioFile, type DjangoFileType, type AudioFilesQuery } from "@/graphql";
+import {
+  useAudioFilesQuery,
+  type AudioFile,
+  type DjangoFileType,
+  type AudioFilesQuery,
+} from "@/graphql";
 import { ElButton } from "element-plus";
 
-export type AudioFilePicker = Pick<AudioFile, 'name' | 'uuid'> & {file?: Pick<DjangoFileType, 'url'> | undefined | null};
-
-
+export type AudioFilePicker = Pick<AudioFile, "name" | "uuid"> & {
+  file?: Pick<DjangoFileType, "url"> | undefined | null;
+};
 
 const emit = defineEmits<{
-  (e: 'selectedAudioFile', audioFile: AudioFilesQuery['audioFiles'][0]): void
-  (e: 'cancel'): void
+  (e: "selectedAudioFile", audioFile: AudioFilesQuery["audioFiles"][0]): void;
+  (e: "cancel"): void;
 }>();
 
 const audioNameFilter: Ref<string> = ref("");
-const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audioNameFilter } });
+const { data, executeQuery, fetching } = useAudioFilesQuery({
+  variables: { audioNameFilter },
+});
 </script>
 
 <template>
@@ -76,7 +83,7 @@ const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audio
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/variables.module.scss';
+@import "@/assets/scss/variables.module.scss";
 
 .audio-selector-wrapper {
   width: 70%;
@@ -151,11 +158,9 @@ const { data, executeQuery, fetching } = useAudioFilesQuery({ variables: { audio
         padding-top: 4px;
         padding-bottom: 4px;
 
-
         &:hover {
           background-color: $grey-light;
         }
-
 
         button {
           all: unset;

@@ -12,8 +12,8 @@
 </template>
 
 <script setup lang="ts">
-import { useInterfaceStore, Tab } from '@/stores/InterfaceStore';
-import { storeToRefs } from 'pinia';
+import { useInterfaceStore, Tab } from "@/stores/InterfaceStore";
+import { storeToRefs } from "pinia";
 
-const {  tab } = storeToRefs(useInterfaceStore());
+const { tab } = storeToRefs(useInterfaceStore());
 </script>

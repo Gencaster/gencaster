@@ -3,7 +3,6 @@ import GraphDetailView from "@/views/GraphDetailView.vue";
 import GraphsView from "@/views/GraphsView.vue";
 import LandingView from "@/views/LandingView.vue";
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   // add typescript/enums for paths

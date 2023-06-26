@@ -55,7 +55,7 @@
   @if $fontStyle == body {
     font-size: $baseFontSizeMobile;
     line-height: 1.3;
-    @include onScreen('tablet-portrait-up') {
+    @include onScreen("tablet-portrait-up") {
       font-size: $baseFontSize;
     }
   }
@@ -63,7 +63,7 @@
   @if $fontStyle == headline {
     font-size: $largeFontSizeMobile;
     line-height: 1.3;
-    @include onScreen('tablet-portrait-up') {
+    @include onScreen("tablet-portrait-up") {
       font-size: $largeFontSize;
     }
   }
@@ -71,7 +71,7 @@
   @if $fontStyle == mediumHeadline {
     font-size: $h2FontSizeMobile;
     line-height: 1.3;
-    @include onScreen('tablet-portrait-up') {
+    @include onScreen("tablet-portrait-up") {
       font-size: $largeFontSize;
     }
   }
@@ -79,7 +79,7 @@
   @if $fontStyle == headlineLarger {
     font-size: $largerFontSizeMobile;
     line-height: 1.05;
-    @include onScreen('tablet-portrait-up') {
+    @include onScreen("tablet-portrait-up") {
       font-size: $largerFontSize;
     }
   }
@@ -87,7 +87,7 @@
   @if $fontStyle == smallHeadline {
     font-size: $mediumFontSizeMobile;
     line-height: 1.3;
-    @include onScreen('tablet-portrait-up') {
+    @include onScreen("tablet-portrait-up") {
       font-size: $mediumFontSize;
     }
   }

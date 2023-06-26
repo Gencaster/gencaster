@@ -47,57 +47,56 @@ import type { Graph } from "@/graphql";
 import AddGraph from "@/components/DialogAddGraph.vue";
 import { ref, type Ref } from "vue";
 
-export type GraphListType = Pick<Graph, 'name' | 'uuid'>
+export type GraphListType = Pick<Graph, "name" | "uuid">;
 
 defineProps<{
-  graphs: GraphListType[]
+  graphs: GraphListType[];
 }>();
 
 const createGraphDialogVisible: Ref<boolean> = ref(false);
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/variables.module.scss';
+@import "@/assets/scss/variables.module.scss";
 
 .graph-selection {
-    .graph {
-      width: 100%;
-      height: 50px;
-      background-color: $mainWhite;
-      border: 1px solid $mainBlack;
-      border-bottom: 0;
+  .graph {
+    width: 100%;
+    height: 50px;
+    background-color: $mainWhite;
+    border: 1px solid $mainBlack;
+    border-bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+
+    div {
+      padding-left: $globalPadding;
+      padding-right: $globalPadding;
+      width: auto;
       display: flex;
-      justify-content: space-between;
-      text-decoration: none;
+      align-items: center;
+      p {
+        margin: 0;
+      }
+    }
 
+    &:hover {
+      background-color: $hoverColor;
+      cursor: pointer;
+    }
+
+    &.new-one {
+      text-align: center;
+      border: 1px solid $mainBlack;
       div {
-        padding-left: $globalPadding;
-        padding-right: $globalPadding;
-        width: auto;
-        display: flex;
-        align-items: center;
+        width: 100%;
         p {
-          margin: 0;
-        }
-      }
-
-      &:hover {
-        background-color: $hoverColor;
-        cursor: pointer;
-      }
-
-      &.new-one {
-        text-align: center;
-        border: 1px solid $mainBlack;
-        div {
-          width: 100%;
-          p {
-            width: inherit;
-            text-align: center;
-          }
+          width: inherit;
+          text-align: center;
         }
       }
     }
   }
-
+}
 </style>
