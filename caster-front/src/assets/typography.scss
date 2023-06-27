@@ -8,7 +8,7 @@ html,
 body,
 button {
   font-display: swap;
-  @include fontStyle('body');
+  @include fontStyle("body");
   font-family: Arial, Helvetica, sans-serif !important;
 }
 
@@ -34,22 +34,21 @@ h6 {
 }
 
 h1 {
-  @include fontStyle('headline');
+  @include fontStyle("headline");
   margin-bottom: $spacingS;
-
 }
 
 h2 {
-  @include fontStyle('headline');
+  @include fontStyle("headline");
   margin-bottom: $spacingS;
 
   &.larger {
-    @include fontStyle('headlineLarger');
+    @include fontStyle("headlineLarger");
   }
 }
 
 h3 {
-  @include fontStyle('smallHeadline');
+  @include fontStyle("smallHeadline");
   margin-bottom: $spacingS;
 }
 
@@ -82,14 +81,14 @@ a:active {
 //   }
 // }
 
-a[target='_blank'].no-arrow {
+a[target="_blank"].no-arrow {
   &::after {
     display: none;
   }
 }
 
 // hover states
-@include onScreen('hover-device') {
+@include onScreen("hover-device") {
   a.cta:hover {
     text-decoration: none;
   }

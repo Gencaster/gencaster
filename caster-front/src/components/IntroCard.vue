@@ -5,13 +5,13 @@ import { computed } from "vue";
 import GraphPlayerCredits from "@/components/GraphPlayerCredits.vue";
 
 const props = defineProps<{
-  title: string
-  descriptionText: string
-  buttonText: string
+  title: string;
+  descriptionText: string;
+  buttonText: string;
 }>();
 
 const emit = defineEmits<{
-  (e: "buttonClicked"): void
+  (e: "buttonClicked"): void;
 }>();
 
 const description = computed<string>(() => {
@@ -50,6 +50,4 @@ const description = computed<string>(() => {
   </div>
 </template>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
