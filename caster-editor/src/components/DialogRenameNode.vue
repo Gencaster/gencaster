@@ -31,15 +31,15 @@
 import { type Node, useUpdateNodeMutation } from "@/graphql";
 import { ref, type Ref } from "vue";
 
-export type NodeRename = Pick<Node, 'uuid' | 'name'>
+export type NodeRename = Pick<Node, "uuid" | "name">;
 
 const emit = defineEmits<{
-    (e: 'renamed'): void
-    (e: 'cancel'): void
+  (e: "renamed"): void;
+  (e: "cancel"): void;
 }>();
 
 const props = defineProps<{
-    node: NodeRename
+  node: NodeRename;
 }>();
 
 const showDialog: Ref<boolean> = ref(true);
@@ -48,15 +48,14 @@ const newName: Ref<string> = ref(props.node.name);
 const udpateNodeMutation = useUpdateNodeMutation();
 
 const renameNode = async () => {
-    const { error } = await udpateNodeMutation.executeMutation({
-        name: newName.value,
-        nodeUuid: props.node.uuid,
-    });
-    if(error) {
-        alert(`Could not rename node: ${error.message}`);
-        return;
-    }
-    emit('renamed');
+  const { error } = await udpateNodeMutation.executeMutation({
+    name: newName.value,
+    nodeUuid: props.node.uuid,
+  });
+  if (error) {
+    alert(`Could not rename node: ${error.message}`);
+    return;
+  }
+  emit("renamed");
 };
-
 </script>

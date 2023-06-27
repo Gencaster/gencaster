@@ -12,7 +12,10 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint:fix": "eslint . --fix",
+    "lint:ci": "eslint . --max-warnings 0",
     "codegen": "graphql-codegen --config codegen.ts",
+    "format": "prettier --write src/",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
   },

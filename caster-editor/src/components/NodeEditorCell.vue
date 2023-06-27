@@ -2,20 +2,34 @@
 <template>
   <div class="cell">
     <ScriptCellMarkdown
-      v-if="scriptCell.cellType === CellType.Markdown || scriptCell.cellType === CellType.Comment"
+      v-if="
+        scriptCell.cellType === CellType.Markdown ||
+          scriptCell.cellType === CellType.Comment
+      "
       v-model:text="scriptCellText"
       :cell-type="scriptCell.cellType"
+      :uuid="scriptCell.uuid"
     />
     <ScriptCellCodemirror
-      v-if="scriptCell.cellType === CellType.Python || scriptCell.cellType === CellType.Supercollider"
+      v-if="
+        scriptCell.cellType === CellType.Python ||
+          scriptCell.cellType === CellType.Supercollider
+      "
       v-model:text="scriptCellText"
       :cell-type="scriptCell.cellType"
+      :uuid="scriptCell.uuid"
     />
-    <div v-if="scriptCell.audioCell!==undefined">
+    <div v-if="scriptCell.audioCell !== undefined">
       <ScriptCellAudio
-        v-if="scriptCell.audioCell !== undefined && scriptCell.audioCell !== null && scriptCell.audioCell?.audioFile.file !== undefined && scriptCell.cellType === CellType.Audio"
+        v-if="
+          scriptCell.audioCell !== undefined &&
+            scriptCell.audioCell !== null &&
+            scriptCell.audioCell?.audioFile.file !== undefined &&
+            scriptCell.cellType === CellType.Audio
+        "
         v-model:text="scriptCellText"
         v-model:audio-cell="scriptCell.audioCell"
+        :uuid="scriptCell.uuid"
       />
     </div>
     <div class="scriptcell-tools">
@@ -50,76 +64,77 @@
 </template>
 
 <script setup lang="ts">
-import { type ScriptCell, CellType, type Scalars, useDeleteScriptCellMutation, type AudioCell, type AudioFile, type DjangoFileType } from '@/graphql';
-import ScriptCellMarkdown from './ScriptCellMarkdown.vue';
-import ScriptCellCodemirror from './ScriptCellCodemirror.vue';
-import ScriptCellAudio from './ScriptCellAudio.vue';
-import { ElMessage } from 'element-plus';
-import { computed } from 'vue';
+import {
+  type ScriptCell,
+  CellType,
+  type Scalars,
+  useDeleteScriptCellMutation,
+  type AudioCell,
+  type AudioFile,
+  type DjangoFileType,
+} from "@/graphql";
+import ScriptCellMarkdown from "./ScriptCellMarkdown.vue";
+import ScriptCellCodemirror from "./ScriptCellCodemirror.vue";
+import ScriptCellAudio from "./ScriptCellAudio.vue";
+import { ElMessage } from "element-plus";
+import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useInterfaceStore } from "@/stores/InterfaceStore";
 
 type Maybe<T> = T | undefined | null;
 
-type ScriptCellData = Pick<ScriptCell, 'cellType' | 'cellCode' | 'uuid'> & {
-  audioCell?: null | undefined | Pick<AudioCell, 'playback' | 'uuid' | 'volume'> & {
-    audioFile: Pick<AudioFile, 'uuid' | 'name'> & {
-      file?: Maybe<Pick<DjangoFileType, 'url'>>
-    }
-  }
-}
+type ScriptCellData = Pick<ScriptCell, "cellType" | "cellCode" | "uuid"> & {
+  audioCell?:
+    | null
+    | undefined
+    | (Pick<AudioCell, "playback" | "uuid" | "volume"> & {
+        audioFile: Pick<AudioFile, "uuid" | "name"> & {
+          file?: Maybe<Pick<DjangoFileType, "url">>;
+        };
+      });
+};
 
 const props = defineProps<{
-    scriptCell: ScriptCellData
+  scriptCell: ScriptCellData;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:scriptCell', scriptCell: ScriptCellData): void
+  (e: "update:scriptCell", scriptCell: ScriptCellData): void;
 }>();
 
+const { newScriptCellUpdates } = storeToRefs(useInterfaceStore());
 
 const scriptCellText = computed<string>({
   get() {
     return props.scriptCell.cellCode;
   },
   set(value) {
-    const newCell = {...props.scriptCell};
+    const newCell = { ...props.scriptCell };
     newCell.cellCode = value;
-    emit('update:scriptCell', newCell);
+    emit("update:scriptCell", newCell);
     return value;
   },
 });
 
-// const sriptCellAudioCell = computed<ScriptCellData['audioCell']>({
-//   get() {
-//     return props.scriptCell.audioCell ?? undefined;
-//   },
-//   set(value) {
-//     const newCell = {...props.scriptCell};
-//     newCell.audioCell = value;
-//     emit('update:scriptCell', newCell);
-//     return value;
-//   }
-// });
-
-const displayError = async(message: string) => {
-  ElMessage({
-      message: message,
-      type: "error",
-      customClass: "messages-editor",
-    });
-};
-
 const deleteScriptCellMutation = useDeleteScriptCellMutation();
-const deleteScriptCell = async (uuid: Scalars['UUID']) => {
-  const {error} = await deleteScriptCellMutation.executeMutation({
+const deleteScriptCell = async (uuid: Scalars["UUID"]) => {
+  if (newScriptCellUpdates.value.size > 0) {
+    // deleting a script cell triggers refresh from the server, so in order to not
+    // loose any changes it is necessary to save them before
+    ElMessage.info(
+      "There are unsaved changes. Please save the changes before deleting a script cell",
+    );
+    return;
+  }
+  const { error } = await deleteScriptCellMutation.executeMutation({
     scriptCellUuid: uuid,
   });
-  if(error) {
-    displayError(error.message);
+  if (error) {
+    ElMessage.error(`Error on deleting the script cell: ${error.message}`);
   }
 };
 
 const playScriptCell = () => {
-  displayError("Script cell playback not yet implemented");
+  ElMessage.error("Script cell playback not yet implemented");
 };
-
 </script>

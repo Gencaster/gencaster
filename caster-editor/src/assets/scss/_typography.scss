@@ -1,14 +1,14 @@
 /* ============ Font ============ */
 
 *::selection {
-  background: #ADFF00;
+  background: #adff00;
 }
 
 html,
 body,
 button {
   font-display: swap;
-  @include fontStyle('body');
+  @include fontStyle("body");
   font-family: Arial, Helvetica, sans-serif !important;
 }
 
@@ -34,17 +34,17 @@ h6 {
 }
 
 h2 {
-  @include fontStyle('headline');
+  @include fontStyle("headline");
   // margin-top: $spacingL;
   margin-bottom: $spacingS;
 
   &.larger {
-    @include fontStyle('headlineLarger');
+    @include fontStyle("headlineLarger");
   }
 }
 
 h3 {
-  @include fontStyle('smallHeadline');
+  @include fontStyle("smallHeadline");
   // margin-top: $spacingL;
   margin-bottom: $spacingS;
 }
@@ -68,9 +68,9 @@ a:active {
   text-underline-offset: 0.1em !important;
 }
 
-a[target='_blank'] {
+a[target="_blank"] {
   &::after {
-    content: '↗';
+    content: "↗";
 
     margin-left: 1px;
     text-decoration: none;
@@ -78,14 +78,14 @@ a[target='_blank'] {
   }
 }
 
-a[target='_blank'].no-arrow {
+a[target="_blank"].no-arrow {
   &::after {
     display: none;
   }
 }
 
 // hover states
-@include onScreen('hover-device') {
+@include onScreen("hover-device") {
   a.cta:hover {
     // font-style: italic;
     text-decoration: none;

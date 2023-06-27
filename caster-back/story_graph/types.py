@@ -123,11 +123,19 @@ class AudioCellInput:
 
 
 @strawberry.django.input(models.ScriptCell)
-class ScriptCellInput:
-    uuid: auto = strawberry.django.field(default=None)
+class ScriptCellInputCreate:
     cell_type: CellType  # type: ignore
     cell_code: auto
     cell_order: auto = strawberry.django.field(default=None)
+    audio_cell: Optional[AudioCellInput]
+
+
+@strawberry.django.input(models.ScriptCell)
+class ScriptCellInputUpdate:
+    uuid: auto = uuid.UUID
+    cell_type: Optional[CellType]  # type: ignore
+    cell_code: Optional[str]
+    cell_order: Optional[int]
     audio_cell: Optional[AudioCellInput]
 
 

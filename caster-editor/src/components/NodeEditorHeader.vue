@@ -13,13 +13,14 @@
       <div class="right">
         <button
           class="unstyled"
-          @click="$emit('saveNode')"
+          :disabled="newScriptCellUpdates.size < 1"
+          @click="interfaceStore.executeScriptCellUpdates()"
         >
           Save Scene
         </button>
         <button
           class="unstyled"
-          @click="showNodeEditor = false"
+          @click="closeScriptCellEditor()"
         >
           Close
         </button>
@@ -48,6 +49,28 @@
       @cancel="showRenameNodeDialog = false"
       @renamed="showRenameNodeDialog = false"
     />
+    <DialogExitNode
+      v-if="showNodeExitDialog"
+      @save="
+        () => {
+          interfaceStore.executeScriptCellUpdates();
+          showNodeEditor = false;
+          cachedNodeData = undefined;
+        }
+      "
+      @no-save="
+        () => {
+          newScriptCellUpdates = new Map();
+          showNodeEditor = false;
+          cachedNodeData = undefined;
+        }
+      "
+      @cancel="
+        () => {
+          showNodeExitDialog = false;
+        }
+      "
+    />
     <AudioFileBrowser
       v-if="showAudioFileBrowser"
       @cancel="showAudioFileBrowser = false"
@@ -57,155 +80,169 @@
 </template>
 
 <script setup lang="ts">
-import { PlaybackChoices, type Node, type AudioFile } from '@/graphql';
-import { CellType, useCreateUpdateScriptCellsMutation } from "@/graphql";
-import { useInterfaceStore } from '@/stores/InterfaceStore';
-import { storeToRefs } from 'pinia';
-import { ref, type Ref } from 'vue';
-import DialogRenameNode from './DialogRenameNode.vue';
-import AudioFileBrowser from './AudioFileBrowser.vue';
-import { ElMessage } from 'element-plus';
+import { PlaybackChoices, type Node, type AudioFile } from "@/graphql";
+import { CellType, useCreateScriptCellsMutation } from "@/graphql";
+import { useInterfaceStore } from "@/stores/InterfaceStore";
+import { storeToRefs } from "pinia";
+import { ref, type Ref } from "vue";
+import DialogRenameNode from "./DialogRenameNode.vue";
+import AudioFileBrowser from "./AudioFileBrowser.vue";
+import { ElMessage } from "element-plus";
+import DialogExitNode from "@/components/DialogExitNode.vue";
 
-export type NodeName = Pick<Node, 'name' | 'uuid'>
+export type NodeName = Pick<Node, "name" | "uuid">;
 
 const props = defineProps<{
-    node: NodeName
+  node: NodeName;
 }>();
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const emit = defineEmits<{
-  (e: 'saveNode'): void
+  (e: "saveNode"): void;
 }>();
 
-const { showNodeEditor, scriptCellsModified } = storeToRefs(useInterfaceStore());
+const interfaceStore = useInterfaceStore();
+const { showNodeEditor, newScriptCellUpdates, cachedNodeData } =
+  storeToRefs(interfaceStore);
 
 const showAudioFileBrowser: Ref<boolean> = ref(false);
-
+const showNodeExitDialog: Ref<boolean> = ref(false);
 const showRenameNodeDialog: Ref<boolean> = ref(false);
 
-const createScriptCellMutation = useCreateUpdateScriptCellsMutation();
+const createScriptCellMutation = useCreateScriptCellsMutation();
 
-const addScriptCell = async (cellType: CellType) => {
-    if(scriptCellsModified.value === true) {
-      ElMessage.warning("Please save your changes before adding a new script cell");
-      return;
-    }
-    if(cellType===CellType.Audio) {
-      showAudioFileBrowser.value = true;
-      return;
-    }
-    const {error} = await createScriptCellMutation.executeMutation({
-      nodeUuid: props.node.uuid,
-      scriptCellInputs: [{
-        cellType: cellType,
-        cellCode: '',
-      }],
-    });
-    if(error) {
-      ElMessage.error(`Error on creating script cell: ${error.message}`);
-    }
+const closeScriptCellEditor = async () => {
+  if (newScriptCellUpdates.value.size < 1) {
+    showNodeEditor.value = false;
+  } else {
+    showNodeExitDialog.value = true;
+  }
 };
 
-const createAudioCell = async (audioFile: Pick<AudioFile, 'uuid'>) => {
+const addScriptCell = async (cellType: CellType) => {
+  if (newScriptCellUpdates.value.size > 0) {
+    ElMessage.warning(
+      "Please save your changes before adding a new script cell",
+    );
+    return;
+  }
+  if (cellType === CellType.Audio) {
+    showAudioFileBrowser.value = true;
+    return;
+  }
   const { error } = await createScriptCellMutation.executeMutation({
     nodeUuid: props.node.uuid,
-    scriptCellInputs: [{
-      audioCell: {
-        audioFile: {
-          uuid: audioFile.uuid,
-        },
-        playback: PlaybackChoices.SyncPlayback,
+    scriptCellInputs: [
+      {
+        cellType: cellType,
+        cellCode: "",
       },
-      cellCode: '',
-      cellType: CellType.Audio,
-    }],
+    ],
   });
-  if(error) {
+  if (error) {
+    ElMessage.error(`Error on creating script cell: ${error.message}`);
+  }
+};
+
+const createAudioCell = async (audioFile: Pick<AudioFile, "uuid">) => {
+  const { error } = await createScriptCellMutation.executeMutation({
+    nodeUuid: props.node.uuid,
+    scriptCellInputs: [
+      {
+        audioCell: {
+          audioFile: {
+            uuid: audioFile.uuid,
+          },
+          playback: PlaybackChoices.AsyncPlayback,
+        },
+        cellCode: "",
+        cellType: CellType.Audio,
+      },
+    ],
+  });
+  if (error) {
     alert(`Error on creating audio cell: ${error.message}`);
   }
   showAudioFileBrowser.value = false;
 };
-
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/variables.module.scss';
+@import "@/assets/scss/variables.module.scss";
 
 .editor-header {
-    display: block;
-    position: fixed;
-    width: 798px;
-    z-index: 2;
-    background-color: $mainWhite;
+  display: block;
+  position: fixed;
+  width: 798px;
+  z-index: 2;
+  background-color: $mainWhite;
 
+  .title {
+    display: flex;
+    height: $menuHeight;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 4px;
 
-    .title {
-      display: flex;
-      height: $menuHeight;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 5px;
-      margin-bottom: 4px;
+    padding-left: 15px;
+    padding-right: 15px;
 
-      padding-left: 15px;
-      padding-right: 15px;
-
-      .left {
-        button {
-          color: $grey-dark;
-
-          &:hover {
-            font-style: italic;
-            background-color: transparent;
-          }
-        }
-      }
-
-      .right {
-        transform: translateX(8px);
-        text-decoration: underline;
-      }
-
-      .left,
-      .right {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        p {
-          margin: 0;
-        }
-      }
-    }
-
-    .node-menu-bar {
-      display: flex;
-      align-items: center;
-      height: $menuHeight;
-      background-color: transparent;
-      border-bottom: 1px solid $grey;
-      border-top: 1px solid $grey;
-      padding-left: 15px;
-      padding-right: 15px;
-
+    .left {
       button {
-        border: 0;
-        margin: 0;
-        padding: 0;
-        background-color: transparent;
-        padding-left: 10px;
-        padding-right: 10px;
-        transform: translateX(-10px);
-
-        border-radius: 2px;
-        height: 24px;
-        cursor: pointer;
+        color: $grey-dark;
 
         &:hover {
-          background-color: $grey-light;
+          font-style: italic;
+          background-color: transparent;
         }
       }
+    }
 
+    .right {
+      transform: translateX(8px);
+      text-decoration: underline;
+    }
+
+    .left,
+    .right {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      p {
+        margin: 0;
+      }
     }
   }
+
+  .node-menu-bar {
+    display: flex;
+    align-items: center;
+    height: $menuHeight;
+    background-color: transparent;
+    border-bottom: 1px solid $grey;
+    border-top: 1px solid $grey;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    button {
+      border: 0;
+      margin: 0;
+      padding: 0;
+      background-color: transparent;
+      padding-left: 10px;
+      padding-right: 10px;
+      transform: translateX(-10px);
+
+      border-radius: 2px;
+      height: 24px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $grey-light;
+      }
+    }
+  }
+}
 </style>

@@ -26,7 +26,7 @@ from django.contrib.auth.models import User as UserModel
 from django.core.exceptions import PermissionDenied
 from django.core.files import File
 from django.http.request import HttpRequest
-from strawberry import auto
+from strawberry import UNSET, auto
 from strawberry.types import Info
 from strawberry_django.fields.field import StrawberryDjangoField
 
@@ -43,7 +43,8 @@ from story_graph.types import (
     NodeCreate,
     NodeUpdate,
     ScriptCell,
-    ScriptCellInput,
+    ScriptCellInputCreate,
+    ScriptCellInputUpdate,
 )
 from stream.exceptions import NoStreamAvailableException
 from stream.types import (
@@ -100,6 +101,7 @@ async def graphql_check_authenticated(info: Info):
 async def update_or_create_audio_cell(
     audio_cell_input: Optional[AudioCellInput],
 ) -> Optional[story_graph_models.AudioCell]:
+    """Async function to update audio cells"""
     if audio_cell_input:
         (
             audio_cell,
@@ -336,8 +338,11 @@ class Mutation:
         return None
 
     @strawberry.mutation
-    async def create_update_script_cells(
-        self, info, script_cell_inputs: List[ScriptCellInput], node_uuid: uuid.UUID
+    async def create_script_cells(
+        self,
+        info,
+        script_cell_inputs: List[ScriptCellInputCreate],
+        node_uuid: uuid.UUID,
     ) -> List[ScriptCell]:
         """Creates or updates a given :class:`~story_graph.models.ScriptCell` to change its content."""
         await graphql_check_authenticated(info)
@@ -368,27 +373,65 @@ class Mutation:
                 else:
                     script_cell_input.cell_order = 0
 
-            (
-                script_cell,
-                created,
-            ) = await story_graph_models.ScriptCell.objects.aupdate_or_create(
-                uuid=script_cell_input.uuid,
-                defaults={
-                    "cell_order": script_cell_input.cell_order,
-                    "cell_type": script_cell_input.cell_type,
-                    "cell_code": script_cell_input.cell_code,
-                    "node": node,
-                    "audio_cell": audio_cell,
-                },
+            script_cell = await story_graph_models.ScriptCell.objects.acreate(
+                cell_order=script_cell_input.cell_order,
+                cell_type=script_cell_input.cell_type,
+                cell_code=script_cell_input.cell_code,
+                node=node,
+                audio_cell=audio_cell,
             )
-            if created:
-                log.debug(f"Created script cell {script_cell.uuid}")
 
+            log.debug(f"Created script cell {script_cell.uuid}")
             script_cells.append(script_cell)
 
         await GenCasterChannel.send_node_update(
             layer=info.context.channel_layer, node_uuid=node.uuid
         )
+        return script_cells  # type: ignore
+
+    @strawberry.mutation
+    async def update_script_cells(
+        self, info, script_cell_inputs: List[ScriptCellInputUpdate]
+    ) -> List[ScriptCell]:
+        script_cells: List[story_graph_models.ScriptCell] = []
+
+        for script_cell_input in script_cell_inputs:
+            # the async orm is still strange sometimes, therefore the code is not written in a clean
+            # and concise manner
+            script_cell: story_graph_models.ScriptCell = (
+                await story_graph_models.ScriptCell.objects.aget(
+                    uuid=script_cell_input.uuid
+                )
+            )
+            audio_cell = await update_or_create_audio_cell(script_cell_input.audio_cell)
+
+            # **{k: v for (k, v) in updates.items() if v is not None}
+            # did not work
+
+            updates: Dict[str, Any] = {}
+            if (order := script_cell_input.cell_order) != UNSET:
+                updates["cell_order"] = order
+            if audio_cell:
+                updates["audio_cell"] = audio_cell
+            if cell_code := script_cell_input.cell_code:
+                updates["cell_code"] = cell_code
+            if cell_type := script_cell_input.cell_type:
+                updates["cell_type"] = cell_type
+            if len(updates) == 0:
+                # maybe
+                continue
+            await story_graph_models.ScriptCell.objects.filter(
+                uuid=script_cell_input.uuid
+            ).aupdate(**updates)
+            script_cells.append(script_cell)
+
+        # send update to subscription if something was updated
+        if len(script_cells) > 0:
+            await GenCasterChannel.send_node_update(
+                layer=info.context.channel_layer,
+                node_uuid=await sync_to_async(lambda: script_cells[0].node.uuid)(),
+            )
+
         return script_cells  # type: ignore
 
     @strawberry.mutation

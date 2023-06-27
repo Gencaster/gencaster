@@ -68,9 +68,17 @@ mutation deleteEdge($edgeUuid: UUID!) {
   deleteEdge(edgeUuid: $edgeUuid)
 }
 
-mutation CreateUpdateScriptCells($nodeUuid: UUID!, $scriptCellInputs: [ScriptCellInput!]!) {
-  createUpdateScriptCells(
+mutation CreateScriptCells($nodeUuid: UUID!, $scriptCellInputs: [ScriptCellInputCreate!]!) {
+  createScriptCells(
     nodeUuid: $nodeUuid,
+    scriptCellInputs: $scriptCellInputs
+  ) {
+    uuid
+  }
+}
+
+mutation UpdateScriptCells($scriptCellInputs: [ScriptCellInputUpdate!]!) {
+  updateScriptCells(
     scriptCellInputs: $scriptCellInputs
   ) {
     uuid

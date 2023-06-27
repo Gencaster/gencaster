@@ -273,7 +273,7 @@ export type Mutation = {
   authLogin: LoginRequestResponse;
   authLogout: Scalars['Boolean'];
   /** Creates or updates a given :class:`~story_graph.models.ScriptCell` to change its content. */
-  createUpdateScriptCells: Array<ScriptCell>;
+  createScriptCells: Array<ScriptCell>;
   createUpdateStreamVariable: Array<StreamVariable>;
   /** Deletes a given :class:`~story_graph.models.Edge`. */
   deleteEdge?: Maybe<Scalars['Void']>;
@@ -288,6 +288,7 @@ export type Mutation = {
    * for renaming or moving it across the canvas.
    */
   updateNode?: Maybe<Scalars['Void']>;
+  updateScriptCells: Array<ScriptCell>;
 };
 
 
@@ -323,9 +324,9 @@ export type MutationAuthLoginArgs = {
 
 
 /** Mutations for Gencaster via GraphQL. */
-export type MutationCreateUpdateScriptCellsArgs = {
+export type MutationCreateScriptCellsArgs = {
   nodeUuid: Scalars['UUID'];
-  scriptCellInputs: Array<ScriptCellInput>;
+  scriptCellInputs: Array<ScriptCellInputCreate>;
 };
 
 
@@ -363,6 +364,12 @@ export type MutationUpdateAudioFileArgs = {
 /** Mutations for Gencaster via GraphQL. */
 export type MutationUpdateNodeArgs = {
   nodeUpdate: NodeUpdate;
+};
+
+
+/** Mutations for Gencaster via GraphQL. */
+export type MutationUpdateScriptCellsArgs = {
+  scriptCellInputs: Array<ScriptCellInputUpdate>;
 };
 
 /** Matches :class:`gencaster.stream.exceptions.NoStreamAvailable`. */
@@ -497,9 +504,21 @@ export type ScriptCell = {
  * with our :class:`~story_graph.engine.Engine` on a
  * :class:`~stream.models.Stream`.
  */
-export type ScriptCellInput = {
+export type ScriptCellInputCreate = {
   audioCell?: InputMaybe<AudioCellInput>;
   cellCode: Scalars['String'];
+  cellOrder?: InputMaybe<Scalars['Int']>;
+  cellType?: InputMaybe<CellType>;
+};
+
+/**
+ * Stores a script which can be executed
+ * with our :class:`~story_graph.engine.Engine` on a
+ * :class:`~stream.models.Stream`.
+ */
+export type ScriptCellInputUpdate = {
+  audioCell?: InputMaybe<AudioCellInput>;
+  cellCode?: InputMaybe<Scalars['String']>;
   cellOrder?: InputMaybe<Scalars['Int']>;
   cellType?: InputMaybe<CellType>;
   uuid?: InputMaybe<Scalars['UUID']>;
@@ -756,13 +775,20 @@ export type DeleteEdgeMutationVariables = Exact<{
 
 export type DeleteEdgeMutation = { deleteEdge?: any | null };
 
-export type CreateUpdateScriptCellsMutationVariables = Exact<{
+export type CreateScriptCellsMutationVariables = Exact<{
   nodeUuid: Scalars['UUID'];
-  scriptCellInputs: Array<ScriptCellInput> | ScriptCellInput;
+  scriptCellInputs: Array<ScriptCellInputCreate> | ScriptCellInputCreate;
 }>;
 
 
-export type CreateUpdateScriptCellsMutation = { createUpdateScriptCells: Array<{ uuid: any }> };
+export type CreateScriptCellsMutation = { createScriptCells: Array<{ uuid: any }> };
+
+export type UpdateScriptCellsMutationVariables = Exact<{
+  scriptCellInputs: Array<ScriptCellInputUpdate> | ScriptCellInputUpdate;
+}>;
+
+
+export type UpdateScriptCellsMutation = { updateScriptCells: Array<{ uuid: any }> };
 
 export type DeleteScriptCellMutationVariables = Exact<{
   scriptCellUuid: Scalars['UUID'];
@@ -961,19 +987,27 @@ export const DeleteEdgeDocument = gql`
 export function useDeleteEdgeMutation() {
   return Urql.useMutation<DeleteEdgeMutation, DeleteEdgeMutationVariables>(DeleteEdgeDocument);
 };
-export const CreateUpdateScriptCellsDocument = gql`
-    mutation CreateUpdateScriptCells($nodeUuid: UUID!, $scriptCellInputs: [ScriptCellInput!]!) {
-  createUpdateScriptCells(
-    nodeUuid: $nodeUuid
-    scriptCellInputs: $scriptCellInputs
-  ) {
+export const CreateScriptCellsDocument = gql`
+    mutation CreateScriptCells($nodeUuid: UUID!, $scriptCellInputs: [ScriptCellInputCreate!]!) {
+  createScriptCells(nodeUuid: $nodeUuid, scriptCellInputs: $scriptCellInputs) {
     uuid
   }
 }
     `;
 
-export function useCreateUpdateScriptCellsMutation() {
-  return Urql.useMutation<CreateUpdateScriptCellsMutation, CreateUpdateScriptCellsMutationVariables>(CreateUpdateScriptCellsDocument);
+export function useCreateScriptCellsMutation() {
+  return Urql.useMutation<CreateScriptCellsMutation, CreateScriptCellsMutationVariables>(CreateScriptCellsDocument);
+};
+export const UpdateScriptCellsDocument = gql`
+    mutation UpdateScriptCells($scriptCellInputs: [ScriptCellInputUpdate!]!) {
+  updateScriptCells(scriptCellInputs: $scriptCellInputs) {
+    uuid
+  }
+}
+    `;
+
+export function useUpdateScriptCellsMutation() {
+  return Urql.useMutation<UpdateScriptCellsMutation, UpdateScriptCellsMutationVariables>(UpdateScriptCellsDocument);
 };
 export const DeleteScriptCellDocument = gql`
     mutation deleteScriptCell($scriptCellUuid: UUID!) {

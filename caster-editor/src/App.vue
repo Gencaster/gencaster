@@ -8,7 +8,7 @@ import { useInterfaceStore } from "@/stores/InterfaceStore";
 import { storeToRefs } from "pinia";
 import { ElMessage } from "element-plus";
 
-const {user} = storeToRefs(useInterfaceStore());
+const { user } = storeToRefs(useInterfaceStore());
 
 const { data, error } = useIsAuthenticatedQuery();
 
@@ -18,19 +18,18 @@ const { data, error } = useIsAuthenticatedQuery();
 const resolvedLoginState: Ref<boolean> = ref(false);
 
 watch(data, (d) => {
-  if(d?.isAuthenticated) {
-     user.value = d.isAuthenticated;
+  if (d?.isAuthenticated) {
+    user.value = d.isAuthenticated;
   }
   resolvedLoginState.value = true;
 });
 
 watch(error, (e) => {
-  if(e?.message) {
+  if (e?.message) {
     ElMessage.error(`Please log in: ${e.message}`);
   }
   resolvedLoginState.value = true;
 });
-
 </script>
 
 <template>

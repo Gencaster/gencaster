@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { useLoginUserMutation } from '@/graphql';
-import { useInterfaceStore } from '@/stores/InterfaceStore';
-import { ElMessage, type FormInstance } from 'element-plus';
-import { storeToRefs } from 'pinia';
-import { reactive, ref, type Ref } from 'vue';
+import { useLoginUserMutation } from "@/graphql";
+import { useInterfaceStore } from "@/stores/InterfaceStore";
+import { ElMessage, type FormInstance } from "element-plus";
+import { storeToRefs } from "pinia";
+import { reactive, ref, type Ref } from "vue";
 
 const loginForm = reactive({
-  username: '',
-  password: '',
+  username: "",
+  password: "",
 });
 
-const {user} = storeToRefs(useInterfaceStore());
+const { user } = storeToRefs(useInterfaceStore());
 
 const loginFormRef: Ref<FormInstance | undefined> = ref();
 
@@ -30,10 +30,10 @@ const tryLogin = async () => {
     return;
   }
   if (data?.authLogin) {
-    if(data.authLogin.__typename === 'LoginError') {
-        ElMessage.error(`Username / Password do not match`);
-        loginFormRef.value?.resetFields();
-        return;
+    if (data.authLogin.__typename === "LoginError") {
+      ElMessage.error(`Username / Password do not match`);
+      loginFormRef.value?.resetFields();
+      return;
     }
     showLoginScreen.value = false;
     ElMessage.success(`Successfully logged in`);
