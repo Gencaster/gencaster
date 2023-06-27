@@ -6,12 +6,12 @@ import StringDialog from "@/components/Dialogs/StringDialog.vue";
 import type { Scalars } from "@/graphql";
 
 defineProps<{
-  request: UserDataRequest
-  streamUuid: Scalars["UUID"]
+  request: UserDataRequest;
+  streamUuid: Scalars["UUID"];
 }>();
 
 const emit = defineEmits<{
-  (e: "submitted"): void
+  (e: "submitted"): void;
 }>();
 </script>
 

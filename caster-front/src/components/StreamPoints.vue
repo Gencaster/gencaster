@@ -4,7 +4,7 @@ import type { StreamPoint } from "@/graphql";
 import { useStreamPointsQuery } from "@/graphql";
 
 const emit = defineEmits<{
-  (e: "selectedStreamPoint", streamPointUUID: StreamPoint): void
+  (e: "selectedStreamPoint", streamPointUUID: StreamPoint): void;
 }>();
 
 const { data, fetching } = useStreamPointsQuery();

@@ -6,15 +6,16 @@
       made with <a
         href="https://gencaster.org/"
         target="_blank"
-      >gencaster</a> - mehr Info ↓
+      >gencaster</a> -
+      mehr Info ↓
     </p>
     <p />
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/mixins.scss';
-@import '@/assets/variables.scss';
+@import "@/assets/mixins.scss";
+@import "@/assets/variables.scss";
 
 .credits {
   position: absolute;

@@ -15,29 +15,41 @@ import IntroInfo from "@/components/IntroInfo.vue";
 
 import type { UserDataRequest } from "@/models";
 import { DrifterStatus, PlayerState, UserDataRequestType } from "@/models";
-import { type Graph, useSendStreamVariableMutation, useStreamSubscription } from "@/graphql";
+import {
+  type Graph,
+  useSendStreamVariableMutation,
+  useStreamSubscription,
+} from "@/graphql";
 import { usePlayerStore } from "@/stores/Player";
 
 const props = defineProps<{
-  graph: Pick<Graph, "uuid" | "name" | "aboutText" | "displayName" | "startText" | "endText" | "slugName">
+  graph: Pick<
+    Graph,
+    | "uuid"
+    | "name"
+    | "aboutText"
+    | "displayName"
+    | "startText"
+    | "endText"
+    | "slugName"
+  >;
 }>();
 
-const {
-  playerState,
-  play,
-  startingTimestamp,
-  playerMounted,
-} = storeToRefs(usePlayerStore());
+const { playerState, play, startingTimestamp, playerMounted } = storeToRefs(
+  usePlayerStore(),
+);
 
 const router = useRouter();
-const showDebug = computed<boolean>(() => router.currentRoute.value.query.debug === null);
+const showDebug = computed<boolean>(
+  () => router.currentRoute.value.query.debug === null,
+);
 // const showDebug: Ref<boolean> = ref(true);
 
 const { data, error, stale } = useStreamSubscription({
   variables: {
     graphUuid: props.graph.uuid,
   },
-  pause: (router.currentRoute.value.name !== "graphPlayer") || (!props.graph.uuid),
+  pause: router.currentRoute.value.name !== "graphPlayer" || !props.graph.uuid,
 });
 
 const drifterStatus: Ref<DrifterStatus> = ref(DrifterStatus.WaitForStart);
@@ -73,7 +85,8 @@ const startStream = async () => {
 const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
   {
     name: "askGps",
-    description: "Drifter ist ein dynamisches Hörspiel, das in Echtzeit generiert wird. Hierfür werden noch Informationen über dich benötigt:",
+    description:
+      "Drifter ist ein dynamisches Hörspiel, das in Echtzeit generiert wird. Hierfür werden noch Informationen über dich benötigt:",
     key: "gps",
     type: UserDataRequestType.Gps,
     placeholder: "",
@@ -114,7 +127,12 @@ const showLoading = computed<boolean>(() => {
 });
 
 const showError = computed<boolean>(() => {
-  if (waitingTimeout.value && (!data.value || data.value?.streamInfo.__typename === 'NoStreamAvailable' || data.value.streamInfo.stream.streamPoint === undefined)) {
+  if (
+    waitingTimeout.value &&
+    (!data.value ||
+      data.value?.streamInfo.__typename === "NoStreamAvailable" ||
+      data.value.streamInfo.stream.streamPoint === undefined)
+  ) {
     return true;
   } else {
     return false;
@@ -125,7 +143,6 @@ const showError = computed<boolean>(() => {
 setTimeout(() => {
   waitingTimeout.value = true;
 }, 3000);
-
 </script>
 
 <template>
@@ -138,13 +155,12 @@ setTimeout(() => {
       <div v-if="data?.streamInfo.__typename === 'NoStreamAvailable'">
         <p>
           Sorry, no stream available right now. Please come back later. <br>
-          In case this error persists, please contact us <a href="mailto:contact@gencaster.org">here</a>.
+          In case this error persists, please contact us
+          <a href="mailto:contact@gencaster.org">here</a>.
         </p>
       </div>
       <div v-else-if="!data">
-        Some error :/
-        Data is empty: {{ data }}
-        Error: {{ error }}
+        Some error :/ Data is empty: {{ data }} Error: {{ error }}
       </div>
     </div>
     <div
@@ -154,7 +170,9 @@ setTimeout(() => {
       <div v-if="data?.streamInfo.__typename === 'StreamInfo'">
         <!-- start screen -->
         <Transition>
-          <div v-if="drifterStatus === DrifterStatus.WaitForStart && playerMounted">
+          <div
+            v-if="drifterStatus === DrifterStatus.WaitForStart && playerMounted"
+          >
             <Intro
               :title="graph.displayName"
               :description-text="graph.startText"
@@ -205,7 +223,12 @@ setTimeout(() => {
 
         <!-- player bar -->
         <Transition>
-          <div v-if="playerState === PlayerState.Playing || playerState === PlayerState.End">
+          <div
+            v-if="
+              playerState === PlayerState.Playing ||
+                playerState === PlayerState.End
+            "
+          >
             <PlayerBar
               :graph="graph"
               @clicked-stop="drifterStatus = DrifterStatus.ShowEndScreen"
@@ -236,8 +259,8 @@ setTimeout(() => {
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/mixins.scss';
-@import '@/assets/variables.scss';
+@import "@/assets/mixins.scss";
+@import "@/assets/variables.scss";
 
 .graph-player {
   min-height: 100vh;

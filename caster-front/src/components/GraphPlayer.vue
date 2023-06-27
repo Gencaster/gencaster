@@ -9,7 +9,7 @@ import StreamInfo from "@/components/StreamInfo.vue";
 import PlayerButtons from "@/components/PlayerButtons.vue";
 
 const props = defineProps<{
-  graph: Pick<Graph, "uuid" | "name">
+  graph: Pick<Graph, "uuid" | "name">;
 }>();
 
 const router = useRouter();
@@ -56,8 +56,8 @@ const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/mixins.scss';
-@import '@/assets/variables.scss';
+@import "@/assets/mixins.scss";
+@import "@/assets/variables.scss";
 
 .debug-info-wrapper {
   margin-top: 10px;

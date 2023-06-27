@@ -26,7 +26,7 @@ const router = createRouter({
       path: "/listen/:graphSlug/",
       name: "graphPlayer",
       component: GraphDetail,
-      props: route => ({
+      props: (route) => ({
         graphSlug: route.params.graphSlug,
         fullView: false,
       }),

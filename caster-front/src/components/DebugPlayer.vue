@@ -36,9 +36,13 @@ const resetStreamPoint = () => {
         <Transition>
           <ElCollapse>
             <ElCollapseItem title="Streaming points">
-              <StreamPoints @selected-stream-point="(streamPoint) => selectedStreamPoint = streamPoint" />
+              <StreamPoints
+                @selected-stream-point="
+                  (streamPoint) => (selectedStreamPoint = streamPoint)
+                "
+              />
               <ElButton
-                style="width: 100%; margin-top: 10px;"
+                style="width: 100%; margin-top: 10px"
                 @click="resetStreamPoint()"
               >
                 Reset streaming point

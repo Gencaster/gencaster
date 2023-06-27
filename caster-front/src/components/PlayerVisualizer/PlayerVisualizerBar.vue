@@ -33,8 +33,8 @@ const cssValue = computed((): string => {
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/mixins.scss';
-@import '@/assets/variables.scss';
+@import "@/assets/mixins.scss";
+@import "@/assets/variables.scss";
 
 .bar {
   background-color: $black;
