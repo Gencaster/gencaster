@@ -5,26 +5,39 @@ import { useRouter } from "vue-router";
 import { computed } from "vue";
 import { usePlayerStore } from "@/stores/Player";
 
-const props = withDefaults(defineProps<{
-  playButton?: boolean
-  micButton?: boolean
-  gpsButton?: boolean
-}>(), {
-  playButton: true,
-  micButton: false,
-  gpsButton: false,
-});
+const props = withDefaults(
+  defineProps<{
+    playButton?: boolean;
+    micButton?: boolean;
+    gpsButton?: boolean;
+  }>(),
+  {
+    playButton: true,
+    micButton: false,
+    gpsButton: false,
+  },
+);
 
 const { play, micActive, streamGPS } = storeToRefs(usePlayerStore());
 
 const router = useRouter();
 
-const showPlayButton = computed<boolean>(() => router.currentRoute.value.query.play === null || props.playButton);
-const showMicButton = computed<boolean>(() => router.currentRoute.value.query.mic === null || props.micButton);
-const showGpsButton = computed<boolean>(() => router.currentRoute.value.query.gps === null || props.gpsButton);
+const showPlayButton = computed<boolean>(
+  () => router.currentRoute.value.query.play === null || props.playButton,
+);
+const showMicButton = computed<boolean>(
+  () => router.currentRoute.value.query.mic === null || props.micButton,
+);
+const showGpsButton = computed<boolean>(
+  () => router.currentRoute.value.query.gps === null || props.gpsButton,
+);
 
-const spanWidth = computed<number>(() =>
-  24 / (Number(showPlayButton.value) + Number(showMicButton.value) + Number(showGpsButton.value)),
+const spanWidth = computed<number>(
+  () =>
+    24 /
+    (Number(showPlayButton.value) +
+      Number(showMicButton.value) +
+      Number(showGpsButton.value)),
 );
 </script>
 
@@ -39,7 +52,7 @@ const spanWidth = computed<number>(() =>
         <ElButton
           size="large"
           type="default"
-          style="width: 100%;"
+          style="width: 100%"
           @click="play = !play"
         >
           {{ play ? "Stop" : "Play" }} Stream
@@ -53,7 +66,7 @@ const spanWidth = computed<number>(() =>
         <ElButton
           size="large"
           type="default"
-          style="width: 100%;"
+          style="width: 100%"
           @click="micActive = !micActive"
         >
           {{ !micActive ? "Activate" : "Disable" }} Microphone
@@ -67,7 +80,7 @@ const spanWidth = computed<number>(() =>
         <ElButton
           size="large"
           type="default"
-          style="width: 100%;"
+          style="width: 100%"
           @click="streamGPS = !streamGPS"
         >
           {{ !streamGPS ? "Activate" : "Disable" }} GPS

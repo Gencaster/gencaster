@@ -18,8 +18,7 @@ const resizeObserver: ResizeObserver = new ResizeObserver(() => {
 
 onMounted(() => {
   setBars();
-  if (wrapper.value)
-    resizeObserver.observe(wrapper.value);
+  if (wrapper.value) resizeObserver.observe(wrapper.value);
 });
 </script>
 
@@ -29,7 +28,7 @@ onMounted(() => {
     class="bars-wrapper"
   >
     <div
-      v-for="(index) in numberOfBars"
+      v-for="index in numberOfBars"
       :key="index"
       class="bar-wrapper"
     >
@@ -39,8 +38,8 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/mixins.scss';
-@import '@/assets/variables.scss';
+@import "@/assets/mixins.scss";
+@import "@/assets/variables.scss";
 
 .bars-wrapper {
   width: 100%;

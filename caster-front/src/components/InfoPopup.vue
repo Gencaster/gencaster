@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{
-  text: string
+  text: string;
 }>();
 </script>
 
@@ -15,8 +15,8 @@ defineProps<{
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/mixins.scss';
-@import '@/assets/variables.scss';
+@import "@/assets/mixins.scss";
+@import "@/assets/variables.scss";
 
 .content-screen {
   box-sizing: border-box;

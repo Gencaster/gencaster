@@ -21,7 +21,15 @@ app.use(urql, {
   exchanges: [
     fetchExchange,
     subscriptionExchange({
-      forwardSubscription: operation => new SubscriptionClient((`${import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081"}/graphql`).replace("https", "wss").replace("http", "ws"), { reconnect: true }).request(operation),
+      forwardSubscription: (operation) =>
+        new SubscriptionClient(
+          `${
+            import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081"
+          }/graphql`
+            .replace("https", "wss")
+            .replace("http", "ws"),
+          { reconnect: true },
+        ).request(operation),
     }),
   ],
 });
