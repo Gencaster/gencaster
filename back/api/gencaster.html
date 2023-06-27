@@ -456,8 +456,8 @@ Although it creates a new node with UUID we don’t hand it back yet.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="gencaster.schema.Mutation.create_update_script_cells">
-<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_update_script_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">script_cell_inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gencaster/schema.html#Mutation.create_update_script_cells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.create_update_script_cells" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="gencaster.schema.Mutation.create_script_cells">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_script_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">script_cell_inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gencaster/schema.html#Mutation.create_script_cells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.create_script_cells" title="Permalink to this definition">#</a></dt>
 <dd><p>Creates or updates a given <a class="reference internal" href="story_graph.html#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a> to change its content.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
@@ -561,6 +561,17 @@ for renaming or moving it across the canvas.</p>
 <dd><p>Helper function to determine if we are loggin in an async manner.</p>
 <p>This would be better a decorator but strawberry is not nice in these regards, see
 <a class="reference external" href="https://stackoverflow.com/a/72796313/3475778">Stack Overflow</a>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gencaster.schema.update_or_create_audio_cell">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.schema.</span></span><span class="sig-name descname"><span class="pre">update_or_create_audio_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audio_cell_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gencaster/schema.html#update_or_create_audio_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.update_or_create_audio_cell" title="Permalink to this definition">#</a></dt>
+<dd><p>Async function to update audio cells</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="story_graph.html#story_graph.models.AudioCell" title="story_graph.models.AudioCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioCell</span></code></a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
