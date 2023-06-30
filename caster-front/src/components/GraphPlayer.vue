@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { type Ref, ref } from "vue";
-import { ElCollapse, ElCollapseItem } from "element-plus";
+import { type Ref, ref, computed } from "vue";
+import { ElCollapse, ElCollapseItem, ElDialog } from "element-plus";
 import { useRouter } from "vue-router";
 import Player from "@/components/PlayerComponent.vue";
-import type { Graph } from "@/graphql";
+import type { Dialog, Graph } from "@/graphql";
 import { useStreamSubscription } from "@/graphql";
 import StreamInfo from "@/components/StreamInfo.vue";
 import PlayerButtons from "@/components/PlayerButtons.vue";
@@ -14,12 +14,28 @@ const props = defineProps<{
 
 const router = useRouter();
 
-const { data, error, stale } = useStreamSubscription({
-  variables: {
-    graphUuid: props.graph.uuid,
-  },
-  pause: router.currentRoute.value.name !== "graphPlayer",
+const dialogsToShow: Ref<Dialog[]> = ref([]);
+
+const showDialog: Ref<boolean> = ref(true);
+
+const currentDialog = computed<Dialog | undefined>(() => {
+  return dialogsToShow.value[0];
 });
+
+const { data, error, stale } = useStreamSubscription(
+  {
+    variables: {
+      graphUuid: props.graph.uuid,
+    },
+    pause: router.currentRoute.value.name !== "graphPlayer",
+  },
+  (oldInfo, newInfo) => {
+    if (newInfo.streamInfo.__typename === "Dialog") {
+      dialogsToShow.value.push(newInfo.streamInfo);
+    }
+    return newInfo;
+  },
+);
 
 const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
 </script>
@@ -30,6 +46,14 @@ const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
     class="graph-player"
   >
     <h2>{{ graph.name }}</h2>
+    <div v-if="currentDialog">
+      <ElDialog
+        v-model="showDialog"
+        :title="currentDialog.title"
+      >
+        {{ currentDialog.content.text }}
+      </ElDialog>
+    </div>
     <div v-if="data?.streamInfo.__typename === 'StreamInfo'">
       <PlayerButtons />
       <Player

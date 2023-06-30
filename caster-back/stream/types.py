@@ -10,7 +10,7 @@ from strawberry import auto
 from strawberry.file_uploads import Upload
 from strawberry_django.filters import FilterLookup
 
-from . import models
+from . import frontend_types, models
 
 
 @strawberry.django.filters.filter(models.StreamPoint, lookups=True)
@@ -90,6 +90,7 @@ class StreamInstruction:
     instruction_text: auto
     state: auto
     return_value: auto
+    frontend_display: frontend_types.Dialog
 
 
 @strawberry.type
@@ -119,7 +120,7 @@ class InvalidAudioFile:
 # combined types - can't be declared as type annotation
 
 StreamInfoResponse = strawberry.union(
-    "StreamInfoResponse", [StreamInfo, NoStreamAvailable]
+    "StreamInfoResponse", [StreamInfo, frontend_types.Dialog, NoStreamAvailable]
 )
 
 AudioFileUploadResponse = strawberry.union(

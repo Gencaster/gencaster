@@ -47,6 +47,7 @@ from story_graph.types import (
     ScriptCellInputUpdate,
 )
 from stream.exceptions import NoStreamAvailableException
+from stream.frontend_types import Dialog
 from stream.types import (
     AddAudioFile,
     AudioFile,
@@ -601,10 +602,13 @@ class Subscription:
         consumer.receive_callback = cleanup_on_stop
 
         async for instruction in engine.start(max_steps=int(10e4)):
-            yield StreamInfo(
-                stream=stream,  # type: ignore
-                stream_instruction=instruction,  # type: ignore
-            )
+            if type(instruction) == Dialog:
+                yield instruction
+            else:
+                yield StreamInfo(
+                    stream=stream,  # type: ignore
+                    stream_instruction=instruction,  # type: ignore
+                )
 
 
 schema = strawberry.Schema(

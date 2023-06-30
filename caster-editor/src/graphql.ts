@@ -132,6 +132,19 @@ export type AudioFileReference = {
 
 export type AudioFileUploadResponse = AudioFile | InvalidAudioFile;
 
+export type Button = {
+  buttonType: ButtonType;
+  sendOnClick?: Maybe<Scalars["String"]>;
+  sendVariablesOnClick: Scalars["Boolean"];
+  text: Scalars["String"];
+};
+
+/** An enumeration. */
+export enum ButtonType {
+  Default = "DEFAULT",
+  Primary = "PRIMARY",
+}
+
 /** Choice of foobar */
 export enum CellType {
   Audio = "AUDIO",
@@ -140,6 +153,12 @@ export enum CellType {
   Python = "PYTHON",
   Supercollider = "SUPERCOLLIDER",
 }
+
+export type Dialog = {
+  content: Text;
+  footer: Array<Button>;
+  title: Scalars["String"];
+};
 
 export type DjangoFileType = {
   name: Scalars["String"];
@@ -548,7 +567,7 @@ export type StreamInfo = {
   streamInstruction?: Maybe<StreamInstruction>;
 };
 
-export type StreamInfoResponse = NoStreamAvailable | StreamInfo;
+export type StreamInfoResponse = Dialog | NoStreamAvailable | StreamInfo;
 
 /**
  * Instruction for a :class:`StreamPoint`, most likely to be
@@ -556,6 +575,7 @@ export type StreamInfoResponse = NoStreamAvailable | StreamInfo;
  */
 export type StreamInstruction = {
   createdDate: Scalars["DateTime"];
+  frontendDisplay: Dialog;
   instructionText: Scalars["String"];
   modifiedDate: Scalars["DateTime"];
   returnValue: Scalars["String"];
@@ -650,6 +670,10 @@ export type SubscriptionStreamInfoArgs = {
   graphUuid: Scalars["UUID"];
 };
 
+export type Text = {
+  text: Scalars["String"];
+};
+
 export type UuidFilterLookup = {
   contains?: InputMaybe<Scalars["UUID"]>;
   endsWith?: InputMaybe<Scalars["UUID"]>;
@@ -691,6 +715,29 @@ export type User = {
   lastName: Scalars["String"];
   /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
   username: Scalars["String"];
+};
+
+export type FullStreamInfoFragment = {
+  __typename: "StreamInfo";
+  stream: {
+    numListeners: number;
+    createdDate: any;
+    modifiedDate: any;
+    uuid: any;
+    streamPoint: {
+      uuid: any;
+      port: number;
+      useInput: boolean;
+      modifiedDate: any;
+      lastLive?: any | null;
+      host: string;
+      createdDate: any;
+      janusInPort?: number | null;
+      janusInRoom?: number | null;
+      janusOutPort?: number | null;
+      janusOutRoom?: number | null;
+    };
+  };
 };
 
 export type UserInfoFragment = {
@@ -879,9 +926,28 @@ export type StreamSubscriptionVariables = Exact<{
 
 export type StreamSubscription = {
   streamInfo:
+    | {
+        __typename: "Dialog";
+        title: string;
+        content: { text: string };
+        footer: Array<{
+          buttonType: ButtonType;
+          sendOnClick?: string | null;
+          sendVariablesOnClick: boolean;
+          text: string;
+        }>;
+      }
     | { __typename: "NoStreamAvailable"; error: string }
     | {
         __typename: "StreamInfo";
+        streamInstruction?: {
+          createdDate: any;
+          instructionText: string;
+          modifiedDate: any;
+          state: string;
+          uuid: any;
+          returnValue: string;
+        } | null;
         stream: {
           numListeners: number;
           createdDate: any;
@@ -901,14 +967,6 @@ export type StreamSubscription = {
             janusOutRoom?: number | null;
           };
         };
-        streamInstruction?: {
-          createdDate: any;
-          instructionText: string;
-          modifiedDate: any;
-          state: string;
-          uuid: any;
-          returnValue: string;
-        } | null;
       };
 };
 
@@ -1027,6 +1085,30 @@ export type UpdateAudioFileMutation = {
   };
 };
 
+export const FullStreamInfoFragmentDoc = gql`
+  fragment FullStreamInfo on StreamInfo {
+    __typename
+    stream {
+      numListeners
+      createdDate
+      modifiedDate
+      streamPoint {
+        uuid
+        port
+        useInput
+        modifiedDate
+        lastLive
+        host
+        createdDate
+        janusInPort
+        janusInRoom
+        janusOutPort
+        janusOutRoom
+      }
+      uuid
+    }
+  }
+`;
 export const UserInfoFragmentDoc = gql`
   fragment UserInfo on User {
     __typename
@@ -1338,26 +1420,7 @@ export const StreamDocument = gql`
   subscription stream($graphUuid: UUID!) {
     streamInfo(graphUuid: $graphUuid) {
       ... on StreamInfo {
-        __typename
-        stream {
-          numListeners
-          createdDate
-          modifiedDate
-          streamPoint {
-            uuid
-            port
-            useInput
-            modifiedDate
-            lastLive
-            host
-            createdDate
-            janusInPort
-            janusInRoom
-            janusOutPort
-            janusOutRoom
-          }
-          uuid
-        }
+        ...FullStreamInfo
         streamInstruction {
           createdDate
           instructionText
@@ -1371,8 +1434,22 @@ export const StreamDocument = gql`
         __typename
         error
       }
+      ... on Dialog {
+        __typename
+        content {
+          text
+        }
+        footer {
+          buttonType
+          sendOnClick
+          sendVariablesOnClick
+          text
+        }
+        title
+      }
     }
   }
+  ${FullStreamInfoFragmentDoc}
 `;
 
 export function useStreamSubscription<R = StreamSubscription>(
