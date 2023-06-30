@@ -139,7 +139,7 @@ GenCaster {
 	}
 
 
-	*new {|hostname="195.201.163.94", port=7000, password="demo"|
+	*new {|hostname="88.99.60.112", port=7000, password="demo"|
 		^super.newCopyArgs(hostname, port, password).init;
 	}
 
