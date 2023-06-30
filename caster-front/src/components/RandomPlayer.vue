@@ -23,7 +23,7 @@ const selectedStreamPoint = computed<StreamPoint | undefined>(() => {
 
     <div v-if="selectedStreamPoint">
       Stream {{ selectedStreamPoint.port }}
-      <center style="margin-top: 50%">
+      <center style="margin-top: 100px">
         <PlayerButtons play-button />
       </center>
       <Player :stream-point="selectedStreamPoint" />
