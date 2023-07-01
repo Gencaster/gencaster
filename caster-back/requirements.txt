@@ -4,7 +4,7 @@ psycopg2-binary==2.9.6
 python-osc==1.8.1
 google-cloud-texttospeech==2.14.1
 strawberry-graphql-django==0.9.4
-strawberry-graphql[channels]<=0.177.0
+strawberry-graphql[channels]<=0.192.0
 strawberry-django-plus==2.5.0
 django-cors-headers==4.0.0
 mistletoe==1.0.1
