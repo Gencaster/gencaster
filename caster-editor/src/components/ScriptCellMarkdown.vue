@@ -19,7 +19,7 @@ import Editor from "@toast-ui/editor";
 import type { EditorOptions, Editor as EditorType } from "@toast-ui/editor";
 import { storeToRefs } from "pinia";
 import { CellType } from "@/graphql";
-import { computed, onMounted, onUnmounted, ref, type Ref } from "vue";
+import { computed, onMounted, onDeactivated, ref, type Ref } from "vue";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 
 const props = defineProps<{
@@ -82,7 +82,7 @@ onMounted(() => {
   });
 });
 
-onUnmounted(() => {
+onDeactivated(() => {
   if (editor.value) {
     editor.value.destroy();
   }

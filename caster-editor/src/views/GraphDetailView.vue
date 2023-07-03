@@ -40,11 +40,13 @@ watch(graphSubscription.error, () => {
 
     <Graph :graph="graphSubscription.data.value.graph" />
 
-    <NodeEditor
-      v-if="showNodeEditor && selectedNodeForEditorUuid"
-      :uuid="selectedNodeForEditorUuid"
-      class="node-editor-outer"
-    />
+    <Transition name="slide">
+      <NodeEditor
+        v-if="showNodeEditor && selectedNodeForEditorUuid"
+        :uuid="selectedNodeForEditorUuid"
+        class="node-editor-outer"
+      />
+    </Transition>
   </div>
   <div v-else>
     Failed to fetch data
