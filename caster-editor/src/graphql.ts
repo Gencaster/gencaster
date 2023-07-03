@@ -132,6 +132,23 @@ export type AudioFileReference = {
 
 export type AudioFileUploadResponse = AudioFile | InvalidAudioFile;
 
+export type Button = {
+  buttonType: ButtonType;
+  sendVariableOnClick?: Maybe<Scalars["String"]>;
+  sendVariablesOnClick: Scalars["Boolean"];
+  text: Scalars["String"];
+};
+
+/** An enumeration. */
+export enum ButtonType {
+  Danger = "DANGER",
+  Default = "DEFAULT",
+  Info = "INFO",
+  Primary = "PRIMARY",
+  Success = "SUCCESS",
+  Warning = "WARNING",
+}
+
 /** Choice of foobar */
 export enum CellType {
   Audio = "AUDIO",
@@ -140,6 +157,20 @@ export enum CellType {
   Python = "PYTHON",
   Supercollider = "SUPERCOLLIDER",
 }
+
+export type Checkbox = {
+  checked: Scalars["Boolean"];
+  key: Scalars["String"];
+  label: Scalars["String"];
+};
+
+export type Content = Checkbox | Input | Text;
+
+export type Dialog = {
+  buttons: Array<Button>;
+  content: Array<Content>;
+  title: Scalars["String"];
+};
 
 export type DjangoFileType = {
   name: Scalars["String"];
@@ -226,6 +257,12 @@ export type GraphFilter = {
   name?: InputMaybe<StrFilterLookup>;
   /** Will be used as a URL */
   slugName?: InputMaybe<StrFilterLookup>;
+};
+
+export type Input = {
+  key: Scalars["String"];
+  label: Scalars["String"];
+  placeholder: Scalars["String"];
 };
 
 export type IntFilterLookup = {
@@ -548,7 +585,7 @@ export type StreamInfo = {
   streamInstruction?: Maybe<StreamInstruction>;
 };
 
-export type StreamInfoResponse = NoStreamAvailable | StreamInfo;
+export type StreamInfoResponse = Dialog | NoStreamAvailable | StreamInfo;
 
 /**
  * Instruction for a :class:`StreamPoint`, most likely to be
@@ -556,6 +593,7 @@ export type StreamInfoResponse = NoStreamAvailable | StreamInfo;
  */
 export type StreamInstruction = {
   createdDate: Scalars["DateTime"];
+  frontendDisplay: Dialog;
   instructionText: Scalars["String"];
   modifiedDate: Scalars["DateTime"];
   returnValue: Scalars["String"];
@@ -650,6 +688,10 @@ export type SubscriptionStreamInfoArgs = {
   graphUuid: Scalars["UUID"];
 };
 
+export type Text = {
+  text: Scalars["String"];
+};
+
 export type UuidFilterLookup = {
   contains?: InputMaybe<Scalars["UUID"]>;
   endsWith?: InputMaybe<Scalars["UUID"]>;
@@ -691,6 +733,29 @@ export type User = {
   lastName: Scalars["String"];
   /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
   username: Scalars["String"];
+};
+
+export type FullStreamInfoFragment = {
+  __typename: "StreamInfo";
+  stream: {
+    numListeners: number;
+    createdDate: any;
+    modifiedDate: any;
+    uuid: any;
+    streamPoint: {
+      uuid: any;
+      port: number;
+      useInput: boolean;
+      modifiedDate: any;
+      lastLive?: any | null;
+      host: string;
+      createdDate: any;
+      janusInPort?: number | null;
+      janusInRoom?: number | null;
+      janusOutPort?: number | null;
+      janusOutRoom?: number | null;
+    };
+  };
 };
 
 export type UserInfoFragment = {
@@ -879,9 +944,43 @@ export type StreamSubscriptionVariables = Exact<{
 
 export type StreamSubscription = {
   streamInfo:
+    | {
+        __typename: "Dialog";
+        title: string;
+        content: Array<
+          | {
+              __typename: "Checkbox";
+              checked: boolean;
+              label: string;
+              key: string;
+            }
+          | {
+              __typename: "Input";
+              label: string;
+              placeholder: string;
+              key: string;
+            }
+          | { __typename: "Text"; text: string }
+        >;
+        buttons: Array<{
+          __typename: "Button";
+          buttonType: ButtonType;
+          sendVariablesOnClick: boolean;
+          text: string;
+          sendVariableOnClick?: string | null;
+        }>;
+      }
     | { __typename: "NoStreamAvailable"; error: string }
     | {
         __typename: "StreamInfo";
+        streamInstruction?: {
+          createdDate: any;
+          instructionText: string;
+          modifiedDate: any;
+          state: string;
+          uuid: any;
+          returnValue: string;
+        } | null;
         stream: {
           numListeners: number;
           createdDate: any;
@@ -901,14 +1000,6 @@ export type StreamSubscription = {
             janusOutRoom?: number | null;
           };
         };
-        streamInstruction?: {
-          createdDate: any;
-          instructionText: string;
-          modifiedDate: any;
-          state: string;
-          uuid: any;
-          returnValue: string;
-        } | null;
       };
 };
 
@@ -1027,6 +1118,30 @@ export type UpdateAudioFileMutation = {
   };
 };
 
+export const FullStreamInfoFragmentDoc = gql`
+  fragment FullStreamInfo on StreamInfo {
+    __typename
+    stream {
+      numListeners
+      createdDate
+      modifiedDate
+      streamPoint {
+        uuid
+        port
+        useInput
+        modifiedDate
+        lastLive
+        host
+        createdDate
+        janusInPort
+        janusInRoom
+        janusOutPort
+        janusOutRoom
+      }
+      uuid
+    }
+  }
+`;
 export const UserInfoFragmentDoc = gql`
   fragment UserInfo on User {
     __typename
@@ -1337,27 +1452,10 @@ export function useCreateGraphMutation() {
 export const StreamDocument = gql`
   subscription stream($graphUuid: UUID!) {
     streamInfo(graphUuid: $graphUuid) {
+      __typename
       ... on StreamInfo {
         __typename
-        stream {
-          numListeners
-          createdDate
-          modifiedDate
-          streamPoint {
-            uuid
-            port
-            useInput
-            modifiedDate
-            lastLive
-            host
-            createdDate
-            janusInPort
-            janusInRoom
-            janusOutPort
-            janusOutRoom
-          }
-          uuid
-        }
+        ...FullStreamInfo
         streamInstruction {
           createdDate
           instructionText
@@ -1371,8 +1469,39 @@ export const StreamDocument = gql`
         __typename
         error
       }
+      ... on Dialog {
+        __typename
+        content {
+          __typename
+          ... on Text {
+            __typename
+            text
+          }
+          ... on Input {
+            __typename
+            label
+            placeholder
+            key
+          }
+          ... on Checkbox {
+            __typename
+            checked
+            label
+            key
+          }
+        }
+        buttons {
+          __typename
+          buttonType
+          sendVariablesOnClick
+          text
+          sendVariableOnClick
+        }
+        title
+      }
     }
   }
+  ${FullStreamInfoFragmentDoc}
 `;
 
 export function useStreamSubscription<R = StreamSubscription>(

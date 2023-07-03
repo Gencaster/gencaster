@@ -121,6 +121,23 @@ input AudioFileReference {
 
 union AudioFileUploadResponse = AudioFile | InvalidAudioFile
 
+type Button {
+  text: String!
+  buttonType: ButtonType!
+  sendVariablesOnClick: Boolean!
+  sendVariableOnClick: String
+}
+
+"""An enumeration."""
+enum ButtonType {
+  DEFAULT
+  PRIMARY
+  SUCCESS
+  WARNING
+  INFO
+  DANGER
+}
+
 """Choice of foobar"""
 enum CellType {
   MARKDOWN
@@ -130,8 +147,22 @@ enum CellType {
   AUDIO
 }
 
+type Checkbox {
+  key: String!
+  label: String!
+  checked: Boolean!
+}
+
+union Content = Text | Input | Checkbox
+
 """Date with time (isoformat)"""
 scalar DateTime
+
+type Dialog {
+  title: String!
+  content: [Content!]!
+  buttons: [Button!]!
+}
 
 type DjangoFileType {
   name: String!
@@ -232,6 +263,12 @@ input GraphFilter {
 
   """Will be used as a URL"""
   slugName: StrFilterLookup
+}
+
+type Input {
+  key: String!
+  label: String!
+  placeholder: String!
 }
 
 input IntFilterLookup {
@@ -463,7 +500,7 @@ type StreamInfo {
   streamInstruction: StreamInstruction
 }
 
-union StreamInfoResponse = StreamInfo | NoStreamAvailable
+union StreamInfoResponse = StreamInfo | Dialog | NoStreamAvailable
 
 """
 Instruction for a :class:`StreamPoint`, most likely to be
@@ -476,6 +513,7 @@ type StreamInstruction {
   instructionText: String!
   state: String!
   returnValue: String!
+  frontendDisplay: Dialog!
 }
 
 """
@@ -555,6 +593,10 @@ type Subscription {
   graph(graphUuid: UUID!): Graph!
   node(nodeUuid: UUID!): Node!
   streamInfo(graphUuid: UUID!): StreamInfoResponse!
+}
+
+type Text {
+  text: String!
 }
 
 scalar UUID

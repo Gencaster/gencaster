@@ -9,10 +9,11 @@ import logging
 import time
 from copy import deepcopy
 from datetime import datetime, timedelta
-from typing import Any, AsyncGenerator, Dict
+from typing import AsyncGenerator, Dict
 
 from asgiref.sync import sync_to_async
 
+from stream.frontend_types import Button, Checkbox, Dialog, Input, Text
 from stream.models import Stream, StreamInstruction, StreamVariable
 
 from .markdown_parser import md_to_ssml
@@ -101,7 +102,7 @@ class Engine:
         yield instruction
         await self.wait_for_finished_instruction(instruction)
 
-    async def execute_python_cell(self, cell_code: str) -> Any:
+    async def execute_python_cell(self, cell_code: str) -> AsyncGenerator[Dialog, None]:
         stream_variables = await self.get_stream_variables()
         old_stream_variables = deepcopy(stream_variables)
         loop = asyncio.get_running_loop()
@@ -109,11 +110,12 @@ class Engine:
             loc: Dict = {}
             exec(
                 f"async def __ex(): "
-                + "".join(f"\n {l}" for l in cell_code.split("\n")),
+                + "".join(f"\n {l}" for l in (cell_code.split("\n") + ["yield None"])),
                 {
                     "__builtins__": {
                         "asyncio": asyncio,
                         "int": int,
+                        "float": float,
                         "loop": loop,
                         "print": print,
                         "time": time,
@@ -123,11 +125,17 @@ class Engine:
                         "timedelta": timedelta,
                         "get_stream_variables": self.get_stream_variables,
                         "wait_for_stream_variable": self.wait_for_stream_variable,
+                        "Text": Text,
+                        "Dialog": Dialog,
+                        "Button": Button,
+                        "Checkbox": Checkbox,
+                        "Input": Input,
                     }
                 },
                 loc,
             )
-            await loc["__ex"]()
+            async for x in loc["__ex"]():
+                yield x
         except Exception as e:
             log.error(f"Occured an exception during graph engine execution: {e}")
             if self.raise_exceptions:
@@ -144,7 +152,7 @@ class Engine:
                     key=k,
                     defaults={"value": v},
                 )
-        return stream_variables.get("return", None)
+        stream_variables.get("return", None)
 
     async def wait_for_finished_instruction(
         self, instruction: StreamInstruction, timeout: int = 30, interval: float = 0.2
@@ -157,7 +165,7 @@ class Engine:
 
     async def execute_node(
         self, node: Node, blocking_sleep_time: int = 10000
-    ) -> AsyncGenerator[StreamInstruction, None]:
+    ) -> AsyncGenerator[StreamInstruction | Dialog, None]:
         """Executes a node."""
         script_cell: ScriptCell
         async for script_cell in node.script_cells.select_related("audio_cell", "audio_cell__audio_file").all():  # type: ignore
@@ -166,7 +174,10 @@ class Engine:
                 continue
             elif cell_type == CellType.PYTHON:
                 if script_cell.cell_code:
-                    await self.execute_python_cell(script_cell.cell_code)
+                    async for instruction in self.execute_python_cell(
+                        script_cell.cell_code
+                    ):
+                        yield instruction
 
             elif cell_type == CellType.SUPERCOLLIDER:
                 async for instruction in self.execute_sc_code(script_cell.cell_code):
@@ -187,7 +198,7 @@ class Engine:
 
     async def start(
         self, max_steps: int = 1000
-    ) -> AsyncGenerator[StreamInstruction, None]:
+    ) -> AsyncGenerator[StreamInstruction | Dialog, None]:
         """Starts the execution of the engine."""
         self._current_node = await self.graph.aget_entry_node()
 

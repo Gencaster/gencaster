@@ -1,3 +1,26 @@
+fragment FullStreamInfo on StreamInfo {
+  __typename
+  stream {
+    numListeners
+    createdDate
+    modifiedDate
+    streamPoint {
+      uuid
+      port
+      useInput
+      modifiedDate
+      lastLive
+      host
+      createdDate
+      janusInPort
+      janusInRoom
+      janusOutPort
+      janusOutRoom
+    }
+    uuid
+  }
+}
+
 fragment UserInfo on User {
   __typename
   email
@@ -163,27 +186,10 @@ mutation CreateGraph($graphInput: AddGraphInput!) {
 
 subscription stream($graphUuid: UUID!) {
   streamInfo(graphUuid: $graphUuid) {
+    __typename
     ... on StreamInfo {
       __typename
-      stream {
-        numListeners
-        createdDate
-        modifiedDate
-        streamPoint {
-          uuid
-          port
-          useInput
-          modifiedDate
-          lastLive
-          host
-          createdDate
-          janusInPort
-          janusInRoom
-          janusOutPort
-          janusOutRoom
-        }
-        uuid
-      }
+      ...FullStreamInfo
       streamInstruction {
         createdDate
         instructionText
@@ -196,6 +202,36 @@ subscription stream($graphUuid: UUID!) {
     ... on NoStreamAvailable {
       __typename
       error
+    }
+    ... on Dialog {
+      __typename
+      content {
+        __typename
+        ... on Text {
+          __typename
+          text
+        }
+        ... on Input {
+          __typename
+          label
+          placeholder
+          key
+        }
+        ... on Checkbox {
+          __typename
+          checked
+          label
+          key
+        }
+      }
+      buttons {
+        __typename
+        buttonType
+        sendVariablesOnClick
+        text
+        sendVariableOnClick
+      }
+      title
     }
   }
 }

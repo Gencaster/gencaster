@@ -72,10 +72,6 @@
   max-height: calc(70vh - 4 * $mobilePadding);
   overflow-y: scroll;
 
-  .el-dialog__header {
-    display: none;
-  }
-
   .el-dialog__body {
     padding: 0;
   }
