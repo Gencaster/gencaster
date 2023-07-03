@@ -134,6 +134,8 @@ GenCaster {
 	var <netClient;
 	var <servers;
 
+	var <targets;
+
 	*initClass {
 		activeClients = ();
 	}
@@ -149,6 +151,7 @@ GenCaster {
 		(0..15).do({|i|
 			clients[i] = GenCasterClient(i, netClient, password);
 		});
+		targets = [nil];
 	}
 
 	sendAll {|code, action=\code|
@@ -186,6 +189,7 @@ GenCaster {
 	broadcastDocument {
 		var interp, fun, document;
 		this.clear;
+
 		interp = thisProcess.interpreter;
 		document = thisProcess.nowExecutingPath;
 
@@ -197,13 +201,18 @@ GenCaster {
 			var msg;
 
 			if(ScIDE.currentPath == document, {
-				"send to all: '%'".format(code).postln;
+				var targetName = if(targets[0].isNil, {"all"}, {targets});
+				"sending to %: '%'".format(targetName, code).postln;
 
-				netClient.sendMsg(GenCasterMessage.addressRemoteAction, *GenCasterMessage.remoteAction(
-					action: \code,
-					password: password,
-					cmd: code,
-				));
+				targets.do({|target|
+					target.postln;
+					netClient.sendMsg(GenCasterMessage.addressRemoteAction, *GenCasterMessage.remoteAction(
+						action: \code,
+						password: password,
+						cmd: code,
+						target: target,
+					));
+				});
 				nil;
 			}, {
 				code;
@@ -231,6 +240,12 @@ GenCaster {
 			));
 		};
 		interp.codeDump = interp.codeDump.addFunc(fun);
+	}
+
+	targets_ {|v|
+		// the nil target will not be deleted, therefore
+		// sending it to all clients
+		targets = if(v.isNil, {[nil]}, {v.asArray});
 	}
 
 	clear {
