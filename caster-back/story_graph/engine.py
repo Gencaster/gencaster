@@ -9,7 +9,7 @@ import logging
 import time
 from copy import deepcopy
 from datetime import datetime, timedelta
-from typing import AsyncGenerator, Dict
+from typing import AsyncGenerator, Dict, Union
 
 from asgiref.sync import sync_to_async
 
@@ -135,7 +135,9 @@ class Engine:
                 loc,
             )
             async for x in loc["__ex"]():
-                yield x
+                # avoid yielding none
+                if x:
+                    yield x
         except Exception as e:
             log.error(f"Occured an exception during graph engine execution: {e}")
             if self.raise_exceptions:
@@ -165,9 +167,10 @@ class Engine:
 
     async def execute_node(
         self, node: Node, blocking_sleep_time: int = 10000
-    ) -> AsyncGenerator[StreamInstruction | Dialog, None]:
+    ) -> AsyncGenerator[Union[StreamInstruction, Dialog], None]:
         """Executes a node."""
         script_cell: ScriptCell
+        instruction: Union[StreamInstruction, Dialog]
         async for script_cell in node.script_cells.select_related("audio_cell", "audio_cell__audio_file").all():  # type: ignore
             cell_type = script_cell.cell_type
             if cell_type == CellType.COMMENT:
@@ -198,7 +201,7 @@ class Engine:
 
     async def start(
         self, max_steps: int = 1000
-    ) -> AsyncGenerator[StreamInstruction | Dialog, None]:
+    ) -> AsyncGenerator[Union[StreamInstruction, Dialog], None]:
         """Starts the execution of the engine."""
         self._current_node = await self.graph.aget_entry_node()
 
