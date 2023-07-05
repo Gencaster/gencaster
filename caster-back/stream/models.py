@@ -326,7 +326,13 @@ class Stream(models.Model):
 
 class StreamVariable(models.Model):
     """Allows to store variables in a stream session as a key/value pair.
-    Due to database constraints we will store any value a string.
+
+    .. warning::
+
+        Due to database constraints all keys and values will be stored
+        as a string, so parsing a float, int or boolean requires
+        type conversion.
+
     """
 
     uuid = models.UUIDField(

@@ -1,5 +1,5 @@
-GenCaster config
-================
+GenCaster Base
+==============
 
 .. automodule:: gencaster
     :members:

@@ -27,10 +27,14 @@ class ScriptCellTimeout(Exception):
 
 
 class Engine:
-    """An engine executes a :class:`~story_graph.models.Graph` on a
-    :class:`~stream.models.StreamPoint`, therefore
-    iterating through the nodes and executing each.
-    This is written in a purely async manner so we can handle many streams at once.
+    """An engine executes a :class:`~story_graph.models.Graph` for a given
+    :class:`~stream.models.StreamPoint`.
+    Executing means to iterate over the :class:`~story_graph.models.Node`
+    and executing each :class:`~story_graph.models.ScriptCell` within such a node.
+
+    The engine runs in an async manner so it is possible to do awaits without
+    blocking the server, which means execution is halted until a specific
+    condition is met.
     """
 
     def __init__(
@@ -43,8 +47,14 @@ class Engine:
         self.raise_exceptions = raise_exceptions
 
     async def get_stream_variables(self) -> Dict[str, str]:
-        """Could be a @property but this can be difficult in async contexts
-        so we use explicit async via a getter method.
+        """
+        Returns the associated :class:`~stream.models.StreamVariable` within
+        this :class:`~stream.models.Stream` session.
+
+        .. todo::
+
+            Could be a @property but this can be difficult in async contexts
+            so we use explicit async via a getter metho
         """
         v = {}
         stream_variable: StreamVariable
@@ -55,6 +65,20 @@ class Engine:
     async def wait_for_stream_variable(
         self, name: str, timeout: float = 100.0, update_speed: float = 0.5
     ):
+        """Waits for a stream variable to be set.
+        If the variable was not found/set within the time period of
+        ``timeout`` this function will raise the exception
+        :class:`ScriptCellTimeout`.
+
+        .. danger::
+
+            Within a script cell it is necessary to await this async function
+
+            .. code-block:: python
+
+                await wait_for_stream_variable('start')
+
+        """
         start_time = datetime.now()
         while True:
             if (datetime.now() - start_time).seconds > timeout:
@@ -88,7 +112,7 @@ class Engine:
         self, audio_cell: AudioCell
     ) -> AsyncGenerator[StreamInstruction, None]:
         """
-        Plays the associated :class:`AudioFile` of an :class:`AudioCell`.
+        Plays the associated :class:`~stream.models.AudioFile` of an :class:`~story_graph.models.AudioCell`.
 
         .. todo::
 
@@ -103,6 +127,18 @@ class Engine:
         await self.wait_for_finished_instruction(instruction)
 
     async def execute_python_cell(self, cell_code: str) -> AsyncGenerator[Dialog, None]:
+        """Executes a python :class:`~story_graph.models.ScriptCell`.
+        A python cell is run as an async generator, which allows to not just run
+        synchronous code but also asynchronous mode.
+
+        It is possible to yield immediate results from this.
+        Currently only the yielding of a :class:`~stream.frontend_types.Dialog`
+        instance is possible, but this could be extended.
+
+        In order to secure at least a little bit the execution within such a script
+        cell everything that is a available for execution needs to be stated
+        explicitly here.
+        """
         stream_variables = await self.get_stream_variables()
         old_stream_variables = deepcopy(stream_variables)
         loop = asyncio.get_running_loop()
@@ -168,7 +204,8 @@ class Engine:
     async def execute_node(
         self, node: Node, blocking_sleep_time: int = 10000
     ) -> AsyncGenerator[Union[StreamInstruction, Dialog], None]:
-        """Executes a node."""
+        """Executes all :class:`~story_graph.models.ScriptCell` of
+        a given :class:`~story_graph.models.Node`."""
         script_cell: ScriptCell
         instruction: Union[StreamInstruction, Dialog]
         async for script_cell in node.script_cells.select_related("audio_cell", "audio_cell__audio_file").all():  # type: ignore
@@ -202,7 +239,16 @@ class Engine:
     async def start(
         self, max_steps: int = 1000
     ) -> AsyncGenerator[Union[StreamInstruction, Dialog], None]:
-        """Starts the execution of the engine."""
+        """Starts the execution of the engine.
+        This method is an async generator which eithor yields a
+        :class:`~stream.models.StreamInstruction`
+        or a :class:`~stream.frontend_types.Dialog`.
+
+        .. note::
+
+            In order to avoid a clumping of the database a lay off period
+            of 0.1 seconds is added between jumping nodes.
+        """
         self._current_node = await self.graph.aget_entry_node()
 
         for _ in range(max_steps):
@@ -227,4 +273,4 @@ class Engine:
                     f"Ran into a dead end on {self.graph} on {self._current_node}"
                 )
                 return
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0.1)

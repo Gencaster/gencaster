@@ -8,9 +8,12 @@ For a specific details of the types consider the
 `GraphiQL <https://github.com/graphql/graphiql>`_
 page available under the `/graphql` endpoint of
 the running backend.
+
+Any subscription updates are messaged via Redis and
+is handled via channels and has an abstraction layer
+:class:`~gencaster.distributor.GenCasterChannel`.
 """
 
-import asyncio
 import json
 import logging
 import os
@@ -526,17 +529,14 @@ class Mutation:
 @strawberry.type
 class Subscription:
     @strawberry.subscription
-    async def count(self, target: int = 100) -> AsyncGenerator[int, None]:
-        for i in range(target):
-            yield i
-            await asyncio.sleep(0.5)
-
-    @strawberry.subscription
     async def graph(
         self,
         info: Info,
         graph_uuid: uuid.UUID,
     ) -> AsyncGenerator[Graph, None]:
+        """Used within the editor to synchronize any updates of the graph such as movement
+        of a :class:`~story_graph.models.Node`.
+        """
         graph = await story_graph_models.Graph.objects.aget(uuid=graph_uuid)
         yield graph  # type: ignore
 
@@ -551,6 +551,9 @@ class Subscription:
         info: Info,
         node_uuid: uuid.UUID,
     ) -> AsyncGenerator[Node, None]:
+        """Used within the editor to synchronize any updates on a node such as updates on a
+        :class:`~story_graph.models.ScriptCell`.
+        """
         node = await story_graph_models.Node.objects.aget(uuid=node_uuid)
         yield node  # type: ignore
 
@@ -565,6 +568,15 @@ class Subscription:
         info: Info,
         graph_uuid: uuid.UUID,
     ) -> AsyncGenerator[StreamInfoResponse, None]:  # type: ignore
+        """Used within the frontend to attach a user to a stream.
+        :class:`~story_graph.engine.Engine` contains the specifics of how the iteration over a
+        graph is handled.
+
+        Upon visit the ``num_of_listeners`` of the associated
+        :class:~stream.models.Stream` will be incremented which indicates
+        if a given stream is free or used.
+        Upon connection stop this will be decremented again.
+        """
         consumer: GraphQLWSConsumerInjector = info.context.ws
 
         graph = await story_graph_models.Graph.objects.filter(uuid=graph_uuid).afirst()

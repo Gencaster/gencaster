@@ -18,6 +18,14 @@ Models
 .. automodule:: stream.models
     :members:
 
+.. _frontend-types:
+
+Frontend Types
+--------------
+
+.. automodule:: stream.frontend_types
+    :members:
+
 Exceptions
 ----------
 
