@@ -132,6 +132,7 @@ export type AudioFileReference = {
 
 export type AudioFileUploadResponse = AudioFile | InvalidAudioFile;
 
+/** A button which can also trigger a set of functionality. */
 export type Button = {
   buttonType: ButtonType;
   sendVariableOnClick?: Maybe<Scalars["String"]>;
@@ -158,6 +159,10 @@ export enum CellType {
   Supercollider = "SUPERCOLLIDER",
 }
 
+/**
+ * A classic ``<checkbox>`` whose state (``true``/``false``) will be
+ * saved **as a string** under ``key`` in a :class:`~stream.models.StreamVariable`.
+ */
 export type Checkbox = {
   checked: Scalars["Boolean"];
   key: Scalars["String"];
@@ -166,6 +171,7 @@ export type Checkbox = {
 
 export type Content = Checkbox | Input | Text;
 
+/** Triggers a popup on the frontend of the listener. */
 export type Dialog = {
   buttons: Array<Button>;
   content: Array<Content>;
@@ -259,6 +265,10 @@ export type GraphFilter = {
   slugName?: InputMaybe<StrFilterLookup>;
 };
 
+/**
+ * A classic ``<inptut>`` which will save its content
+ * under the ``key`` as a :class:`~stream.models.StreamVariable`.
+ */
 export type Input = {
   key: Scalars["String"];
   label: Scalars["String"];
@@ -647,7 +657,12 @@ export type StreamPointFilter = {
 
 /**
  * Allows to store variables in a stream session as a key/value pair.
- * Due to database constraints we will store any value a string.
+ *
+ * .. warning::
+ *
+ *     Due to database constraints all keys and values will be stored
+ *     as a string, so parsing a float, int or boolean requires
+ *     type conversion.
  */
 export type StreamVariable = {
   key: Scalars["String"];
@@ -666,14 +681,27 @@ export type StreamVariableInput = {
 };
 
 export type Subscription = {
-  count: Scalars["Int"];
+  /**
+   * Used within the editor to synchronize any updates of the graph such as movement
+   * of a :class:`~story_graph.models.Node`.
+   */
   graph: Graph;
+  /**
+   * Used within the editor to synchronize any updates on a node such as updates on a
+   * :class:`~story_graph.models.ScriptCell`.
+   */
   node: Node;
+  /**
+   * Used within the frontend to attach a user to a stream.
+   * :class:`~story_graph.engine.Engine` contains the specifics of how the iteration over a
+   * graph is handled.
+   *
+   * Upon visit the ``num_of_listeners`` of the associated
+   * :class:~stream.models.Stream` will be incremented which indicates
+   * if a given stream is free or used.
+   * Upon connection stop this will be decremented again.
+   */
   streamInfo: StreamInfoResponse;
-};
-
-export type SubscriptionCountArgs = {
-  target?: Scalars["Int"];
 };
 
 export type SubscriptionGraphArgs = {
@@ -688,6 +716,7 @@ export type SubscriptionStreamInfoArgs = {
   graphUuid: Scalars["UUID"];
 };
 
+/** Displays plain text. */
 export type Text = {
   text: Scalars["String"];
 };
