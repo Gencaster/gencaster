@@ -19,6 +19,7 @@ import {
   type Graph,
   useSendStreamVariableMutation,
   useStreamSubscription,
+  type StreamSubscription,
 } from "@/graphql";
 import { usePlayerStore } from "@/stores/Player";
 
@@ -45,12 +46,26 @@ const showDebug = computed<boolean>(
 );
 // const showDebug: Ref<boolean> = ref(true);
 
-const { data, error, stale } = useStreamSubscription({
-  variables: {
-    graphUuid: props.graph.uuid,
+const { data, error, stale } = useStreamSubscription(
+  {
+    variables: {
+      graphUuid: props.graph.uuid,
+    },
+    pause:
+      router.currentRoute.value.name !== "graphPlayer" || !props.graph.uuid,
   },
-  pause: router.currentRoute.value.name !== "graphPlayer" || !props.graph.uuid,
-});
+  (oldInfo, newInfo) => {
+    if (newInfo.streamInfo.__typename === "StreamInfo") {
+      streamInfo.value = newInfo.streamInfo;
+    }
+    return newInfo;
+  },
+);
+
+const streamInfo: Ref<
+  | Extract<StreamSubscription["streamInfo"], { __typename: "StreamInfo" }>
+  | undefined
+> = ref(undefined);
 
 const drifterStatus: Ref<DrifterStatus> = ref(DrifterStatus.WaitForStart);
 
@@ -65,7 +80,7 @@ const startStream = async () => {
   }
   const { error } = await sendStreamVariableMutation.executeMutation({
     streamVariables: {
-      streamUuid: data.value?.streamInfo.stream.uuid,
+      streamUuid: streamInfo.value?.stream.uuid,
       key: "start",
       value: "1.0",
       streamToSc: true,
@@ -131,7 +146,7 @@ const showError = computed<boolean>(() => {
     waitingTimeout.value &&
     (!data.value ||
       data.value?.streamInfo.__typename === "NoStreamAvailable" ||
-      data.value.streamInfo.stream.streamPoint === undefined)
+      streamInfo.value?.stream.streamPoint === undefined)
   ) {
     return true;
   } else {
@@ -167,7 +182,7 @@ setTimeout(() => {
       v-loading="showLoading"
       class="graph-player"
     >
-      <div v-if="data?.streamInfo.__typename === 'StreamInfo'">
+      <div v-if="streamInfo">
         <!-- start screen -->
         <Transition>
           <div
@@ -197,17 +212,17 @@ setTimeout(() => {
           <div v-if="dialogsToShow[0] && renderDialog">
             <MetaDialog
               :request="dialogsToShow[0]"
-              :stream-uuid="data.streamInfo.stream.uuid"
+              :stream-uuid="streamInfo.stream.uuid"
               @submitted="() => shiftDialogs()"
             />
           </div>
         </div>
 
         <!-- player -->
-        <div v-if="data.streamInfo.stream">
+        <div v-if="streamInfo.stream">
           <Player
-            :stream-point="data.streamInfo.stream.streamPoint"
-            :stream="data.streamInfo.stream"
+            :stream-point="streamInfo.stream.streamPoint"
+            :stream="streamInfo.stream"
           />
         </div>
 
@@ -247,8 +262,8 @@ setTimeout(() => {
               name="debug"
             >
               <StreamInfo
-                :stream="data.streamInfo.stream"
-                :stream-instruction="data.streamInfo.streamInstruction"
+                :stream="streamInfo.stream"
+                :stream-instruction="streamInfo.streamInstruction"
               />
             </ElCollapseItem>
           </ElCollapse>
