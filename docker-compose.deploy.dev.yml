@@ -60,6 +60,7 @@ services:
       dockerfile: Dockerfile.deploy
       args:
         - BACKEND_URL=https://backend.dev.gencaster.org
+        - SENTRY_DSN_CASTER_EDITOR=https://4f4b994233384dc3a79ec1a4fea3cd80@o4504548423565312.ingest.sentry.io/4505476421386240
     ports:
       - 3001:80
     environment:
@@ -77,6 +78,7 @@ services:
       args:
         - BACKEND_URL=https://backend.dev.gencaster.org
         - JANUS_URL=https://sound.dev.gencaster.org/janus
+        - SENTRY_DSN_CASTER_FRONT=https://cf06c7d74e1644cab833acf57ae598b3@o4504548423565312.ingest.sentry.io/4505476517396480
     ports:
       - 3000:80
     environment:
