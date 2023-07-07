@@ -361,7 +361,7 @@ class StreamVariable(models.Model):
 
     def send_to_sc(self) -> "StreamInstruction":
         return self.stream.stream_point.send_raw_instruction(
-            instruction_text=f"Ndef(\\{self.key}, {{{self.value}}});"
+            instruction_text=f'g.updateStreamVariable("{self.key}", {self.value})'
         )
 
     class Meta:
