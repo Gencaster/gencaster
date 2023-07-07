@@ -628,7 +628,7 @@ document.write(`
 
     <span class="k">def</span> <span class="nf">send_to_sc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StreamInstruction&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">stream_point</span><span class="o">.</span><span class="n">send_raw_instruction</span><span class="p">(</span>
-            <span class="n">instruction_text</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Ndef(</span><span class="se">\\</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">, </span><span class="se">{{</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="se">}}</span><span class="s2">);&quot;</span>
+            <span class="n">instruction_text</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;g.updateStreamVariable(&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s1">&quot;, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s1">)&#39;</span>
         <span class="p">)</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
