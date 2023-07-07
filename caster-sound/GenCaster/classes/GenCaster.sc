@@ -490,7 +490,7 @@ GenCasterServer {
 		var isExisting;
 		var isGencasterStyle;
 		key = key.asSymbol;
-		isExisting = Ndef.dictFor(s).krProxyNames.includes(key);
+		isExisting = Ndef.dictFor(Server.default).krProxyNames.includes(key);
 		isGencasterStyle = if(isExisting, {
 			// hacky check to see if Ndef was initialized with a \val.kr
 			Ndef(key).getKeysValues[0].asArray[0].postln.asSymbol == \val;
