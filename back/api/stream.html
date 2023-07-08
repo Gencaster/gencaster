@@ -644,6 +644,30 @@ Due to database constraints we will store any value a string.</p>
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#stream.models.StreamVariable.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="stream.models.StreamVariable.send_to_sc">
+<span class="sig-name descname"><span class="pre">send_to_sc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/stream/models.html#StreamVariable.send_to_sc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.StreamVariable.send_to_sc" title="Permalink to this definition">#</a></dt>
+<dd><p>Makes the stream variable available on the scsynth server under the same name as an Ndef.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This used to be solved with</p>
+<div class="highlight-supercollider notranslate"><div class="highlight"><pre><span></span><span class="nx">Ndef</span><span class="p">(</span><span class="ss">\foo</span><span class="p">,</span> <span class="p">{</span><span class="nx">val</span><span class="p">});</span>
+</pre></div>
+</div>
+<p>but this introduced a clicking noise on each update.
+The solution seems to be to use instead</p>
+<div class="highlight-supercollider notranslate"><div class="highlight"><pre><span></span><span class="nx">Ndef</span><span class="p">(</span><span class="ss">\foo</span><span class="p">,</span> <span class="nx">val</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>without the surrounding curly brackets for the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">

@@ -626,10 +626,29 @@ document.write(`
         <span class="n">help_text</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Stream values to SC as control rate Ndef&quot;</span><span class="p">),</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">send_to_sc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StreamInstruction&quot;</span><span class="p">:</span>
+<div class="viewcode-block" id="StreamVariable.send_to_sc"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamVariable.send_to_sc">[docs]</a>    <span class="k">def</span> <span class="nf">send_to_sc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StreamInstruction&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Makes the stream variable available on the scsynth server under the same name as an Ndef.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            This used to be solved with</span>
+
+<span class="sd">            .. code-block:: supercollider</span>
+
+<span class="sd">                Ndef(\\foo, {val});</span>
+
+<span class="sd">            but this introduced a clicking noise on each update.</span>
+<span class="sd">            The solution seems to be to use instead</span>
+
+<span class="sd">            .. code-block:: supercollider</span>
+
+<span class="sd">                Ndef(\\foo, val);</span>
+
+<span class="sd">            without the surrounding curly brackets for the value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">stream_point</span><span class="o">.</span><span class="n">send_raw_instruction</span><span class="p">(</span>
-            <span class="n">instruction_text</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;g.updateStreamVariable(&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s1">&quot;, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s1">)&#39;</span>
-        <span class="p">)</span>
+            <span class="n">instruction_text</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Ndef(&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s1">&quot;.asSymbol, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s1">);&#39;</span>
+        <span class="p">)</span></div>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span>
