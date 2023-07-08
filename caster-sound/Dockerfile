@@ -150,6 +150,10 @@ RUN apk add parallel
 # are served via a python http server - only for debugging
 COPY html_test /root/html_test/
 
+# ------------------  SuperCollider extensions
+COPY install_mi.sh .
+RUN ./install_mi.sh
+
 # apply config files
 
 COPY janus.plugin.streaming.jcfg /opt/janus/etc/janus/janus.plugin.streaming.jcfg
