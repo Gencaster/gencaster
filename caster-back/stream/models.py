@@ -360,8 +360,27 @@ class StreamVariable(models.Model):
     )
 
     def send_to_sc(self) -> "StreamInstruction":
+        """Makes the stream variable available on the scsynth server under the same name as an Ndef.
+
+        .. note::
+
+            This used to be solved with
+
+            .. code-block:: supercollider
+
+                Ndef(\\foo, {val});
+
+            but this introduced a clicking noise on each update.
+            The solution seems to be to use instead
+
+            .. code-block:: supercollider
+
+                Ndef(\\foo, val);
+
+            without the surrounding curly brackets for the value.
+        """
         return self.stream.stream_point.send_raw_instruction(
-            instruction_text=f'g.updateStreamVariable("{self.key}", {self.value})'
+            instruction_text=f'Ndef("{self.key}".asSymbol, {self.value});'
         )
 
     class Meta:

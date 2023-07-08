@@ -474,35 +474,4 @@ GenCasterServer {
 		this.beacon.play;
 		this.instructionReceiver;
 	}
-
-	updateStreamVariable {|key, val|
-		/*
-		The former naive way was to simply call Ndef(\key, {val})
-		but this introduces glitches during updates.
-		Using Ndef(\key, \val.kr(val))
-		allows smooth updates, but as the Ndef could have been
-		initialized without this \val.kr it is necessary to check
-		if it has the proper format, and if not, it is replaced
-		with a Ndef with the proper format.
-		If the proper format is given, Ndef.kr(\key).set(\val, val)
-		is called.
-		*/
-		var isExisting;
-		var isGencasterStyle;
-		key = key.asSymbol;
-		isExisting = Ndef.dictFor(Server.default).krProxyNames.includes(key);
-		isGencasterStyle = if(isExisting, {
-			// hacky check to see if Ndef was initialized with a \val.kr
-			Ndef(key).getKeysValues[0].asArray[0].postln.asSymbol == \val;
-		}, {
-			false;
-		});
-		if(isExisting && isGencasterStyle, {
-			// smooth update via .set(\val)
-			Ndef(key).set(\val, val);
-		}, {
-			// init with \val.kr style
-			Ndef(key, {\val.kr(val)});
-		});
-	}
 }
