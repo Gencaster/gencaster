@@ -55,13 +55,14 @@ const refreshIntervalId = setInterval(async () => {
   // i don't have a clue if this works properly b/c I always receive a GPS location first
   // but "in theory" it should also help us
   const { state } = await navigator.permissions.query({ name: "geolocation" });
-  console.log("state is", state);
   if (state === "granted") {
+    console.log("GPS has been granted");
     granted.value = true;
     gpsSuccess.value = true;
+    streamGPS.value = true;
     clearInterval(refreshIntervalId);
   }
-}, 100);
+}, 50);
 
 const gpsRequest = async () => {
   // as it makes only sense to have one GPS stream we refer to
