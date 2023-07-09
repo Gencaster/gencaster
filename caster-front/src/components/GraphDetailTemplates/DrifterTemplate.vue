@@ -91,13 +91,6 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
     type: UserDataRequestType.Gps,
     placeholder: "",
   },
-  {
-    name: "askName",
-    description: "What would you like to be called?",
-    key: "name",
-    type: UserDataRequestType.String,
-    placeholder: "Your name",
-  },
 ]);
 
 const renderDialog = ref(true);
