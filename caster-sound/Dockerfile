@@ -170,6 +170,7 @@ COPY GenCaster/ /usr/local/share/SuperCollider/Extensions/GenCaster/
 COPY create_config.sh /root/create_config.sh
 COPY janus.plugin.audiobridge.jcfg.template /root/janus.plugin.audiobridge.jcfg.template
 COPY janus.plugin.streaming.jcfg.template /root/janus.plugin.streaming.jcfg.template
+COPY pipewire.conf /usr/share/pipewire/pipewire.conf
 
 # CMD ["tail", "-f", "/dev/null"]
 CMD ["/bin/sh", "-c", "/root/create_config.sh && /usr/bin/supervisord -c /root/caster-sound.conf"]
