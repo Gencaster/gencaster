@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type Ref, nextTick, ref, computed } from "vue";
-import { ElCollapse, ElCollapseItem, ElMessage } from "element-plus";
+import { ElCollapse, ElCollapseItem, ElMessage, ElImage } from "element-plus";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 
@@ -86,7 +86,7 @@ const dialogsToShow: Ref<UserDataRequest[]> = ref<UserDataRequest[]>([
   {
     name: "askGps",
     description:
-      "Drifter ist ein dynamisches Hörspiel, das in Echtzeit generiert wird. Hierfür werden noch Informationen über dich benötigt:",
+      "Walking Along a Sonic Möbius Strip ist eine ortsspezifische Komposition, welche in Echtzeit generiert wird. Hierfür ist der Zugriff auf den Standort erforderlich",
     key: "gps",
     type: UserDataRequestType.Gps,
     placeholder: "",
@@ -211,6 +211,13 @@ setTimeout(() => {
             class="audio-visualizer"
           >
             <PlayerVisualizer />
+            <center>
+              <ElImage
+                src="https://hedgedoc.musikinformatik.net/uploads/a403e2d4-bde1-4ed2-9a74-9331e45ccf63.png"
+                style="max-width: 900px"
+                fit="contain"
+              />
+            </center>
           </div>
         </Transition>
 

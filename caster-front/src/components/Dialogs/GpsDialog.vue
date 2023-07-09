@@ -106,7 +106,7 @@ const gpsRequest = async () => {
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <div class="confirm">
+          <!-- <div class="confirm">
             <ElButton
               class="caps green"
               size="default"
@@ -115,7 +115,7 @@ const gpsRequest = async () => {
             >
               Ok
             </ElButton>
-          </div>
+          </div> -->
         </span>
       </template>
     </ElDialog>
