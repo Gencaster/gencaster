@@ -132,6 +132,25 @@ const showError = computed<boolean>(() => {
   }
 });
 
+const clickedStop = async () => {
+  drifterStatus.value = DrifterStatus.ShowEndScreen;
+
+  if (data.value?.streamInfo.__typename === "NoStreamAvailable") {
+    return;
+  }
+  if (!data.value) {
+    return;
+  }
+  const { error } = await sendStreamVariableMutation.executeMutation({
+    streamVariables: {
+      streamUuid: data.value.streamInfo.stream.uuid,
+      key: "stop",
+      value: "1.0",
+      streamToSc: true,
+    },
+  });
+};
+
 // wait 3 seconds before showing error
 setTimeout(() => {
   waitingTimeout.value = true;
@@ -231,7 +250,7 @@ setTimeout(() => {
           >
             <PlayerBar
               :graph="graph"
-              @clicked-stop="drifterStatus = DrifterStatus.ShowEndScreen"
+              @clicked-stop="clickedStop()"
             />
           </div>
         </Transition>
