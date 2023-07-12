@@ -22,11 +22,6 @@ if (
     dsn: import.meta.env.VITE_SENTRY_DSN_CASTER_FRONT,
     integrations: [
       new Sentry.BrowserTracing({
-        // Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
-        tracePropagationTargets: [
-          "127.0.0.1",
-          "https://backend.dev.gencaster.org/graphql",
-        ],
         routingInstrumentation: Sentry.vueRouterInstrumentation(router),
       }),
       new Sentry.Replay(),
