@@ -25,7 +25,7 @@ JANUS_START_PORT_OUT=5002
 JANUS_START_PORT_IN=6002
 
 echo "Adjust pipewire settinges"
-pw-metadata -n settings 0 clock.force-quantum 4096
+pw-metadata -n settings 0 clock.force-quantum 16384
 
 echo "Spawn $NUM_STREAMS instances"
 
