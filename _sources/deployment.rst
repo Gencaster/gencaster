@@ -17,6 +17,38 @@ For more information regarding this topic refer to the `Mozilla Documentation <h
     Also all necessary ports need to be free on the host.
 
 
+``.secrets.env``
+^^^^^^^^^^^^^^^^
+
+Sensitive information such as passwords are stored in ``.secrets.env`` which is not part of the repository and needs therefore be created in order to spin up the containers.
+
+A local setup can look like this
+
+.. code-block:: text
+
+  GOOGLE_APPLICATION_CREDENTIALS="/path/to/gcp.json"
+
+
+while a dev deployment can look like this
+
+.. code-block:: text
+
+  GOOGLE_APPLICATION_CREDENTIALS="/path/to/gcp.json"
+
+  DJANGO_SU_USER=changeMe
+  DJANGO_SU_PASS=changeMe
+
+  POSTGRES_DB=gencaster
+  POSTGRES_PASSWORD=changeMe
+  POSTGRES_USER=gencaster
+
+  BACKEND_OSC_PASSWORD=changeMe
+
+  SENTRY_DSN_CASTER_BACK="https://changeMe.io"
+  SENTRY_DSN_CASTER_EDITOR="https://changeMe.io"
+  SENTRY_DSN_CASTER_FRONT="https://changeMe.io"
+
+
 .. _services:
 
 Services

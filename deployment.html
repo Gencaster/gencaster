@@ -345,6 +345,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#docker">Docker</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#secrets-env"><code class="docutils literal notranslate"><span class="pre">.secrets.env</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#services">Services</a></li>
 </ul>
 </li>
@@ -375,6 +376,31 @@ For more information regarding this topic refer to the <a class="reference exter
 The result is: <strong>it is only possible to run ONE instance of Gencaster on a server</strong>.
 Also all necessary ports need to be free on the host.</p>
 </div>
+<section id="secrets-env">
+<h3><code class="docutils literal notranslate"><span class="pre">.secrets.env</span></code><a class="headerlink" href="#secrets-env" title="Permalink to this headline">#</a></h3>
+<p>Sensitive information such as passwords are stored in <code class="docutils literal notranslate"><span class="pre">.secrets.env</span></code> which is not part of the repository and needs therefore be created in order to spin up the containers.</p>
+<p>A local setup can look like this</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>GOOGLE_APPLICATION_CREDENTIALS=&quot;/path/to/gcp.json&quot;
+</pre></div>
+</div>
+<p>while a dev deployment can look like this</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>GOOGLE_APPLICATION_CREDENTIALS=&quot;/path/to/gcp.json&quot;
+
+DJANGO_SU_USER=changeMe
+DJANGO_SU_PASS=changeMe
+
+POSTGRES_DB=gencaster
+POSTGRES_PASSWORD=changeMe
+POSTGRES_USER=gencaster
+
+BACKEND_OSC_PASSWORD=changeMe
+
+SENTRY_DSN_CASTER_BACK=&quot;https://changeMe.io&quot;
+SENTRY_DSN_CASTER_EDITOR=&quot;https://changeMe.io&quot;
+SENTRY_DSN_CASTER_FRONT=&quot;https://changeMe.io&quot;
+</pre></div>
+</div>
+</section>
 <section id="services">
 <span id="id1"></span><h3>Services<a class="headerlink" href="#services" title="Permalink to this headline">#</a></h3>
 <table class="colwidths-given table" id="id3">
@@ -669,6 +695,7 @@ server {
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#docker">Docker</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#secrets-env"><code class="docutils literal notranslate"><span class="pre">.secrets.env</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#services">Services</a></li>
 </ul>
 </li>
