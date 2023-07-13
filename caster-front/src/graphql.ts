@@ -135,9 +135,10 @@ export type AudioFileUploadResponse = AudioFile | InvalidAudioFile;
 /** A button which can also trigger a set of functionality. */
 export type Button = {
   buttonType: ButtonType;
-  sendVariableOnClick?: Maybe<Scalars["String"]>;
-  sendVariablesOnClick: Scalars["Boolean"];
+  callbackActions: Array<CallbackAction>;
+  key: Scalars["String"];
   text: Scalars["String"];
+  value: Scalars["String"];
 };
 
 /** An enumeration. */
@@ -148,6 +149,23 @@ export enum ButtonType {
   Primary = "PRIMARY",
   Success = "SUCCESS",
   Warning = "WARNING",
+}
+
+/**
+ * Allows to add a pre-defined JavaScript callback to a button or a checkbox.
+ *
+ * ACTIVATE_GPS_STREAMING          Activates streaming of GPS coordinates
+ *                                 as :class:`~stream.models.StreamVariable`
+ * SEND_VARIABLES                  Send all variables of the form / dialog to
+ *                                 the server.
+ * SEND_VARIABLE                   Sends a single :class:`~stream.models.StreamVariable`
+ *                                 with the key/value of the where the callback is
+ *                                 attached to.
+ */
+export enum CallbackAction {
+  ActivateGpsStreaming = "ACTIVATE_GPS_STREAMING",
+  SendVariable = "SEND_VARIABLE",
+  SendVariables = "SEND_VARIABLES",
 }
 
 /** Choice of foobar */
@@ -164,6 +182,7 @@ export enum CellType {
  * saved **as a string** under ``key`` in a :class:`~stream.models.StreamVariable`.
  */
 export type Checkbox = {
+  callbackActions: Array<CallbackAction>;
   checked: Scalars["Boolean"];
   key: Scalars["String"];
   label: Scalars["String"];
@@ -982,6 +1001,7 @@ export type StreamSubscription = {
               checked: boolean;
               label: string;
               key: string;
+              callbackActions: Array<CallbackAction>;
             }
           | {
               __typename: "Input";
@@ -994,9 +1014,10 @@ export type StreamSubscription = {
         buttons: Array<{
           __typename: "Button";
           buttonType: ButtonType;
-          sendVariablesOnClick: boolean;
           text: string;
-          sendVariableOnClick?: string | null;
+          key: string;
+          callbackActions: Array<CallbackAction>;
+          value: string;
         }>;
       }
     | { __typename: "NoStreamAvailable"; error: string }
@@ -1517,14 +1538,16 @@ export const StreamDocument = gql`
             checked
             label
             key
+            callbackActions
           }
         }
         buttons {
           __typename
           buttonType
-          sendVariablesOnClick
           text
-          sendVariableOnClick
+          key
+          callbackActions
+          value
         }
         title
       }

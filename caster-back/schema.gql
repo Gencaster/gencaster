@@ -124,9 +124,10 @@ union AudioFileUploadResponse = AudioFile | InvalidAudioFile
 """A button which can also trigger a set of functionality."""
 type Button {
   text: String!
+  value: String!
+  key: String!
   buttonType: ButtonType!
-  sendVariablesOnClick: Boolean!
-  sendVariableOnClick: String
+  callbackActions: [CallbackAction!]!
 }
 
 """An enumeration."""
@@ -137,6 +138,23 @@ enum ButtonType {
   WARNING
   INFO
   DANGER
+}
+
+"""
+Allows to add a pre-defined JavaScript callback to a button or a checkbox.
+
+ACTIVATE_GPS_STREAMING          Activates streaming of GPS coordinates
+                                as :class:`~stream.models.StreamVariable`
+SEND_VARIABLES                  Send all variables of the form / dialog to
+                                the server.
+SEND_VARIABLE                   Sends a single :class:`~stream.models.StreamVariable`
+                                with the key/value of the where the callback is
+                                attached to.
+"""
+enum CallbackAction {
+  ACTIVATE_GPS_STREAMING
+  SEND_VARIABLES
+  SEND_VARIABLE
 }
 
 """Choice of foobar"""
@@ -156,6 +174,7 @@ type Checkbox {
   key: String!
   label: String!
   checked: Boolean!
+  callbackActions: [CallbackAction!]!
 }
 
 union Content = Text | Input | Checkbox

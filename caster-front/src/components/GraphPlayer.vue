@@ -13,11 +13,21 @@ import {
 } from "element-plus";
 import { useRouter } from "vue-router";
 import Player from "@/components/PlayerComponent.vue";
-import { type Graph, type StreamSubscription, ButtonType } from "@/graphql";
+import {
+  type Graph,
+  type StreamSubscription,
+  ButtonType,
+  type Button,
+  CallbackAction,
+  type StreamVariableInput,
+  type Checkbox,
+} from "@/graphql";
 import { useStreamSubscription } from "@/graphql";
 import StreamInfo from "@/components/StreamInfo.vue";
 import PlayerButtons from "@/components/PlayerButtons.vue";
 import { useSendStreamVariableMutation } from "@/graphql";
+import { storeToRefs } from "pinia";
+import { usePlayerStore } from "@/stores/Player";
 
 interface DialogShow {
   show: boolean;
@@ -28,6 +38,8 @@ interface DialogShow {
 const props = defineProps<{
   graph: Pick<Graph, "uuid" | "name">;
 }>();
+
+const { streamGPS, gpsError, gpsSuccess } = storeToRefs(usePlayerStore());
 
 const router = useRouter();
 
@@ -111,10 +123,64 @@ let formData: Record<string, any> = reactive<Record<string, any>>({});
 
 const playerRef: Ref<InstanceType<typeof Player> | undefined> = ref(undefined);
 
-const processButton = async (
-  sendVariablesOnClick: boolean,
-  sendVariableOnClick: string | undefined | null = undefined,
-) => {
+const closeCurrentDialog = () => {
+  formData = reactive<Record<string, any>>({});
+  if (currentDialog.value) {
+    currentDialog.value.loading = false;
+    currentDialog.value.show = false;
+  }
+};
+
+// gps stuff
+watch(gpsSuccess, () => {
+  console.log("Received first GPS signal - connection successful");
+  closeCurrentDialog();
+});
+
+watch(gpsError, () => {
+  if (gpsError.value) {
+    console.log(
+      `Error at obtaining GPS handle: ${gpsError.value}`,
+      gpsError.value,
+    );
+    if (gpsError.value.PERMISSION_DENIED) ElMessage.error("Plesae allow GPS.");
+    else if (
+      gpsError.value.POSITION_UNAVAILABLE ||
+      gpsError.value.PERMISSION_DENIED
+    )
+      ElMessage.error(
+        `Could not obtain a GPS position: ${gpsError.value.message}`,
+      );
+    router.push("/gps-error");
+  }
+});
+
+const setupGPS = async () => {
+  if (gpsSuccess.value) {
+    // gps is already running so nothing to do
+    closeCurrentDialog();
+  }
+  // as it makes only sense to have one GPS stream we refer to
+  // it via the global store.
+  streamGPS.value = true;
+  // a watcher which checks the status of the GPS request
+  const refreshIntervalId = setInterval(async () => {
+    // i don't have a clue if this works properly b/c I always receive a GPS location first
+    // but "in theory" it should also help us
+    const { state } = await navigator.permissions.query({
+      name: "geolocation",
+    });
+    console.log("state is", state);
+    if (state === "granted") {
+      gpsSuccess.value = true;
+      clearInterval(refreshIntervalId);
+      closeCurrentDialog();
+    }
+  }, 100);
+};
+
+// callback stuff
+const processAction = async (button: Button | Checkbox) => {
   if (!streamInfo.value) {
     console.log(
       `Can not send stream variable ${sendStreamVariable} because stream info is missing`,
@@ -124,38 +190,48 @@ const processButton = async (
   if (currentDialog.value) {
     currentDialog.value.loading = true;
   }
-  if (sendVariableOnClick) {
-    const { error } = await sendStreamVariable.executeMutation({
-      streamVariables: [
-        {
-          streamUuid: streamInfo.value.stream.uuid,
-          key: sendVariableOnClick,
-          value: "True",
-        },
-      ],
-    });
-    if (error) {
-      ElMessage.error(
-        `Could not transfer button press to server: ${error.message}`,
-      );
+  let gpsAction = false;
+  const updates: StreamVariableInput[] = [];
+  button.callbackActions.forEach((action) => {
+    if (action === CallbackAction.SendVariable) {
+      updates.push({
+        streamUuid: streamInfo.value?.stream.uuid,
+        key: button.key,
+        value: "value" in button ? button.value : String(button.checked),
+      });
     }
-  }
-  if (sendVariablesOnClick) {
-    const { error } = await sendStreamVariable.executeMutation({
-      streamVariables: Object.keys(formData).map((key) => {
-        return {
+
+    if (action === CallbackAction.SendVariables) {
+      Object.keys(formData).forEach((key) => {
+        updates.push({
           streamUuid: streamInfo.value?.stream.uuid,
           key: key,
           value: formData[key],
-        };
-      }),
+        });
+      });
+    }
+
+    if (action === CallbackAction.ActivateGpsStreaming) {
+      gpsAction = true;
+    }
+  });
+
+  if (updates.length > 0) {
+    const { error } = await sendStreamVariable.executeMutation({
+      streamVariables: updates,
     });
     if (error) {
       ElMessage.error(
-        `Could not transfer input press to server: ${error.message}`,
+        `Could not transfer variable to server: ${error.message}`,
       );
     }
   }
+
+  if (gpsAction) {
+    setupGPS();
+    return;
+  }
+
   // reset form data
   formData = reactive<Record<string, any>>({});
   if (currentDialog.value) {
@@ -191,7 +267,6 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
       return ElButtonType.Default;
   }
 };
-// :type="button.buttonType === 'PRIMARY' ? 'primary' : 'primary'"
 </script>
 
 <template>
@@ -206,6 +281,8 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
         v-loading="currentDialog.loading"
         :title="currentDialog.dialog.title"
         :append-to-body="true"
+        :close-on-click-modal="false"
+        :show-close="false"
         @closed="closedDialog()"
       >
         <ElForm>
@@ -222,6 +299,7 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
               <ElFormItem
                 v-model="formData[content.key]"
                 :label="content.label"
+                @click="processAction(content)"
               >
                 <ElCheckbox />
               </ElFormItem>
@@ -244,12 +322,7 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
               v-for="(button, index) in currentDialog.dialog.buttons"
               :key="index"
               :type="convertButtonType(button.buttonType)"
-              @click="
-                processButton(
-                  button.sendVariablesOnClick,
-                  button.sendVariableOnClick
-                )
-              "
+              @click="processAction(button)"
             >
               {{ button.text }}
             </ElButton>

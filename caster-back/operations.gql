@@ -222,14 +222,16 @@ subscription stream($graphUuid: UUID!) {
           checked
           label
           key
+          callbackActions
         }
       }
       buttons {
         __typename
         buttonType
-        sendVariablesOnClick
         text
-        sendVariableOnClick
+        key
+        callbackActions
+        value
       }
       title
     }

@@ -74,7 +74,7 @@ The exact arguments are documented in :ref:`frontend-types`.
     yield Dialog(
         title="Headline",
         content=[
-            Text("Can we ask for your name?"),
+            Text(text="Can we ask for your name?"),
             Input(label="Name", key="name"),
         ],
         buttons=[Button.cancel(), Button.ok()],
