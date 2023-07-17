@@ -341,7 +341,7 @@ watch(play, (playState) => {
     <div v-if="stream">
       <GpsStreaming :stream="stream" />
     </div>
-    <div v-else>
+    <div v-else-if="showRawControls">
       GPS works only on a Gencaster stream
     </div>
 
