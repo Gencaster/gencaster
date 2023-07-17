@@ -263,6 +263,7 @@ GenCasterServer {
 	var <>oscBackendClient;
 	var <>environment; // shall this be a proxy space?
 	var <>server;
+	var <beacon;
 
 	// basically a constructor which allows us to set
 	// the necessary values directly or via env variables
@@ -319,6 +320,17 @@ GenCasterServer {
 		environment[\oscBackendClient] = oscBackendClient;
 		environment[\this] = this;
 		this.loadSynthDefs;
+		beacon = Task({
+			inf.do({
+				this.sendAck(
+					status: GenCasterStatus.beacon,
+					uuid: 0,
+					message: this.serverInfo,
+					address: "/beacon",
+				);
+				5.wait;
+			});
+		});
 	}
 
 	loadSynthDefs {
@@ -426,20 +438,6 @@ GenCasterServer {
 		server.waitForBoot(onComplete: this.postStartServer);
 	}
 
-	beacon { |waitTime=5.0|
-		^Tdef(\beacon, {
-			inf.do({
-				this.sendAck(
-					status: GenCasterStatus.beacon,
-					uuid: 0,
-					message: this.serverInfo,
-					address: "/beacon",
-				);
-				waitTime.wait;
-			});
-		});
-	}
-
 	instructionReceiver {
 		^OSCdef(\instructionReceiver, {|msg, time, addr, recvPort|
 			var uuid = msg[1];
@@ -471,7 +469,7 @@ GenCasterServer {
 	postStartServer {
 		"Finished booting server".postln;
 		"Start beacon".postln;
-		this.beacon.play;
+		beacon.play;
 		this.instructionReceiver;
 	}
 }
