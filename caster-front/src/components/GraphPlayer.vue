@@ -285,7 +285,7 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
         :show-close="false"
         @closed="closedDialog()"
       >
-        <ElForm>
+        <ElForm label-position="top">
           <span
             v-for="(content, index) in currentDialog.dialog.content"
             :key="index"

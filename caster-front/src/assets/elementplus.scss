@@ -74,18 +74,60 @@
 
   .el-dialog__body {
     padding: 0;
+    @include fontStyle("body");
+    margin: 0;
+
+    .el-form-item__label {
+      @include fontStyle("body");
+    }
+  }
+
+  // string dialog
+  .el-input {
+    margin-bottom: 0;
   }
 
   .description {
-    @include fontStyle("smallHeadline");
+    @include fontStyle("body");
     color: $black;
     margin-top: $spacingM;
     margin-bottom: $spacingM;
   }
 
+  .el-dialog__header {
+    padding: 0;
+    margin: 0;
+    margin-top: $spacingM;
+    margin-bottom: $spacingM;
+
+    .el-dialog__title {
+      font-size: $mediumFontSize;
+    }
+  }
+
+  .el-form-item {
+    margin-bottom: 0;
+  }
+
   .el-dialog__footer {
     padding: 0;
     margin-top: $spacingM;
+
+    .el-button {
+      @include fontStyle("body");
+      padding-top: 10px;
+      text-decoration: none;
+      border: none;
+      color: $black;
+
+      &.el-button--primary {
+        background-color: $green-light;
+      }
+
+      &.el-button--warning {
+        background-color: $grey;
+      }
+    }
   }
 }
 
