@@ -54,7 +54,7 @@ class Engine:
         .. todo::
 
             Could be a @property but this can be difficult in async contexts
-            so we use explicit async via a getter metho
+            so we use explicit async via a getter method.
         """
         v = {}
         stream_variable: StreamVariable
