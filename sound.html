@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Caster sound &#8212; Gencaster  documentation</title>
+    <title>Caster Sound &#8212; Gencaster  documentation</title>
   
   
   
@@ -31,6 +31,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -47,7 +48,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Deployment" href="deployment.html" />
-    <link rel="prev" title="Caster front" href="front.html" />
+    <link rel="prev" title="Caster Front" href="front.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -135,20 +136,20 @@
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="story_graph.html">Story Graph</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="services.html">Services</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
 <li class="toctree-l3"><a class="reference internal" href="back/graphql.html">GraphQL</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="back/api/story_graph.html">Story Graph</a></li>
 <li class="toctree-l4"><a class="reference internal" href="back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="editor.html">Caster editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front.html">Caster front</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Caster sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="editor.html">Caster Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="front.html">Caster Front</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
@@ -333,7 +334,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Caster sound</h1>
+    <h1>Caster Sound</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -348,7 +349,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section id="caster-sound">
-<span id="id1"></span><h1>Caster sound<a class="headerlink" href="#caster-sound" title="Permalink to this headline">#</a></h1>
+<span id="id1"></span><h1>Caster Sound<a class="headerlink" href="#caster-sound" title="Permalink to this headline">#</a></h1>
 </section>
 
 
@@ -369,7 +370,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Caster front</p>
+        <p class="prev-next-title">Caster Front</p>
       </div>
     </a>
     <a class="right-next"

@@ -31,6 +31,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -46,7 +47,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Caster back" href="back/index.html" />
+    <link rel="next" title="Caster Back" href="back/index.html" />
     <link rel="prev" title="Story Graph" href="story_graph.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
@@ -135,20 +136,20 @@
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="story_graph.html">Story Graph</a></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Services</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
 <li class="toctree-l3"><a class="reference internal" href="back/graphql.html">GraphQL</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="back/api/story_graph.html">Story Graph</a></li>
 <li class="toctree-l4"><a class="reference internal" href="back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="editor.html">Caster editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front.html">Caster front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="editor.html">Caster Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="front.html">Caster Front</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
@@ -352,7 +353,7 @@ document.write(`
 <div class="toctree-wrapper compound">
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="back/index.html">Caster back</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="back/index.html">Caster Back</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="back/index.html#global-model-graph">Global model graph</a></li>
 <li class="toctree-l2"><a class="reference internal" href="back/index.html#api">API</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
@@ -362,13 +363,23 @@ document.write(`
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="editor.html">Caster editor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="front.html">Caster front</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="editor.html">Caster Editor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="editor.html#script-cells">Script cells</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="editor.html#markdown">Markdown</a></li>
+<li class="toctree-l3"><a class="reference internal" href="editor.html#audio">Audio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="editor.html#python">Python</a></li>
+<li class="toctree-l3"><a class="reference internal" href="editor.html#supercollider">SuperCollider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="editor.html#comment">Comment</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="front.html">Caster Front</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="front.html#connection-flow">Connection flow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="front.html#templates">Templates</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="sound.html">Caster sound</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sound.html">Caster Sound</a></li>
 </ul>
 </div>
 </section>
@@ -399,7 +410,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Caster back</p>
+        <p class="prev-next-title">Caster Back</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

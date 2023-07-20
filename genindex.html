@@ -30,6 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -132,20 +133,20 @@
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="story_graph.html">Story Graph</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
 <li class="toctree-l3"><a class="reference internal" href="back/graphql.html">GraphQL</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="back/api/story_graph.html">Story Graph</a></li>
 <li class="toctree-l4"><a class="reference internal" href="back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="editor.html">Caster editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front.html">Caster front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="editor.html">Caster Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="front.html">Caster Front</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
@@ -320,6 +321,16 @@ document.write(`
 </li>
         <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterToken.__init__">(story_graph.markdown_parser.GencasterToken method)</a>
 </li>
+        <li><a href="back/api/stream.html#stream.frontend_types.Button.__init__">(stream.frontend_types.Button method)</a>
+</li>
+        <li><a href="back/api/stream.html#stream.frontend_types.Checkbox.__init__">(stream.frontend_types.Checkbox method)</a>
+</li>
+        <li><a href="back/api/stream.html#stream.frontend_types.Dialog.__init__">(stream.frontend_types.Dialog method)</a>
+</li>
+        <li><a href="back/api/stream.html#stream.frontend_types.Input.__init__">(stream.frontend_types.Input method)</a>
+</li>
+        <li><a href="back/api/stream.html#stream.frontend_types.Text.__init__">(stream.frontend_types.Text method)</a>
+</li>
       </ul></li>
   </ul></td>
 </tr></table>
@@ -366,17 +377,29 @@ document.write(`
       <li><a href="back/osc_server.html#osc_server.server.OSCServer.beacon_handler">beacon_handler() (osc_server.server.OSCServer method)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="back/api/stream.html#stream.frontend_types.Button">Button (class in stream.frontend_types)</a>
+</li>
+      <li><a href="back/api/stream.html#stream.frontend_types.ButtonType">ButtonType (class in stream.frontend_types)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.models.CellType">CellType (class in story_graph.models)</a>
+      <li><a href="back/api/stream.html#stream.frontend_types.CallbackAction">CallbackAction (class in stream.frontend_types)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.chars">chars() (story_graph.markdown_parser.GencasterRenderer method)</a>
+      <li><a href="back/api/stream.html#stream.frontend_types.Button.cancel">cancel() (stream.frontend_types.Button class method)</a>
+</li>
+      <li><a href="back/api/story_graph.html#story_graph.models.CellType">CellType (class in story_graph.models)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.chars">chars() (story_graph.markdown_parser.GencasterRenderer method)</a>
+</li>
+      <li><a href="back/api/stream.html#stream.frontend_types.Checkbox">Checkbox (class in stream.frontend_types)</a>
+</li>
       <li><a href="back/api/stream.html#stream.models.TextToSpeech.create_from_text">create_from_text() (stream.models.TextToSpeech class method)</a>
 </li>
       <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.create_script_cells">create_script_cells() (gencaster.schema.Mutation method)</a>
@@ -389,11 +412,13 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.delete_edge">delete_edge() (gencaster.schema.Mutation method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.delete_node">delete_node() (gencaster.schema.Mutation method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.delete_script_cell">delete_script_cell() (gencaster.schema.Mutation method)</a>
+</li>
+      <li><a href="back/api/stream.html#stream.frontend_types.Dialog">Dialog (class in stream.frontend_types)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -420,6 +445,8 @@ document.write(`
       <li><a href="back/api/story_graph.html#story_graph.engine.Engine.execute_markdown_code">execute_markdown_code() (story_graph.engine.Engine method)</a>
 </li>
       <li><a href="back/api/story_graph.html#story_graph.engine.Engine.execute_node">execute_node() (story_graph.engine.Engine method)</a>
+</li>
+      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.execute_python_cell">execute_python_cell() (story_graph.engine.Engine method)</a>
 </li>
       <li><a href="back/api/story_graph.html#story_graph.engine.Engine.execute_sc_code">execute_sc_code() (story_graph.engine.Engine method)</a>
 </li>
@@ -523,6 +550,8 @@ document.write(`
 </li>
       <li><a href="back/api/story_graph.html#story_graph.models.Graph">Graph (class in story_graph.models)</a>
 </li>
+      <li><a href="back/api/gencaster.html#gencaster.schema.Subscription.graph">graph() (gencaster.schema.Subscription method)</a>
+</li>
       <li><a href="back/api/story_graph.html#story_graph.models.Graph.DoesNotExist">Graph.DoesNotExist</a>
 </li>
       <li><a href="back/api/story_graph.html#story_graph.models.Graph.GraphDetailTemplate">Graph.GraphDetailTemplate (class in story_graph.models)</a>
@@ -543,10 +572,12 @@ document.write(`
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/stream.html#stream.exceptions.InvalidAudioFileException">InvalidAudioFileException</a>
+      <li><a href="back/api/stream.html#stream.frontend_types.Input">Input (class in stream.frontend_types)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="back/api/stream.html#stream.exceptions.InvalidAudioFileException">InvalidAudioFileException</a>
+</li>
       <li><a href="back/api/gencaster.html#gencaster.schema.IsAuthenticated">IsAuthenticated (class in gencaster.schema)</a>
 </li>
   </ul></td>
@@ -617,6 +648,8 @@ document.write(`
 </li>
         <li><a href="back/api/stream.html#module-stream.exceptions">stream.exceptions</a>
 </li>
+        <li><a href="back/api/stream.html#module-stream.frontend_types">stream.frontend_types</a>
+</li>
         <li><a href="back/api/stream.html#module-stream.models">stream.models</a>
 </li>
       </ul></li>
@@ -631,6 +664,8 @@ document.write(`
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/story_graph.html#story_graph.models.Node">Node (class in story_graph.models)</a>
+</li>
+      <li><a href="back/api/gencaster.html#gencaster.schema.Subscription.node">node() (gencaster.schema.Subscription method)</a>
 </li>
       <li><a href="back/api/story_graph.html#story_graph.models.Node.DoesNotExist">Node.DoesNotExist</a>
 </li>
@@ -648,6 +683,8 @@ document.write(`
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="back/api/stream.html#stream.frontend_types.Button.ok">ok() (stream.frontend_types.Button class method)</a>
+</li>
       <li>
     osc_server
 
@@ -662,6 +699,8 @@ document.write(`
         <li><a href="back/osc_server.html#module-osc_server.exceptions">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     osc_server.models
 
@@ -669,8 +708,6 @@ document.write(`
         <li><a href="back/osc_server.html#module-osc_server.models">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     osc_server.server
 
@@ -761,10 +798,10 @@ document.write(`
         <li><a href="back/api/stream.html#module-stream">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/stream.html#stream.models.Stream">Stream (class in stream.models)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/stream.html#stream.models.Stream.DoesNotExist">Stream.DoesNotExist</a>
 </li>
       <li>
@@ -775,6 +812,13 @@ document.write(`
 </li>
       </ul></li>
       <li>
+    stream.frontend_types
+
+      <ul>
+        <li><a href="back/api/stream.html#module-stream.frontend_types">module</a>
+</li>
+      </ul></li>
+      <li>
     stream.models
 
       <ul>
@@ -782,6 +826,8 @@ document.write(`
 </li>
       </ul></li>
       <li><a href="back/api/stream.html#stream.models.Stream.MultipleObjectsReturned">Stream.MultipleObjectsReturned</a>
+</li>
+      <li><a href="back/api/gencaster.html#gencaster.schema.Subscription.stream_info">stream_info() (gencaster.schema.Subscription method)</a>
 </li>
       <li><a href="back/api/stream.html#stream.models.StreamInstruction">StreamInstruction (class in stream.models)</a>
 </li>
@@ -811,12 +857,14 @@ document.write(`
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/stream.html#stream.models.TextToSpeech">TextToSpeech (class in stream.models)</a>
+      <li><a href="back/api/stream.html#stream.frontend_types.Text">Text (class in stream.frontend_types)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.TextToSpeech.DoesNotExist">TextToSpeech.DoesNotExist</a>
+      <li><a href="back/api/stream.html#stream.models.TextToSpeech">TextToSpeech (class in stream.models)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="back/api/stream.html#stream.models.TextToSpeech.DoesNotExist">TextToSpeech.DoesNotExist</a>
+</li>
       <li><a href="back/api/stream.html#stream.models.TextToSpeech.MultipleObjectsReturned">TextToSpeech.MultipleObjectsReturned</a>
 </li>
       <li><a href="back/api/stream.html#stream.models.TextToSpeech.VoiceNameChoices">TextToSpeech.VoiceNameChoices (class in stream.models)</a>
@@ -856,6 +904,10 @@ document.write(`
 
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.wait_for_stream_variable">wait_for_stream_variable() (story_graph.engine.Engine method)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/gencaster.html#gencaster.distributor.GraphQLWSConsumerInjector.websocket_disconnect">websocket_disconnect() (gencaster.distributor.GraphQLWSConsumerInjector method)</a>
 </li>

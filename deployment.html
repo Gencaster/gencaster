@@ -31,6 +31,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -46,7 +47,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Caster sound" href="sound.html" />
+    <link rel="prev" title="Caster Sound" href="sound.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -134,20 +135,20 @@
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="story_graph.html">Story Graph</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
 <li class="toctree-l3"><a class="reference internal" href="back/graphql.html">GraphQL</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="back/api/story_graph.html">Story Graph</a></li>
 <li class="toctree-l4"><a class="reference internal" href="back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="editor.html">Caster editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front.html">Caster front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="editor.html">Caster Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="front.html">Caster Front</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Deployment</a></li>
@@ -368,7 +369,7 @@ document.write(`
 This allows for easier development but also introduces some challenges regarding WebRTC communication and CPU realtime priority.</p>
 <section id="docker">
 <h2>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">#</a></h2>
-<p>As WebRTC relies on a peer-to-peer connection it is necessary to run the streaming container <a class="reference internal" href="sound.html#caster-sound"><span class="std std-ref">Caster sound</span></a> in <code class="docutils literal notranslate"><span class="pre">host</span></code> mode as otherwise the connection can not be initiated because of a lack of proper IP propagation because otherwise the Docker network acts as a NAT.
+<p>As WebRTC relies on a peer-to-peer connection it is necessary to run the streaming container <a class="reference internal" href="sound.html#caster-sound"><span class="std std-ref">Caster Sound</span></a> in <code class="docutils literal notranslate"><span class="pre">host</span></code> mode as otherwise the connection can not be initiated because of a lack of proper IP propagation because otherwise the Docker network acts as a NAT.
 For more information regarding this topic refer to the <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Protocols">Mozilla Documentation</a>.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
@@ -422,7 +423,7 @@ SENTRY_DSN_CASTER_FRONT=&quot;https://changeMe.io&quot;
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">backend</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">8081</span></code></p></td>
 <td><p>Django backend with database management for streams</p></td>
-<td><p><a class="reference internal" href="back/index.html#caster-back"><span class="std std-ref">Caster back</span></a></p></td>
+<td><p><a class="reference internal" href="back/index.html#caster-back"><span class="std std-ref">Caster Back</span></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">osc_backend</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">57130</span></code></p></td>
@@ -432,17 +433,17 @@ SENTRY_DSN_CASTER_FRONT=&quot;https://changeMe.io&quot;
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">editor</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3001</span></code></p></td>
 <td><p>Editor fronted for story graphs</p></td>
-<td><p><a class="reference internal" href="editor.html#caster-editor"><span class="std std-ref">Caster editor</span></a></p></td>
+<td><p><a class="reference internal" href="editor.html#caster-editor"><span class="std std-ref">Caster Editor</span></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">frontend</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3000</span></code></p></td>
 <td><p>frontend for user interaction</p></td>
-<td><p><a class="reference internal" href="front.html#caster-front"><span class="std std-ref">Caster front</span></a></p></td>
+<td><p><a class="reference internal" href="front.html#caster-front"><span class="std std-ref">Caster Front</span></a></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sound</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">57120,8088</span></code></p></td>
 <td><p>SuperCollider server which can be listened to via WebRTC</p></td>
-<td><p><a class="reference internal" href="sound.html#caster-sound"><span class="std std-ref">Caster sound</span></a></p></td>
+<td><p><a class="reference internal" href="sound.html#caster-sound"><span class="std std-ref">Caster Sound</span></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">database</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">5432</span></code></p></td>
@@ -673,7 +674,7 @@ server {
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Caster sound</p>
+        <p class="prev-next-title">Caster Sound</p>
       </div>
     </a>
 </div></div>

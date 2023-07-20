@@ -31,6 +31,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -135,20 +136,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../story_graph.html">Story Graph</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../../services.html">Services</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Caster back</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">Caster Back</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../osc_server.html">OSC Server</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../graphql.html">GraphQL</a></li>
 <li class="toctree-l3 current active has-children"><a class="reference internal" href="index.html">API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l4 current active"><a class="current reference internal" href="#">Story Graph</a></li>
 <li class="toctree-l4"><a class="reference internal" href="stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="gencaster.html">GenCaster config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../editor.html">Caster editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../front.html">Caster front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../sound.html">Caster sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../editor.html">Caster Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../front.html">Caster Front</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../deployment.html">Deployment</a></li>
@@ -370,32 +371,35 @@ These cells allow to control what happens on the script and to which Node we jum
 Therefore a story is represented by a graph.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#graph" id="id7">Graph</a></p>
+<li><p><a class="reference internal" href="#graph" id="id8">Graph</a></p>
 <ul>
-<li><p><a class="reference internal" href="#engine" id="id8">Engine</a></p></li>
-<li><p><a class="reference internal" href="#markdown-parser" id="id9">Markdown parser</a></p></li>
-<li><p><a class="reference internal" href="#models" id="id10">Models</a></p></li>
+<li><p><a class="reference internal" href="#engine" id="id9">Engine</a></p></li>
+<li><p><a class="reference internal" href="#markdown-parser" id="id10">Markdown parser</a></p></li>
+<li><p><a class="reference internal" href="#models" id="id11">Models</a></p></li>
 </ul>
 </li>
 </ul>
 </div>
 <section id="graph">
-<h2><a class="toc-backref" href="#id7">Graph</a><a class="headerlink" href="#graph" title="Permalink to this headline">#</a></h2>
-<figure class="align-default" id="id6">
+<h2><a class="toc-backref" href="#id8">Graph</a><a class="headerlink" href="#graph" title="Permalink to this headline">#</a></h2>
+<figure class="align-default" id="id7">
 <img alt="../../_images/story_graph.png" src="../../_images/story_graph.png" />
 <figcaption>
-<p><span class="caption-text">Model graph for the story graph app.</span><a class="headerlink" href="#id6" title="Permalink to this image">#</a></p>
+<p><span class="caption-text">Model graph for the story graph app.</span><a class="headerlink" href="#id7" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <span class="target" id="module-story_graph.engine"></span><section id="engine">
-<h3><a class="toc-backref" href="#id8">Engine</a><a class="headerlink" href="#engine" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id9">Engine</a><a class="headerlink" href="#engine" title="Permalink to this headline">#</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="story_graph.engine.Engine">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.engine.</span></span><span class="sig-name descname"><span class="pre">Engine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine" title="Permalink to this definition">#</a></dt>
-<dd><p>An engine executes a <a class="reference internal" href="#story_graph.models.Graph" title="story_graph.models.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a> on a
-<a class="reference internal" href="stream.html#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>, therefore
-iterating through the nodes and executing each.
-This is written in a purely async manner so we can handle many streams at once.</p>
+<dd><p>An engine executes a <a class="reference internal" href="#story_graph.models.Graph" title="story_graph.models.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a> for a given
+<a class="reference internal" href="stream.html#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>.
+Executing means to iterate over the <a class="reference internal" href="#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>
+and executing each <a class="reference internal" href="#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a> within such a node.</p>
+<p>The engine runs in an async manner so it is possible to do awaits without
+blocking the server, which means execution is halted until a specific
+condition is met.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="story_graph.engine.Engine.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine.__init__" title="Permalink to this definition">#</a></dt>
@@ -404,7 +408,7 @@ This is written in a purely async manner so we can handle many streams at once.<
 <dl class="py method">
 <dt class="sig sig-object py" id="story_graph.engine.Engine.execute_audio_cell">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_audio_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audio_cell</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine.execute_audio_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine.execute_audio_cell" title="Permalink to this definition">#</a></dt>
-<dd><p>Plays the associated <code class="xref py py-class docutils literal notranslate"><span class="pre">AudioFile</span></code> of an <code class="xref py py-class docutils literal notranslate"><span class="pre">AudioCell</span></code>.</p>
+<dd><p>Plays the associated <a class="reference internal" href="stream.html#stream.models.AudioFile" title="stream.models.AudioFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioFile</span></code></a> of an <a class="reference internal" href="#story_graph.models.AudioCell" title="story_graph.models.AudioCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioCell</span></code></a>.</p>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
 <p>This does not respect the different Playback formats</p>
@@ -426,10 +430,30 @@ This is written in a purely async manner so we can handle many streams at once.<
 <dl class="py method">
 <dt class="sig sig-object py" id="story_graph.engine.Engine.execute_node">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocking_sleep_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine.execute_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine.execute_node" title="Permalink to this definition">#</a></dt>
-<dd><p>Executes a node.</p>
+<dd><p>Executes all <a class="reference internal" href="#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a> of
+a given <a class="reference internal" href="#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>, <a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="story_graph.engine.Engine.execute_python_cell">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute_python_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_code</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine.execute_python_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine.execute_python_cell" title="Permalink to this definition">#</a></dt>
+<dd><p>Executes a python <a class="reference internal" href="#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a>.
+A python cell is run as an async generator, which allows to not just run
+synchronous code but also asynchronous mode.</p>
+<p>It is possible to yield immediate results from this.
+Currently only the yielding of a <a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>
+instance is possible, but this could be extended.</p>
+<p>In order to secure at least a little bit the execution within such a script
+cell everything that is a available for execution needs to be stated
+explicitly here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -448,8 +472,13 @@ This is written in a purely async manner so we can handle many streams at once.<
 <dl class="py method">
 <dt class="sig sig-object py" id="story_graph.engine.Engine.get_stream_variables">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_stream_variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine.get_stream_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine.get_stream_variables" title="Permalink to this definition">#</a></dt>
-<dd><p>Could be a &#64;property but this can be difficult in async contexts
+<dd><p>Returns the associated <a class="reference internal" href="stream.html#stream.models.StreamVariable" title="stream.models.StreamVariable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamVariable</span></code></a> within
+this <a class="reference internal" href="stream.html#stream.models.Stream" title="stream.models.Stream"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stream</span></code></a> session.</p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>Could be a &#64;property but this can be difficult in async contexts
 so we use explicit async via a getter method.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
@@ -460,12 +489,36 @@ so we use explicit async via a getter method.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="story_graph.engine.Engine.start">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine.start" title="Permalink to this definition">#</a></dt>
-<dd><p>Starts the execution of the engine.</p>
+<dd><p>Starts the execution of the engine.
+This method is an async generator which eithor yields a
+<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>
+or a <a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In order to avoid a clumping of the database a lay off period
+of 0.1 seconds is added between jumping nodes.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>, <a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="story_graph.engine.Engine.wait_for_stream_variable">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">wait_for_stream_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_speed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine.wait_for_stream_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine.wait_for_stream_variable" title="Permalink to this definition">#</a></dt>
+<dd><p>Waits for a stream variable to be set.
+If the variable was not found/set within the time period of
+<code class="docutils literal notranslate"><span class="pre">timeout</span></code> this function will raise the exception
+<a class="reference internal" href="#story_graph.engine.ScriptCellTimeout" title="story_graph.engine.ScriptCellTimeout"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCellTimeout</span></code></a>.</p>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>Within a script cell it is necessary to await this async function</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">await</span> <span class="n">wait_for_stream_variable</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -477,7 +530,7 @@ so we use explicit async via a getter method.</p>
 
 </section>
 <span class="target" id="module-story_graph.markdown_parser"></span><section id="markdown-parser">
-<h3><a class="toc-backref" href="#id9">Markdown parser</a><a class="headerlink" href="#markdown-parser" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id10">Markdown parser</a><a class="headerlink" href="#markdown-parser" title="Permalink to this headline">#</a></h3>
 <p>A <a class="reference internal" href="#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a> can hold markdown content in our own markdown
 dialect to control breaks, change of speakers and emphasis but also allows us to access
 variables which are defined within a <a class="reference internal" href="stream.html#stream.models.Stream" title="stream.models.Stream"><code class="xref py py-class docutils literal notranslate"><span class="pre">stream.models.Stream</span></code></a>.
@@ -537,7 +590,7 @@ in GC docs.</p>
 </div>
 <p>will result in <cite>two plus two is 4</cite>.</p>
 <p>Eval does not allow for variable assignment but we obtain a return value.</p>
-<div class="admonition-todo admonition" id="id2">
+<div class="admonition-todo admonition" id="id3">
 <p class="admonition-title">Todo</p>
 <p>Store variables in <code class="xref py py-class docutils literal notranslate"><span class="pre">story_graph.models.GraphSession</span></code> context.</p>
 </div>
@@ -631,7 +684,7 @@ in GC docs.</p>
 <dt class="sig sig-object py" id="story_graph.markdown_parser.GencasterRenderer.validate_gencaster_tokens">
 <span class="sig-name descname"><span class="pre">validate_gencaster_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/markdown_parser.html#GencasterRenderer.validate_gencaster_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.markdown_parser.GencasterRenderer.validate_gencaster_tokens" title="Permalink to this definition">#</a></dt>
 <dd><p>Validates if the used tags are known to Gencaster</p>
-<div class="admonition-todo admonition" id="id3">
+<div class="admonition-todo admonition" id="id4">
 <p class="admonition-title">Todo</p>
 <p>this is not implemented yet and will raise an exception</p>
 </div>
@@ -694,7 +747,7 @@ empty string <cite>“”</cite>, but we can provide a fallback value via <code 
 
 </section>
 <span class="target" id="module-story_graph.models"></span><section id="models">
-<h3><a class="toc-backref" href="#id10">Models</a><a class="headerlink" href="#models" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id11">Models</a><a class="headerlink" href="#models" title="Permalink to this headline">#</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="story_graph.models.AudioCell">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.models.</span></span><span class="sig-name descname"><span class="pre">AudioCell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">audio_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#AudioCell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.AudioCell" title="Permalink to this definition">#</a></dt>
@@ -747,7 +800,7 @@ empty string <cite>“”</cite>, but we can provide a fallback value via <code 
 <dt class="sig sig-object py" id="story_graph.models.Edge">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.models.</span></span><span class="sig-name descname"><span class="pre">Edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#Edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.Edge" title="Permalink to this definition">#</a></dt>
 <dd><p>Connects two <a class="reference internal" href="#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> with each other.</p>
-<div class="admonition-todo admonition" id="id5">
+<div class="admonition-todo admonition" id="id6">
 <p class="admonition-title">Todo</p>
 <p>With a script we can also jump to any other node
 so it is not clear how to use this.

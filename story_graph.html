@@ -31,6 +31,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -135,20 +136,20 @@
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Story Graph</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
 <li class="toctree-l3"><a class="reference internal" href="back/graphql.html">GraphQL</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="back/api/story_graph.html">Story Graph</a></li>
 <li class="toctree-l4"><a class="reference internal" href="back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="editor.html">Caster editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front.html">Caster front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="editor.html">Caster Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="front.html">Caster Front</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
@@ -322,7 +323,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -338,6 +341,15 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#node">Node</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edge">Edge</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -349,10 +361,76 @@ document.write(`
                   
   <section id="story-graph">
 <span id="id1"></span><h1>Story Graph<a class="headerlink" href="#story-graph" title="Permalink to this headline">#</a></h1>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>This documents covers the concept behind a story graph.
+The editing of such a graph can be found in <a class="reference internal" href="editor.html#caster-editor"><span class="std std-ref">Caster Editor</span></a>.</p>
+</div>
+<p>The story graph acts as a central element of Gencaster to create non-linear storytelling experiences.
+In non-linearity the concept of a timeline is replaced by a tree of possibilities that the listener walks along.
+A story graph allows to construct such possibilities which cover</p>
+<ul class="simple">
+<li><p>the playback of audio files</p></li>
+<li><p>generating speech to text</p></li>
+<li><p>triggering input dialogs</p></li>
+</ul>
+<p>and much more.</p>
+<section id="node">
+<h2>Node<a class="headerlink" href="#node" title="Permalink to this headline">#</a></h2>
+<p>A <em>Node</em> represents a group of statements which will be executed for the listener upon visiting said node.
+Each node contains one or multiple <em>script cells</em>, which are described further at <a class="reference internal" href="editor.html#caster-editor-script-cells"><span class="std std-ref">Script cells</span></a>.</p>
+<p>Each session of a listener starts on the <em>Start node</em>.</p>
+<figure class="align-default" id="id3">
+<div class="graphviz"><img src="_images/graphviz-65832ecac7d90c8e687e508d5509985f11019f36.png" alt="digraph StoryGraph {
+    &quot;Start&quot;;
+}" class="graphviz" /></div>
+<figcaption>
+<p><span class="caption-text">A story graph at least consists of a start node</span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="edge">
+<h2>Edge<a class="headerlink" href="#edge" title="Permalink to this headline">#</a></h2>
+<p>In order to jump from one node to another one it is necessary to connect these two with an <em>edge</em>.
+This <em>edge</em> is directed, which means that the edge works only in one direction, from an outgoing <em>start node</em>
+to an incoming <em>end node</em>.</p>
+<figure class="align-default" id="id4">
+<div class="graphviz"><img src="_images/graphviz-3bed645006c2bb4eb4bf0a5f783b0e978b46e91a.png" alt="digraph StoryGraph {
+    &quot;Start&quot; -&gt; &quot;Play music&quot;;
+}" class="graphviz" /></div>
+<figcaption>
+<p><span class="caption-text">A connection between two nodes can be established via an edge.
+This connects the <em>Start</em> node to the <em>Play music</em> node.</span><a class="headerlink" href="#id4" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 <div class="admonition-todo admonition" id="id2">
 <p class="admonition-title">Todo</p>
-<p>Concept of a story graph</p>
+<p>If multiple <em>outgoing</em> edges are present it is currently determined by chance which node
+will be taken.
+This is about to change and is WIP.</p>
+<figure class="align-default" id="id5">
+<div class="graphviz"><img src="_images/graphviz-d4f919377a3e22f125f43245086f9de2748bda4a.png" alt="digraph StoryGraph {
+        &quot;Start&quot; -&gt; &quot;Play music&quot;;
+        &quot;Start&quot; -&gt; &quot;Play podcast&quot;;
+    }" class="graphviz" /></div>
+<figcaption>
+<p><span class="caption-text">Multiple outgoing connections from the <em>Start node</em>.
+There is a 50/50 chance which following node will be selected.</span><a class="headerlink" href="#id5" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 </div>
+<p>It is possible to create loops within the story graph.</p>
+<figure class="align-default" id="id6">
+<div class="graphviz"><img src="_images/graphviz-14f19fef63083fb80eaf4ed1429af2c4d3be97d2.png" alt="digraph StoryGraph {
+    &quot;Start&quot; -&gt; &quot;Play music&quot;;
+    &quot;Play music&quot; -&gt; &quot;Play podcast&quot;;
+    &quot;Play podcast&quot; -&gt; &quot;Start&quot;;
+}" class="graphviz" /></div>
+<figcaption>
+<p><span class="caption-text">A graph which loops indefinitely.</span><a class="headerlink" href="#id6" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
 </section>
 
 
@@ -394,6 +472,21 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#node">Node</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edge">Edge</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

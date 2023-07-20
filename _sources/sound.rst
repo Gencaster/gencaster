@@ -1,4 +1,4 @@
 .. _caster-sound:
 
-Caster sound
+Caster Sound
 ============

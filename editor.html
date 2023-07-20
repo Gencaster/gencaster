@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Caster editor &#8212; Gencaster  documentation</title>
+    <title>Caster Editor &#8212; Gencaster  documentation</title>
   
   
   
@@ -31,6 +31,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -46,8 +47,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Caster front" href="front.html" />
-    <link rel="prev" title="GenCaster config" href="back/api/gencaster.html" />
+    <link rel="next" title="Caster Front" href="front.html" />
+    <link rel="prev" title="GenCaster Base" href="back/api/gencaster.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -135,20 +136,20 @@
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="story_graph.html">Story Graph</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="services.html">Services</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
 <li class="toctree-l3"><a class="reference internal" href="back/graphql.html">GraphQL</a></li>
 <li class="toctree-l3 has-children"><a class="reference internal" href="back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="back/api/story_graph.html">Story Graph</a></li>
 <li class="toctree-l4"><a class="reference internal" href="back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Caster editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front.html">Caster front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster sound</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Caster Editor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="front.html">Caster Front</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
@@ -322,7 +323,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -333,11 +336,26 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Caster editor</h1>
+    <h1>Caster Editor</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#script-cells">Script cells</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markdown">Markdown</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#audio">Audio</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python">Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#supercollider">SuperCollider</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comment">Comment</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -348,7 +366,92 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section id="caster-editor">
-<span id="id1"></span><h1>Caster editor<a class="headerlink" href="#caster-editor" title="Permalink to this headline">#</a></h1>
+<span id="id1"></span><h1>Caster Editor<a class="headerlink" href="#caster-editor" title="Permalink to this headline">#</a></h1>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>This documents covers the editing of a <em>story graph</em>.
+For the concepts of such a graph see <a class="reference internal" href="story_graph.html#story-graph"><span class="std std-ref">Story Graph</span></a>.</p>
+</div>
+<section id="script-cells">
+<span id="caster-editor-script-cells"></span><h2>Script cells<a class="headerlink" href="#script-cells" title="Permalink to this headline">#</a></h2>
+<section id="markdown">
+<h3>Markdown<a class="headerlink" href="#markdown" title="Permalink to this headline">#</a></h3>
+<p>Markdown is a way to write formatted text in an easy but extensible manner.
+The written text will be converted to audio via <a class="reference internal" href="back/api/stream.html#stream.models.TextToSpeech" title="stream.models.TextToSpeech"><code class="xref py py-class docutils literal notranslate"><span class="pre">TextToSpeech</span></code></a>.</p>
+<p>It is possible to make this text dynamic by using the value of a <a class="reference internal" href="back/api/stream.html#stream.models.StreamVariable" title="stream.models.StreamVariable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamVariable</span></code></a> within the text.</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>Hello ${var}`name`.
+I hope you are doing fine.
+</pre></div>
+</div>
+<p>All possible macros are documented in <a class="reference internal" href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer" title="story_graph.markdown_parser.GencasterRenderer"><code class="xref py py-class docutils literal notranslate"><span class="pre">GencasterRenderer</span></code></a>.</p>
+</section>
+<section id="audio">
+<h3>Audio<a class="headerlink" href="#audio" title="Permalink to this headline">#</a></h3>
+<p>An audio cell allows to playback a <a class="reference internal" href="back/api/stream.html#stream.models.AudioFile" title="stream.models.AudioFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioFile</span></code></a> on the stream in two ways</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">async</span></code> will playback in the background and the story graph will continue with the execution</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sync</span></code> will pause the execution of the story graph until the file has been played back fully.</p></li>
+</ul>
+</section>
+<section id="python">
+<h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">#</a></h3>
+<p>Python is an universal scripting language and allows to</p>
+<ul class="simple">
+<li><p>interact with the graph (e.g. set next node)</p></li>
+<li><p>create or read out <a class="reference internal" href="back/api/stream.html#stream.models.StreamVariable" title="stream.models.StreamVariable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamVariable</span></code></a></p></li>
+<li><p>trigger dialogs on the frontend</p></li>
+</ul>
+<p>The execution is async which allows to wait for something to happen, e.g. for a stream variable through an user interaction with the help of <a class="reference internal" href="back/api/story_graph.html#story_graph.engine.Engine.wait_for_stream_variable" title="story_graph.engine.Engine.wait_for_stream_variable"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wait_for_stream_variable()</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">await</span> <span class="n">wait_for_stream_variable</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A stream variable can be accessed through a dictionary</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># will return None if not set</span>
+<span class="n">name</span> <span class="o">=</span> <span class="nb">vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In order to set a stream variable, simply set the value in the <code class="docutils literal notranslate"><span class="pre">vars</span></code> dictionary</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="mi">20</span>
+</pre></div>
+</div>
+<p>To trigger a dialog in the frontend use the <code class="docutils literal notranslate"><span class="pre">yield</span></code> command with a <a class="reference internal" href="back/api/stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a> instance.
+The exact arguments are documented in <a class="reference internal" href="back/api/stream.html#frontend-types"><span class="std std-ref">Frontend Types</span></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">yield</span> <span class="n">Dialog</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Headline&quot;</span><span class="p">,</span>
+    <span class="n">content</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">Text</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Can we ask for your name?&quot;</span><span class="p">),</span>
+        <span class="n">Input</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">buttons</span><span class="o">=</span><span class="p">[</span><span class="n">Button</span><span class="o">.</span><span class="n">cancel</span><span class="p">(),</span> <span class="n">Button</span><span class="o">.</span><span class="n">ok</span><span class="p">()],</span>
+<span class="p">)</span>
+<span class="c1"># wait for user input</span>
+<span class="k">await</span> <span class="n">wait_for_stream_variable</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will save the value that was inserted by the user into tho variable <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+</section>
+<section id="supercollider">
+<h3>SuperCollider<a class="headerlink" href="#supercollider" title="Permalink to this headline">#</a></h3>
+<p>A SuperCollider cell allows to directly control what happens in the audio domain of the stream.
+The language used for this is <em>sclang</em> and the dialect of choice is the <em>JITlib</em> dialect.</p>
+<p>The code can be async and will be handled in blocking manner which allows to wait on the stream, e.g. for a fade-in to finish.</p>
+<div class="highlight-supercollider notranslate"><div class="highlight"><pre><span></span><span class="nx">Ndef</span><span class="p">(</span><span class="ss">\drone</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">SinOsc</span><span class="p">.</span><span class="nx">ar</span><span class="p">(</span><span class="nx">LFDNoise1</span><span class="p">.</span><span class="nx">kr</span><span class="p">(</span><span class="mf">0.1</span><span class="o">!</span><span class="mi">2</span><span class="p">).</span><span class="nx">exprange</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">400</span><span class="p">))</span> <span class="o">*</span> <span class="ss">\amp</span><span class="p">.</span><span class="nx">kr</span><span class="p">(</span><span class="mf">0.2</span><span class="p">);</span>
+<span class="p">}).</span><span class="nx">fadeTime_</span><span class="p">(</span><span class="mf">10.0</span><span class="p">).</span><span class="nx">play</span><span class="p">;</span>
+<span class="mf">10.0</span><span class="p">.</span><span class="nx">wait</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Do not execute <code class="docutils literal notranslate"><span class="pre">Tdef.clear</span></code> as this will remove the beacon of the server and
+the stream will be considered offline from there on.</p>
+</div>
+</section>
+<section id="comment">
+<h3>Comment<a class="headerlink" href="#comment" title="Permalink to this headline">#</a></h3>
+<p>A comment will be ignored for execution, but allows to add commentary on a node.</p>
+</section>
+</section>
 </section>
 
 
@@ -369,7 +472,7 @@ document.write(`
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">GenCaster config</p>
+        <p class="prev-next-title">GenCaster Base</p>
       </div>
     </a>
     <a class="right-next"
@@ -377,7 +480,7 @@ document.write(`
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Caster front</p>
+        <p class="prev-next-title">Caster Front</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -390,6 +493,27 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#script-cells">Script cells</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markdown">Markdown</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#audio">Audio</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python">Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#supercollider">SuperCollider</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comment">Comment</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
