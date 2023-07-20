@@ -121,6 +121,42 @@ input AudioFileReference {
 
 union AudioFileUploadResponse = AudioFile | InvalidAudioFile
 
+"""A button which can also trigger a set of functionality."""
+type Button {
+  text: String!
+  value: String!
+  key: String!
+  buttonType: ButtonType!
+  callbackActions: [CallbackAction!]!
+}
+
+"""An enumeration."""
+enum ButtonType {
+  DEFAULT
+  PRIMARY
+  SUCCESS
+  WARNING
+  INFO
+  DANGER
+}
+
+"""
+Allows to add a pre-defined JavaScript callback to a button or a checkbox.
+
+ACTIVATE_GPS_STREAMING          Activates streaming of GPS coordinates
+                                as :class:`~stream.models.StreamVariable`
+SEND_VARIABLES                  Send all variables of the form / dialog to
+                                the server.
+SEND_VARIABLE                   Sends a single :class:`~stream.models.StreamVariable`
+                                with the key/value of the where the callback is
+                                attached to.
+"""
+enum CallbackAction {
+  ACTIVATE_GPS_STREAMING
+  SEND_VARIABLES
+  SEND_VARIABLE
+}
+
 """Choice of foobar"""
 enum CellType {
   MARKDOWN
@@ -130,8 +166,28 @@ enum CellType {
   AUDIO
 }
 
+"""
+A classic ``<checkbox>`` whose state (``true``/``false``) will be
+saved **as a string** under ``key`` in a :class:`~stream.models.StreamVariable`.
+"""
+type Checkbox {
+  key: String!
+  label: String!
+  checked: Boolean!
+  callbackActions: [CallbackAction!]!
+}
+
+union Content = Text | Input | Checkbox
+
 """Date with time (isoformat)"""
 scalar DateTime
+
+"""Triggers a popup on the frontend of the listener."""
+type Dialog {
+  title: String!
+  content: [Content!]!
+  buttons: [Button!]!
+}
 
 type DjangoFileType {
   name: String!
@@ -232,6 +288,16 @@ input GraphFilter {
 
   """Will be used as a URL"""
   slugName: StrFilterLookup
+}
+
+"""
+A classic ``<inptut>`` which will save its content
+under the ``key`` as a :class:`~stream.models.StreamVariable`.
+"""
+type Input {
+  key: String!
+  label: String!
+  placeholder: String!
 }
 
 input IntFilterLookup {
@@ -463,7 +529,7 @@ type StreamInfo {
   streamInstruction: StreamInstruction
 }
 
-union StreamInfoResponse = StreamInfo | NoStreamAvailable
+union StreamInfoResponse = StreamInfo | Dialog | NoStreamAvailable
 
 """
 Instruction for a :class:`StreamPoint`, most likely to be
@@ -476,6 +542,7 @@ type StreamInstruction {
   instructionText: String!
   state: String!
   returnValue: String!
+  frontendDisplay: Dialog!
 }
 
 """
@@ -531,7 +598,12 @@ input StreamPointFilter {
 
 """
 Allows to store variables in a stream session as a key/value pair.
-Due to database constraints we will store any value a string.
+
+.. warning::
+
+    Due to database constraints all keys and values will be stored
+    as a string, so parsing a float, int or boolean requires
+    type conversion.
 """
 type StreamVariable {
   uuid: UUID!
@@ -551,10 +623,34 @@ input StreamVariableInput {
 }
 
 type Subscription {
-  count(target: Int! = 100): Int!
+  """
+  Used within the editor to synchronize any updates of the graph such as movement
+  of a :class:`~story_graph.models.Node`.
+  """
   graph(graphUuid: UUID!): Graph!
+
+  """
+  Used within the editor to synchronize any updates on a node such as updates on a
+  :class:`~story_graph.models.ScriptCell`.
+  """
   node(nodeUuid: UUID!): Node!
+
+  """
+  Used within the frontend to attach a user to a stream.
+  :class:`~story_graph.engine.Engine` contains the specifics of how the iteration over a
+  graph is handled.
+
+  Upon visit the ``num_of_listeners`` of the associated
+  :class:~stream.models.Stream` will be incremented which indicates
+  if a given stream is free or used.
+  Upon connection stop this will be decremented again.
+  """
   streamInfo(graphUuid: UUID!): StreamInfoResponse!
+}
+
+"""Displays plain text."""
+type Text {
+  text: String!
 }
 
 scalar UUID
