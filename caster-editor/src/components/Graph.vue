@@ -19,6 +19,8 @@ import { VNetworkGraph } from "v-network-graph";
 import variables from "@/assets/scss/variables.module.scss";
 import DialogExitNode from "@/components/DialogExitNode.vue";
 
+import { VueFlow  } from '@vue-flow/core';
+
 const props = defineProps<{
   graph: GraphSubscription["graph"];
 }>();
@@ -347,6 +349,20 @@ const graphSettings = {
     },
   }),
 };
+
+// Flow
+const nodesF = ref([
+  { id: '1', type: 'input', label: 'Node 1', position: { x: 250, y: 5 } },
+  { id: '2', label: 'Node 2', position: { x: 100, y: 100 } },
+  { id: '3', label: 'Node 3', position: { x: 400, y: 100 } },
+  { id: '4', type: 'output', label: 'Node 4', position: { x: 400, y: 200 } },
+]);
+
+const edgesF = ref([
+  { id: 'e1-3', source: '1', target: '3', animated: true },
+  { id: 'e1-2', source: '1', target: '2', animated: true },
+]);
+
 </script>
 
 <template>
@@ -363,8 +379,16 @@ const graphSettings = {
       :event-handlers="eventHandlers"
     />
 
-    <div class="flow-graph" />
-
+    <div class="flow-graph">
+      <VueFlow 
+        :default-zoom="1"
+        :max-zoom="1"
+        :min-zoom="1"
+        :nodes="nodesF"
+        :edges="edgesF"
+        :nodes-connectable="true"
+      />
+    </div>
     <div
       v-if="!showNodeEditor"
       class="stats"
@@ -401,6 +425,13 @@ const graphSettings = {
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variables.module.scss";
+
+.flow-graph {
+  --vf-node-bg: white;
+  --vf-node-text: $black;
+  --vf-connection-path:  $black;
+  --vf-handle: $grey-dark;
+}
 
 .graph {
   position: relative;

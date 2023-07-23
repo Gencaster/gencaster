@@ -20,6 +20,10 @@ import router from "@/router";
 import "./assets/scss/main.scss";
 import "v-network-graph/lib/style.css";
 
+import '@vue-flow/core/dist/style.css';
+/* this contains the default theme, these are optional styles */
+import '@vue-flow/core/dist/theme-default.css';
+
 const app = createApp(App);
 
 if (
