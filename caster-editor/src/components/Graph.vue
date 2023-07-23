@@ -363,6 +363,8 @@ const graphSettings = {
       :event-handlers="eventHandlers"
     />
 
+    <div class="flow-graph" />
+
     <div
       v-if="!showNodeEditor"
       class="stats"
@@ -403,7 +405,15 @@ const graphSettings = {
 .graph {
   position: relative;
   width: 100%;
-  height: calc(100vh - 64px);
+  height: calc(50vh - 64px);
+  background-color: yellow;
+}
+
+.flow-graph {
+  position: relative;
+  width: 100%;
+  height: calc(50vh);
+  background-color: light-grey;
 }
 
 .stats {
