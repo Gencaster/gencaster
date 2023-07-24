@@ -7,7 +7,7 @@
         href="https://gencaster.org/"
         target="_blank"
       >gencaster</a> -
-      mehr Info ↓
+      more info ↓
     </p>
     <p />
   </div>

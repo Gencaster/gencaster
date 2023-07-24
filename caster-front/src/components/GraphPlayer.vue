@@ -29,6 +29,14 @@ import { useSendStreamVariableMutation } from "@/graphql";
 import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/Player";
 
+import Intro from "@/components/IntroCard.vue";
+import IntroInfo from "@/components/IntroInfo.vue";
+import { PlayerState } from "@/models";
+import PlayerVisualizer from "@/components/PlayerVisualizer/PlayerVisualizer.vue";
+import PlayerBar from "@/components/PlayerBar/PlayerBar.vue";
+import EndScreen from "@/components/EndScreen.vue";
+
+
 interface DialogShow {
   show: boolean;
   loading: boolean;
@@ -36,10 +44,20 @@ interface DialogShow {
 }
 
 const props = defineProps<{
-  graph: Pick<Graph, "uuid" | "name">;
+  graph: Pick<
+    Graph,
+    | "uuid"
+    | "name"
+    | "aboutText"
+    | "displayName"
+    | "startText"
+    | "endText"
+    | "slugName"
+  >;
+  showDebug?: boolean;
 }>();
 
-const { streamGPS, gpsError, gpsSuccess } = storeToRefs(usePlayerStore());
+const { streamGPS, gpsError, gpsSuccess, playerState, play, startingTimestamp, playerMounted } = storeToRefs(usePlayerStore());
 
 const router = useRouter();
 
@@ -267,6 +285,32 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
       return ElButtonType.Default;
   }
 };
+
+// template functions
+const startStream = async () => {
+  // TODO: Do we still need this?
+  // if (data.value?.streamInfo.__typename === "NoStreamAvailable") {
+  //   ElMessage.error("Can not start an unassigned stream");
+  //   return;
+  // }
+  // const { error } = await sendStreamVariableMutation.executeMutation({
+  //   streamVariables: {
+  //     streamUuid: streamInfo.value?.stream.uuid,
+  //     key: "start",
+  //     value: "1.0",
+  //     streamToSc: true,
+  //   },
+  // });
+  // if (error) {
+  //   ElMessage.error(`Something went wrong ${error.message}`);
+  //   return;
+  // }
+  play.value = true;
+  playerState.value = PlayerState.Playing;
+  startingTimestamp.value = new Date().getTime();
+};
+
+
 </script>
 
 <template>
@@ -274,7 +318,6 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
     v-loading="stale"
     class="graph-player"
   >
-    <h2>{{ graph.name }}</h2>
     <div v-if="currentDialog">
       <ElDialog
         v-model="currentDialog.show"
@@ -331,13 +374,64 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
       </ElDialog>
     </div>
     <div v-if="streamInfo">
+      <!-- start screen -->
+      <Transition>
+        <div
+          v-if="playerMounted && playerState === 'start'"
+        >
+          <Intro
+            :title="graph.displayName"
+            :description-text="graph.startText"
+            button-text="Start"
+            @button-clicked="startStream()"
+          />
+          <div v-if="graph.aboutText">
+            <IntroInfo :text="graph.aboutText" />
+          </div>
+        </div>
+      </Transition>
+
+      <!-- audio visualizer -->
+      <Transition>
+        <div
+          v-if="playerState === PlayerState.Playing"
+          class="audio-visualizer"
+        >
+          <PlayerVisualizer />
+        </div>
+      </Transition>
+
+      <!-- player bar -->
+      <Transition>
+        <div
+          v-if="
+            playerState === PlayerState.Playing
+          "
+        >
+          <PlayerBar
+            :graph="graph"
+            @clicked-stop="playerState = PlayerState.End"
+          />
+        </div>
+      </Transition>
+
+      <!-- end screen -->
+      <Transition>
+        <div v-if="playerState === PlayerState.End">
+          <EndScreen :text="graph.endText" />
+        </div>
+      </Transition>
+
       <PlayerButtons />
       <Player
         ref="playerRef"
         :stream-point="streamInfo.stream.streamPoint"
         :stream="streamInfo.stream"
       />
-      <ElCollapse class="debug-info-wrapper">
+      <ElCollapse
+        v-if="showDebug"
+        class="debug-info-wrapper"
+      >
         <ElCollapseItem title="Debug info">
           <StreamInfo
             :stream="streamInfo.stream"
@@ -362,4 +456,16 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
 .debug-info-wrapper {
   margin-top: 10px;
 }
+
+.audio-visualizer {
+    box-sizing: border-box;
+    position: absolute;
+    top: 20px;
+    left: 0px;
+    height: 80px;
+    width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+    margin: 0 auto;
+  }
 </style>
