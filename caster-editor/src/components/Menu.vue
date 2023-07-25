@@ -96,7 +96,6 @@ const goToDocs = () => {
     }
 
     &.level-2 {
-
       .left,
       .middle,
       .right {
