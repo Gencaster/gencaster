@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, watch, type Ref } from "vue";
+import { reactive, ref, watch, type Ref, computed } from "vue";
 import Browser from "@/components/AudioFileBrowser.vue";
 import AudioPlayer from "./AudioFilePlayer.vue";
 import ScriptCellMarkdown from "./ScriptCellMarkdown.vue";
@@ -137,9 +137,36 @@ const audioCellData = reactive<AudioScriptCellData["audioCell"]>({
   audioFile: props.audioCell.audioFile,
 });
 
+// in case we receive an update of the props we also update the reactive component
+// this is only necessary for playback and volume
+// for some reason props is not reactive so we make it reactive
+// by turning it into a computed property, probably an anti pattern
+//
+// we use a 'clutch' to discard incoming updates
+// as updates of our own
+const dataClutch = ref<boolean>(false);
+watch(
+  computed(() => props.audioCell),
+  (newValue) => {
+    dataClutch.value = true;
+    audioCellData.playback = newValue.playback;
+    audioCellData.volume = newValue.volume;
+    // watch takes some time to keep up, so the clutch
+    // needs to be on for some time
+    setTimeout(() => {
+      dataClutch.value = false;
+    }, 10);
+  },
+  { deep: true },
+);
+
 watch(
   audioCellData,
   (newData) => {
+    if (dataClutch.value) {
+      // ignore updates from props update
+      return;
+    }
     let update = newScriptCellUpdates.value.get(props.uuid);
 
     const audioCellUpdate: AudioCellInput = {
