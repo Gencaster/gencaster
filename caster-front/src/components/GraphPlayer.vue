@@ -36,7 +36,6 @@ import PlayerVisualizer from "@/components/PlayerVisualizer/PlayerVisualizer.vue
 import PlayerBar from "@/components/PlayerBar/PlayerBar.vue";
 import EndScreen from "@/components/EndScreen.vue";
 
-
 interface DialogShow {
   show: boolean;
   loading: boolean;
@@ -57,7 +56,15 @@ const props = defineProps<{
   showDebug?: boolean;
 }>();
 
-const { streamGPS, gpsError, gpsSuccess, playerState, play, startingTimestamp, playerMounted } = storeToRefs(usePlayerStore());
+const {
+  streamGPS,
+  gpsError,
+  gpsSuccess,
+  playerState,
+  play,
+  startingTimestamp,
+  playerMounted,
+} = storeToRefs(usePlayerStore());
 
 const router = useRouter();
 
@@ -309,8 +316,6 @@ const startStream = async () => {
   playerState.value = PlayerState.Playing;
   startingTimestamp.value = new Date().getTime();
 };
-
-
 </script>
 
 <template>
@@ -376,9 +381,7 @@ const startStream = async () => {
     <div v-if="streamInfo">
       <!-- start screen -->
       <Transition>
-        <div
-          v-if="playerMounted && playerState === 'start'"
-        >
+        <div v-if="playerMounted && playerState === 'start'">
           <Intro
             :title="graph.displayName"
             :description-text="graph.startText"
@@ -403,11 +406,7 @@ const startStream = async () => {
 
       <!-- player bar -->
       <Transition>
-        <div
-          v-if="
-            playerState === PlayerState.Playing
-          "
-        >
+        <div v-if="playerState === PlayerState.Playing">
           <PlayerBar
             :graph="graph"
             @clicked-stop="playerState = PlayerState.End"
@@ -458,14 +457,14 @@ const startStream = async () => {
 }
 
 .audio-visualizer {
-    box-sizing: border-box;
-    position: absolute;
-    top: 20px;
-    left: 0px;
-    height: 80px;
-    width: 100%;
-    padding-left: 24px;
-    padding-right: 24px;
-    margin: 0 auto;
-  }
+  box-sizing: border-box;
+  position: absolute;
+  top: 20px;
+  left: 0px;
+  height: 80px;
+  width: 100%;
+  padding-left: 24px;
+  padding-right: 24px;
+  margin: 0 auto;
+}
 </style>

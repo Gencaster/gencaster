@@ -20,7 +20,7 @@ defineProps<{
   <div class="default-graph-detail">
     <GraphPlayer
       :graph="graph"
-      :show-debug="false"
+      :show-debug="true"
     />
   </div>
 </template>
