@@ -1,6 +1,5 @@
 /* ============ Element Plus ============ */
 * {
-  --el-color-primary: #{$green-light} !important;
   --el-color-white: #{$white} !important;
   --el-radio-button-checked-bg-color: #{$grey} !important;
   --el-radio-button-checked-text-color: #{$black} !important;
@@ -13,8 +12,25 @@
 
   --el-button-text-color: #{$black} !important;
   --el-button-hover-text-color: #{$black} !important;
+
+}
+
+.el-button--primary {
+  --el-color-primary: #{$green-light} !important;
   --el-button-hover-border-color: #{$green-light} !important;
   --el-button-hover-bg-color: #{$green-light} !important;
+}
+
+.el-button--danger {
+  --el-color-danger: #{$alertRed} !important;
+  --el-button-hover-border-color:  #{$alertRed} !important;
+  --el-button-hover-bg-color:  #{$alertRed} !important;
+}
+
+.el-button--info {
+  --el-button-hover-bg-color:  #{$grey-medium} !important;
+  --el-button-hover-border-color:  #{$grey-medium} !important;
+  --el-button-hover-bg-color:  #{$grey-medium} !important;
 }
 
 .el-radio-group {
