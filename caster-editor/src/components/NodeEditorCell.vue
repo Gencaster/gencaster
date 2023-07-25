@@ -98,10 +98,6 @@ const props = defineProps<{
   scriptCell: ScriptCellData;
 }>();
 
-const emit = defineEmits<{
-  (e: "update:scriptCell", scriptCell: ScriptCellData): void;
-}>();
-
 const { newScriptCellUpdates } = storeToRefs(useInterfaceStore());
 
 const scriptCellText = computed<string>({
@@ -111,7 +107,6 @@ const scriptCellText = computed<string>({
   set(value) {
     const newCell = { ...props.scriptCell };
     newCell.cellCode = value;
-    emit("update:scriptCell", newCell);
     return value;
   },
 });
