@@ -14,7 +14,7 @@
       </div>
       <div class="content">
         <AudioPlayer
-          :audio-file="audioCell.audioFile"
+          :audio-file="audioCellData.audioFile"
           :type="'minimal'"
           :volume="audioCellData.volume"
         />
@@ -64,6 +64,7 @@
       </div>
 
       <div class="content">
+        <!-- The markdown component takes care of any necessary text updates -->
         <ScriptCellMarkdown
           v-model:text="textData"
           :cell-type="CellType.Comment"
@@ -91,7 +92,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, type Ref } from "vue";
+import { reactive, ref, watch, type Ref } from "vue";
 import Browser from "@/components/AudioFileBrowser.vue";
 import AudioPlayer from "./AudioFilePlayer.vue";
 import ScriptCellMarkdown from "./ScriptCellMarkdown.vue";
@@ -103,6 +104,7 @@ import {
   type AudioFile,
   PlaybackChoices,
   type DjangoFileType,
+  type AudioCellInput,
 } from "@/graphql";
 import { CellType } from "@/graphql";
 import { storeToRefs } from "pinia";
@@ -128,54 +130,38 @@ const props = defineProps<{
 
 const { newScriptCellUpdates } = storeToRefs(useInterfaceStore());
 
-// Mutations
-const emit = defineEmits<{
-  (e: "update:audioCell", scriptCell: AudioScriptCellData["audioCell"]): void;
-  (e: "update:text", text: string): void;
-}>();
+const audioCellData = reactive<AudioScriptCellData["audioCell"]>({
+  volume: props.audioCell.volume,
+  uuid: props.audioCell.uuid,
+  playback: props.audioCell.playback,
+  audioFile: props.audioCell.audioFile,
+});
 
-const audioCellData = computed<AudioScriptCellData["audioCell"]>({
-  get() {
-    return props.audioCell;
-  },
-  set(value) {
-    console.log("current audio cell internal", value);
-    emit("update:audioCell", value);
-
+watch(
+  audioCellData,
+  (newData) => {
     let update = newScriptCellUpdates.value.get(props.uuid);
 
+    const audioCellUpdate: AudioCellInput = {
+      uuid: newData.uuid,
+      audioFile: { uuid: audioCellData.audioFile.uuid },
+      volume: audioCellData.volume,
+      playback: audioCellData.playback,
+    };
+
     if (update) {
-      update.audioCell = value;
+      update.audioCell = audioCellUpdate;
     } else {
       newScriptCellUpdates.value.set(props.uuid, {
         uuid: props.uuid,
-        audioCell: value,
+        audioCell: audioCellUpdate,
       });
     }
-    return value;
   },
-});
+  { deep: true },
+);
 
-const textData = computed<string>({
-  get() {
-    return props.text;
-  },
-  set(value) {
-    emit("update:text", value);
-
-    let update = newScriptCellUpdates.value.get(props.uuid);
-
-    if (update) {
-      update.cellCode = value;
-    } else {
-      newScriptCellUpdates.value.set(props.uuid, {
-        uuid: props.uuid,
-        cellCode: value,
-      });
-    }
-    return value;
-  },
-});
+const textData = ref<string>(props.text);
 
 // State
 const showBrowser: Ref<boolean> = ref(false);
