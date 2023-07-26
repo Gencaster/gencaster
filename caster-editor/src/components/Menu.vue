@@ -11,6 +11,12 @@
         <div class="menu-items right">
           <button
             class="unstyled"
+            @click="goToDocs()"
+          >
+            Docs
+          </button>
+          <button
+            class="unstyled"
             @click="showExitGraphDialog = true"
           >
             Exit
@@ -57,6 +63,10 @@ defineProps<{
 const { tab } = storeToRefs(useInterfaceStore());
 
 const showExitGraphDialog: Ref<boolean> = ref(false);
+
+const goToDocs = () => {
+  window.open("https://docs.gencaster.org/", "_blank");
+};
 </script>
 
 <style lang="scss" scoped>
@@ -110,11 +120,13 @@ const showExitGraphDialog: Ref<boolean> = ref(false);
       height: 30px;
       display: flex;
       align-items: center;
+
       .state {
         display: flex;
         justify-content: center;
         align-items: center;
       }
+
       .state-indicator {
         width: 11px;
         height: 11px;

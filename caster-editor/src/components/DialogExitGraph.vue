@@ -23,7 +23,7 @@
             "
           >Cancel</ElButton>
           <ElButton
-            color="#FF0000"
+            type="danger"
             @click="exitGraph()"
           > Exit </ElButton>
         </span>
