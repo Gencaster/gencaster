@@ -22,8 +22,10 @@
           <ElButton
             type="danger"
             @click="emit('noSave')"
-          > Discard changes </ElButton>
-          <ElButton 
+          >
+            Discard changes
+          </ElButton>
+          <ElButton
             type="primary"
             @click="emit('save')"
           > Save </ElButton>
