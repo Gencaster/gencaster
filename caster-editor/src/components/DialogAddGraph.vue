@@ -4,6 +4,7 @@
       v-model="showDialog"
       title="Create graph"
       :show-close="false"
+      align-center
     >
       <ElInput
         id="graphNameInput"
@@ -12,14 +13,14 @@
       />
       <template #footer>
         <span class="dialog-footer">
-          <ElButton @click="() => emit('aborted')">Cancel</ElButton>
           <ElButton
-            color="#ADFF00"
+            type="danger"
+            @click="() => emit('aborted')"
+          >Cancel</ElButton>
+          <ElButton
             type="primary"
             @click="createGraph()"
-          >
-            Confirm
-          </ElButton>
+          > Confirm </ElButton>
         </span>
       </template>
     </ElDialog>

@@ -64,6 +64,10 @@
     width: calc(100% - 2 * $mobilePadding);
     max-width: 500px;
     border-radius: $borderRadius;
+
+    &.is-align-center {
+      transform: translateY(-5vh);
+    }
   }
 
   .el-dialog__header {

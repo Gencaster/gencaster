@@ -6,6 +6,7 @@
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
+      align-center
     >
       <ElForm label-width="120px">
         <ElFormItem label="Name">
@@ -23,14 +24,14 @@
       </ElForm>
       <template #footer>
         <span class="dialog-footer">
-          <ElButton @click="emit('cancel')">Cancel</ElButton>
+          <ElButton
+            type="danger"
+            @click="emit('cancel')"
+          >Cancel</ElButton>
           <ElButton
             type="primary"
-            color="#ADFF00"
             @click="update()"
-          >
-            Confirm
-          </ElButton>
+          > Confirm </ElButton>
         </span>
       </template>
     </ElDialog>

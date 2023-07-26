@@ -4,6 +4,7 @@
       v-model="showDialog"
       title="Exit node"
       center
+      align-center
       lock-scroll
       :show-close="false"
       :close-on-click-modal="false"
