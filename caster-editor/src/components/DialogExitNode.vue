@@ -4,6 +4,7 @@
       v-model="showDialog"
       title="Exit node"
       center
+      align-center
       lock-scroll
       :show-close="false"
       :close-on-click-modal="false"
@@ -16,11 +17,19 @@
       <template #footer>
         <span class="dialog-footer">
           <ElButton
-            primary
+            type="info"
             @click="emit('cancel')"
           > Cancel </ElButton>
-          <ElButton @click="emit('noSave')"> Discard changes </ElButton>
-          <ElButton @click="emit('save')"> Save </ElButton>
+          <ElButton
+            type="danger"
+            @click="emit('noSave')"
+          >
+            Discard changes
+          </ElButton>
+          <ElButton
+            type="primary"
+            @click="emit('save')"
+          > Save </ElButton>
         </span>
       </template>
     </ElDialog>

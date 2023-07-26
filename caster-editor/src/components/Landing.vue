@@ -25,7 +25,7 @@
         </ElFormItem>
         <ElFormItem>
           <ElButton
-            :color="variables.greenLight"
+            type="primary"
             class="login-button"
             native-type="submit"
             @click="onSubmit"

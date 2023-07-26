@@ -6,6 +6,7 @@
       center
       lock-scroll
       :show-close="false"
+      align-center
     >
       <span>
         Are you sure to exit the graph?
@@ -16,8 +17,7 @@
       <template #footer>
         <span class="dialog-footer">
           <ElButton
-            text
-            bg
+            type="info"
             @click="
               () => {
                 emit('cancel');
@@ -25,7 +25,7 @@
             "
           >Cancel</ElButton>
           <ElButton
-            color="#FF0000"
+            type="danger"
             @click="exitGraph()"
           > Exit </ElButton>
         </span>

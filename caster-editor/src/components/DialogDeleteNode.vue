@@ -6,21 +6,19 @@
       center
       lock-scroll
       :show-close="false"
+      align-center
     >
       <span> Are you sure to delete Node "{{ node.name }}"? </span>
       <template #footer>
         <span class="dialog-footer">
           <ElButton
-            text
-            bg
+            type="info"
             @click="emit('cancel')"
           >Cancel</ElButton>
           <ElButton
-            color="#FF0000"
+            type="danger"
             @click="deleteNode()"
-          >
-            Delete Node
-          </ElButton>
+          > Delete Node </ElButton>
         </span>
       </template>
     </ElDialog>

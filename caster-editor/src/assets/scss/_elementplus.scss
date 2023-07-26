@@ -12,7 +12,6 @@
 
   --el-button-text-color: #{$black} !important;
   --el-button-hover-text-color: #{$black} !important;
-
 }
 
 .el-button--primary {
@@ -23,14 +22,14 @@
 
 .el-button--danger {
   --el-color-danger: #{$alertRed} !important;
-  --el-button-hover-border-color:  #{$alertRed} !important;
-  --el-button-hover-bg-color:  #{$alertRed} !important;
+  --el-button-hover-border-color: #{$alertRed} !important;
+  --el-button-hover-bg-color: #{$alertRed} !important;
 }
 
 .el-button--info {
-  --el-button-hover-bg-color:  #{$grey-medium} !important;
-  --el-button-hover-border-color:  #{$grey-medium} !important;
-  --el-button-hover-bg-color:  #{$grey-medium} !important;
+  --el-button-hover-bg-color: #{$grey-medium} !important;
+  --el-button-hover-border-color: #{$grey-medium} !important;
+  --el-button-hover-bg-color: #{$grey-medium} !important;
 }
 
 .el-radio-group {
@@ -63,18 +62,22 @@
   .el-dialog {
     border: 2px solid black;
     width: calc(100% - 2 * $mobilePadding);
-    max-width: 600px;
+    max-width: 500px;
     border-radius: $borderRadius;
+
+    &.is-align-center {
+      transform: translateY(-5vh);
+    }
   }
 
   .el-dialog__header {
     margin: 0;
-    padding: 35px 35px 10px 35px;
+    padding: 30px 20px 15px 20px;
   }
 
   .el-dialog--center,
   .el-dialog__body {
-    padding: 15px 35px 10px 35px;
+    padding: 0px 20px 0px 20px;
     width: 100%;
     text-align: center;
     word-break: break-word;
@@ -82,7 +85,7 @@
 
   .el-dialog__footer {
     margin-bottom: 15px;
-    padding: 0px 35px 15px 35px;
+    padding: 30px 20px 15px 20px;
   }
 
   label {
