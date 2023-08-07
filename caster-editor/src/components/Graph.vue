@@ -8,7 +8,11 @@ import type {
   Nodes as GraphNodes,
 } from "v-network-graph";
 
-import type { Node as GraphNodeF, Edge as GraphEdgeF } from "@vue-flow/core";
+import type {
+  Node as GraphNodeF,
+  Edge as GraphEdgeF,
+  NodeDragEvent,
+} from "@vue-flow/core";
 
 import { ref, type Ref, watch, nextTick } from "vue";
 import { storeToRefs } from "pinia";
@@ -181,6 +185,23 @@ const eventHandlers: GraphEventHandlers = {
       });
     }
   },
+};
+
+const onNodeDragStop = (nodeDragEvent: NodeDragEvent) => {
+  const draggedNode = props.graph.nodes.find(
+    (x) => x.uuid === nodeDragEvent.node.id,
+  );
+
+  if (draggedNode === undefined) {
+    console.log(`Dragged unknown node ${nodeDragEvent.node.label}`);
+    return;
+  }
+
+  updateNodeMutation.executeMutation({
+    nodeUuid: draggedNode.uuid,
+    positionX: nodeDragEvent.node.computedPosition.x,
+    positionY: nodeDragEvent.node.computedPosition.y,
+  });
 };
 
 /*
@@ -418,6 +439,7 @@ const graphSettings = {
         :nodes="nodesF()"
         :edges="edgesF()"
         :nodes-connectable="true"
+        @node-drag-stop="onNodeDragStop"
       />
     </div>
     <div
