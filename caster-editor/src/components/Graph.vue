@@ -252,6 +252,8 @@ function nodes(): GraphNodes {
 //   // { id: 'e1-2', source: '2', target: '3', animated: true },
 // ]);
 
+const connectionLineStyle = { stroke: "#000" };
+
 function nodesF(): GraphNodeF[] {
   const n: GraphNodeF[] = [];
 
@@ -463,6 +465,7 @@ const graphSettings = {
         :nodes="nodesF()"
         :edges="edgesF()"
         :nodes-connectable="true"
+        :connection-line-style="connectionLineStyle"
         @node-drag-stop="onNodeDragStop"
       >
         <template #node-custom="{ data }">
