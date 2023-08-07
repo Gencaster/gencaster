@@ -8,6 +8,8 @@ import type {
   Nodes as GraphNodes,
 } from "v-network-graph";
 
+import type { Node as GraphNodeF, Edge as GraphEdgeF } from "@vue-flow/core";
+
 import { ref, type Ref, watch, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
@@ -19,7 +21,7 @@ import { VNetworkGraph } from "v-network-graph";
 import variables from "@/assets/scss/variables.module.scss";
 import DialogExitNode from "@/components/DialogExitNode.vue";
 
-import { VueFlow  } from '@vue-flow/core';
+import { VueFlow } from "@vue-flow/core";
 
 const props = defineProps<{
   graph: GraphSubscription["graph"];
@@ -199,6 +201,23 @@ function nodes(): GraphNodes {
   return n;
 }
 
+function nodesF(): GraphNodeF[] {
+  const n: GraphNodeF[] = [];
+
+  props.graph.nodes.forEach((node) => {
+    const graphNode: GraphNodeF = {
+      label: node.name,
+      id: node.uuid,
+      position: {
+        x: node.positionX,
+        y: node.positionY,
+      },
+    };
+    n.push(graphNode);
+  });
+  return n;
+}
+
 function edges(): GraphEdges {
   const e: GraphEdges = {};
   props.graph.edges.forEach((edge) => {
@@ -207,6 +226,20 @@ function edges(): GraphEdges {
       target: edge.outNode.uuid,
     };
     e[edge.uuid] = graphEdge;
+  });
+  return e;
+}
+
+function edgesF(): GraphEdgeF[] {
+  const e: GraphEdgeF[] = [];
+  props.graph.edges.forEach((edge) => {
+    const graphEdge: GraphEdgeF = {
+      id: edge.uuid,
+      source: edge.inNode.uuid,
+      target: edge.outNode.uuid,
+      animated: true,
+    };
+    e.push(graphEdge);
   });
   return e;
 }
@@ -351,18 +384,16 @@ const graphSettings = {
 };
 
 // Flow
-const nodesF = ref([
-  { id: '1', type: 'input', label: 'Node 1', position: { x: 250, y: 5 } },
-  { id: '2', label: 'Node 2', position: { x: 100, y: 100 } },
-  { id: '3', label: 'Node 3', position: { x: 400, y: 100 } },
-  { id: '4', type: 'output', label: 'Node 4', position: { x: 400, y: 200 } },
-]);
+// const nodesF = ref([
+//   { id: '1', label: 'Start', position: { x: 250, y: 5 } },
+//   { id: '2', label: 'Node 1', position: { x: 100, y: 100 } },
+//   { id: '3', label: 'Node 2', position: { x: 400, y: 100 } },
+// ]);
 
-const edgesF = ref([
-  { id: 'e1-3', source: '1', target: '3', animated: true },
-  { id: 'e1-2', source: '1', target: '2', animated: true },
-]);
-
+// const edgesF = ref([
+//   // { id: 'e1-3', source: '1', target: '2', animated: true },
+//   // { id: 'e1-2', source: '2', target: '3', animated: true },
+// ]);
 </script>
 
 <template>
@@ -380,12 +411,12 @@ const edgesF = ref([
     />
 
     <div class="flow-graph">
-      <VueFlow 
+      <VueFlow
         :default-zoom="1"
         :max-zoom="1"
         :min-zoom="1"
-        :nodes="nodesF"
-        :edges="edgesF"
+        :nodes="nodesF()"
+        :edges="edgesF()"
         :nodes-connectable="true"
       />
     </div>
@@ -429,7 +460,7 @@ const edgesF = ref([
 .flow-graph {
   --vf-node-bg: white;
   --vf-node-text: $black;
-  --vf-connection-path:  $black;
+  --vf-connection-path: $black;
   --vf-handle: $grey-dark;
 }
 
