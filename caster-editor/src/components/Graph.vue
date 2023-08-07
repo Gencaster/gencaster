@@ -13,6 +13,7 @@ import type {
   Edge as GraphEdgeF,
   NodeDragEvent,
 } from "@vue-flow/core";
+import DefaultNode from "@/components/FlowNodeDefault.vue";
 
 import { ref, type Ref, watch, nextTick } from "vue";
 import { storeToRefs } from "pinia";
@@ -204,6 +205,23 @@ const onNodeDragStop = (nodeDragEvent: NodeDragEvent) => {
   });
 };
 
+const onNodeDoubleClick = (uuid: string) => {
+  console.log(uuid);
+
+  nextNodeDoubleClicked.value = uuid;
+
+  if (showNodeEditor.value && newScriptCellUpdates.value.size > 0) {
+    showSwitchNodeDialog.value = true;
+    return;
+  }
+
+  lastNodeDoubleClicked.value = uuid;
+  selectedNodeUUIDs.value = [uuid];
+
+  showNodeEditor.value = true;
+  selectedNodeForEditorUuid.value = uuid;
+};
+
 /*
   transforms the edges, nodes and layout from our StoryGraph model to
   v-network-graph model. Maybe this can be done in a nicer,
@@ -222,12 +240,30 @@ function nodes(): GraphNodes {
   return n;
 }
 
+// Flow
+// const nodesF = ref([
+//   { id: '1', label: 'Start', position: { x: 250, y: 5 } },
+//   { id: '2', label: 'Node 1', position: { x: 100, y: 100 } },
+//   { id: '3', label: 'Node 2', position: { x: 400, y: 100 } },
+// ]);
+
+// const edgesF = ref([
+//   // { id: 'e1-3', source: '1', target: '2', animated: true },
+//   // { id: 'e1-2', source: '2', target: '3', animated: true },
+// ]);
+
 function nodesF(): GraphNodeF[] {
   const n: GraphNodeF[] = [];
 
   props.graph.nodes.forEach((node) => {
     const graphNode: GraphNodeF = {
       label: node.name,
+      type: "custom",
+      data: {
+        name: node.name,
+        uuid: node.uuid,
+        scriptCells: node.scriptCells,
+      },
       id: node.uuid,
       position: {
         x: node.positionX,
@@ -403,18 +439,6 @@ const graphSettings = {
     },
   }),
 };
-
-// Flow
-// const nodesF = ref([
-//   { id: '1', label: 'Start', position: { x: 250, y: 5 } },
-//   { id: '2', label: 'Node 1', position: { x: 100, y: 100 } },
-//   { id: '3', label: 'Node 2', position: { x: 400, y: 100 } },
-// ]);
-
-// const edgesF = ref([
-//   // { id: 'e1-3', source: '1', target: '2', animated: true },
-//   // { id: 'e1-2', source: '2', target: '3', animated: true },
-// ]);
 </script>
 
 <template>
@@ -440,7 +464,14 @@ const graphSettings = {
         :edges="edgesF()"
         :nodes-connectable="true"
         @node-drag-stop="onNodeDragStop"
-      />
+      >
+        <template #node-custom="{ data }">
+          <DefaultNode
+            :data="data"
+            @dblclick="onNodeDoubleClick"
+          />
+        </template>
+      </VueFlow>
     </div>
     <div
       v-if="!showNodeEditor"
