@@ -424,23 +424,26 @@ const startStream = async () => {
         </div>
       </Transition>
 
-      <!-- <PlayerButtons /> -->
       <Player
         ref="playerRef"
         :stream-point="streamInfo.stream.streamPoint"
         :stream="streamInfo.stream"
       />
-      <ElCollapse
-        v-if="showDebug"
-        class="debug-info-wrapper"
-      >
-        <ElCollapseItem title="Debug info">
-          <StreamInfo
-            :stream="streamInfo.stream"
-            :stream-instruction="streamInfo.streamInstruction"
-          />
-        </ElCollapseItem>
-      </ElCollapse>
+      <!-- Debug -->
+      <div class="debug-wrapper">
+        <PlayerButtons v-if="showDebug" />
+        <ElCollapse
+          v-if="showDebug"
+          class="debug-info-wrapper"
+        >
+          <ElCollapseItem title="Debug info">
+            <StreamInfo
+              :stream="streamInfo.stream"
+              :stream-instruction="streamInfo.streamInstruction"
+            />
+          </ElCollapseItem>
+        </ElCollapse>
+      </div>
     </div>
     <div v-if="streamError">
       Currently no stream is available, please come back later.
@@ -455,8 +458,16 @@ const startStream = async () => {
 @import "@/assets/mixins.scss";
 @import "@/assets/variables.scss";
 
-.debug-info-wrapper {
-  margin-top: 10px;
+.debug-wrapper {
+  position: absolute;
+  top: $playerBarHeight * 2;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  .debug-info-wrapper {
+    margin-top: 10px;
+  }
 }
 
 .audio-visualizer {
