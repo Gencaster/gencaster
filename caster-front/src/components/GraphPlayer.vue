@@ -99,7 +99,7 @@ watch(streamInfo, (info) => {
       streamVariables: [
         {
           streamUuid: info.stream.uuid,
-          key: "start",
+          key: "ready",
           value: "1.0",
           streamToSc: true,
         },
@@ -293,25 +293,28 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
   }
 };
 
+const sendStreamVariableMutation = useSendStreamVariableMutation();
+
 // template functions
 const startStream = async () => {
   // TODO: Do we still need this?
+  // I don't think so, since the page should show an error if it can't get a stream
   // if (data.value?.streamInfo.__typename === "NoStreamAvailable") {
   //   ElMessage.error("Can not start an unassigned stream");
   //   return;
   // }
-  // const { error } = await sendStreamVariableMutation.executeMutation({
-  //   streamVariables: {
-  //     streamUuid: streamInfo.value?.stream.uuid,
-  //     key: "start",
-  //     value: "1.0",
-  //     streamToSc: true,
-  //   },
-  // });
-  // if (error) {
-  //   ElMessage.error(`Something went wrong ${error.message}`);
-  //   return;
-  // }
+  const { error } = await sendStreamVariableMutation.executeMutation({
+    streamVariables: {
+      streamUuid: streamInfo.value?.stream.uuid,
+      key: "start",
+      value: "1.0",
+      streamToSc: true,
+    },
+  });
+  if (error) {
+    ElMessage.error(`Something went wrong ${error.message}`);
+    return;
+  }
   play.value = true;
   playerState.value = PlayerState.Playing;
   startingTimestamp.value = new Date().getTime();
@@ -421,7 +424,7 @@ const startStream = async () => {
         </div>
       </Transition>
 
-      <PlayerButtons />
+      <!-- <PlayerButtons /> -->
       <Player
         ref="playerRef"
         :stream-point="streamInfo.stream.streamPoint"
