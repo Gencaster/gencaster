@@ -352,7 +352,7 @@ const startStream = async () => {
                 :label="content.label"
                 @click="processAction(content)"
               >
-                <ElCheckbox />
+                <ElCheckbox @keydown.enter.prevent />
               </ElFormItem>
             </div>
             <div v-if="content.__typename == 'Input'">
@@ -360,6 +360,7 @@ const startStream = async () => {
                 <ElInput
                   v-model="formData[content.key]"
                   :placeholder="content.placeholder"
+                  @keydown.enter.prevent
                 />
               </ElFormItem>
             </div>
