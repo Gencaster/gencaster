@@ -10,8 +10,8 @@ import PlayerBar from "@/components/PlayerBar/PlayerBar.vue";
 import StreamInfo from "@/components/StreamInfo.vue";
 import EndScreen from "@/components/EndScreen.vue";
 import MetaDialog from "@/components/Dialogs/MetaDialog.vue";
-import Intro from "@/components/IntroCard.vue";
-import IntroInfo from "@/components/IntroInfo.vue";
+import IntroScreen from "@/components/IntroScreen.vue";
+import IntroMoreInfo from "@/components/IntroMoreInfo.vue";
 
 import type { UserDataRequest } from "@/models";
 import { DrifterStatus, PlayerState, UserDataRequestType } from "@/models";
@@ -188,14 +188,15 @@ setTimeout(() => {
           <div
             v-if="drifterStatus === DrifterStatus.WaitForStart && playerMounted"
           >
-            <Intro
+            <IntroScreen
               :title="graph.displayName"
               :description-text="graph.startText"
               button-text="Start"
+              :more-info="true"
               @button-clicked="startStream()"
             />
             <div v-if="graph.aboutText">
-              <IntroInfo :text="graph.aboutText" />
+              <IntroMoreInfo :text="graph.aboutText" />
             </div>
           </div>
         </Transition>

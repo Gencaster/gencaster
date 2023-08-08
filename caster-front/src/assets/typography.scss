@@ -39,12 +39,8 @@ h1 {
 }
 
 h2 {
-  @include fontStyle("headline");
+  @include fontStyle("mediumHeadline");
   margin-bottom: $spacingS;
-
-  &.larger {
-    @include fontStyle("headlineLarger");
-  }
 }
 
 h3 {

@@ -29,8 +29,8 @@ import { useSendStreamVariableMutation } from "@/graphql";
 import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/Player";
 
-import Intro from "@/components/IntroCard.vue";
-import IntroInfo from "@/components/IntroInfo.vue";
+import IntroScreen from "@/components/IntroScreen.vue";
+import IntroMoreInfo from "@/components/IntroMoreInfo.vue";
 import { PlayerState } from "@/models";
 import PlayerVisualizer from "@/components/PlayerVisualizer/PlayerVisualizer.vue";
 import PlayerBar from "@/components/PlayerBar/PlayerBar.vue";
@@ -386,14 +386,15 @@ const startStream = async () => {
       <!-- start screen -->
       <Transition>
         <div v-if="playerMounted && playerState === 'start'">
-          <Intro
+          <IntroScreen
             :title="graph.displayName"
             :description-text="graph.startText"
             button-text="Start"
+            :more-info="graph.aboutText ? true : false"
             @button-clicked="startStream()"
           />
           <div v-if="graph.aboutText">
-            <IntroInfo :text="graph.aboutText" />
+            <IntroMoreInfo :text="graph.aboutText" />
           </div>
         </div>
       </Transition>
