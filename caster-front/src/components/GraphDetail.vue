@@ -2,7 +2,6 @@
 import { useRouter } from "vue-router";
 import { GraphDetailTemplate, useGetGraphsMetaQuery } from "@/graphql";
 import DefaultDetail from "@/components/GraphDetailTemplates/DefaultTemplate.vue";
-import DrifterDetail from "@/components/GraphDetailTemplates/DrifterTemplate.vue";
 import { ref } from "vue";
 
 const props = defineProps<{
