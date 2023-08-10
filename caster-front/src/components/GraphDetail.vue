@@ -42,11 +42,8 @@ setTimeout(() => {
       </div>
     </div>
     <div
-      v-else-if="data?.graphs[0].templateName === GraphDetailTemplate.Drifter"
+      v-else-if="data?.graphs[0].templateName === GraphDetailTemplate.Default"
     >
-      <DrifterDetail :graph="data.graphs[0]" />
-    </div>
-    <div v-else>
       <DefaultDetail :graph="data.graphs[0]" />
     </div>
   </div>
