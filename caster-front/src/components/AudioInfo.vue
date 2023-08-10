@@ -28,7 +28,7 @@ const description = computed<string>(() => {
           text
           @click="emit('clicked-close')"
         >
-          <span> Schließen </span>
+          <span> Close </span>
         </ElButton>
       </ElHeader>
       <ElMain>

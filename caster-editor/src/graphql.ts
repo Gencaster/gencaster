@@ -141,7 +141,10 @@ export type Button = {
   value: Scalars["String"];
 };
 
-/** An enumeration. */
+/**
+ * Derived from ElementPlus framework, see
+ * `https://element-plus.org/en-US/component/button.html`_.
+ */
 export enum ButtonType {
   Danger = "DANGER",
   Default = "DEFAULT",
@@ -155,7 +158,10 @@ export enum ButtonType {
  * Allows to add a pre-defined JavaScript callback to a button or a checkbox.
  *
  * ACTIVATE_GPS_STREAMING          Activates streaming of GPS coordinates
- *                                 as :class:`~stream.models.StreamVariable`
+ *                                 as :class:`~stream.models.StreamVariable`.
+ *                                 If the GPS request succeeds the dialog will be closed,
+ *                                 if not it the user will be forwarded to an error page
+ *                                 which describes the setup procedure for the OS.
  * SEND_VARIABLES                  Send all variables of the form / dialog to
  *                                 the server.
  * SEND_VARIABLE                   Sends a single :class:`~stream.models.StreamVariable`
@@ -261,7 +267,6 @@ export type Graph = {
 /** An enumeration. */
 export enum GraphDetailTemplate {
   Default = "DEFAULT",
-  Drifter = "DRIFTER",
 }
 
 /**

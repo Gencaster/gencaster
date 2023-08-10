@@ -21,6 +21,19 @@ em {
   font-style: italic;
 }
 
+.strike {
+  position: relative;
+}
+
+.strike::before {
+  content: "";
+  width: 100%;
+  position: absolute;
+  right: 0;
+  top: calc(50% - 2.5px);
+  border-bottom: 3px solid rgba(0, 0, 0, 1);
+}
+
 h1,
 h2,
 h3,
@@ -39,12 +52,8 @@ h1 {
 }
 
 h2 {
-  @include fontStyle("headline");
+  @include fontStyle("mediumHeadline");
   margin-bottom: $spacingS;
-
-  &.larger {
-    @include fontStyle("headlineLarger");
-  }
 }
 
 h3 {
