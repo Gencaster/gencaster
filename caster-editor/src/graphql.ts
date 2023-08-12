@@ -141,7 +141,10 @@ export type Button = {
   value: Scalars["String"];
 };
 
-/** An enumeration. */
+/**
+ * Derived from ElementPlus framework, see
+ * `https://element-plus.org/en-US/component/button.html`_.
+ */
 export enum ButtonType {
   Danger = "DANGER",
   Default = "DEFAULT",
@@ -155,7 +158,10 @@ export enum ButtonType {
  * Allows to add a pre-defined JavaScript callback to a button or a checkbox.
  *
  * ACTIVATE_GPS_STREAMING          Activates streaming of GPS coordinates
- *                                 as :class:`~stream.models.StreamVariable`
+ *                                 as :class:`~stream.models.StreamVariable`.
+ *                                 If the GPS request succeeds the dialog will be closed,
+ *                                 if not it the user will be forwarded to an error page
+ *                                 which describes the setup procedure for the OS.
  * SEND_VARIABLES                  Send all variables of the form / dialog to
  *                                 the server.
  * SEND_VARIABLE                   Sends a single :class:`~stream.models.StreamVariable`
@@ -630,6 +636,18 @@ export type StreamInstruction = {
   uuid: Scalars["UUID"];
 };
 
+/** StreamLog(uuid, created_date, modified_date, stream_point, stream, origin, level, message, name) */
+export type StreamLog = {
+  createdDate: Scalars["DateTime"];
+  level: Scalars["Int"];
+  message: Scalars["String"];
+  name?: Maybe<Scalars["String"]>;
+  origin?: Maybe<Scalars["String"]>;
+  stream?: Maybe<Stream>;
+  streamPoint?: Maybe<StreamPoint>;
+  uuid: Scalars["UUID"];
+};
+
 /**
  * Stores metadata for each SuperCollider/Janus instance
  * and how we can interact with this instance.
@@ -721,6 +739,8 @@ export type Subscription = {
    * Upon connection stop this will be decremented again.
    */
   streamInfo: StreamInfoResponse;
+  streamLogs: StreamLog;
+  streams: Array<Stream>;
 };
 
 export type SubscriptionGraphArgs = {
@@ -733,6 +753,15 @@ export type SubscriptionNodeArgs = {
 
 export type SubscriptionStreamInfoArgs = {
   graphUuid: Scalars["UUID"];
+};
+
+export type SubscriptionStreamLogsArgs = {
+  streamPointUuid?: InputMaybe<Scalars["UUID"]>;
+  streamUuid?: InputMaybe<Scalars["UUID"]>;
+};
+
+export type SubscriptionStreamsArgs = {
+  limit?: Scalars["Int"];
 };
 
 /** Displays plain text. */
@@ -1168,6 +1197,69 @@ export type UpdateAudioFileMutation = {
   };
 };
 
+export type StreamInfoFragmentFragment = {
+  uuid: any;
+  numListeners: number;
+  modifiedDate: any;
+  createdDate: any;
+  streamPoint: {
+    createdDate: any;
+    host: string;
+    janusInPort?: number | null;
+    janusInRoom?: number | null;
+    janusOutPort?: number | null;
+    janusOutRoom?: number | null;
+    lastLive?: any | null;
+    modifiedDate: any;
+    port: number;
+    useInput: boolean;
+    uuid: any;
+  };
+};
+
+export type StreamsSubscriptionVariables = Exact<{
+  numOfStreams?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type StreamsSubscription = {
+  streams: Array<{
+    uuid: any;
+    numListeners: number;
+    modifiedDate: any;
+    createdDate: any;
+    streamPoint: {
+      createdDate: any;
+      host: string;
+      janusInPort?: number | null;
+      janusInRoom?: number | null;
+      janusOutPort?: number | null;
+      janusOutRoom?: number | null;
+      lastLive?: any | null;
+      modifiedDate: any;
+      port: number;
+      useInput: boolean;
+      uuid: any;
+    };
+  }>;
+};
+
+export type StreamLogsSubscriptionVariables = Exact<{
+  streamUuid?: InputMaybe<Scalars["UUID"]>;
+  streamPointUuid?: InputMaybe<Scalars["UUID"]>;
+}>;
+
+export type StreamLogsSubscription = {
+  streamLogs: {
+    createdDate: any;
+    level: number;
+    message: string;
+    name?: string | null;
+    uuid: any;
+    stream?: { uuid: any } | null;
+    streamPoint?: { uuid: any } | null;
+  };
+};
+
 export const FullStreamInfoFragmentDoc = gql`
   fragment FullStreamInfo on StreamInfo {
     __typename
@@ -1215,6 +1307,27 @@ export const AudioFileInfoFragmentDoc = gql`
       path
       size
       url
+    }
+  }
+`;
+export const StreamInfoFragmentFragmentDoc = gql`
+  fragment StreamInfoFragment on Stream {
+    uuid
+    numListeners
+    modifiedDate
+    createdDate
+    streamPoint {
+      createdDate
+      host
+      janusInPort
+      janusInRoom
+      janusOutPort
+      janusOutRoom
+      lastLive
+      modifiedDate
+      port
+      useInput
+      uuid
     }
   }
 `;
@@ -1731,4 +1844,57 @@ export function useUpdateAudioFileMutation() {
     UpdateAudioFileMutation,
     UpdateAudioFileMutationVariables
   >(UpdateAudioFileDocument);
+}
+export const StreamsDocument = gql`
+  subscription Streams($numOfStreams: Int) {
+    streams(limit: $numOfStreams) {
+      ...StreamInfoFragment
+    }
+  }
+  ${StreamInfoFragmentFragmentDoc}
+`;
+
+export function useStreamsSubscription<R = StreamsSubscription>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<never, StreamsSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandlerArg<StreamsSubscription, R>,
+) {
+  return Urql.useSubscription<
+    StreamsSubscription,
+    R,
+    StreamsSubscriptionVariables
+  >({ query: StreamsDocument, ...options }, handler);
+}
+export const StreamLogsDocument = gql`
+  subscription StreamLogs($streamUuid: UUID, $streamPointUuid: UUID) {
+    streamLogs(streamUuid: $streamUuid, streamPointUuid: $streamPointUuid) {
+      createdDate
+      level
+      message
+      name
+      uuid
+      stream {
+        uuid
+      }
+      streamPoint {
+        uuid
+      }
+    }
+  }
+`;
+
+export function useStreamLogsSubscription<R = StreamLogsSubscription>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<never, StreamLogsSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandlerArg<StreamLogsSubscription, R>,
+) {
+  return Urql.useSubscription<
+    StreamLogsSubscription,
+    R,
+    StreamLogsSubscriptionVariables
+  >({ query: StreamLogsDocument, ...options }, handler);
 }
