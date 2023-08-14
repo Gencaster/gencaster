@@ -55,16 +55,9 @@ const deleteNodeMutation = useDeleteNodeMutation();
 const deleteEdgeMutation = useDeleteEdgeMutation();
 
 const removeSelection = async () => {
-  selectedNodeUUIDs.value.forEach(async (nodeUuid) => {
-    const { error } = await deleteNodeMutation.executeMutation({
-      nodeUuid,
-    });
-    if (error) {
-      ElMessage.error(`Could not delete node ${nodeUuid}: ${error.message}`);
-    }
-    ElMessage.info(`Deleted node ${nodeUuid}`);
-  });
+  console.log("Removing selection");
 
+  // deleting edges first
   selectedEdgeUUIDs.value.forEach(async (edgeUuid) => {
     const { error } = await deleteEdgeMutation.executeMutation({
       edgeUuid,
@@ -73,6 +66,16 @@ const removeSelection = async () => {
       ElMessage.error(`Could not delete edge ${edgeUuid}: ${error.message}`);
     }
     ElMessage.info(`Deleted edge ${edgeUuid}`);
+  });
+
+  selectedNodeUUIDs.value.forEach(async (nodeUuid) => {
+    const { error } = await deleteNodeMutation.executeMutation({
+      nodeUuid,
+    });
+    if (error) {
+      ElMessage.error(`Could not delete node ${nodeUuid}: ${error.message}`);
+    }
+    ElMessage.info(`Deleted node ${nodeUuid}`);
   });
 };
 

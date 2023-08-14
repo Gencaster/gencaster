@@ -26,7 +26,13 @@ import { VNetworkGraph } from "v-network-graph";
 import variables from "@/assets/scss/variables.module.scss";
 import DialogExitNode from "@/components/DialogExitNode.vue";
 
-import { VueFlow } from "@vue-flow/core";
+import { VueFlow, useVueFlow } from "@vue-flow/core";
+
+const { getSelectedEdges, getSelectedNodes } = useVueFlow({});
+
+// watch(getNodes, (nodes) => console.log('nodes changed', nodes))
+watch(getSelectedNodes, (nodes) => onSelectionChangeNodes(nodes));
+watch(getSelectedEdges, (edges) => onSelectionChangeEdges(edges));
 
 const props = defineProps<{
   graph: GraphSubscription["graph"];
@@ -206,8 +212,6 @@ const onNodeDragStop = (nodeDragEvent: NodeDragEvent) => {
 };
 
 const onNodeDoubleClick = (uuid: string) => {
-  console.log(uuid);
-
   nextNodeDoubleClicked.value = uuid;
 
   if (showNodeEditor.value && newScriptCellUpdates.value.size > 0) {
@@ -220,6 +224,22 @@ const onNodeDoubleClick = (uuid: string) => {
 
   showNodeEditor.value = true;
   selectedNodeForEditorUuid.value = uuid;
+};
+
+const onSelectionChangeNodes = (nodes) => {
+  console.log("selection change");
+  selectedNodeUUIDs.value = [];
+  nodes.forEach((node) => {
+    selectedNodeUUIDs.value.push(node.id);
+  });
+};
+
+const onSelectionChangeEdges = (edges) => {
+  console.log("selection change");
+  selectedEdgeUUIDs.value = [];
+  edges.forEach((edge) => {
+    selectedEdgeUUIDs.value.push(edge.id);
+  });
 };
 
 /*
@@ -447,8 +467,6 @@ const graphSettings = {
   <div>
     <VNetworkGraph
       ref="vNetworkGraph"
-      v-model:selected-nodes="selectedNodeUUIDs"
-      v-model:selected-edges="selectedEdgeUUIDs"
       class="graph"
       :nodes="nodes()"
       :edges="edges()"
@@ -518,6 +536,12 @@ const graphSettings = {
   --vf-node-text: $black;
   --vf-connection-path: $black;
   --vf-handle: $grey-dark;
+
+  position: relative;
+  width: 100%;
+  height: calc(50vh);
+  // height: calc(100vh - 64px);
+  background-color: light-grey;
 }
 
 .graph {
@@ -525,13 +549,6 @@ const graphSettings = {
   width: 100%;
   height: calc(50vh - 64px);
   background-color: yellow;
-}
-
-.flow-graph {
-  position: relative;
-  width: 100%;
-  height: calc(50vh);
-  background-color: light-grey;
 }
 
 .stats {
