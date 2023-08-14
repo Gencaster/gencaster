@@ -45,6 +45,7 @@ class Engine:
         self._current_node: Node
         self.blocking_time: int = 60 * 60 * 3
         self.raise_exceptions = raise_exceptions
+        log.debug(f"Started engine for graph {self.graph.uuid}")
 
     async def get_stream_variables(self) -> Dict[str, str]:
         """
@@ -79,6 +80,7 @@ class Engine:
                 await wait_for_stream_variable('start')
 
         """
+        log.debug(f"Wait for stream variable {name}")
         start_time = datetime.now()
         while True:
             if (datetime.now() - start_time).seconds > timeout:
@@ -91,6 +93,7 @@ class Engine:
         """Runs the code of a markdown cell by parsing its content with the
         :class:`~story_graph.markdown_parser.GencasterRenderer`.
         """
+        log.debug(f"Execute markdown code '{cell_code}'")
         ssml_text = md_to_ssml(cell_code, await self.get_stream_variables())
         instruction = await sync_to_async(self.stream.stream_point.speak_on_stream)(
             ssml_text
@@ -102,6 +105,7 @@ class Engine:
         self, cell_code: str
     ) -> AsyncGenerator[StreamInstruction, None]:
         """Executes a SuperCollider code cell"""
+        log.debug(f"Run SuperCollider code '{cell_code}'")
         instruction = await sync_to_async(
             self.stream.stream_point.send_raw_instruction
         )(cell_code)
@@ -120,6 +124,7 @@ class Engine:
 
         """
         # text field has no enum restrictions but the database enforces this
+        log.debug(f"Run audio cell {audio_cell.uuid}")
         instruction = await sync_to_async(self.stream.stream_point.play_audio_file)(
             audio_cell.audio_file, audio_cell.playback  # type: ignore
         )
@@ -139,6 +144,7 @@ class Engine:
         cell everything that is a available for execution needs to be stated
         explicitly here.
         """
+        log.debug(f"Run python code '{cell_code}'")
         stream_variables = await self.get_stream_variables()
         old_stream_variables = deepcopy(stream_variables)
         loop = asyncio.get_running_loop()
@@ -185,6 +191,7 @@ class Engine:
             # unset value is a hack b/c none maybe a desired state
             # @todo switch to async bulk create
             if old_stream_variables.get(k, "__unset_value__") != v:
+                log.debug(f"New stream variable: {k} -> {v}")
                 await StreamVariable.objects.aupdate_or_create(
                     stream=self.stream,
                     key=k,
@@ -195,17 +202,20 @@ class Engine:
     async def wait_for_finished_instruction(
         self, instruction: StreamInstruction, timeout: int = 30, interval: float = 0.2
     ) -> None:
+        log.debug(f"Wait for finished instruction {instruction.uuid}")
         for _ in range(int(timeout / interval)):
             await sync_to_async(instruction.refresh_from_db)()
             if instruction.state == StreamInstruction.InstructionState.FINISHED:
                 return
             await asyncio.sleep(interval)
+        log.info(f"Timed out on waiting for stream instruction {instruction.uuid}")
 
     async def execute_node(
         self, node: Node, blocking_sleep_time: int = 10000
     ) -> AsyncGenerator[Union[StreamInstruction, Dialog], None]:
         """Executes all :class:`~story_graph.models.ScriptCell` of
         a given :class:`~story_graph.models.Node`."""
+        log.debug(f"Executing node {node.uuid}")
         script_cell: ScriptCell
         instruction: Union[StreamInstruction, Dialog]
         async for script_cell in node.script_cells.select_related("audio_cell", "audio_cell__audio_file").all():  # type: ignore
@@ -252,7 +262,6 @@ class Engine:
         self._current_node = await self.graph.aget_entry_node()
 
         for _ in range(max_steps):
-            log.info(f"Currently running node {self._current_node}")
             async for instruction in self.execute_node(self._current_node):
                 yield instruction
             if self._current_node.is_blocking_node:

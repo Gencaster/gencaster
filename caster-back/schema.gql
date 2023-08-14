@@ -1,3 +1,4 @@
+### START LOGGING THREAD LOOP ###
 input AddAudioFile {
   file: Upload!
   description: String!
@@ -551,6 +552,20 @@ type StreamInstruction {
 }
 
 """
+StreamLog(uuid, created_date, modified_date, stream_point, stream, origin, level, message, name)
+"""
+type StreamLog {
+  uuid: UUID!
+  createdDate: DateTime!
+  streamPoint: StreamPoint
+  stream: Stream
+  origin: String
+  level: Int!
+  message: String!
+  name: String
+}
+
+"""
 Stores metadata for each SuperCollider/Janus instance
 and how we can interact with this instance.
 
@@ -651,6 +666,8 @@ type Subscription {
   Upon connection stop this will be decremented again.
   """
   streamInfo(graphUuid: UUID!): StreamInfoResponse!
+  streamLogs(streamUuid: UUID = null, streamPointUuid: UUID = null): StreamLog!
+  streams(limit: Int! = 20): [Stream!]!
 }
 
 """Displays plain text."""

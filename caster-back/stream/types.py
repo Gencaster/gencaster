@@ -1,6 +1,6 @@
-import uuid
 from datetime import timedelta
 from typing import Optional
+from uuid import UUID
 
 import strawberry
 import strawberry.django
@@ -139,7 +139,19 @@ class StreamVariable:
 
 @strawberry.input
 class StreamVariableInput:
-    stream_uuid: uuid.UUID
+    stream_uuid: UUID
     key: str
     value: str
     stream_to_sc: bool = False
+
+
+@strawberry.django.type(models.StreamLog)
+class StreamLog:
+    uuid: auto
+    created_date: auto
+    stream_point: StreamPoint
+    stream: Stream
+    origin: auto
+    level: auto
+    message: auto
+    name: auto
