@@ -75,8 +75,7 @@ const sourceHandleStyleB = computed(() => ({
   padding: 10px;
   border-radius: 4px;
   height: auto;
-  background-color: yellow;
   width: 200px;
-  border: 1px solid black;
+  // border: 1px solid black;
 }
 </style>

@@ -1,0 +1,17 @@
+/* ============ Vue Flow ============ */
+
+.vue-flow__pane.draggable {
+  cursor: move !important;
+}
+
+.vue-flow__node {
+  .node {
+    background-color: $grey-medium;
+  }
+
+  &.selected {
+    .node {
+      background-color: $green-light;
+    }
+  }
+}
