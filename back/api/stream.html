@@ -461,7 +461,10 @@ It also allows us to trace past streams.</p>
 <p>Reverse relationships:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>variables</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#stream.models.StreamVariable" title="stream.models.StreamVariable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamVariable</span></code></a>) – All variables of this Stream (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">stream</span></code>)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variables</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#stream.models.StreamVariable" title="stream.models.StreamVariable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamVariable</span></code></a>) – All variables of this Stream (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">stream</span></code>)</p></li>
+<li><p><strong>streamlog</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#stream.models.StreamLog" title="stream.models.StreamLog"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamLog</span></code></a>) – All Stream logs of this Stream (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">stream</span></code>)</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py exception">
@@ -532,6 +535,55 @@ created from a <a class="reference internal" href="story_graph.html#story_graph.
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="stream.models.StreamLog">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stream.models.</span></span><span class="sig-name descname"><span class="pre">StreamLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">created_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modified_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/stream/models.html#StreamLog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.StreamLog" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uuid</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.UUIDField" title="(in Django v4.2)"><em>UUIDField</em></a>) – Primary key: Uuid</p></li>
+<li><p><strong>created_date</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v4.2)"><em>DateTimeField</em></a>) – Created date</p></li>
+<li><p><strong>modified_date</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v4.2)"><em>DateTimeField</em></a>) – Modified date</p></li>
+<li><p><strong>origin</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.TextField" title="(in Django v4.2)"><em>TextField</em></a>) – Origin</p></li>
+<li><p><strong>level</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.IntegerField" title="(in Django v4.2)"><em>IntegerField</em></a>) – Level</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.TextField" title="(in Django v4.2)"><em>TextField</em></a>) – Message</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.TextField" title="(in Django v4.2)"><em>TextField</em></a>) – Name</p></li>
+</ul>
+</dd>
+</dl>
+<p>Relationship fields:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stream_point</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>) – Stream point (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">streamlog</span></code>)</p></li>
+<li><p><strong>stream</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#stream.models.Stream" title="stream.models.Stream"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stream</span></code></a>) – Stream (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">streamlog</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py exception">
+<dt class="sig sig-object py" id="stream.models.StreamLog.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#stream.models.StreamLog.DoesNotExist" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="stream.models.StreamLog.LogLevel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LogLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/stream/models.html#StreamLog.LogLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.StreamLog.LogLevel" title="Permalink to this definition">#</a></dt>
+<dd><p>Taken from <code class="docutils literal notranslate"><span class="pre">logging</span></code> module but omitting <code class="docutils literal notranslate"><span class="pre">FATAL</span></code> and <code class="docutils literal notranslate"><span class="pre">WARN</span></code>.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="stream.models.StreamLog.MultipleObjectsReturned">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#stream.models.StreamLog.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="stream.models.StreamLog.Origin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Origin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/stream/models.html#StreamLog.Origin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.StreamLog.Origin" title="Permalink to this definition">#</a></dt>
+<dd><p>States from which module the current logging occurs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="stream.models.StreamPoint">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stream.models.</span></span><span class="sig-name descname"><span class="pre">StreamPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/stream/models.html#StreamPoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.StreamPoint" title="Permalink to this definition">#</a></dt>
 <dd><p>Stores metadata for each SuperCollider/Janus instance
@@ -565,6 +617,7 @@ instances.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>streams</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#stream.models.Stream" title="stream.models.Stream"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stream</span></code></a>) – All streams of this Stream Endpoint (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">stream_point</span></code>)</p></li>
 <li><p><strong>instructions</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>) – All instructions of this Stream Endpoint (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">stream_point</span></code>)</p></li>
+<li><p><strong>streamlog</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#stream.models.StreamLog" title="stream.models.StreamLog"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamLog</span></code></a>) – All Stream logs of this Stream Endpoint (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">stream_point</span></code>)</p></li>
 </ul>
 </dd>
 </dl>

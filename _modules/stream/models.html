@@ -273,17 +273,20 @@ document.write(`
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">asgiref.sync</span> <span class="kn">import</span> <span class="n">async_to_sync</span>
+<span class="kn">from</span> <span class="nn">channels.layers</span> <span class="kn">import</span> <span class="n">get_channel_layer</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
 <span class="kn">from</span> <span class="nn">django.core.files</span> <span class="kn">import</span> <span class="n">File</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
-<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">F</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">signals</span>
+<span class="kn">from</span> <span class="nn">django.dispatch</span> <span class="kn">import</span> <span class="n">receiver</span>
 <span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
 <span class="kn">from</span> <span class="nn">django.utils.translation</span> <span class="kn">import</span> <span class="n">gettext</span> <span class="k">as</span> <span class="n">_</span>
 <span class="kn">from</span> <span class="nn">google.cloud</span> <span class="kn">import</span> <span class="n">texttospeech</span>
 <span class="kn">from</span> <span class="nn">pythonosc.udp_client</span> <span class="kn">import</span> <span class="n">SimpleUDPClient</span>
 
 <span class="kn">import</span> <span class="nn">story_graph.models</span>
+<span class="kn">from</span> <span class="nn">gencaster.distributor</span> <span class="kn">import</span> <span class="n">GenCasterChannel</span>
 
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">NoStreamAvailableException</span>
 
@@ -569,14 +572,20 @@ document.write(`
     <span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">increment_num_listeners</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">await</span> <span class="n">Stream</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span><span class="o">.</span><span class="n">aupdate</span><span class="p">(</span>
-            <span class="n">num_listeners</span><span class="o">=</span><span class="n">F</span><span class="p">(</span><span class="s2">&quot;num_listeners&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Increment number of listeners&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_listeners</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_listeners</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">asave</span><span class="p">()</span>
+        <span class="c1"># await Stream.objects.filter(uuid=self.uuid).aupdate(</span>
+        <span class="c1">#     num_listeners=F(&quot;num_listeners&quot;) + 1</span>
+        <span class="c1"># )</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">decrement_num_listeners</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">await</span> <span class="n">Stream</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span><span class="o">.</span><span class="n">aupdate</span><span class="p">(</span>
-            <span class="n">num_listeners</span><span class="o">=</span><span class="n">F</span><span class="p">(</span><span class="s2">&quot;num_listeners&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Decrement number of listeners&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_listeners</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_listeners</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">asave</span><span class="p">()</span>
+        <span class="c1"># await Stream.objects.filter(uuid=self.uuid).aupdate(</span>
+        <span class="c1">#     num_listeners=F(&quot;num_listeners&quot;) - 1</span>
+        <span class="c1"># )</span>
 
     <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Disconnect stream </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -590,6 +599,13 @@ document.write(`
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Stream on </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream_point</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">Stream</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;update_streams_ws&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">update_streams_ws</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Stream</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">async_to_sync</span><span class="p">(</span><span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_streams_update</span><span class="p">)(</span>
+        <span class="n">get_channel_layer</span><span class="p">(),</span> <span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
+    <span class="p">)</span>
 
 
 <div class="viewcode-block" id="StreamVariable"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamVariable">[docs]</a><span class="k">class</span> <span class="nc">StreamVariable</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
@@ -940,6 +956,78 @@ document.write(`
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="StreamLog"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamLog">[docs]</a><span class="k">class</span> <span class="nc">StreamLog</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="StreamLog.LogLevel"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamLog.LogLevel">[docs]</a>    <span class="k">class</span> <span class="nc">LogLevel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerChoices</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Taken from ``logging`` module but omitting ``FATAL`` and ``WARN``.&quot;&quot;&quot;</span>
+
+        <span class="n">CRITICAL</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Critical&quot;</span><span class="p">)</span>
+        <span class="n">ERROR</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">)</span>
+        <span class="n">WARNING</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">)</span>
+        <span class="n">INFO</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Info&quot;</span><span class="p">)</span>
+        <span class="n">DEBUG</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Debug&quot;</span><span class="p">)</span>
+        <span class="n">NOTSET</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Not set&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StreamLog.Origin"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamLog.Origin">[docs]</a>    <span class="k">class</span> <span class="nc">Origin</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;States from which module the current logging occurs&quot;&quot;&quot;</span>
+
+        <span class="n">GRAPH_ENGINE</span> <span class="o">=</span> <span class="s2">&quot;graph_engine&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Graph engine&quot;</span><span class="p">)</span>
+        <span class="n">SUPERCOLLIDER</span> <span class="o">=</span> <span class="s2">&quot;supercollider&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;SuperCollider&quot;</span><span class="p">)</span>
+        <span class="n">JANUS</span> <span class="o">=</span> <span class="s2">&quot;janus&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Janus&quot;</span><span class="p">)</span></div>
+
+    <span class="n">uuid</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">UUIDField</span><span class="p">(</span>
+        <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">editable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">,</span>
+        <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">created_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now_add</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">modified_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">auto_now</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">stream_point</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+        <span class="n">StreamPoint</span><span class="p">,</span>
+        <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span>
+        <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">stream</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span>
+        <span class="n">Stream</span><span class="p">,</span>
+        <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">,</span>
+        <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span>
+        <span class="n">choices</span><span class="o">=</span><span class="n">Origin</span><span class="o">.</span><span class="n">choices</span><span class="p">,</span>
+        <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">level</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">IntegerField</span><span class="p">(</span>
+        <span class="n">choices</span><span class="o">=</span><span class="n">LogLevel</span><span class="o">.</span><span class="n">choices</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">LogLevel</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">message</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span>
+        <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">(</span>
+        <span class="n">blank</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-created_date&quot;</span><span class="p">]</span>
+        <span class="n">verbose_name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Stream log&quot;</span><span class="p">)</span>
+        <span class="n">verbose_name_plural</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Stream logs&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Stream log </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="si">}</span><span class="s2">&quot;</span></div>
 </pre></div>
 
                 </article>

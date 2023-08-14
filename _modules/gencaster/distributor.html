@@ -331,6 +331,8 @@ document.write(`
 
     <span class="n">GRAPH_UPDATE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;graph.update&quot;</span>
     <span class="n">NODE_UPDATE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;node.update&quot;</span>
+    <span class="n">STREAM_LOG_UPDATE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;stream_log.update&quot;</span>
+    <span class="n">STREAMS_UPDATE_TYPE</span> <span class="o">=</span> <span class="s2">&quot;streams.update&quot;</span>
 
 <div class="viewcode-block" id="GenCasterChannel.__init__"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.distributor.GenCasterChannel.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span></div>
@@ -349,9 +351,28 @@ document.write(`
         <span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">send_log_update</span><span class="p">(</span>
+        <span class="n">layer</span><span class="p">:</span> <span class="n">RedisChannelLayer</span><span class="p">,</span> <span class="n">stream_log_message</span><span class="p">:</span> <span class="s2">&quot;StreamLogUpdateMessage&quot;</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">stream_log_message</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">send_streams_update</span><span class="p">(</span><span class="n">layer</span><span class="p">:</span> <span class="n">RedisChannelLayer</span><span class="p">,</span> <span class="n">stream_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span>
+            <span class="n">layer</span><span class="o">=</span><span class="n">layer</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">StreamsUpdateMessage</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">stream_uuid</span><span class="p">))</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">send_message</span><span class="p">(</span>
         <span class="n">layer</span><span class="p">:</span> <span class="n">RedisChannelLayer</span><span class="p">,</span>
-        <span class="n">message</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;GraphUpdateMessage&quot;</span><span class="p">,</span> <span class="s2">&quot;NodeUpdateMessage&quot;</span><span class="p">],</span>
+        <span class="n">message</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
+            <span class="s2">&quot;GraphUpdateMessage&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;NodeUpdateMessage&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;StreamLogUpdateMessage&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;StreamsUpdateMessage&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
     <span class="p">):</span>
         <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">channels</span><span class="p">:</span>
             <span class="k">await</span> <span class="n">layer</span><span class="o">.</span><span class="n">group_send</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">asdict</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
@@ -382,7 +403,35 @@ document.write(`
             <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">NODE_UPDATE_TYPE</span><span class="p">,</span>
             <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="n">group_name</span><span class="p">],</span>
         <span class="p">):</span>
-            <span class="k">yield</span> <span class="n">NodeUpdateMessage</span><span class="p">(</span><span class="o">**</span><span class="n">message</span><span class="p">)</span></div>
+            <span class="k">yield</span> <span class="n">NodeUpdateMessage</span><span class="p">(</span><span class="o">**</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">receive_stream_log_updates</span><span class="p">(</span>
+        <span class="n">consumer</span><span class="p">:</span> <span class="n">GraphQLWSConsumer</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="s2">&quot;StreamLogUpdateMessage&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="n">group_name</span> <span class="o">=</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">STREAM_LOG_UPDATE_TYPE</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">consumer</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MissingChannelLayer</span><span class="p">()</span>
+        <span class="k">await</span> <span class="n">consumer</span><span class="o">.</span><span class="n">channel_layer</span><span class="o">.</span><span class="n">group_add</span><span class="p">(</span><span class="n">group_name</span><span class="p">,</span> <span class="n">consumer</span><span class="o">.</span><span class="n">channel_name</span><span class="p">)</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">consumer</span><span class="o">.</span><span class="n">channel_listen</span><span class="p">(</span>
+            <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">STREAM_LOG_UPDATE_TYPE</span><span class="p">,</span>
+            <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="n">group_name</span><span class="p">],</span>
+        <span class="p">):</span>
+            <span class="k">yield</span> <span class="n">StreamLogUpdateMessage</span><span class="p">(</span><span class="o">**</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">receive_streams_updates</span><span class="p">(</span>
+        <span class="n">consumer</span><span class="p">:</span> <span class="n">GraphQLWSConsumer</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="s2">&quot;StreamsUpdateMessage&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="n">group_name</span> <span class="o">=</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">STREAMS_UPDATE_TYPE</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">consumer</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MissingChannelLayer</span><span class="p">()</span>
+        <span class="k">await</span> <span class="n">consumer</span><span class="o">.</span><span class="n">channel_layer</span><span class="o">.</span><span class="n">group_add</span><span class="p">(</span><span class="n">group_name</span><span class="p">,</span> <span class="n">consumer</span><span class="o">.</span><span class="n">channel_name</span><span class="p">)</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">consumer</span><span class="o">.</span><span class="n">channel_listen</span><span class="p">(</span>
+            <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">STREAMS_UPDATE_TYPE</span><span class="p">,</span>
+            <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="n">group_name</span><span class="p">],</span>
+        <span class="p">):</span>
+            <span class="k">yield</span> <span class="n">StreamsUpdateMessage</span><span class="p">(</span><span class="o">**</span><span class="n">message</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GraphUpdateMessage"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.distributor.GraphUpdateMessage">[docs]</a><span class="nd">@dataclass</span>
@@ -406,6 +455,35 @@ document.write(`
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">uuid_to_group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">)]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">additional_channels</span></div>
+
+
+<div class="viewcode-block" id="StreamLogUpdateMessage"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.distributor.StreamLogUpdateMessage">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">StreamLogUpdateMessage</span><span class="p">:</span>
+    <span class="c1"># todo if a str is inserted here it will fail</span>
+    <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">stream_point_uuid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">stream_uuid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">STREAM_LOG_UPDATE_TYPE</span>
+
+    <span class="n">additional_channels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">STREAM_LOG_UPDATE_TYPE</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">additional_channels</span></div>
+
+
+<div class="viewcode-block" id="StreamsUpdateMessage"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.distributor.StreamsUpdateMessage">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">StreamsUpdateMessage</span><span class="p">:</span>
+    <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">STREAMS_UPDATE_TYPE</span>
+
+    <span class="n">additional_channels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">STREAMS_UPDATE_TYPE</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">additional_channels</span></div>
 </pre></div>
 
                 </article>
