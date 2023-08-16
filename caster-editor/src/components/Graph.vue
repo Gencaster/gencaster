@@ -8,11 +8,6 @@ import type {
   Nodes as GraphNodes,
 } from "v-network-graph";
 
-import type {
-  Node as GraphNodeF,
-  Edge as GraphEdgeF,
-  NodeDragEvent,
-} from "@vue-flow/core";
 import DefaultNode from "@/components/FlowNodeDefault.vue";
 import { ElMessage } from "element-plus";
 import { ref, type Ref, watch, nextTick } from "vue";
@@ -26,9 +21,15 @@ import { VNetworkGraph } from "v-network-graph";
 import variables from "@/assets/scss/variables.module.scss";
 import DialogExitNode from "@/components/DialogExitNode.vue";
 
+import type {
+  Node as GraphNodeF,
+  Edge as GraphEdgeF,
+  NodeDragEvent,
+} from "@vue-flow/core";
 import { VueFlow, useVueFlow } from "@vue-flow/core";
 
-const { getSelectedEdges, getSelectedNodes } = useVueFlow({});
+const { getSelectedEdges, getSelectedNodes, getTransform, viewport } =
+  useVueFlow({});
 
 // watch(getNodes, (nodes) => console.log('nodes changed', nodes))
 watch(getSelectedNodes, (nodes) => onSelectionChangeNodes(nodes));
@@ -46,15 +47,20 @@ const {
   selectedEdgeUUIDs,
   newScriptCellUpdates,
   selectedNodeForEditorUuid,
+  vueFlowRef,
 } = storeToRefs(interfaceStore);
 
 watch(showNodeEditor, (visible) => {
   if (visible) {
-    graphPan(graphPanType.NodeEditor, lastNodeClick.value);
+    // graphPan(graphPanType.NodeEditor, lastNodeClick.value);
+    // flowPan(graphPanType.NodeEditor);
   } else {
-    graphPan(graphPanType.Center, lastNodeClick.value);
+    // graphPan(graphPanType.Center, lastNodeClick.value);
+    flowPan(graphPanType.Center);
   }
 });
+
+const lastPosition = ref<{ x: number; y: number }>({ x: 0, y: 0 });
 
 const lastNodeClick = ref<MouseEvent>();
 const lastPanMove = ref({ x: 0, y: 0 });
@@ -122,6 +128,94 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
     };
 
     vNetworkGraph.value?.panBy(shift);
+    prevProgress = progress.absolute;
+  };
+
+  // animate
+  gsap.to(progress, {
+    absolute: 1,
+    duration: 0.3,
+    ease: "power3.inOut",
+    onUpdate: () => {
+      moveGraph();
+    },
+  });
+};
+
+const flowPan = (location: graphPanType) => {
+  if (!vueFlowRef.value) return;
+
+  const currentTransform = vueFlowRef.value.getTransform();
+  lastPosition.value.x = currentTransform.x;
+  lastPosition.value.y = currentTransform.y;
+
+  // get canvas size
+  console.log(vueFlowRef.value.dimensions);
+  const { height: gHeight, width: gWidth } = vueFlowRef.value.dimensions;
+
+  // screen aim
+  let aimPos: { x: number; y: number };
+  let moveBy: { x: number; y: number };
+
+  // node
+  const node = vueFlowRef.value.findNode(selectedNodeForEditorUuid.value);
+  const nodePosition = node?.position || { x: 0, y: 0 };
+  const nodeDimensions = node?.dimensions || { width: 0, height: 0 };
+
+  switch (location) {
+    case graphPanType.NodeEditor:
+      const editorWidth = 800; // this needs to be hard coded for transition purposes
+
+      aimPos = {
+        x: (gWidth - editorWidth) / 2,
+        y: (gHeight / 2) * 0.9, // 0.9 to visually center vertical
+      };
+
+      moveBy = {
+        x:
+          aimPos.x -
+          nodePosition.x -
+          nodeDimensions.width / 2 -
+          currentTransform.x,
+        y:
+          aimPos.y -
+          nodePosition.y -
+          nodeDimensions.height / 2 -
+          currentTransform.y,
+      };
+
+      lastPanMove.value = moveBy;
+
+      // console.log('starting position');
+      // console.log(vueFlowRef.value.getTransform());
+      // console.log('node Position');
+      // console.log(nodePosition);
+      // console.log('moveby');
+      // console.log(moveBy);
+      break;
+    case graphPanType.Center:
+      moveBy = {
+        x: -lastPanMove.value.x,
+        y: -lastPanMove.value.y,
+      };
+      break;
+  }
+
+  const progress = {
+    absolute: 0,
+  };
+
+  let prevProgress = 0;
+  // const { height: gHeight, width: gWidth } = vueFlowRef.value.getSizes();
+
+  const moveGraph = () => {
+    const delta = progress.absolute - prevProgress;
+    const shift = {
+      x: moveBy.x * delta,
+      y: moveBy.y * delta,
+    };
+
+    vueFlowRef.value?.panBy(shift);
     prevProgress = progress.absolute;
   };
 
@@ -222,8 +316,10 @@ const onNodeDoubleClick = (uuid: string) => {
   lastNodeDoubleClicked.value = uuid;
   selectedNodeUUIDs.value = [uuid];
 
-  showNodeEditor.value = true;
   selectedNodeForEditorUuid.value = uuid;
+  showNodeEditor.value = true;
+
+  flowPan(graphPanType.NodeEditor);
 };
 
 const onSelectionChangeNodes = (nodes) => {
@@ -463,15 +559,6 @@ const graphSettings = {
 };
 
 const createEdgeMutation = useCreateEdgeMutation();
-const createEdge = (GraphEdge) => {
-  // if (selectedNodeUUIDs.value.length !== 2) {
-  //   ElMessage.info("Creating a connection requires exactly 2 selected scenes.");
-  //   return;
-  // }
-
-  console.log("create edge");
-  console.log(GraphEdge);
-};
 
 // this runs if mouse is released on connection
 const onConnect = async (connection) => {
@@ -505,6 +592,7 @@ const onConnect = async (connection) => {
 
     <div class="flow-graph">
       <VueFlow
+        ref="vueFlowRef"
         :default-zoom="1"
         :max-zoom="1"
         :min-zoom="1"

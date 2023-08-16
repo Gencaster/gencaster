@@ -7,6 +7,7 @@ import {
   useUpdateScriptCellsMutation,
 } from "@/graphql";
 import type { Instance as GraphInstance } from "v-network-graph";
+import type { VueFlowStore as GraphInstanceFlow } from "@vue-flow/core";
 import { ElMessage } from "element-plus";
 
 export enum Tab {
@@ -17,6 +18,7 @@ export enum Tab {
 // some hack to avoid
 // https://github.com/microsoft/TypeScript/issues/5711
 interface CustomGraph extends GraphInstance {}
+interface CustomGraphFlow extends GraphInstanceFlow {}
 
 export const useInterfaceStore = defineStore("interface", () => {
   const showNodeEditor: Ref<boolean> = ref(false);
@@ -26,6 +28,8 @@ export const useInterfaceStore = defineStore("interface", () => {
   const selectedEdgeUUIDs: Ref<string[]> = ref([]);
 
   const vNetworkGraph: Ref<CustomGraph | undefined> = ref(undefined);
+
+  const vueFlowRef: Ref<CustomGraphFlow | undefined> = ref(undefined);
 
   const tab: Ref<Tab> = ref(Tab.Edit);
 
@@ -69,6 +73,7 @@ export const useInterfaceStore = defineStore("interface", () => {
     selectedEdgeUUIDs,
     tab,
     vNetworkGraph,
+    vueFlowRef,
     cachedNodeData,
     waitForScriptCellsUpdate,
     newScriptCellUpdates,
