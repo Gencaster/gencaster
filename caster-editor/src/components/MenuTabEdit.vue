@@ -8,12 +8,6 @@
     </button>
     <button
       class="unstyled"
-      @click="createEdge()"
-    >
-      Add Connection
-    </button>
-    <button
-      class="unstyled"
       @click="removeSelection()"
     >
       Remove
