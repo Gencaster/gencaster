@@ -43,6 +43,12 @@ const sourceHandleStyleB = computed(() => ({
   width: "10px",
   height: "10px",
 }));
+
+const isValidConnection = (connection: any) => {
+  // console.log(connection.targetHandle === "a");
+  // return connection.targetHandle === "a";
+  return true;
+};
 </script>
 
 <template>
@@ -55,15 +61,16 @@ const sourceHandleStyleB = computed(() => ({
     <Handle
       id="a"
       type="target"
-      :position="Position.Top"
+      :position="Position.Left"
       :style="sourceHandleStyleA"
     />
 
     <Handle
       id="b"
       type="source"
-      :position="Position.Bottom"
+      :position="Position.Right"
       :style="sourceHandleStyleB"
+      :is-valid-connection="isValidConnection"
     />
   </div>
 </template>
@@ -75,7 +82,18 @@ const sourceHandleStyleB = computed(() => ({
   padding: 10px;
   border-radius: 4px;
   height: auto;
-  width: 200px;
+  width: 160px;
   // border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  min-height: 50px;
+
+  p {
+    text-align: center;
+    height: 100%;
+    margin: 0;
+  }
 }
 </style>

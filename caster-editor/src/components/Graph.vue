@@ -14,12 +14,12 @@ import type {
   NodeDragEvent,
 } from "@vue-flow/core";
 import DefaultNode from "@/components/FlowNodeDefault.vue";
-
+import { ElMessage } from "element-plus";
 import { ref, type Ref, watch, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
 import type { GraphSubscription, Scalars } from "@/graphql";
-import { useUpdateNodeMutation } from "@/graphql";
+import { useUpdateNodeMutation, useCreateEdgeMutation } from "@/graphql";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 import * as vNG from "v-network-graph";
 import { VNetworkGraph } from "v-network-graph";
@@ -461,6 +461,34 @@ const graphSettings = {
     },
   }),
 };
+
+const createEdgeMutation = useCreateEdgeMutation();
+const createEdge = (GraphEdge) => {
+  // if (selectedNodeUUIDs.value.length !== 2) {
+  //   ElMessage.info("Creating a connection requires exactly 2 selected scenes.");
+  //   return;
+  // }
+
+  console.log("create edge");
+  console.log(GraphEdge);
+};
+
+// this runs if mouse is released on connection
+const onConnect = async (connection) => {
+  // console.log(connection);
+
+  const nodeOutUuid = connection.target;
+  const nodeInUuid = connection.source;
+
+  const { error } = await createEdgeMutation.executeMutation({
+    nodeInUuid,
+    nodeOutUuid,
+  });
+  if (error) {
+    ElMessage.error(`Could not create edge: ${error.message}`);
+  }
+  ElMessage.success(`Created new edge`);
+};
 </script>
 
 <template>
@@ -485,6 +513,7 @@ const graphSettings = {
         :nodes-connectable="true"
         :connection-line-style="connectionLineStyle"
         @node-drag-stop="onNodeDragStop"
+        @connect="onConnect"
       >
         <template #node-custom="{ data }">
           <DefaultNode
