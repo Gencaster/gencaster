@@ -10,7 +10,7 @@
       class="unstyled"
       @click="removeSelection()"
     >
-      Remove
+      Remove Selected
     </button>
     <DialogAddNode
       v-if="showAddNodeDialog"
