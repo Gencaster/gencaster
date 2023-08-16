@@ -580,7 +580,7 @@ const onConnect = async (connection) => {
 
 <template>
   <div>
-    <VNetworkGraph
+    <!-- <VNetworkGraph
       ref="vNetworkGraph"
       class="graph"
       :nodes="nodes()"
@@ -588,7 +588,7 @@ const onConnect = async (connection) => {
       :configs="graphSettings.standard"
       :layouts="layouts()"
       :event-handlers="eventHandlers"
-    />
+    /> -->
 
     <div class="flow-graph">
       <VueFlow
@@ -656,8 +656,8 @@ const onConnect = async (connection) => {
 
   position: relative;
   width: 100%;
-  height: calc(50vh);
-  // height: calc(100vh - 64px);
+  // height: calc(50vh);
+  height: calc(100vh - 64px);
   background-color: light-grey;
 }
 
