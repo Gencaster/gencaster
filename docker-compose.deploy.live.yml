@@ -1,0 +1,87 @@
+version: '3.9'
+
+volumes:
+  static:
+services:
+  database:
+    env_file:
+      - vars.env
+      - vars.deploy.live.env
+      - .secrets.env
+
+  backend:
+    env_file:
+      - vars.env
+      - vars.deploy.live.env
+      - .secrets.env
+    volumes:
+      - static:/home/gencaster/static:rw
+      - ./data:/data
+      - ./data:/home/gencaster/media
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  osc_backend:
+    volumes:
+      - ./data:/data
+      - ./data:/home/gencaster/media
+    env_file:
+      - vars.env
+      - vars.deploy.live.env
+      - .secrets.env
+    ports:
+      - 7000:7000/udp
+
+  sound:
+    network_mode: host
+    env_file:
+      - vars.env
+      - vars.deploy.live.env
+    volumes:
+      - ./data:/data
+      - ./caster-sound/janus.jcfg:/opt/janus/etc/janus/janus.jcfg
+      # - ./caster-sound/janus.plugin.audiobridge.jcfg:/opt/janus/etc/janus/janus.plugin.audiobridge.jcfg
+
+  nginx:
+    image: nginx:1.23-alpine
+    volumes:
+      - ./nginx.deploy.conf:/etc/nginx/conf.d/default.conf
+      - static:/static/:ro
+      - ./data:/home/gencaster/media
+    ports:
+      - 8081:80
+    depends_on:
+      - backend
+
+  editor:
+    platform: linux/amd64
+    build:
+      context: caster-editor
+      dockerfile: Dockerfile.deploy
+      args:
+        - BACKEND_URL=https://backend.live.gencaster.org
+        - SENTRY_DSN_CASTER_EDITOR=https://4f4b994233384dc3a79ec1a4fea3cd80@o4504548423565312.ingest.sentry.io/4505476421386240
+    ports:
+      - 3001:80
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3001
+      - BACKEND_URL="https://backend.live.gencaster.org"
+    depends_on:
+      - backend
+
+  frontend:
+    platform: linux/amd64
+    build:
+      context: caster-front
+      dockerfile: Dockerfile.deploy
+      args:
+        - BACKEND_URL=https://backend.live.gencaster.org
+        - JANUS_URL=https://sound.live.gencaster.org/janus
+        - SENTRY_DSN_CASTER_FRONT=https://cf06c7d74e1644cab833acf57ae598b3@o4504548423565312.ingest.sentry.io/4505476517396480
+    ports:
+      - 3000:80
+    environment:
+      - NGINX_HOST=0.0.0.0
+    depends_on:
+      - backend

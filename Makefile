@@ -4,7 +4,8 @@ DOCKER_EDITOR = -f docker-compose.editor.yml
 DOCKER_FRONTEND = -f docker-compose.frontend.yml
 DOCKER_LOCAL = -f docker-compose.yml -f docker-compose.local.yml
 DOCKER_DEPLOY_DEV = -f docker-compose.yml -f docker-compose.deploy.dev.yml
-DOCKER_ALL_FILES = $(DOCKER_LOCAL) $(DOCKER_EDITOR) $(DOCKER_FRONTEND) -f docker-compose.deploy.dev.yml
+DOCKER_DEPLOY_LIVE = -f docker-compose.yml -f docker-compose.deploy.live.yml
+DOCKER_ALL_FILES = $(DOCKER_LOCAL) $(DOCKER_EDITOR) $(DOCKER_FRONTEND) -f docker-compose.deploy.dev.yml -f docker-compose.deploy.live.yml
 
 venv: caster-back/venv/touchfile
 
@@ -59,6 +60,11 @@ docker-deploy-dev:
 	docker compose $(DOCKER_ALL_FILES) stop
 	docker compose $(DOCKER_DEPLOY_DEV) build
 	docker compose $(DOCKER_DEPLOY_DEV) up -d
+
+docker-deploy-live:
+	docker compose $(DOCKER_ALL_FILES) stop
+	docker compose $(DOCKER_DEPLOY_LIVE) build
+	docker compose $(DOCKER_DEPLOY_LIVE) up -d
 
 docker-stop:
 	docker compose $(DOCKER_ALL_FILES) stop
