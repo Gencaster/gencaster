@@ -580,16 +580,6 @@ const onConnect = async (connection) => {
 
 <template>
   <div>
-    <!-- <VNetworkGraph
-      ref="vNetworkGraph"
-      class="graph"
-      :nodes="nodes()"
-      :edges="edges()"
-      :configs="graphSettings.standard"
-      :layouts="layouts()"
-      :event-handlers="eventHandlers"
-    /> -->
-
     <div class="flow-graph">
       <VueFlow
         ref="vueFlowRef"
@@ -600,6 +590,7 @@ const onConnect = async (connection) => {
         :edges="edgesF()"
         :nodes-connectable="true"
         :connection-line-style="connectionLineStyle"
+        :delete-key-code="'null'"
         @node-drag-stop="onNodeDragStop"
         @connect="onConnect"
       >
