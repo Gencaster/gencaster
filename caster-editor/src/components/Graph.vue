@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-v-model-argument -->
 <script lang="ts" setup>
-import DefaultNode from "@/components/FlowNodeDefault.vue";
 import { ElMessage } from "element-plus";
+import DefaultNode from "@/components/FlowNodeDefault.vue";
 import { ref, type Ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
@@ -9,7 +9,6 @@ import type { GraphSubscription, Scalars } from "@/graphql";
 import { useUpdateNodeMutation, useCreateEdgeMutation } from "@/graphql";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 import DialogExitNode from "@/components/DialogExitNode.vue";
-
 import type {
   Node as GraphNode,
   Edge as GraphEdge,
@@ -18,14 +17,17 @@ import type {
 } from "@vue-flow/core";
 import { VueFlow, useVueFlow } from "@vue-flow/core";
 
-const { getSelectedEdges, getSelectedNodes } = useVueFlow({});
-watch(getSelectedNodes, (nodes) => onSelectionChangeNodes(nodes));
-watch(getSelectedEdges, (edges) => onSelectionChangeEdges(edges));
+// mutations
+const updateNodeMutation = useUpdateNodeMutation();
+const createEdgeMutation = useCreateEdgeMutation();
 
-const props = defineProps<{
-  graph: GraphSubscription["graph"];
-}>();
+// types
+enum graphPanType {
+  NodeEditor = "NODE_EDITOR",
+  Center = "CENTER",
+}
 
+// store
 const interfaceStore = useInterfaceStore();
 const {
   showNodeEditor,
@@ -35,19 +37,119 @@ const {
   selectedNodeForEditorUuid,
   vueFlowRef,
 } = storeToRefs(interfaceStore);
+const { getSelectedEdges, getSelectedNodes } = useVueFlow({});
 
+// props
+const props = defineProps<{
+  graph: GraphSubscription["graph"];
+}>();
+
+// watchers
+watch(getSelectedNodes, (nodes) => onSelectionChangeNodes(nodes));
+watch(getSelectedEdges, (edges) => onSelectionChangeEdges(edges));
 watch(showNodeEditor, (visible) => {
   if (!visible) {
     flowPan(graphPanType.Center);
   }
 });
 
+// vars
 const lastPosition = ref<{ x: number; y: number }>({ x: 0, y: 0 });
 const lastPanMove = ref({ x: 0, y: 0 });
-enum graphPanType {
-  NodeEditor = "NODE_EDITOR",
-  Center = "CENTER",
+const lastNodeDoubleClicked = ref<Scalars["UUID"]>("");
+const nextNodeDoubleClicked = ref<Scalars["UUID"]>("");
+const showSwitchNodeDialog: Ref<boolean> = ref(false);
+
+// styling
+const connectionLineStyle = { stroke: "#000" };
+
+//functions
+function nodes(): GraphNode[] {
+  const n: GraphNode[] = [];
+
+  props.graph.nodes.forEach((node) => {
+    const graphNode: GraphNode = {
+      label: node.name,
+      type: "custom",
+      data: {
+        name: node.name,
+        uuid: node.uuid,
+        scriptCells: node.scriptCells,
+      },
+      id: node.uuid,
+      position: {
+        x: node.positionX,
+        y: node.positionY,
+      },
+    };
+    n.push(graphNode);
+  });
+  return n;
 }
+
+function edges(): GraphEdge[] {
+  const e: GraphEdge[] = [];
+  props.graph.edges.forEach((edge) => {
+    const graphEdge: GraphEdge = {
+      id: edge.uuid,
+      source: edge.inNode.uuid,
+      target: edge.outNode.uuid,
+      animated: true,
+    };
+    e.push(graphEdge);
+  });
+  return e;
+}
+
+const onNodeDragStop = (nodeDragEvent: NodeDragEvent) => {
+  const draggedNode = props.graph.nodes.find(
+    (x) => x.uuid === nodeDragEvent.node.id,
+  );
+
+  if (draggedNode === undefined) {
+    console.log(`Dragged unknown node ${nodeDragEvent.node.label}`);
+    return;
+  }
+
+  updateNodeMutation.executeMutation({
+    nodeUuid: draggedNode.uuid,
+    positionX: nodeDragEvent.node.computedPosition.x,
+    positionY: nodeDragEvent.node.computedPosition.y,
+  });
+};
+
+const onNodeDoubleClick = (uuid: string) => {
+  nextNodeDoubleClicked.value = uuid;
+
+  if (showNodeEditor.value && newScriptCellUpdates.value.size > 0) {
+    showSwitchNodeDialog.value = true;
+    return;
+  }
+
+  lastNodeDoubleClicked.value = uuid;
+  selectedNodeUUIDs.value = [uuid];
+
+  selectedNodeForEditorUuid.value = uuid;
+  showNodeEditor.value = true;
+
+  flowPan(graphPanType.NodeEditor);
+};
+
+const onSelectionChangeNodes = (nodes: Array<GraphNode>) => {
+  console.log("nodes selection change");
+  selectedNodeUUIDs.value = [];
+  nodes.forEach((node) => {
+    selectedNodeUUIDs.value.push(node.id);
+  });
+};
+
+const onSelectionChangeEdges = (edges: Array<GraphEdge>) => {
+  console.log("edges selection change");
+  selectedEdgeUUIDs.value = [];
+  edges.forEach((edge) => {
+    selectedEdgeUUIDs.value.push(edge.id);
+  });
+};
 
 const flowPan = (location: graphPanType) => {
   if (!vueFlowRef.value) return;
@@ -63,7 +165,7 @@ const flowPan = (location: graphPanType) => {
   let aimPos: { x: number; y: number };
   let moveBy: { x: number; y: number };
 
-  // node
+  // get node
   const node = vueFlowRef.value.findNode(selectedNodeForEditorUuid.value);
   const nodePosition = node?.position || { x: 0, y: 0 };
   const nodeDimensions = node?.dimensions || { width: 0, height: 0 };
@@ -127,104 +229,6 @@ const flowPan = (location: graphPanType) => {
     },
   });
 };
-
-const updateNodeMutation = useUpdateNodeMutation();
-
-const onNodeDragStop = (nodeDragEvent: NodeDragEvent) => {
-  const draggedNode = props.graph.nodes.find(
-    (x) => x.uuid === nodeDragEvent.node.id,
-  );
-
-  if (draggedNode === undefined) {
-    console.log(`Dragged unknown node ${nodeDragEvent.node.label}`);
-    return;
-  }
-
-  updateNodeMutation.executeMutation({
-    nodeUuid: draggedNode.uuid,
-    positionX: nodeDragEvent.node.computedPosition.x,
-    positionY: nodeDragEvent.node.computedPosition.y,
-  });
-};
-
-const onNodeDoubleClick = (uuid: string) => {
-  nextNodeDoubleClicked.value = uuid;
-
-  if (showNodeEditor.value && newScriptCellUpdates.value.size > 0) {
-    showSwitchNodeDialog.value = true;
-    return;
-  }
-
-  lastNodeDoubleClicked.value = uuid;
-  selectedNodeUUIDs.value = [uuid];
-
-  selectedNodeForEditorUuid.value = uuid;
-  showNodeEditor.value = true;
-
-  flowPan(graphPanType.NodeEditor);
-};
-
-const onSelectionChangeNodes = (nodes: Array<GraphNode>) => {
-  console.log("nodes selection change");
-  selectedNodeUUIDs.value = [];
-  nodes.forEach((node) => {
-    selectedNodeUUIDs.value.push(node.id);
-  });
-};
-
-const onSelectionChangeEdges = (edges: Array<GraphEdge>) => {
-  console.log("edges selection change");
-  selectedEdgeUUIDs.value = [];
-  edges.forEach((edge) => {
-    selectedEdgeUUIDs.value.push(edge.id);
-  });
-};
-
-const connectionLineStyle = { stroke: "#000" };
-
-function nodes(): GraphNode[] {
-  const n: GraphNode[] = [];
-
-  props.graph.nodes.forEach((node) => {
-    const graphNode: GraphNode = {
-      label: node.name,
-      type: "custom",
-      data: {
-        name: node.name,
-        uuid: node.uuid,
-        scriptCells: node.scriptCells,
-      },
-      id: node.uuid,
-      position: {
-        x: node.positionX,
-        y: node.positionY,
-      },
-    };
-    n.push(graphNode);
-  });
-  return n;
-}
-
-function edges(): GraphEdge[] {
-  const e: GraphEdge[] = [];
-  props.graph.edges.forEach((edge) => {
-    const graphEdge: GraphEdge = {
-      id: edge.uuid,
-      source: edge.inNode.uuid,
-      target: edge.outNode.uuid,
-      animated: true,
-    };
-    e.push(graphEdge);
-  });
-  return e;
-}
-
-// Dialogs
-const lastNodeDoubleClicked = ref<Scalars["UUID"]>("");
-const nextNodeDoubleClicked = ref<Scalars["UUID"]>("");
-const showSwitchNodeDialog: Ref<boolean> = ref(false);
-
-const createEdgeMutation = useCreateEdgeMutation();
 
 // this runs if mouse is released on connection
 const onConnect = async (connection: Connection) => {
@@ -311,7 +315,6 @@ const onConnect = async (connection: Connection) => {
 
   position: relative;
   width: 100%;
-  // height: calc(50vh);
   height: calc(100vh - 64px);
   background-color: light-grey;
 }

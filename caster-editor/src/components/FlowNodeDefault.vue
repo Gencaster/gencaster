@@ -24,9 +24,9 @@ const props = defineProps<DataInput>();
 
 const emit = defineEmits(["dblclick"]);
 
-function onDblClick() {
+const onDblClick = () => {
   emit("dblclick", props.data.uuid);
-}
+};
 
 const sourceHandleStyleA = computed(() => ({
   backgroundColor: "red",
