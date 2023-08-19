@@ -45,6 +45,9 @@ $buttonScale: 1.1;
 // menu
 $menuHeight: 32px;
 
+// node
+$nodeDefaultWidth: 160px;
+
 // old
 $bodyBackground: white;
 $mainWhite: white;
@@ -64,4 +67,5 @@ $hoverColor: lightgrey;
   alertRed: $alertRed;
   white: $white;
   white08: $white08;
+  nodeDefaultWidth: $nodeDefaultWidth;
 }

@@ -5,10 +5,8 @@ import urql, {
   dedupExchange,
   cacheExchange,
 } from "@urql/vue";
-import VNetworkGraph from "v-network-graph";
 import { SubscriptionClient } from "subscriptions-transport-ws";
 import { multipartFetchExchange } from "@urql/exchange-multipart-fetch";
-import "v-network-graph/lib/style.css";
 import * as Sentry from "@sentry/vue";
 
 import ElementPlus from "element-plus";
@@ -18,7 +16,6 @@ import App from "@/App.vue";
 import router from "@/router";
 
 import "./assets/scss/main.scss";
-import "v-network-graph/lib/style.css";
 
 import "@vue-flow/core/dist/style.css";
 /* this contains the default theme, these are optional styles */
@@ -73,6 +70,5 @@ app.use(urql, {
   ],
 });
 app.use(createPinia());
-app.use(VNetworkGraph);
 app.use(ElementPlus);
 app.mount("#app");

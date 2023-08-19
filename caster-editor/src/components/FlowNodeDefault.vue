@@ -82,7 +82,7 @@ const isValidConnection = (connection: any) => {
   padding: 10px;
   border-radius: 4px;
   height: auto;
-  width: 160px;
+  width: $nodeDefaultWidth;
   // border: 1px solid black;
   display: flex;
   align-items: center;
