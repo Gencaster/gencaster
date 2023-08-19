@@ -9,18 +9,15 @@ import type { GraphSubscription, Scalars } from "@/graphql";
 import { useUpdateNodeMutation, useCreateEdgeMutation } from "@/graphql";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 import DialogExitNode from "@/components/DialogExitNode.vue";
-// import variables from "@/assets/scss/variables.module.scss";
 
 import type {
-  Node as GraphNodeF,
-  Edge as GraphEdgeF,
+  Node as GraphNode,
+  Edge as GraphEdge,
   NodeDragEvent,
 } from "@vue-flow/core";
 import { VueFlow, useVueFlow } from "@vue-flow/core";
 
 const { getSelectedEdges, getSelectedNodes } = useVueFlow({});
-
-// watch(getNodes, (nodes) => console.log('nodes changed', nodes))
 watch(getSelectedNodes, (nodes) => onSelectionChangeNodes(nodes));
 watch(getSelectedEdges, (edges) => onSelectionChangeEdges(edges));
 
@@ -39,17 +36,12 @@ const {
 } = storeToRefs(interfaceStore);
 
 watch(showNodeEditor, (visible) => {
-  if (visible) {
-    // graphPan(graphPanType.NodeEditor, lastNodeClick.value);
-    // flowPan(graphPanType.NodeEditor);
-  } else {
-    // graphPan(graphPanType.Center, lastNodeClick.value);
+  if (!visible) {
     flowPan(graphPanType.Center);
   }
 });
 
 const lastPosition = ref<{ x: number; y: number }>({ x: 0, y: 0 });
-
 const lastPanMove = ref({ x: 0, y: 0 });
 enum graphPanType {
   NodeEditor = "NODE_EDITOR",
@@ -64,7 +56,6 @@ const flowPan = (location: graphPanType) => {
   lastPosition.value.y = currentTransform.y;
 
   // get canvas size
-  console.log(vueFlowRef.value.dimensions);
   const { height: gHeight, width: gWidth } = vueFlowRef.value.dimensions;
 
   // screen aim
@@ -190,11 +181,11 @@ const onSelectionChangeEdges = (edges) => {
 
 const connectionLineStyle = { stroke: "#000" };
 
-function nodesF(): GraphNodeF[] {
-  const n: GraphNodeF[] = [];
+function nodes(): GraphNode[] {
+  const n: GraphNode[] = [];
 
   props.graph.nodes.forEach((node) => {
-    const graphNode: GraphNodeF = {
+    const graphNode: GraphNode = {
       label: node.name,
       type: "custom",
       data: {
@@ -213,10 +204,10 @@ function nodesF(): GraphNodeF[] {
   return n;
 }
 
-function edgesF(): GraphEdgeF[] {
-  const e: GraphEdgeF[] = [];
+function edges(): GraphEdge[] {
+  const e: GraphEdge[] = [];
   props.graph.edges.forEach((edge) => {
-    const graphEdge: GraphEdgeF = {
+    const graphEdge: GraphEdge = {
       id: edge.uuid,
       source: edge.inNode.uuid,
       target: edge.outNode.uuid,
@@ -260,8 +251,8 @@ const onConnect = async (connection) => {
         :default-zoom="1"
         :max-zoom="1"
         :min-zoom="1"
-        :nodes="nodesF()"
-        :edges="edgesF()"
+        :nodes="nodes()"
+        :edges="edges()"
         :nodes-connectable="true"
         :connection-line-style="connectionLineStyle"
         :delete-key-code="'null'"
