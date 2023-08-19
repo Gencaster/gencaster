@@ -14,6 +14,7 @@ import type {
   Node as GraphNode,
   Edge as GraphEdge,
   NodeDragEvent,
+  Connection,
 } from "@vue-flow/core";
 import { VueFlow, useVueFlow } from "@vue-flow/core";
 
@@ -163,7 +164,7 @@ const onNodeDoubleClick = (uuid: string) => {
   flowPan(graphPanType.NodeEditor);
 };
 
-const onSelectionChangeNodes = (nodes) => {
+const onSelectionChangeNodes = (nodes: Array<GraphNode>) => {
   console.log("nodes selection change");
   selectedNodeUUIDs.value = [];
   nodes.forEach((node) => {
@@ -171,7 +172,7 @@ const onSelectionChangeNodes = (nodes) => {
   });
 };
 
-const onSelectionChangeEdges = (edges) => {
+const onSelectionChangeEdges = (edges: Array<GraphEdge>) => {
   console.log("edges selection change");
   selectedEdgeUUIDs.value = [];
   edges.forEach((edge) => {
@@ -226,9 +227,7 @@ const showSwitchNodeDialog: Ref<boolean> = ref(false);
 const createEdgeMutation = useCreateEdgeMutation();
 
 // this runs if mouse is released on connection
-const onConnect = async (connection) => {
-  // console.log(connection);
-
+const onConnect = async (connection: Connection) => {
   const nodeOutUuid = connection.target;
   const nodeInUuid = connection.source;
 

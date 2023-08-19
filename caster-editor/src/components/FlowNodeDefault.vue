@@ -1,34 +1,30 @@
 <script lang="ts" setup>
+import type { NodeSubscription } from "@/graphql";
 import { Handle, Position } from "@vue-flow/core";
 import { computed } from "vue";
 
 interface DataInput {
-  name: {
-    type: String;
-    required: true;
-  };
-  uuid: {
-    type: String;
-    required: true;
-  };
-  scriptCells: {
-    type: Array;
-    required: true;
+  data: {
+    name: {
+      type: String;
+      required: true;
+    };
+    uuid: {
+      type: String;
+      required: true;
+    };
+    scriptCells: {
+      type: NodeSubscription["node"]["scriptCells"];
+      required: true;
+    };
   };
 }
 
-const props = defineProps({
-  //TODO: needs to be typed correctly
-  data: {
-    type: Object as PropType<DataInput>,
-    required: true,
-  },
-});
+const props = defineProps<DataInput>();
 
 const emit = defineEmits(["dblclick"]);
 
 function onDblClick() {
-  // console.log(`dblclicked ${props.data.uuid}`);
   emit("dblclick", props.data.uuid);
 }
 
@@ -44,11 +40,15 @@ const sourceHandleStyleB = computed(() => ({
   height: "10px",
 }));
 
-const isValidConnection = (connection: any) => {
-  // console.log(connection.targetHandle === "a");
-  // return connection.targetHandle === "a";
+const isValidConnection = () => {
   return true;
 };
+// vallidator for later
+// const isValidConnection = (connection: Connection) => {
+//   // console.log(connection.targetHandle === "a");
+//   // return connection.targetHandle === "a";
+//   return true;
+// };
 </script>
 
 <template>
