@@ -29,7 +29,7 @@ ALLOWED_HOSTS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "https://live.dev.gencaster.org",
+    "https://editor.live.gencaster.org",
     "https://live.gencaster.org",
     "https://backend.live.gencaster.org",
 ]
