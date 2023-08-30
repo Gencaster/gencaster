@@ -39,7 +39,7 @@ def setup_logging():
         def _loop(self):
             from .models import StreamLog
 
-            print("### START LOGGING THREAD LOOP ###")
+            # print("### START LOGGING THREAD LOOP ###")
             while True:
                 record = self._queue.get()
                 if getattr(record, TO_DB_FLAG, False):
