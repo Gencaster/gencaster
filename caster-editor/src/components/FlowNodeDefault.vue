@@ -59,14 +59,15 @@ const isValidConnection = () => {
     <p>{{ data.name }}</p>
 
     <Handle
-      id="a"
+      id="target-id-a"
       type="target"
       :position="Position.Left"
       :style="sourceHandleStyleA"
+      :is-valid-connection="isValidConnection"
     />
 
     <Handle
-      id="b"
+      id="source-id-a"
       type="source"
       :position="Position.Right"
       :style="sourceHandleStyleB"

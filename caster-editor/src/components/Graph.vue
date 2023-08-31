@@ -233,6 +233,14 @@ const flowPan = (location: graphPanType) => {
 
 // this runs if mouse is released on connection
 const onConnect = async (connection: Connection) => {
+  // validation: compare if one output and one input
+  const handleOutId = connection.targetHandle || "undefined";
+  const handleInId = connection.sourceHandle || "undefined";
+  if (handleOutId.split("-")[0] === handleInId.split("-")[0]) {
+    ElMessage.error("Can only connect outputs with inputs");
+    return;
+  }
+
   const nodeOutUuid = connection.target;
   const nodeInUuid = connection.source;
 
