@@ -3,6 +3,7 @@
 import { ElMessage } from "element-plus";
 import DefaultNode from "@/components/FlowNodeDefault.vue";
 import { ref, type Ref, watch } from "vue";
+import variables from "@/assets/scss/variables.module.scss";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
 import type { GraphSubscription, Scalars } from "@/graphql";
@@ -37,7 +38,7 @@ const {
   selectedNodeForEditorUuid,
   vueFlowRef,
 } = storeToRefs(interfaceStore);
-const { getSelectedEdges, getSelectedNodes } = useVueFlow({});
+const { getSelectedEdges, getSelectedNodes, onPaneReady } = useVueFlow({});
 
 // props
 const props = defineProps<{
@@ -244,6 +245,26 @@ const onConnect = async (connection: Connection) => {
   }
   ElMessage.success(`Created new edge`);
 };
+
+const centerGraph = () => {
+  if (!vueFlowRef.value) return;
+
+  const { height, width } = vueFlowRef.value.dimensions;
+  const lastNode = nodes()[nodes().length - 1];
+  const position = lastNode.position;
+
+  const shift = {
+    x: -position.x + width / 2 - parseInt(variables.nodeDefaultWidth) / 2,
+    y: -position.y + (height / 2) * 0.9,
+  };
+
+  vueFlowRef.value?.panBy(shift);
+};
+
+// waiting for everything to be init
+onPaneReady(() => {
+  centerGraph();
+});
 </script>
 
 <template>
