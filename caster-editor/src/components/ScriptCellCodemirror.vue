@@ -39,10 +39,6 @@ const props = defineProps<{
   uuid: string;
 }>();
 
-const emit = defineEmits<{
-  (e: "update:text", text: string): void;
-}>();
-
 const { newScriptCellUpdates } = storeToRefs(useInterfaceStore());
 
 const domReady: Ref<boolean> = ref(false);
@@ -52,8 +48,6 @@ const scriptText = computed<string>({
     return props.text;
   },
   set(value) {
-    emit("update:text", value);
-
     let update = newScriptCellUpdates.value.get(props.uuid);
 
     if (update) {

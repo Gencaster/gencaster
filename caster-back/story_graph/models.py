@@ -33,7 +33,6 @@ class Graph(models.Model):
 
     class GraphDetailTemplate(models.TextChoices):
         DEFAULT = "default", _("Default template")
-        DRIFTER = "drifter", _("Drifter template")
 
     uuid = models.UUIDField(
         primary_key=True,

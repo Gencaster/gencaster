@@ -6,6 +6,7 @@
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
+      align-center
     >
       <ElInput
         v-model="newName"
@@ -13,14 +14,14 @@
       />
       <template #footer>
         <span class="dialog-footer">
-          <ElButton @click="emit('cancel')">Cancel</ElButton>
+          <ElButton
+            type="danger"
+            @click="emit('cancel')"
+          >Cancel</ElButton>
           <ElButton
             type="primary"
-            color="#ADFF00"
             @click="renameNode()"
-          >
-            Confirm
-          </ElButton>
+          > Confirm </ElButton>
         </span>
       </template>
     </ElDialog>

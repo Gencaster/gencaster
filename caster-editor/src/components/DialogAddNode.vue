@@ -59,6 +59,7 @@ const createNode = async () => {
     <ElDialog
       v-model="showDialog"
       title="Create new node"
+      align-center
       :show-close="true"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -71,7 +72,10 @@ const createNode = async () => {
       />
       <template #footer>
         <span class="dialog-footer">
-          <ElButton @click="() => emit('closed')">Cancel</ElButton>
+          <ElButton
+            type="danger"
+            @click="() => emit('closed')"
+          >Cancel</ElButton>
           <ElButton
             type="primary"
             :disabled="!hasName"

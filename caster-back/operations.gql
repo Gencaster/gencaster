@@ -313,3 +313,45 @@ mutation UpdateAudioFile($uuid: UUID!, $updateAudioFile: UpdateAudioFile!) {
 		...AudioFileInfo
   }
 }
+
+fragment StreamInfoFragment on Stream {
+    uuid
+    numListeners
+    modifiedDate
+    createdDate
+    streamPoint {
+      createdDate
+      host
+      janusInPort
+      janusInRoom
+      janusOutPort
+      janusOutRoom
+      lastLive
+      modifiedDate
+      port
+      useInput
+      uuid
+    }
+}
+
+subscription Streams($numOfStreams: Int) {
+  streams(limit: $numOfStreams) {
+		...StreamInfoFragment
+  }
+}
+
+subscription StreamLogs($streamUuid: UUID, $streamPointUuid: UUID) {
+  streamLogs(streamUuid: $streamUuid, streamPointUuid: $streamPointUuid) {
+    createdDate
+    level
+    message
+    name
+    uuid
+    stream {
+      uuid
+    }
+    streamPoint {
+      uuid
+    }
+  }
+}

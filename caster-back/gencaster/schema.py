@@ -57,14 +57,17 @@ from stream.types import (
     AudioFileUploadResponse,
     InvalidAudioFile,
     NoStreamAvailable,
+    Stream,
     StreamInfo,
     StreamInfoResponse,
+    StreamLog,
     StreamPoint,
     StreamVariable,
     StreamVariableInput,
     UpdateAudioFile,
 )
 
+from . import db_logging
 from .distributor import GenCasterChannel, GraphQLWSConsumerInjector
 
 log = logging.getLogger(__name__)
@@ -582,19 +585,12 @@ class Subscription:
         graph = await story_graph_models.Graph.objects.filter(uuid=graph_uuid).afirst()
         if not graph:
             raise Exception("could not find graph!")
-
         try:
             stream = await stream_models.Stream.objects.aget_free_stream(graph)
+            log.info(f"Attached to stream {stream.uuid}")
         except NoStreamAvailableException:
             yield NoStreamAvailable()
             return
-
-        await stream.increment_num_listeners()
-
-        engine = Engine(
-            graph=graph,
-            stream=stream,
-        )
 
         async def cleanup():
             await stream.decrement_num_listeners()
@@ -610,17 +606,63 @@ class Subscription:
                     log.info("Stop a stream due to a stop signal")
                     await cleanup()
 
-        consumer.disconnect_callback = cleanup
-        consumer.receive_callback = cleanup_on_stop
+        with db_logging.LogContext(db_logging.LogKeyEnum.STREAM, stream):
+            await stream.increment_num_listeners()
 
-        async for instruction in engine.start(max_steps=int(10e4)):
-            if type(instruction) == Dialog:
-                yield instruction
-            else:
-                yield StreamInfo(
-                    stream=stream,  # type: ignore
-                    stream_instruction=instruction,  # type: ignore
-                )
+            engine = Engine(
+                graph=graph,
+                stream=stream,
+            )
+
+            consumer.disconnect_callback = cleanup
+            consumer.receive_callback = cleanup_on_stop
+
+            async for instruction in engine.start(max_steps=int(10e4)):
+                if type(instruction) == Dialog:
+                    yield instruction
+                else:
+                    yield StreamInfo(
+                        stream=stream,  # type: ignore
+                        stream_instruction=instruction,  # type: ignore
+                    )
+
+    @strawberry.subscription
+    async def stream_logs(self, info: Info, stream_uuid: Optional[uuid.UUID] = None, stream_point_uuid: Optional[uuid.UUID] = None) -> AsyncGenerator[StreamLog, None]:  # type: ignore
+        stream_logs = stream_models.StreamLog.objects.order_by("created_date")
+        if stream_uuid:
+            stream_logs = stream_logs.filter(stream__uuid=stream_uuid)
+        if stream_point_uuid:
+            stream_logs = stream_logs.filter(stream_point__uuid=stream_point_uuid)
+        async for stream_log in stream_logs.all():
+            yield stream_log  # type: ignore
+
+        async for log_update in GenCasterChannel.receive_stream_log_updates(
+            info.context.ws,
+        ):
+            if stream_uuid:
+                if str(log_update.stream_uuid) != str(stream_uuid):
+                    continue
+            if stream_point_uuid:
+                if str(log_update.stream_point_uuid) != str(stream_point_uuid):
+                    continue
+            yield await stream_models.StreamLog.objects.aget(uuid=log_update.uuid)  # type: ignore
+
+    @strawberry.subscription
+    async def streams(self, info: Info, limit: int = 20) -> AsyncGenerator[List[Stream], None]:  # type: ignore
+        async def get_streams() -> List[Stream]:
+            # as slicing operation is not implemented in async mode we need this
+            # helper function
+            streams_db: List[Stream] = []
+            async for stream in stream_models.Stream.objects.order_by("-created_date")[
+                0:limit
+            ]:
+                streams_db.append(stream)
+            return streams_db
+
+        yield await get_streams()
+
+        async for _ in GenCasterChannel.receive_streams_updates(info.context.ws):
+            yield await get_streams()
 
 
 schema = strawberry.Schema(

@@ -30,10 +30,6 @@ const props = defineProps<{
   cellType: CellType.Markdown | CellType.Comment;
 }>();
 
-const emit = defineEmits<{
-  (e: "update:text", text: string): void;
-}>();
-
 // Store
 const { newScriptCellUpdates } = storeToRefs(useInterfaceStore());
 
@@ -46,7 +42,6 @@ const scriptCellText = computed<string>({
     return props.text;
   },
   set(value) {
-    emit("update:text", value);
     let update = newScriptCellUpdates.value.get(props.uuid);
 
     if (update) {

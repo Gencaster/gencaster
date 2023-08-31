@@ -5,17 +5,20 @@ from datetime import timedelta
 from typing import Optional
 
 from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib import admin
 from django.core.files import File
 from django.db import models
-from django.db.models import F
+from django.db.models import signals
+from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from google.cloud import texttospeech
 from pythonosc.udp_client import SimpleUDPClient
 
 import story_graph.models
+from gencaster.distributor import GenCasterChannel
 
 from .exceptions import NoStreamAvailableException
 
@@ -301,14 +304,20 @@ class Stream(models.Model):
     )
 
     async def increment_num_listeners(self):
-        await Stream.objects.filter(uuid=self.uuid).aupdate(
-            num_listeners=F("num_listeners") + 1
-        )
+        log.debug("Increment number of listeners")
+        self.num_listeners = self.num_listeners + 1
+        await self.asave()
+        # await Stream.objects.filter(uuid=self.uuid).aupdate(
+        #     num_listeners=F("num_listeners") + 1
+        # )
 
     async def decrement_num_listeners(self):
-        await Stream.objects.filter(uuid=self.uuid).aupdate(
-            num_listeners=F("num_listeners") - 1
-        )
+        log.debug("Decrement number of listeners")
+        self.num_listeners = self.num_listeners - 1
+        await self.asave()
+        # await Stream.objects.filter(uuid=self.uuid).aupdate(
+        #     num_listeners=F("num_listeners") - 1
+        # )
 
     def disconnect(self):
         log.info(f"Disconnect stream {self.uuid}")
@@ -322,6 +331,13 @@ class Stream(models.Model):
 
     def __str__(self) -> str:
         return f"Stream on {self.stream_point}"
+
+
+@receiver(signals.post_save, sender=Stream, dispatch_uid="update_streams_ws")
+def update_streams_ws(sender, instance: Stream, **kwargs):
+    async_to_sync(GenCasterChannel.send_streams_update)(
+        get_channel_layer(), str(instance.uuid)
+    )
 
 
 class StreamVariable(models.Model):
@@ -672,3 +688,75 @@ class TextToSpeech(models.Model):
 
     def __str__(self) -> str:
         return f"{self.text[0:100]}"
+
+
+class StreamLog(models.Model):
+    class LogLevel(models.IntegerChoices):
+        """Taken from ``logging`` module but omitting ``FATAL`` and ``WARN``."""
+
+        CRITICAL = 50, _("Critical")
+        ERROR = 40, _("Error")
+        WARNING = 30, _("Warning")
+        INFO = 20, _("Info")
+        DEBUG = 10, _("Debug")
+        NOTSET = 0, _("Not set")
+
+    class Origin(models.TextChoices):
+        """States from which module the current logging occurs"""
+
+        GRAPH_ENGINE = "graph_engine", _("Graph engine")
+        SUPERCOLLIDER = "supercollider", _("SuperCollider")
+        JANUS = "janus", _("Janus")
+
+    uuid = models.UUIDField(
+        primary_key=True,
+        editable=False,
+        default=uuid.uuid4,
+        unique=True,
+    )
+
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+    stream_point = models.ForeignKey(
+        StreamPoint,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+
+    stream = models.ForeignKey(
+        Stream,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+
+    origin = models.TextField(
+        choices=Origin.choices,
+        blank=True,
+        null=True,
+    )
+
+    level = models.IntegerField(
+        choices=LogLevel.choices,
+        default=LogLevel.INFO,
+    )
+
+    message = models.TextField(
+        blank=True,
+        null=False,
+    )
+
+    name = models.TextField(
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        ordering = ["-created_date"]
+        verbose_name = _("Stream log")
+        verbose_name_plural = _("Stream logs")
+
+    def __str__(self) -> str:
+        return f"Stream log {self.uuid}"

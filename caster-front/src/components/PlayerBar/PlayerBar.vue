@@ -7,7 +7,7 @@ import { PlayerState } from "@/models";
 import type { Graph } from "@/graphql";
 import AudioInfo from "@/components/AudioInfo.vue";
 
-defineProps<{
+const props = defineProps<{
   graph: Pick<Graph, "displayName" | "aboutText">;
 }>();
 
@@ -65,6 +65,10 @@ onBeforeUnmount(() => {
   stopInterval();
 });
 
+const infoAvailable = computed<boolean>(() => {
+  return props.graph.aboutText ? true : false;
+});
+
 const showInfo: Ref<boolean> = ref(false);
 </script>
 
@@ -85,7 +89,10 @@ const showInfo: Ref<boolean> = ref(false);
       </div>
     </Transition>
     <ElRow class="player-bar general-padding">
-      <ElCol :span="8">
+      <ElCol
+        v-if="infoAvailable"
+        :span="8"
+      >
         <ElButton
           class="caps"
           size="default"

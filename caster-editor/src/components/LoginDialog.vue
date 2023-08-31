@@ -53,6 +53,7 @@ const showLoginScreen = ref<boolean>(true);
       :show-close="false"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
+      align-center
     >
       <ElForm
         ref="loginFormRef"

@@ -1,3 +1,4 @@
+import logging
 import uuid
 from unittest import mock
 
@@ -15,7 +16,11 @@ from story_graph.tests import (
 from stream.models import AudioFile
 from stream.tests import AudioFileTestCase
 
+from . import db_logging
 from .schema import schema
+
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
 
 
 class SchemaTestCase(TransactionTestCase):
@@ -490,3 +495,31 @@ class SchemaTestCase(TransactionTestCase):
 
         self.assertIsNotNone(resp.errors)
         self.assertEqual(1, await ScriptCell.objects.all().acount())
+
+
+class DatabaseLoggingTestCase(TransactionTestCase):
+    def test_log_context(self):
+        from stream.tests import StreamPointTestCase
+
+        stream_point = StreamPointTestCase.get_stream_point()
+        try:
+            log.manager.disable = logging.DEBUG
+            # setup_logging relies on its own thread which fails to
+            # setup the database for a test environment, so it can not be tested
+            # setup_logging()
+            with self.assertLogs(log, logging.INFO) as lm:
+                with db_logging.LogContext(
+                    db_logging.LogKeyEnum.STREAM_POINT,
+                    stream_point,
+                    log,
+                ):
+                    log.info("Hello world")
+                log.info("No logging anymore")
+        finally:
+            log.manager.disable = 50
+            log.filters = []
+
+        self.assertEqual(len(lm.records), 2)
+        self.assertEqual(stream_point, lm.records[0].stream_point)  # type: ignore
+        with self.assertRaises(AttributeError):
+            lm.records[1].stream_point  # type: ignore

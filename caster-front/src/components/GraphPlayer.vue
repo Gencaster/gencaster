@@ -29,6 +29,13 @@ import { useSendStreamVariableMutation } from "@/graphql";
 import { storeToRefs } from "pinia";
 import { usePlayerStore } from "@/stores/Player";
 
+import IntroScreen from "@/components/IntroScreen.vue";
+import IntroMoreInfo from "@/components/IntroMoreInfo.vue";
+import { PlayerState } from "@/models";
+import PlayerVisualizer from "@/components/PlayerVisualizer/PlayerVisualizer.vue";
+import PlayerBar from "@/components/PlayerBar/PlayerBar.vue";
+import EndScreen from "@/components/EndScreen.vue";
+
 interface DialogShow {
   show: boolean;
   loading: boolean;
@@ -36,10 +43,28 @@ interface DialogShow {
 }
 
 const props = defineProps<{
-  graph: Pick<Graph, "uuid" | "name">;
+  graph: Pick<
+    Graph,
+    | "uuid"
+    | "name"
+    | "aboutText"
+    | "displayName"
+    | "startText"
+    | "endText"
+    | "slugName"
+  >;
+  showDebug?: boolean;
 }>();
 
-const { streamGPS, gpsError, gpsSuccess } = storeToRefs(usePlayerStore());
+const {
+  streamGPS,
+  gpsError,
+  gpsSuccess,
+  playerState,
+  play,
+  startingTimestamp,
+  playerMounted,
+} = storeToRefs(usePlayerStore());
 
 const router = useRouter();
 
@@ -74,7 +99,7 @@ watch(streamInfo, (info) => {
       streamVariables: [
         {
           streamUuid: info.stream.uuid,
-          key: "start",
+          key: "ready",
           value: "1.0",
           streamToSc: true,
         },
@@ -267,6 +292,33 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
       return ElButtonType.Default;
   }
 };
+
+const sendStreamVariableMutation = useSendStreamVariableMutation();
+
+// template functions
+const startStream = async () => {
+  // TODO: Do we still need this?
+  // I don't think so, since the page should show an error if it can't get a stream
+  // if (data.value?.streamInfo.__typename === "NoStreamAvailable") {
+  //   ElMessage.error("Can not start an unassigned stream");
+  //   return;
+  // }
+  const { error } = await sendStreamVariableMutation.executeMutation({
+    streamVariables: {
+      streamUuid: streamInfo.value?.stream.uuid,
+      key: "start",
+      value: "1.0",
+      streamToSc: true,
+    },
+  });
+  if (error) {
+    ElMessage.error(`Something went wrong ${error.message}`);
+    return;
+  }
+  play.value = true;
+  playerState.value = PlayerState.Playing;
+  startingTimestamp.value = new Date().getTime();
+};
 </script>
 
 <template>
@@ -274,7 +326,6 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
     v-loading="stale"
     class="graph-player"
   >
-    <h2>{{ graph.name }}</h2>
     <div v-if="currentDialog">
       <ElDialog
         v-model="currentDialog.show"
@@ -301,7 +352,7 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
                 :label="content.label"
                 @click="processAction(content)"
               >
-                <ElCheckbox />
+                <ElCheckbox @keydown.enter.prevent />
               </ElFormItem>
             </div>
             <div v-if="content.__typename == 'Input'">
@@ -309,6 +360,7 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
                 <ElInput
                   v-model="formData[content.key]"
                   :placeholder="content.placeholder"
+                  @keydown.enter.prevent
                 />
               </ElFormItem>
             </div>
@@ -331,20 +383,69 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
       </ElDialog>
     </div>
     <div v-if="streamInfo">
-      <PlayerButtons />
+      <!-- start screen -->
+      <Transition>
+        <div v-if="playerMounted && playerState === 'start'">
+          <IntroScreen
+            :title="graph.displayName"
+            :description-text="graph.startText"
+            button-text="Start"
+            :more-info="graph.aboutText ? true : false"
+            @button-clicked="startStream()"
+          />
+          <div v-if="graph.aboutText">
+            <IntroMoreInfo :text="graph.aboutText" />
+          </div>
+        </div>
+      </Transition>
+
+      <!-- audio visualizer -->
+      <Transition>
+        <div
+          v-if="playerState === PlayerState.Playing"
+          class="audio-visualizer"
+        >
+          <PlayerVisualizer />
+        </div>
+      </Transition>
+
+      <!-- player bar -->
+      <Transition>
+        <div v-if="playerState === PlayerState.Playing">
+          <PlayerBar
+            :graph="graph"
+            @clicked-stop="playerState = PlayerState.End"
+          />
+        </div>
+      </Transition>
+
+      <!-- end screen -->
+      <Transition>
+        <div v-if="playerState === PlayerState.End">
+          <EndScreen :text="graph.endText" />
+        </div>
+      </Transition>
+
       <Player
         ref="playerRef"
         :stream-point="streamInfo.stream.streamPoint"
         :stream="streamInfo.stream"
       />
-      <ElCollapse class="debug-info-wrapper">
-        <ElCollapseItem title="Debug info">
-          <StreamInfo
-            :stream="streamInfo.stream"
-            :stream-instruction="streamInfo.streamInstruction"
-          />
-        </ElCollapseItem>
-      </ElCollapse>
+      <!-- Debug -->
+      <div class="debug-wrapper">
+        <PlayerButtons v-if="showDebug" />
+        <ElCollapse
+          v-if="showDebug"
+          class="debug-info-wrapper"
+        >
+          <ElCollapseItem title="Debug info">
+            <StreamInfo
+              :stream="streamInfo.stream"
+              :stream-instruction="streamInfo.streamInstruction"
+            />
+          </ElCollapseItem>
+        </ElCollapse>
+      </div>
     </div>
     <div v-if="streamError">
       Currently no stream is available, please come back later.
@@ -359,7 +460,27 @@ const convertButtonType = (b: ButtonType): ElButtonType => {
 @import "@/assets/mixins.scss";
 @import "@/assets/variables.scss";
 
-.debug-info-wrapper {
-  margin-top: 10px;
+.debug-wrapper {
+  position: absolute;
+  top: $playerBarHeight * 2;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  .debug-info-wrapper {
+    margin-top: 10px;
+  }
+}
+
+.audio-visualizer {
+  box-sizing: border-box;
+  position: absolute;
+  top: 20px;
+  left: 0px;
+  height: 80px;
+  width: 100%;
+  padding-left: 24px;
+  padding-right: 24px;
+  margin: 0 auto;
 }
 </style>
