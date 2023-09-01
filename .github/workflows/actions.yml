@@ -83,7 +83,7 @@ jobs:
         working-directory: caster-editor
         name: "Run type checks"
       - name: Cypress run
-        uses: cypress-io/github-action@v5 # use the explicit version number
+        uses: cypress-io/github-action@v6 # use the explicit version number
         with:
           browser: chrome
           build: npm run build
