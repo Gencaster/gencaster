@@ -30,7 +30,12 @@
         >
           <MenuTabEdit :graph="graph" />
         </div>
-        <div v-if="tab === Tab.Play" />
+        <div
+          v-if="tab === Tab.Play"
+          class="left"
+        >
+          <MenuTabPlay :graph="graph" />
+        </div>
       </div>
     </div>
     <div class="menu-spacer" />
@@ -50,6 +55,7 @@ import { ref, type Ref } from "vue";
 import { Tab, useInterfaceStore } from "@/stores/InterfaceStore";
 import MenuTab from "./MenuTabHeader.vue";
 import MenuTabEdit from "./MenuTabEdit.vue";
+import MenuTabPlay from "./MenuTabPlay.vue";
 import DialogExitGraph from "./DialogExitGraph.vue";
 
 export type GraphMenu = Pick<Graph, "name" | "uuid">;

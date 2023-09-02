@@ -1509,6 +1509,7 @@ export const GraphDocument = gql`
     graph(graphUuid: $uuid) {
       name
       uuid
+      slugName
       edges {
         uuid
         outNode {
