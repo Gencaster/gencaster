@@ -70,6 +70,11 @@ graphql-schema:
 	cd caster-front && npm run codegen
 	@echo "Sucessfully generated new schema in caster-editor/src/graphql/graphql.ts"
 
+engine-variables-json:
+	docker compose -f docker-compose.yml -f docker-compose.local.yml exec backend ./generate_engine_vars_json.sh
+	cp caster-back/engineVars.json caster-editor/src/
+	@echo "Created new engine variables"
+
 test-backend: venv virtualenv
 	. caster-back/venv/bin/activate && (\
 		cd caster-back; \

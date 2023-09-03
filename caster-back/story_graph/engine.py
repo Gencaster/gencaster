@@ -9,7 +9,7 @@ import logging
 import time
 from copy import deepcopy
 from datetime import datetime, timedelta
-from typing import AsyncGenerator, Dict, Union
+from typing import Any, AsyncGenerator, Dict, Optional, Union
 
 from asgiref.sync import sync_to_async
 
@@ -131,6 +131,70 @@ class Engine:
         yield instruction
         await self.wait_for_finished_instruction(instruction)
 
+    @staticmethod
+    def get_engine_global_vars(
+        runtime_values: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Dict[str, Any]]:
+        """Generates the dictionary which contains all objects which are available for the execution engine of
+        the graph.
+        This acts as a security measurement.
+
+        .. important::
+
+            If anything is changed here please execute
+
+            .. code::
+
+                make engine-variables-json
+
+            which will create an updated autocomplete JSON for the editor.
+
+        :param runtime_values: Allows to add additional objects to the module namespace at runtime.
+            These are injected within :func:`~story_graph.engine.Engine.execute_python_cell` and consist of
+
+            .. list-table:: Runtime vars
+                :header-rows: 1
+
+                * - key
+                  - value
+                  - info
+                * - ``loop``
+                  - loop
+                  - the current asyncio loop - can be used to execute
+                    additional async code
+                * - ``vars``
+                  - a dictionary of all stream variables
+                  - See :func:`~story_graph.engine.Engine.get_stream_variables`
+                * - ``self``
+                  - Current :class:`~story_graph.engine.Engine` instance
+                  -
+                * - ``get_stream_variables``
+                  - Callable
+                  - See :func:`~story_graph.engine.Engine.get_stream_variables`
+                * - ``wait_for_stream_variable``
+                  - Callable
+                  - See :func:`~story_graph.engine.Engine.wait_for_stream_variable`
+
+        """
+        runtime_values = runtime_values if runtime_values else {}
+        return {
+            "__builtins__": {
+                "asyncio": asyncio,
+                "int": int,
+                "float": float,
+                "print": print,
+                "time": time,
+                "datetime": datetime,
+                "timedelta": timedelta,
+                "Text": Text,
+                "Dialog": Dialog,
+                "Button": Button,
+                "Checkbox": Checkbox,
+                "Input": Input,
+                **runtime_values,
+            }
+        }
+
     async def execute_python_cell(self, cell_code: str) -> AsyncGenerator[Dialog, None]:
         """Executes a python :class:`~story_graph.models.ScriptCell`.
         A python cell is run as an async generator, which allows to not just run
@@ -149,33 +213,34 @@ class Engine:
         old_stream_variables = deepcopy(stream_variables)
         loop = asyncio.get_running_loop()
         try:
-            loc: Dict = {}
+            loc: Dict[str, Any] = {}
             exec(
+                # wrap the script cell in an async function
                 f"async def __ex(): "
                 + "".join(f"\n {l}" for l in (cell_code.split("\n") + ["yield None"])),
-                {
-                    "__builtins__": {
-                        "asyncio": asyncio,
-                        "int": int,
-                        "float": float,
+                # global variables which are module scoped - they can not be
+                # overwritten, avoiding any kind of messing with the
+                # internal engine
+                self.get_engine_global_vars(
+                    {
+                        # please note any runtime variables changes also in
+                        # story_graph/management/commands/get_engine_vars.py
+                        # as this will generate the necessary JSON for
+                        # the autocomplete within the editor
                         "loop": loop,
-                        "print": print,
-                        "time": time,
                         "vars": stream_variables,
                         "self": self,
-                        "datetime": datetime,
-                        "timedelta": timedelta,
                         "get_stream_variables": self.get_stream_variables,
                         "wait_for_stream_variable": self.wait_for_stream_variable,
-                        "Text": Text,
-                        "Dialog": Dialog,
-                        "Button": Button,
-                        "Checkbox": Checkbox,
-                        "Input": Input,
                     }
-                },
+                ),
+                # locals which mirror the current namespace and allow for modification
+                # and storing of values
                 loc,
             )
+
+            # execute the wrapped async script cell code in our asyncio runtime
+            # yielding allows to yield such things like a request for a Dialog
             async for x in loc["__ex"]():
                 # avoid yielding none
                 if x:
