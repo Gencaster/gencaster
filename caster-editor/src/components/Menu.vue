@@ -65,7 +65,7 @@ const { tab } = storeToRefs(useInterfaceStore());
 const showExitGraphDialog: Ref<boolean> = ref(false);
 
 const goToDocs = () => {
-  window.open("https://docs.gencaster.org/", "_blank");
+  window.open("https://docs.gencaster.org/editor", "_blank");
 };
 </script>
 

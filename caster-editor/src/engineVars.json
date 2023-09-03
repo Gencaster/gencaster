@@ -1,0 +1,172 @@
+[
+  {
+    "label": "asyncio",
+    "display_label": null,
+    "detail": "",
+    "info": null,
+    "apply": null,
+    "type": "namespace",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "int",
+    "display_label": null,
+    "detail": null,
+    "info": null,
+    "apply": null,
+    "type": "class",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "float",
+    "display_label": null,
+    "detail": "(x=0, /)",
+    "info": "Convert a string or number to a floating point number, if possible.",
+    "apply": null,
+    "type": "function",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "print",
+    "display_label": null,
+    "detail": null,
+    "info": null,
+    "apply": null,
+    "type": "class",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "time",
+    "display_label": null,
+    "detail": "",
+    "info": null,
+    "apply": null,
+    "type": "namespace",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "datetime",
+    "display_label": null,
+    "detail": null,
+    "info": null,
+    "apply": null,
+    "type": "class",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "timedelta",
+    "display_label": null,
+    "detail": null,
+    "info": null,
+    "apply": null,
+    "type": "class",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "Text",
+    "display_label": null,
+    "detail": "(*, text: str) -> None",
+    "info": "Displays plain text.",
+    "apply": null,
+    "type": "function",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "Dialog",
+    "display_label": null,
+    "detail": "(*, title: str, content: <strawberry.type.StrawberryList object at 0x7fc52ff9c850>, buttons: List[stream.frontend_types.Button]) -> None",
+    "info": "Triggers a popup on the frontend of the listener.",
+    "apply": null,
+    "type": "function",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "Button",
+    "display_label": null,
+    "detail": "(*, text: str, value: str, key: str = 'button', button_type: stream.frontend_types.ButtonType = <ButtonType.DEFAULT: 'default'>, callback_actions: List[stream.frontend_types.CallbackAction] = <factory>) -> None",
+    "info": "A button which can also trigger a set of functionality.",
+    "apply": null,
+    "type": "function",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "Checkbox",
+    "display_label": null,
+    "detail": "(*, key: str, label: str, checked: bool = False, callback_actions: List[stream.frontend_types.CallbackAction] = <factory>) -> None",
+    "info": "A classic ``<checkbox>`` whose state (``true``/``false``) will be\nsaved **as a string** under ``key`` in a :class:`~stream.models.StreamVariable`.",
+    "apply": null,
+    "type": "function",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "Input",
+    "display_label": null,
+    "detail": "(*, key: str, label: str = 'input', placeholder: str = 'Please input') -> None",
+    "info": "A classic ``<inptut>`` which will save its content\nunder the ``key`` as a :class:`~stream.models.StreamVariable`.",
+    "apply": null,
+    "type": "function",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "loop",
+    "display_label": null,
+    "detail": "()",
+    "info": null,
+    "apply": null,
+    "type": "function",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "vars",
+    "display_label": null,
+    "detail": null,
+    "info": null,
+    "apply": null,
+    "type": "variable",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "self",
+    "display_label": null,
+    "detail": "(graph: story_graph.models.Graph, stream: stream.models.Stream, raise_exceptions: bool = False) -> None",
+    "info": "An engine executes a :class:`~story_graph.models.Graph` for a given\n:class:`~stream.models.StreamPoint`.\nExecuting means to iterate over the :class:`~story_graph.models.Node`\nand executing each :class:`~story_graph.models.ScriptCell` within such a node.\n\nThe engine runs in an async manner so it is possible to do awaits without\nblocking the server, which means execution is halted until a specific\ncondition is met.",
+    "apply": null,
+    "type": "function",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "get_stream_variables",
+    "display_label": null,
+    "detail": "()",
+    "info": null,
+    "apply": null,
+    "type": "function",
+    "boost": null,
+    "section": null
+  },
+  {
+    "label": "wait_for_stream_variable",
+    "display_label": null,
+    "detail": "(name: str, timeout: float = 100.0, update_speed: float = 0.5)",
+    "info": null,
+    "apply": null,
+    "type": "function",
+    "boost": null,
+    "section": null
+  }
+]
