@@ -371,17 +371,17 @@ These cells allow to control what happens on the script and to which Node we jum
 Therefore a story is represented by a graph.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#graph" id="id8">Graph</a></p>
+<li><p><a class="reference internal" href="#graph" id="id9">Graph</a></p>
 <ul>
-<li><p><a class="reference internal" href="#engine" id="id9">Engine</a></p></li>
-<li><p><a class="reference internal" href="#markdown-parser" id="id10">Markdown parser</a></p></li>
-<li><p><a class="reference internal" href="#models" id="id11">Models</a></p></li>
+<li><p><a class="reference internal" href="#engine" id="id10">Engine</a></p></li>
+<li><p><a class="reference internal" href="#markdown-parser" id="id11">Markdown parser</a></p></li>
+<li><p><a class="reference internal" href="#models" id="id12">Models</a></p></li>
 </ul>
 </li>
 </ul>
 </div>
 <section id="graph">
-<h2><a class="toc-backref" href="#id8">Graph</a><a class="headerlink" href="#graph" title="Permalink to this headline">#</a></h2>
+<h2><a class="toc-backref" href="#id9">Graph</a><a class="headerlink" href="#graph" title="Permalink to this headline">#</a></h2>
 <figure class="align-default" id="id7">
 <img alt="../../_images/story_graph.png" src="../../_images/story_graph.png" />
 <figcaption>
@@ -389,7 +389,7 @@ Therefore a story is represented by a graph.</p>
 </figcaption>
 </figure>
 <span class="target" id="module-story_graph.engine"></span><section id="engine">
-<h3><a class="toc-backref" href="#id9">Engine</a><a class="headerlink" href="#engine" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id10">Engine</a><a class="headerlink" href="#engine" title="Permalink to this headline">#</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="story_graph.engine.Engine">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.engine.</span></span><span class="sig-name descname"><span class="pre">Engine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine" title="Permalink to this definition">#</a></dt>
@@ -470,6 +470,69 @@ explicitly here.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="story_graph.engine.Engine.get_engine_global_vars">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_engine_global_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runtime_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine.get_engine_global_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine.get_engine_global_vars" title="Permalink to this definition">#</a></dt>
+<dd><p>Generates the dictionary which contains all objects which are available for the execution engine of
+the graph.
+This acts as a security measurement.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>If anything is changed here please execute</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span> <span class="n">engine</span><span class="o">-</span><span class="n">variables</span><span class="o">-</span><span class="n">json</span>
+</pre></div>
+</div>
+<p>which will create an updated autocomplete JSON for the editor.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>runtime_values</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]) – <p>Allows to add additional objects to the module namespace at runtime.
+These are injected within <a class="reference internal" href="#story_graph.engine.Engine.execute_python_cell" title="story_graph.engine.Engine.execute_python_cell"><code class="xref py py-func docutils literal notranslate"><span class="pre">execute_python_cell()</span></code></a> and consist of</p>
+<table class="table" id="id8">
+<caption><span class="caption-text">Runtime vars</span><a class="headerlink" href="#id8" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>key</p></th>
+<th class="head"><p>value</p></th>
+<th class="head"><p>info</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">loop</span></code></p></td>
+<td><p>loop</p></td>
+<td><p>the current asyncio loop - can be used to execute
+additional async code</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vars</span></code></p></td>
+<td><p>a dictionary of all stream variables</p></td>
+<td><p>See <a class="reference internal" href="#story_graph.engine.Engine.get_stream_variables" title="story_graph.engine.Engine.get_stream_variables"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_stream_variables()</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">self</span></code></p></td>
+<td><p>Current <a class="reference internal" href="#story_graph.engine.Engine" title="story_graph.engine.Engine"><code class="xref py py-class docutils literal notranslate"><span class="pre">Engine</span></code></a> instance</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">get_stream_variables</span></code></p></td>
+<td><p>Callable</p></td>
+<td><p>See <a class="reference internal" href="#story_graph.engine.Engine.get_stream_variables" title="story_graph.engine.Engine.get_stream_variables"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_stream_variables()</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wait_for_stream_variable</span></code></p></td>
+<td><p>Callable</p></td>
+<td><p>See <a class="reference internal" href="#story_graph.engine.Engine.wait_for_stream_variable" title="story_graph.engine.Engine.wait_for_stream_variable"><code class="xref py py-func docutils literal notranslate"><span class="pre">wait_for_stream_variable()</span></code></a></p></td>
+</tr>
+</tbody>
+</table>
+</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="story_graph.engine.Engine.get_stream_variables">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_stream_variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine.get_stream_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine.get_stream_variables" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns the associated <a class="reference internal" href="stream.html#stream.models.StreamVariable" title="stream.models.StreamVariable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamVariable</span></code></a> within
@@ -530,7 +593,7 @@ If the variable was not found/set within the time period of
 
 </section>
 <span class="target" id="module-story_graph.markdown_parser"></span><section id="markdown-parser">
-<h3><a class="toc-backref" href="#id10">Markdown parser</a><a class="headerlink" href="#markdown-parser" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id11">Markdown parser</a><a class="headerlink" href="#markdown-parser" title="Permalink to this headline">#</a></h3>
 <p>A <a class="reference internal" href="#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a> can hold markdown content in our own markdown
 dialect to control breaks, change of speakers and emphasis but also allows us to access
 variables which are defined within a <a class="reference internal" href="stream.html#stream.models.Stream" title="stream.models.Stream"><code class="xref py py-class docutils literal notranslate"><span class="pre">stream.models.Stream</span></code></a>.
@@ -747,7 +810,7 @@ empty string <cite>“”</cite>, but we can provide a fallback value via <code 
 
 </section>
 <span class="target" id="module-story_graph.models"></span><section id="models">
-<h3><a class="toc-backref" href="#id11">Models</a><a class="headerlink" href="#models" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id12">Models</a><a class="headerlink" href="#models" title="Permalink to this headline">#</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="story_graph.models.AudioCell">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.models.</span></span><span class="sig-name descname"><span class="pre">AudioCell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">audio_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#AudioCell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.AudioCell" title="Permalink to this definition">#</a></dt>

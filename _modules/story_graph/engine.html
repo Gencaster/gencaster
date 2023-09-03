@@ -277,7 +277,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">AsyncGenerator</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">AsyncGenerator</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">asgiref.sync</span> <span class="kn">import</span> <span class="n">sync_to_async</span>
 
@@ -399,6 +399,70 @@ document.write(`
         <span class="k">yield</span> <span class="n">instruction</span>
         <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_finished_instruction</span><span class="p">(</span><span class="n">instruction</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Engine.get_engine_global_vars"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.engine.Engine.get_engine_global_vars">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_engine_global_vars</span><span class="p">(</span>
+        <span class="n">runtime_values</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates the dictionary which contains all objects which are available for the execution engine of</span>
+<span class="sd">        the graph.</span>
+<span class="sd">        This acts as a security measurement.</span>
+
+<span class="sd">        .. important::</span>
+
+<span class="sd">            If anything is changed here please execute</span>
+
+<span class="sd">            .. code::</span>
+
+<span class="sd">                make engine-variables-json</span>
+
+<span class="sd">            which will create an updated autocomplete JSON for the editor.</span>
+
+<span class="sd">        :param runtime_values: Allows to add additional objects to the module namespace at runtime.</span>
+<span class="sd">            These are injected within :func:`~story_graph.engine.Engine.execute_python_cell` and consist of</span>
+
+<span class="sd">            .. list-table:: Runtime vars</span>
+<span class="sd">                :header-rows: 1</span>
+
+<span class="sd">                * - key</span>
+<span class="sd">                  - value</span>
+<span class="sd">                  - info</span>
+<span class="sd">                * - ``loop``</span>
+<span class="sd">                  - loop</span>
+<span class="sd">                  - the current asyncio loop - can be used to execute</span>
+<span class="sd">                    additional async code</span>
+<span class="sd">                * - ``vars``</span>
+<span class="sd">                  - a dictionary of all stream variables</span>
+<span class="sd">                  - See :func:`~story_graph.engine.Engine.get_stream_variables`</span>
+<span class="sd">                * - ``self``</span>
+<span class="sd">                  - Current :class:`~story_graph.engine.Engine` instance</span>
+<span class="sd">                  -</span>
+<span class="sd">                * - ``get_stream_variables``</span>
+<span class="sd">                  - Callable</span>
+<span class="sd">                  - See :func:`~story_graph.engine.Engine.get_stream_variables`</span>
+<span class="sd">                * - ``wait_for_stream_variable``</span>
+<span class="sd">                  - Callable</span>
+<span class="sd">                  - See :func:`~story_graph.engine.Engine.wait_for_stream_variable`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">runtime_values</span> <span class="o">=</span> <span class="n">runtime_values</span> <span class="k">if</span> <span class="n">runtime_values</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;asyncio&quot;</span><span class="p">:</span> <span class="n">asyncio</span><span class="p">,</span>
+                <span class="s2">&quot;int&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                <span class="s2">&quot;float&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="s2">&quot;print&quot;</span><span class="p">:</span> <span class="nb">print</span><span class="p">,</span>
+                <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="p">,</span>
+                <span class="s2">&quot;datetime&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+                <span class="s2">&quot;timedelta&quot;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">,</span>
+                <span class="s2">&quot;Text&quot;</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
+                <span class="s2">&quot;Dialog&quot;</span><span class="p">:</span> <span class="n">Dialog</span><span class="p">,</span>
+                <span class="s2">&quot;Button&quot;</span><span class="p">:</span> <span class="n">Button</span><span class="p">,</span>
+                <span class="s2">&quot;Checkbox&quot;</span><span class="p">:</span> <span class="n">Checkbox</span><span class="p">,</span>
+                <span class="s2">&quot;Input&quot;</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">runtime_values</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">}</span></div>
+
 <div class="viewcode-block" id="Engine.execute_python_cell"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.engine.Engine.execute_python_cell">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">execute_python_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">Dialog</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes a python :class:`~story_graph.models.ScriptCell`.</span>
 <span class="sd">        A python cell is run as an async generator, which allows to not just run</span>
@@ -417,33 +481,34 @@ document.write(`
         <span class="n">old_stream_variables</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">stream_variables</span><span class="p">)</span>
         <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">loc</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">loc</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">exec</span><span class="p">(</span>
+                <span class="c1"># wrap the script cell in an async function</span>
                 <span class="sa">f</span><span class="s2">&quot;async def __ex(): &quot;</span>
                 <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="p">(</span><span class="n">cell_code</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;yield None&quot;</span><span class="p">])),</span>
-                <span class="p">{</span>
-                    <span class="s2">&quot;__builtins__&quot;</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="s2">&quot;asyncio&quot;</span><span class="p">:</span> <span class="n">asyncio</span><span class="p">,</span>
-                        <span class="s2">&quot;int&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                        <span class="s2">&quot;float&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                <span class="c1"># global variables which are module scoped - they can not be</span>
+                <span class="c1"># overwritten, avoiding any kind of messing with the</span>
+                <span class="c1"># internal engine</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_engine_global_vars</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="c1"># please note any runtime variables changes also in</span>
+                        <span class="c1"># story_graph/management/commands/get_engine_vars.py</span>
+                        <span class="c1"># as this will generate the necessary JSON for</span>
+                        <span class="c1"># the autocomplete within the editor</span>
                         <span class="s2">&quot;loop&quot;</span><span class="p">:</span> <span class="n">loop</span><span class="p">,</span>
-                        <span class="s2">&quot;print&quot;</span><span class="p">:</span> <span class="nb">print</span><span class="p">,</span>
-                        <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="p">,</span>
                         <span class="s2">&quot;vars&quot;</span><span class="p">:</span> <span class="n">stream_variables</span><span class="p">,</span>
                         <span class="s2">&quot;self&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="p">,</span>
-                        <span class="s2">&quot;datetime&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
-                        <span class="s2">&quot;timedelta&quot;</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">,</span>
                         <span class="s2">&quot;get_stream_variables&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_stream_variables</span><span class="p">,</span>
                         <span class="s2">&quot;wait_for_stream_variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait_for_stream_variable</span><span class="p">,</span>
-                        <span class="s2">&quot;Text&quot;</span><span class="p">:</span> <span class="n">Text</span><span class="p">,</span>
-                        <span class="s2">&quot;Dialog&quot;</span><span class="p">:</span> <span class="n">Dialog</span><span class="p">,</span>
-                        <span class="s2">&quot;Button&quot;</span><span class="p">:</span> <span class="n">Button</span><span class="p">,</span>
-                        <span class="s2">&quot;Checkbox&quot;</span><span class="p">:</span> <span class="n">Checkbox</span><span class="p">,</span>
-                        <span class="s2">&quot;Input&quot;</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span>
                     <span class="p">}</span>
-                <span class="p">},</span>
+                <span class="p">),</span>
+                <span class="c1"># locals which mirror the current namespace and allow for modification</span>
+                <span class="c1"># and storing of values</span>
                 <span class="n">loc</span><span class="p">,</span>
             <span class="p">)</span>
+
+            <span class="c1"># execute the wrapped async script cell code in our asyncio runtime</span>
+            <span class="c1"># yielding allows to yield such things like a request for a Dialog</span>
             <span class="k">async</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">loc</span><span class="p">[</span><span class="s2">&quot;__ex&quot;</span><span class="p">]():</span>
                 <span class="c1"># avoid yielding none</span>
                 <span class="k">if</span> <span class="n">x</span><span class="p">:</span>
