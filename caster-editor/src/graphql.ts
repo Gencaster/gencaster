@@ -68,7 +68,7 @@ export type AddGraphInput = {
   templateName?: InputMaybe<GraphDetailTemplate>;
 };
 
-/** AudioCell(uuid, playback, audio_file, volume) */
+/** Stores information for playback of static audio files. */
 export type AudioCell = {
   audioFile: AudioFile;
   playback: PlaybackChoices;
@@ -76,12 +76,12 @@ export type AudioCell = {
   volume: Scalars["Float"];
 };
 
-/** AudioCell(uuid, playback, audio_file, volume) */
+/** Stores information for playback of static audio files. */
 export type AudioCellAudioFileArgs = {
   pagination?: InputMaybe<OffsetPaginationInput>;
 };
 
-/** AudioCell(uuid, playback, audio_file, volume) */
+/** Stores information for playback of static audio files. */
 export type AudioCellInput = {
   audioFile: AudioFileReference;
   playback?: InputMaybe<PlaybackChoices>;
@@ -174,7 +174,57 @@ export enum CallbackAction {
   SendVariables = "SEND_VARIABLES",
 }
 
-/** Choice of foobar */
+/**
+ * A :class:`~story_graph.models.ScriptCell` can contain
+ * different types of code, each with unique functionality.
+ *
+ * Both, the database and :class:`~story_graph.engine.Engine`,
+ * implement some specific details according to these types.
+ *
+ * .. list-table:: Cell types
+ *     :header-rows: 1
+ *
+ *     * - Name
+ *       - Description
+ *       - Database
+ *       - Engine
+ *     * - Markdown
+ *       - Allows to write arbitrary text which will get
+ *         rendered as an audio file via a text to speech service,
+ *         see :class:`~stream.models.TextToSpeech` for conversion
+ *         and :class:`~story_graph.markdown_parser.GencasterRenderer`
+ *         for the extended Markdown syntax.
+ *       - - :class:`~stream.models.TextToSpeech`
+ *       - - :func:`~story_graph.engine.Engine.execute_markdown_code`
+ *         - :class:`~story_graph.markdown_parser.GencasterRenderer`
+ *     * - Python
+ *       - Allows to execute python code via :func:`exec` which allows
+ *         to trigger e.g. Dialogs in the frontend
+ *         (see :class:`~stream.frontend_types.Dialog`)
+ *         or calculate or fetch any kind of data and store its value
+ *         as a :class:`~stream.models.StreamVariable`.
+ *       -
+ *       - - :func:`~story_graph.engine.Engine.execute_python_cell`
+ *     * - SuperCollider
+ *       - Executes *sclang* code on the associated server.
+ *         This can be used to control the sonic content on the server.
+ *       - - :class:`~stream.models.StreamInstruction`
+ *       - - :func:`~story_graph.engine.Engine.execute_sc_code`
+ *         - :ref:`OSC Server`
+ *     * - Comment
+ *       - Does not get executed, but allows to put comments into
+ *         the graph.
+ *       -
+ *       -
+ *     * - Audio
+ *       - Allows to playback static audio files.
+ *         The instruction will be translated into *sclang* code and will
+ *         be executed as such on the associated stream.
+ *       - - :class:`~story_graph.models.AudioCell`
+ *         - :class:`~stream.models.AudioFile`
+ *       - - :func:`~story_graph.engine.Engine.execute_audio_cell`
+ *
+ */
 export enum CellType {
   Audio = "AUDIO",
   Comment = "COMMENT",
@@ -210,25 +260,83 @@ export type DjangoFileType = {
   url: Scalars["String"];
 };
 
+/** An enumeration. */
+export enum DoorType {
+  Input = "INPUT",
+  Output = "OUTPUT",
+}
+
 /**
- * Connects two :class:`~Node` with each other.
+ * Connects two :class:`~Node` with each other by
+ * using their respective :class:`~NodeDoor`.
  *
- * .. todo::
+ * .. important::
  *
- *     With a script we can also jump to any other node
- *     so it is not clear how to use this.
- *     Maybe take a look at visual programming languages
- *     such as MSP or Scratch how they handle this?
+ *     It is important to note that an edge flows from
+ *     ``out_node_door`` to ``in_node_door`` as we follow
+ *     the notion from the perspective of a
+ *     :class:`story_graph.models.Node` rather than from the
+ *     edge.
+ *
+ *
+ * .. graphviz::
+ *
+ *     digraph Connection {
+ *         rank = same;
+ *         subgraph cluster_node_a {
+ *             rank = same;
+ *             label = "NODE_A";
+ *             NODE_A [shape=Msquare, label="NODE_A\n\nscript_cell_1\nscript_cell_2"];
+ *             subgraph cluster_in_nodes_a {
+ *                 label = "IN_NODES";
+ *                 in_node_door_a [label="in_node_door"];
+ *             }
+ *             subgraph cluster_out_nodes_a {
+ *                 label = "OUT_NODES";
+ *                 out_node_door_a_1 [label="out_node_door 1"];
+ *                 out_node_door_a_2 [label="out_node_door 2"];
+ *             }
+ *             in_node_door_a -> NODE_A [label="DB\nreference"];
+ *             {out_node_door_a_1, out_node_door_a_2} -> NODE_A;
+ *             in_node_door_a -> NODE_A [style=dashed, color=red, fontcolor=red, label="Engine\nProgression"];
+ *             NODE_A -> out_node_door_a_1 [style=dashed, color=red];
+ *         }
+ *
+ *         edge_ [shape=Msquare, label="EDGE"];
+ *         edge_ -> out_node_door_a_1 [label="out_node_door"];
+ *         edge_ -> in_node_door_b [label="in_node_door"];
+ *         out_node_door_a_1 -> edge_ [style=dashed, color=red];
+ *         edge_ -> in_node_door_b [style=dashed, color=red];
+ *
+ *         subgraph cluster_node_b {
+ *             rank = same;
+ *             label = "NODE_B";
+ *             NODE_B [shape=Msquare];
+ *             subgraph cluster_in_nodes_b {
+ *                 label = "IN_NODES";
+ *                 in_node_door_b [label="in_node_door"];
+ *             }
+ *             subgraph cluster_out_nodes_b {
+ *                 label = "OUT_NODES";
+ *                 out_node_door_b_1 [label="out_node_door 1"];
+ *                 out_node_door_b_2 [label="out_node_door 2"];
+ *             }
+ *             in_node_door_b -> NODE_B;
+ *             {out_node_door_b_1, out_node_door_b_2} -> NODE_B;
+ *             in_node_door_b -> NODE_B [style=dashed, color=red];
+ *             NODE_B -> out_node_door_b_1 [style=dashed, color=red];
+ *         }
+ *     }
  */
 export type Edge = {
-  inNode: Node;
-  outNode: Node;
+  inNodeDoor?: Maybe<NodeDoor>;
+  outNodeDoor?: Maybe<NodeDoor>;
   uuid: Scalars["UUID"];
 };
 
 export type EdgeInput = {
-  nodeInUuid: Scalars["UUID"];
-  nodeOutUuid: Scalars["UUID"];
+  nodeDoorInUuid: Scalars["UUID"];
+  nodeDoorOutUuid: Scalars["UUID"];
 };
 
 /**
@@ -336,9 +444,9 @@ export type Mutation = {
   /**
    * Creates a :class:`~story_graph.models.Edge` for a given
    * :class:`~story_graph.models.Graph`.
-   * It does not return the created edge.
+   * It returns the created edge.
    */
-  addEdge?: Maybe<Scalars["Void"]>;
+  addEdge: Edge;
   addGraph: Graph;
   /**
    * Creates a new :class:`~story_graph.models.Node` in a given
@@ -348,6 +456,7 @@ export type Mutation = {
   addNode?: Maybe<Scalars["Void"]>;
   authLogin: LoginRequestResponse;
   authLogout: Scalars["Boolean"];
+  createNodeDoor: NodeDoor;
   /** Creates or updates a given :class:`~story_graph.models.ScriptCell` to change its content. */
   createScriptCells: Array<ScriptCell>;
   createUpdateStreamVariable: Array<StreamVariable>;
@@ -355,6 +464,11 @@ export type Mutation = {
   deleteEdge?: Maybe<Scalars["Void"]>;
   /** Deletes a given :class:`~story_graph.models.Node`. */
   deleteNode?: Maybe<Scalars["Void"]>;
+  /**
+   * Allows to delete a non-default NodeDoor.
+   * If a node door was deleted it will return ``True``, otherwise ``False``.
+   */
+  deleteNodeDoor: Scalars["Boolean"];
   /** Deletes a given :class:`~story_graph.models.ScriptCell`. */
   deleteScriptCell?: Maybe<Scalars["Void"]>;
   /** Update metadata of an :class:`~stream.models.AudioFile` via a UUID */
@@ -364,6 +478,7 @@ export type Mutation = {
    * for renaming or moving it across the canvas.
    */
   updateNode?: Maybe<Scalars["Void"]>;
+  updateNodeDoor: NodeDoor;
   updateScriptCells: Array<ScriptCell>;
 };
 
@@ -394,6 +509,12 @@ export type MutationAuthLoginArgs = {
 };
 
 /** Mutations for Gencaster via GraphQL. */
+export type MutationCreateNodeDoorArgs = {
+  nodeDoorInput: NodeDoorInputCreate;
+  nodeUuid: Scalars["UUID"];
+};
+
+/** Mutations for Gencaster via GraphQL. */
 export type MutationCreateScriptCellsArgs = {
   nodeUuid: Scalars["UUID"];
   scriptCellInputs: Array<ScriptCellInputCreate>;
@@ -415,6 +536,11 @@ export type MutationDeleteNodeArgs = {
 };
 
 /** Mutations for Gencaster via GraphQL. */
+export type MutationDeleteNodeDoorArgs = {
+  nodeDoorUuid: Scalars["UUID"];
+};
+
+/** Mutations for Gencaster via GraphQL. */
 export type MutationDeleteScriptCellArgs = {
   scriptCellUuid: Scalars["UUID"];
 };
@@ -431,6 +557,11 @@ export type MutationUpdateNodeArgs = {
 };
 
 /** Mutations for Gencaster via GraphQL. */
+export type MutationUpdateNodeDoorArgs = {
+  nodeDoorInput: NodeDoorInputUpdate;
+};
+
+/** Mutations for Gencaster via GraphQL. */
 export type MutationUpdateScriptCellsArgs = {
   scriptCellInputs: Array<ScriptCellInputUpdate>;
 };
@@ -443,12 +574,13 @@ export type NoStreamAvailable = {
 /** A node. */
 export type Node = {
   color: Scalars["String"];
-  inEdges: Array<Edge>;
+  inNodeDoors: Array<NodeDoor>;
   /** Acts as a singular entrypoint for our graph.Only one such node can exist per graph. */
   isEntryNode: Scalars["Boolean"];
   /** Name of the node */
   name: Scalars["String"];
-  outEdges: Array<Edge>;
+  nodeDoors: Array<NodeDoor>;
+  outNodeDoors: Array<NodeDoor>;
   /** x-Position in graph canvas */
   positionX: Scalars["Float"];
   /** y-Position in graph canvas */
@@ -465,6 +597,95 @@ export type NodeCreate = {
   positionY?: InputMaybe<Scalars["Float"]>;
 };
 
+/**
+ * A :class:`~Node` can be entered and exited via
+ * multiple paths, where each of these exits and
+ * entrances is called a *door*.
+ *
+ * A connection between nodes can only be made via their
+ * doors.
+ * There are two types of doors:
+ *
+ * .. list-table:: Door types
+ *     :header-rows: 1
+ *
+ *     * - Kind
+ *       - Description
+ *     * - **INPUT**
+ *       - Allows to enter a node.
+ *         Currently each Node only has one entry point
+ *         but for future development and a nicer
+ *         database operations it is also represented.
+ *     * - **OUTPUT**
+ *       - Allows to exit a node.
+ *         After all script cells of a node has been
+ *         executed, the condition of each door will
+ *         be evaluated (like in a switch case).
+ *         Once a condition has been met, the door
+ *         will be stepped through.
+ *         This allows to have a visual representation
+ *         of logic branches.
+ *
+ * It is only possible to connect an **OUTPUT** to an
+ * **INPUT** door via an :class:`~Edge`.
+ */
+export type NodeDoor = {
+  code: Scalars["String"];
+  doorType: DoorType;
+  isDefault: Scalars["Boolean"];
+  name: Scalars["String"];
+  node: Node;
+  order: Scalars["Int"];
+  uuid: Scalars["UUID"];
+};
+
+/**
+ * A :class:`~Node` can be entered and exited via
+ * multiple paths, where each of these exits and
+ * entrances is called a *door*.
+ *
+ * A connection between nodes can only be made via their
+ * doors.
+ * There are two types of doors:
+ *
+ * .. list-table:: Door types
+ *     :header-rows: 1
+ *
+ *     * - Kind
+ *       - Description
+ *     * - **INPUT**
+ *       - Allows to enter a node.
+ *         Currently each Node only has one entry point
+ *         but for future development and a nicer
+ *         database operations it is also represented.
+ *     * - **OUTPUT**
+ *       - Allows to exit a node.
+ *         After all script cells of a node has been
+ *         executed, the condition of each door will
+ *         be evaluated (like in a switch case).
+ *         Once a condition has been met, the door
+ *         will be stepped through.
+ *         This allows to have a visual representation
+ *         of logic branches.
+ *
+ * It is only possible to connect an **OUTPUT** to an
+ * **INPUT** door via an :class:`~Edge`.
+ */
+export type NodeDoorInputCreate = {
+  code?: InputMaybe<Scalars["String"]>;
+  doorType?: InputMaybe<DoorType>;
+  name: Scalars["String"];
+  order?: InputMaybe<Scalars["Int"]>;
+};
+
+export type NodeDoorInputUpdate = {
+  code?: InputMaybe<Scalars["String"]>;
+  doorType?: DoorType;
+  name?: InputMaybe<Scalars["String"]>;
+  order?: InputMaybe<Scalars["Int"]>;
+  uuid: Scalars["UUID"];
+};
+
 export type NodeUpdate = {
   color?: InputMaybe<Scalars["String"]>;
   name?: InputMaybe<Scalars["String"]>;
@@ -478,7 +699,23 @@ export type OffsetPaginationInput = {
   offset?: Scalars["Int"];
 };
 
-/** An enumeration. */
+/**
+ * Different kinds of playback.
+ *
+ * .. list-table:: Playback types
+ *     :header-rows: 1
+ *
+ *     * - Name
+ *       - Description
+ *     * - ``SYNC``
+ *       - Plays back an audio file and waits for the
+ *         playback to finish before continuing the
+ *         execution of the script cells.
+ *     * - ``ASYNC``
+ *       - Plays back an audio file and immediately
+ *         continues the execution of script cells.
+ *         This is fitting for e.g. background music.
+ */
 export enum PlaybackChoices {
   AsyncPlayback = "ASYNC_PLAYBACK",
   SyncPlayback = "SYNC_PLAYBACK",
@@ -884,11 +1121,11 @@ export type GetGraphsMetaQuery = {
 };
 
 export type CreateEdgeMutationVariables = Exact<{
-  nodeInUuid: Scalars["UUID"];
-  nodeOutUuid: Scalars["UUID"];
+  nodeDoorInUuid: Scalars["UUID"];
+  nodeDoorOutUuid: Scalars["UUID"];
 }>;
 
-export type CreateEdgeMutation = { addEdge?: any | null };
+export type CreateEdgeMutation = { addEdge: { uuid: any } };
 
 export type CreateNodeMutationVariables = Exact<{
   name: Scalars["String"];
@@ -945,6 +1182,14 @@ export type DeleteScriptCellMutationVariables = Exact<{
 
 export type DeleteScriptCellMutation = { deleteScriptCell?: any | null };
 
+export type NodeDoorBasicFragment = {
+  uuid: any;
+  name: string;
+  order: number;
+  isDefault: boolean;
+  node: { uuid: any };
+};
+
 export type GraphSubscriptionVariables = Exact<{
   uuid: Scalars["UUID"];
 }>;
@@ -953,7 +1198,23 @@ export type GraphSubscription = {
   graph: {
     name: string;
     uuid: any;
-    edges: Array<{ uuid: any; outNode: { uuid: any }; inNode: { uuid: any } }>;
+    edges: Array<{
+      uuid: any;
+      inNodeDoor?: {
+        uuid: any;
+        name: string;
+        order: number;
+        isDefault: boolean;
+        node: { uuid: any };
+      } | null;
+      outNodeDoor?: {
+        uuid: any;
+        name: string;
+        order: number;
+        isDefault: boolean;
+        node: { uuid: any };
+      } | null;
+    }>;
     nodes: Array<{
       name: string;
       uuid: any;
@@ -966,8 +1227,31 @@ export type GraphSubscription = {
         cellType: CellType;
         uuid: any;
       }>;
+      inNodeDoors: Array<{
+        uuid: any;
+        name: string;
+        order: number;
+        isDefault: boolean;
+        node: { uuid: any };
+      }>;
+      outNodeDoors: Array<{
+        uuid: any;
+        name: string;
+        order: number;
+        isDefault: boolean;
+        node: { uuid: any };
+      }>;
     }>;
   };
+};
+
+export type NodeDoorDetailFragment = {
+  uuid: any;
+  name: string;
+  order: number;
+  isDefault: boolean;
+  code: string;
+  doorType: DoorType;
 };
 
 export type NodeSubscriptionVariables = Exact<{
@@ -981,6 +1265,22 @@ export type NodeSubscription = {
     positionX: number;
     positionY: number;
     uuid: any;
+    inNodeDoors: Array<{
+      uuid: any;
+      name: string;
+      order: number;
+      isDefault: boolean;
+      code: string;
+      doorType: DoorType;
+    }>;
+    outNodeDoors: Array<{
+      uuid: any;
+      name: string;
+      order: number;
+      isDefault: boolean;
+      code: string;
+      doorType: DoorType;
+    }>;
     scriptCells: Array<{
       cellCode: string;
       cellOrder: number;
@@ -1259,6 +1559,31 @@ export type StreamLogsSubscription = {
   };
 };
 
+export type CreateNodeDoorMutationVariables = Exact<{
+  nodeUuid: Scalars["UUID"];
+  name: Scalars["String"];
+  code?: Scalars["String"];
+  doorType?: InputMaybe<DoorType>;
+  order?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type CreateNodeDoorMutation = { createNodeDoor: { uuid: any } };
+
+export type DeleteNodeDoorMutationVariables = Exact<{
+  nodeDoorUuid: Scalars["UUID"];
+}>;
+
+export type DeleteNodeDoorMutation = { deleteNodeDoor: boolean };
+
+export type UpdateNodeDoorMutationVariables = Exact<{
+  uuid: Scalars["UUID"];
+  name?: InputMaybe<Scalars["String"]>;
+  code?: InputMaybe<Scalars["String"]>;
+  order?: InputMaybe<Scalars["Int"]>;
+}>;
+
+export type UpdateNodeDoorMutation = { updateNodeDoor: { uuid: any } };
+
 export const FullStreamInfoFragmentDoc = gql`
   fragment FullStreamInfo on StreamInfo {
     __typename
@@ -1307,6 +1632,27 @@ export const AudioFileInfoFragmentDoc = gql`
       size
       url
     }
+  }
+`;
+export const NodeDoorBasicFragmentDoc = gql`
+  fragment NodeDoorBasic on NodeDoor {
+    uuid
+    name
+    order
+    isDefault
+    node {
+      uuid
+    }
+  }
+`;
+export const NodeDoorDetailFragmentDoc = gql`
+  fragment NodeDoorDetail on NodeDoor {
+    uuid
+    name
+    order
+    isDefault
+    code
+    doorType
   }
 `;
 export const StreamInfoFragmentFragmentDoc = gql`
@@ -1376,8 +1722,15 @@ export function useGetGraphsMetaQuery(
   });
 }
 export const CreateEdgeDocument = gql`
-  mutation createEdge($nodeInUuid: UUID!, $nodeOutUuid: UUID!) {
-    addEdge(newEdge: { nodeInUuid: $nodeInUuid, nodeOutUuid: $nodeOutUuid })
+  mutation createEdge($nodeDoorInUuid: UUID!, $nodeDoorOutUuid: UUID!) {
+    addEdge(
+      newEdge: {
+        nodeDoorInUuid: $nodeDoorInUuid
+        nodeDoorOutUuid: $nodeDoorOutUuid
+      }
+    ) {
+      uuid
+    }
   }
 `;
 
@@ -1511,11 +1864,11 @@ export const GraphDocument = gql`
       uuid
       edges {
         uuid
-        outNode {
-          uuid
+        inNodeDoor {
+          ...NodeDoorBasic
         }
-        inNode {
-          uuid
+        outNodeDoor {
+          ...NodeDoorBasic
         }
       }
       nodes {
@@ -1530,9 +1883,16 @@ export const GraphDocument = gql`
         positionX
         positionY
         color
+        inNodeDoors {
+          ...NodeDoorBasic
+        }
+        outNodeDoors {
+          ...NodeDoorBasic
+        }
       }
     }
   }
+  ${NodeDoorBasicFragmentDoc}
 `;
 
 export function useGraphSubscription<R = GraphSubscription>(
@@ -1550,6 +1910,12 @@ export function useGraphSubscription<R = GraphSubscription>(
 export const NodeDocument = gql`
   subscription node($uuid: UUID!) {
     node(nodeUuid: $uuid) {
+      inNodeDoors {
+        ...NodeDoorDetail
+      }
+      outNodeDoors {
+        ...NodeDoorDetail
+      }
       color
       name
       positionX
@@ -1578,6 +1944,7 @@ export const NodeDocument = gql`
       uuid
     }
   }
+  ${NodeDoorDetailFragmentDoc}
 `;
 
 export function useNodeSubscription<R = NodeSubscription>(
@@ -1896,4 +2263,65 @@ export function useStreamLogsSubscription<R = StreamLogsSubscription>(
     R,
     StreamLogsSubscriptionVariables
   >({ query: StreamLogsDocument, ...options }, handler);
+}
+export const CreateNodeDoorDocument = gql`
+  mutation createNodeDoor(
+    $nodeUuid: UUID!
+    $name: String!
+    $code: String! = ""
+    $doorType: DoorType = OUTPUT
+    $order: Int
+  ) {
+    createNodeDoor(
+      nodeDoorInput: {
+        name: $name
+        code: $code
+        doorType: $doorType
+        order: $order
+      }
+      nodeUuid: $nodeUuid
+    ) {
+      uuid
+    }
+  }
+`;
+
+export function useCreateNodeDoorMutation() {
+  return Urql.useMutation<
+    CreateNodeDoorMutation,
+    CreateNodeDoorMutationVariables
+  >(CreateNodeDoorDocument);
+}
+export const DeleteNodeDoorDocument = gql`
+  mutation deleteNodeDoor($nodeDoorUuid: UUID!) {
+    deleteNodeDoor(nodeDoorUuid: $nodeDoorUuid)
+  }
+`;
+
+export function useDeleteNodeDoorMutation() {
+  return Urql.useMutation<
+    DeleteNodeDoorMutation,
+    DeleteNodeDoorMutationVariables
+  >(DeleteNodeDoorDocument);
+}
+export const UpdateNodeDoorDocument = gql`
+  mutation updateNodeDoor(
+    $uuid: UUID!
+    $name: String
+    $code: String
+    $order: Int
+  ) {
+    updateNodeDoor(
+      nodeDoorInput: { name: $name, code: $code, order: $order, uuid: $uuid }
+    ) {
+      uuid
+    }
+  }
+`;
+
+export function useUpdateNodeDoorMutation() {
+  return Urql.useMutation<
+    UpdateNodeDoorMutation,
+    UpdateNodeDoorMutationVariables
+  >(UpdateNodeDoorDocument);
 }
