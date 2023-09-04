@@ -13,8 +13,8 @@
       <div class="right">
         <button
           class="unstyled"
-          :disabled="newScriptCellUpdates.size < 1"
-          @click="interfaceStore.executeScriptCellUpdates()"
+          :disabled="!unsavedNodeChanges"
+          @click="interfaceStore.executeUpdates()"
         >
           Save Scene
         </button>
@@ -53,14 +53,14 @@
       v-if="showNodeExitDialog"
       @save="
         () => {
-          interfaceStore.executeScriptCellUpdates();
+          interfaceStore.executeUpdates();
           showNodeEditor = false;
           cachedNodeData = undefined;
         }
       "
       @no-save="
         () => {
-          newScriptCellUpdates = new Map();
+          interfaceStore.resetUpdates();
           showNodeEditor = false;
           cachedNodeData = undefined;
         }
@@ -102,7 +102,7 @@ const emit = defineEmits<{
 }>();
 
 const interfaceStore = useInterfaceStore();
-const { showNodeEditor, newScriptCellUpdates, cachedNodeData } =
+const { showNodeEditor, unsavedNodeChanges, cachedNodeData } =
   storeToRefs(interfaceStore);
 
 const showAudioFileBrowser: Ref<boolean> = ref(false);
@@ -112,7 +112,7 @@ const showRenameNodeDialog: Ref<boolean> = ref(false);
 const createScriptCellMutation = useCreateScriptCellsMutation();
 
 const closeScriptCellEditor = async () => {
-  if (newScriptCellUpdates.value.size < 1) {
+  if (!unsavedNodeChanges.value) {
     showNodeEditor.value = false;
   } else {
     showNodeExitDialog.value = true;
@@ -120,7 +120,7 @@ const closeScriptCellEditor = async () => {
 };
 
 const addScriptCell = async (cellType: CellType) => {
-  if (newScriptCellUpdates.value.size > 0) {
+  if (unsavedNodeChanges) {
     ElMessage.warning(
       "Please save your changes before adding a new script cell",
     );
