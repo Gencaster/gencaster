@@ -14,7 +14,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(change_drifter_to_default_template),
+        migrations.RunPython(
+            code=change_drifter_to_default_template,
+            reverse_code=migrations.RunPython.noop,
+        ),
         migrations.AlterField(
             model_name="graph",
             name="about_text",
