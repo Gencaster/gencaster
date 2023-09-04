@@ -21,6 +21,7 @@ from . import models
 CellType = strawberry.enum(models.CellType)  # type: ignore
 PlaybackType = strawberry.enum(models.AudioCell.PlaybackChoices)  # type: ignore
 TemplateType = strawberry.enum(models.Graph.GraphDetailTemplate)  # type: ignore
+NodeDoorType = strawberry.enum(models.NodeDoor.DoorType)  # type: ignore
 
 
 @strawberry.input
@@ -43,8 +44,8 @@ class NodeUpdate:
 
 @strawberry.input
 class EdgeInput:
-    node_in_uuid: uuid.UUID
-    node_out_uuid: uuid.UUID
+    node_door_in_uuid: uuid.UUID
+    node_door_out_uuid: uuid.UUID
 
 
 @strawberry.django.filters.filter(models.Graph, lookups=True)
@@ -67,7 +68,7 @@ class Graph:
 
     @strawberry.django.field
     def edges(self) -> List["Edge"]:
-        return models.Edge.objects.filter(in_node__graph=self)  # type: ignore
+        return models.Edge.objects.filter(out_node_door__node__graph=self)  # type: ignore
 
 
 @strawberry.django.type(models.Node)
@@ -79,16 +80,61 @@ class Node:
     position_y: auto
     is_entry_node: auto
 
-    in_edges: List["Edge"]
-    out_edges: List["Edge"]
     script_cells: List["ScriptCell"]
+    node_doors: List["NodeDoor"]
+
+    @strawberry.django.field
+    def in_node_doors(self) -> List["NodeDoor"]:
+        return models.NodeDoor.objects.filter(
+            node=self,
+            door_type=models.NodeDoor.DoorType.INPUT,
+        )  # type: ignore
+
+    @strawberry.django.field
+    def out_node_doors(self) -> List["NodeDoor"]:
+        return models.NodeDoor.objects.filter(
+            node=self,
+            door_type=models.NodeDoor.DoorType.OUTPUT,
+        )  # type: ignore
+
+
+@strawberry.django.type(models.NodeDoor)
+class NodeDoor:
+    uuid: auto
+    door_type: NodeDoorType  # type: ignore
+    node: Node
+    name: auto
+    order: auto
+    is_default: auto
+    code: auto
+
+
+@strawberry.django.input(models.NodeDoor)
+class NodeDoorInputCreate:
+    # default is disabled as it is not possible for a user
+    # to create a default door
+    door_type: NodeDoorType  # type: ignore
+    name: auto
+    order: auto
+    code: auto
+
+
+# @strawberry.django.input(models.NodeDoor) - using this makes
+# some mandatory fields optional - so we use a manual setup
+@strawberry.input
+class NodeDoorInputUpdate:
+    uuid: uuid.UUID
+    door_type: NodeDoorType = models.NodeDoor.DoorType.OUTPUT  # type: ignore
+    name: Optional[str] = None
+    order: Optional[int] = None
+    code: Optional[str] = None
 
 
 @strawberry.django.type(models.Edge)
 class Edge:
     uuid: auto
-    in_node: Node
-    out_node: Node
+    in_node_door: NodeDoor
+    out_node_door: NodeDoor
 
 
 @strawberry.django.type(models.AudioCell)
