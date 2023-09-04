@@ -39,11 +39,15 @@ from story_graph.engine import Engine
 from story_graph.types import (
     AddGraphInput,
     AudioCellInput,
+    Edge,
     EdgeInput,
     Graph,
     GraphFilter,
     Node,
     NodeCreate,
+    NodeDoor,
+    NodeDoorInputCreate,
+    NodeDoorInputUpdate,
     NodeUpdate,
     ScriptCell,
     ScriptCellInputCreate,
@@ -275,29 +279,27 @@ class Mutation:
         return None
 
     @strawberry.mutation
-    async def add_edge(self, info: Info, new_edge: EdgeInput) -> None:
+    async def add_edge(self, info: Info, new_edge: EdgeInput) -> Edge:
         """Creates a :class:`~story_graph.models.Edge` for a given
         :class:`~story_graph.models.Graph`.
-        It does not return the created edge.
+        It returns the created edge.
         """
         await graphql_check_authenticated(info)
-        in_node: story_graph_models.Node = (
-            await story_graph_models.Node.objects.select_related("graph").aget(
-                uuid=new_edge.node_in_uuid
-            )
+        in_node_door = await story_graph_models.NodeDoor.objects.select_related(
+            "node__graph"
+        ).aget(uuid=new_edge.node_door_in_uuid)
+        out_node_door = await story_graph_models.NodeDoor.objects.aget(
+            uuid=new_edge.node_door_out_uuid
         )
-        out_node: story_graph_models.Node = await story_graph_models.Node.objects.aget(
-            uuid=new_edge.node_out_uuid
-        )
-        edge: story_graph_models.Edge = await story_graph_models.Edge.objects.acreate(
-            in_node=in_node,
-            out_node=out_node,
+        edge = await story_graph_models.Edge.objects.acreate(
+            in_node_door=in_node_door,
+            out_node_door=out_node_door,
         )
         await GenCasterChannel.send_graph_update(
             layer=info.context.channel_layer,
-            graph_uuid=in_node.graph.uuid,
+            graph_uuid=in_node_door.node.graph.uuid,
         )
-        return None
+        return edge  # type: ignore
 
     @strawberry.mutation
     async def delete_edge(self, info, edge_uuid: uuid.UUID) -> None:
@@ -306,16 +308,17 @@ class Mutation:
         try:
             edge: story_graph_models.Edge = (
                 await story_graph_models.Edge.objects.select_related(
-                    "in_node__graph"
+                    "in_node_door__node__graph"
                 ).aget(uuid=edge_uuid)
             )
             await story_graph_models.Edge.objects.filter(uuid=edge_uuid).adelete()
         except Exception:
             raise Exception(f"Could not delete edge {edge_uuid}")
-        await GenCasterChannel.send_graph_update(
-            layer=info.context.channel_layer,
-            graph_uuid=edge.in_node.graph.uuid,
-        )
+        if edge.in_node_door:
+            await GenCasterChannel.send_graph_update(
+                layer=info.context.channel_layer,
+                graph_uuid=edge.in_node_door.node.graph.uuid,
+            )
         return None
 
     @strawberry.mutation
@@ -528,6 +531,55 @@ class Mutation:
 
         return stream_vars  # type: ignore
 
+    @strawberry.mutation
+    async def create_node_door(
+        self,
+        info,
+        node_door_input: NodeDoorInputCreate,
+        node_uuid: uuid.UUID,
+    ) -> NodeDoor:
+        await graphql_check_authenticated(info)
+        node = await story_graph_models.Node.objects.aget(uuid=node_uuid)
+        return await story_graph_models.NodeDoor.objects.acreate(
+            door_type=node_door_input.door_type,
+            node=node,
+            name=node_door_input.name,
+            order=node_door_input.order,
+            code=node_door_input.code,
+        )  # type: ignore
+
+    @strawberry.mutation
+    async def update_node_door(
+        self,
+        info,
+        node_door_input: NodeDoorInputUpdate,
+    ) -> NodeDoor:
+        await graphql_check_authenticated(info)
+        node_door = await story_graph_models.NodeDoor.objects.aget(
+            uuid=node_door_input.uuid
+        )
+        node_door.door_type = node_door_input.door_type
+        if node_door_input.code:
+            node_door.code = node_door_input.code
+        if node_door_input.name:
+            node_door.name = node_door_input.name
+        if node_door_input.order:
+            node_door.order = node_door_input.order
+        await node_door.asave()
+        return node_door  # type: ignore
+
+    @strawberry.mutation
+    async def delete_node_door(self, info, node_door_uuid: uuid.UUID) -> bool:
+        """Allows to delete a non-default NodeDoor.
+        If a node door was deleted it will return ``True``, otherwise ``False``.
+        """
+        await graphql_check_authenticated(info)
+        deleted_objects, _ = await story_graph_models.NodeDoor.objects.filter(
+            is_default=False,
+            uuid=node_door_uuid,
+        ).adelete()
+        return deleted_objects >= 1
+
 
 @strawberry.type
 class Subscription:
@@ -656,7 +708,7 @@ class Subscription:
             async for stream in stream_models.Stream.objects.order_by("-created_date")[
                 0:limit
             ]:
-                streams_db.append(stream)
+                streams_db.append(stream)  # type: ignore
             return streams_db
 
         yield await get_streams()
