@@ -22,7 +22,13 @@ class StreamLogInline(admin.TabularInline):
 
     fields = ["created_date", "name", "level", "message"]
 
-    readonly_fields = fields
+    search_fields = [
+        "name",
+        "level",
+        "message",
+    ]
+
+    readonly_fields = ["created_date", "name", "level", "message"]
 
 
 @admin.register(Stream)
@@ -41,6 +47,14 @@ class StreamAdmin(admin.ModelAdmin):
         "num_listeners",
     ]
 
+    autocomplete_fields = [
+        "stream_point",
+    ]
+
+    search_fields = [
+        "uuid",
+    ]
+
 
 @admin.register(StreamPoint)
 class StreamPointAdmin(admin.ModelAdmin):
@@ -55,10 +69,17 @@ class StreamPointAdmin(admin.ModelAdmin):
         "host",
         "port",
         "last_live",
+        "uuid",
     ]
 
     list_filter = [
         "host",
+    ]
+
+    search_fields = [
+        "host",
+        "port",
+        "uuid",
     ]
 
 
@@ -82,6 +103,15 @@ class StreamInstructionAdmin(admin.ModelAdmin):
         "return_value",
     ]
 
+    search_fields = [
+        "uuid",
+        "return_value",
+    ]
+
+    autocomplete_fields = [
+        "stream_point",
+    ]
+
 
 @admin.register(AudioFile)
 class AudioFileAdmin(admin.ModelAdmin):
@@ -96,6 +126,11 @@ class AudioFileAdmin(admin.ModelAdmin):
         "uuid",
         "created_date",
         "modified_date",
+    ]
+
+    search_fields = [
+        "uuid",
+        "name",
     ]
 
     list_filter = ["created_date", "auto_generated"]
@@ -123,6 +158,11 @@ class TextToSpeechAdmin(admin.ModelAdmin):
         "voice_name",
     ]
 
+    search_fields = [
+        "text",
+        "uuid",
+    ]
+
 
 @admin.register(StreamVariable)
 class StreamVariableAdmin(admin.ModelAdmin):
@@ -138,6 +178,17 @@ class StreamVariableAdmin(admin.ModelAdmin):
         "stream__stream_point",
     ]
 
+    search_fields = [
+        "uuid",
+        "key",
+        "value",
+        "stream__graph__name",
+    ]
+
+    autocomplete_fields = [
+        "stream",
+    ]
+
 
 @admin.register(StreamLog)
 class StreamLogAdmin(admin.ModelAdmin):
@@ -150,6 +201,11 @@ class StreamLogAdmin(admin.ModelAdmin):
         "stream_point",
         "stream",
         "level",
+    ]
+
+    autocomplete_fields = [
+        "stream_point",
+        "stream",
     ]
 
     search_fields = ["message"]

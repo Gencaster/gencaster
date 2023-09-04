@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import AudioCell, Edge, Graph, Node, ScriptCell
+from .models import AudioCell, Edge, Graph, Node, NodeDoor, ScriptCell
 
 
 class NodeInline(admin.TabularInline):
@@ -8,21 +8,42 @@ class NodeInline(admin.TabularInline):
     extra: int = 0
 
 
-class InEdgeInline(admin.TabularInline):
-    model = Edge
+class NodeDoorInline(admin.TabularInline):
+    model = NodeDoor
     extra = 1
-    fk_name: str = "in_node"
-
-
-class OutEdgeInline(admin.TabularInline):
-    model = Edge
-    extra = 1
-    fk_name: str = "out_node"
+    fk_name = "node"
 
 
 class ScriptCellInline(admin.TabularInline):
     model = ScriptCell
     extra: int = 1
+
+
+@admin.register(NodeDoor)
+class NodeDoorAdmin(admin.ModelAdmin):
+    list_display = [
+        "uuid",
+        "node",
+        "name",
+        "door_type",
+        "is_default",
+    ]
+
+    autocomplete_fields = [
+        "node",
+    ]
+
+    search_fields = [
+        "name",
+        "node__graph__name",
+        "node__name",
+    ]
+
+    list_filter = [
+        "door_type",
+        "node__graph",
+        "is_default",
+    ]
 
 
 @admin.register(Graph)
@@ -36,6 +57,12 @@ class GraphAdmin(admin.ModelAdmin):
         "public_visible",
     ]
 
+    search_fields = [
+        "name",
+        "display_name",
+        "slug_name",
+    ]
+
     prepopulated_fields = {
         "slug_name": ["name"],
         "display_name": ["name"],
@@ -46,7 +73,7 @@ class GraphAdmin(admin.ModelAdmin):
 
 @admin.register(Node)
 class NodeAdmin(admin.ModelAdmin):
-    inlines = [ScriptCellInline, InEdgeInline, OutEdgeInline]
+    inlines = [ScriptCellInline, NodeDoorInline]
     list_display = [
         "name",
         "graph",
@@ -60,17 +87,36 @@ class NodeAdmin(admin.ModelAdmin):
         "is_blocking_node",
     ]
 
+    search_fields = [
+        "name",
+        "graph__name",
+    ]
+
+    autocomplete_fields = [
+        "graph",
+    ]
+
 
 @admin.register(Edge)
 class EdgeAdmin(admin.ModelAdmin):
     list_display = [
         "uuid",
-        "in_node",
-        "out_node",
+        "in_node_door",
+        "out_node_door",
+    ]
+
+    search_fields = [
+        "in_node_door__node__name",
+        "out_node_door__node__name",
+    ]
+
+    autocomplete_fields = [
+        "in_node_door",
+        "out_node_door",
     ]
 
     list_filter = [
-        "in_node__graph",
+        "in_node_door__node__graph",
     ]
 
 
@@ -87,8 +133,16 @@ class ScriptCellAdmin(admin.ModelAdmin):
         "cell_type",
     ]
 
+    search_fields = [
+        "node__name",
+    ]
+
     readonly_fields = [
         "uuid",
+    ]
+
+    autocomplete_fields = [
+        "node",
     ]
 
 
@@ -98,8 +152,17 @@ class AudioCellAdmin(admin.ModelAdmin):
 
     readonly_fields = ["uuid"]
 
+    search_fields = [
+        "uuid",
+        "node__name",
+    ]
+
     list_filter = [
         "playback",
         "script_cell__node__graph",
         "script_cell__node",
+    ]
+
+    autocomplete_fields = [
+        "audio_file",
     ]
