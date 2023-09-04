@@ -75,7 +75,7 @@ def setup_logging():
             self._queue.put(record)
 
     # see https://docs.python.org/3/howto/logging-cookbook.html#dealing-with-handlers-that-block
-    log_queue = Queue(-1)
+    log_queue: Queue = Queue(-1)
 
     root_logger = logging.getLogger()
     QueueHandler(log_queue)
