@@ -1,5 +1,8 @@
 {
-    "python.analysis.typeCheckingMode": "basic",
+    // "python.analysis.typeCheckingMode": "basic",
+    "mypy-type-checker.args": [
+        "--config-file=${workspaceFolder}/caster-back/setup.cfg"
+    ],
     "cSpell.words": [
         "Gencaster",
         "pythonosc",
@@ -14,5 +17,6 @@
         "javascript",
         "javascriptreact",
         "vue"
-    ]
+    ],
+    "python.analysis.typeCheckingMode": "basic"
 }
