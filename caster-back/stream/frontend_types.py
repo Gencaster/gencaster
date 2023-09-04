@@ -113,7 +113,7 @@ class Button:
         ],
         **kwargs
     ):
-        """Constructor for a OK button which will"""
+        """Constructor for a OK button which will set the StreamVariable ``button`` to ``OK``."""
         return cls(
             text=text,
             value=value,
@@ -134,8 +134,7 @@ class Button:
         **kwargs
     ):
         """Constructor for a cancel button which will simply close
-        the dialog and set the :class:`~story_graph.models.StreamVariable` ``CANCEL`` to ``'true'``
-        (but as a string!).
+        the dialog and set the :class:`~story_graph.models.StreamVariable` ``button`` to ``'cancel'``.
         """
         return cls(
             text=text,
