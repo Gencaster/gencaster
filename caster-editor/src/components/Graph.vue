@@ -16,6 +16,7 @@ import type {
   Connection,
 } from "@vue-flow/core";
 import { VueFlow, useVueFlow } from "@vue-flow/core";
+import GencasterNode from "@/components/GencasterNode.vue";
 
 // mutations
 const updateNodeMutation = useUpdateNodeMutation();
@@ -74,7 +75,8 @@ function nodes(): GraphNode[] {
       data: {
         name: node.name,
         uuid: node.uuid,
-        scriptCells: node.scriptCells,
+        inNodeDoors: node.inNodeDoors,
+        outNodeDoors: node.outNodeDoors,
       },
       id: node.uuid,
       position: {
@@ -90,13 +92,18 @@ function nodes(): GraphNode[] {
 function edges(): GraphEdge[] {
   const e: GraphEdge[] = [];
   props.graph.edges.forEach((edge) => {
-    const graphEdge: GraphEdge = {
-      id: edge.uuid,
-      source: edge.inNode.uuid,
-      target: edge.outNode.uuid,
-      animated: true,
-    };
-    e.push(graphEdge);
+    // @todo make inNodeDoor non-nullable
+    if (edge.inNodeDoor && edge.outNodeDoor) {
+      const graphEdge: GraphEdge = {
+        id: edge.uuid,
+        source: edge.inNodeDoor.node.uuid,
+        sourceHandle: edge.inNodeDoor.uuid,
+        target: edge.outNodeDoor.node.uuid,
+        targetHandle: edge.outNodeDoor.uuid,
+        animated: true,
+      };
+      e.push(graphEdge);
+    }
   });
   return e;
 }
@@ -119,6 +126,7 @@ const onNodeDragStop = (nodeDragEvent: NodeDragEvent) => {
 };
 
 const onNodeDoubleClick = (uuid: string) => {
+  console.log("uuid is", uuid);
   nextNodeDoubleClicked.value = uuid;
 
   if (showNodeEditor.value && newScriptCellUpdates.value.size > 0) {
@@ -232,12 +240,12 @@ const flowPan = (location: graphPanType) => {
 
 // this runs if mouse is released on connection
 const onConnect = async (connection: Connection) => {
-  const nodeOutUuid = connection.target;
-  const nodeInUuid = connection.source;
+  const nodeDoorOutUuid = connection.sourceHandle;
+  const nodeDoorInUuid = connection.targetHandle;
 
   const { error } = await createEdgeMutation.executeMutation({
-    nodeInUuid,
-    nodeOutUuid,
+    nodeDoorInUuid,
+    nodeDoorOutUuid,
   });
   if (error) {
     ElMessage.error(`Could not create edge: ${error.message}`);
@@ -256,16 +264,17 @@ const onConnect = async (connection: Connection) => {
         :min-zoom="1"
         :nodes="nodes()"
         :edges="edges()"
-        :nodes-connectable="true"
         :connection-line-style="connectionLineStyle"
-        :delete-key-code="'null'"
+        fit-view-on-init
+        :nodes-connectable="true"
         @node-drag-stop="onNodeDragStop"
         @connect="onConnect"
       >
         <template #node-custom="{ data }">
-          <DefaultNode
+          <GencasterNode
             :data="data"
-            @dblclick="onNodeDoubleClick"
+            :connectable="true"
+            @dblclick="() => onNodeDoubleClick(data.uuid)"
           />
         </template>
       </VueFlow>
