@@ -31,7 +31,7 @@ const updateOrder = async (
       });
     }
   });
-  interfaceStore.executeScriptCellUpdates();
+  interfaceStore.executeUpdates();
 };
 
 const moveableScriptCells = computed<NodeSubscription["node"]["scriptCells"]>({

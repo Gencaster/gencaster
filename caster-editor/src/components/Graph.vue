@@ -297,14 +297,14 @@ const onConnect = async (connection: Connection) => {
       "
       @save="
         async () => {
-          await interfaceStore.executeScriptCellUpdates();
+          await interfaceStore.executeUpdates();
           selectedNodeForEditorUuid = nextNodeDoubleClicked;
           showSwitchNodeDialog = false;
         }
       "
       @no-save="
         () => {
-          interfaceStore.resetScriptCellUpdates();
+          interfaceStore.resetUpdates();
           selectedNodeForEditorUuid = nextNodeDoubleClicked;
           showSwitchNodeDialog = false;
         }

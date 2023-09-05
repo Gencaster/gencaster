@@ -55,7 +55,7 @@ const exitGraph = () => {
   showDialog.value = false;
 
   selectedNodeForEditorUuid.value = undefined;
-  interfaceStore.resetScriptCellUpdates();
+  interfaceStore.resetUpdates();
 
   router.push({
     path: "/graph",
