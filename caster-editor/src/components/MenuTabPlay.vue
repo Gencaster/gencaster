@@ -17,34 +17,38 @@
 
 <script setup lang="ts">
 import type { Graph } from "@/graphql";
-export type GraphEdit = Pick<Graph, "uuid" | "slugName">;
+import { ElMessage } from "element-plus";
 
 const props = defineProps<{
-  graph: GraphEdit;
+  graph: Pick<Graph, "uuid" | "slugName">;
 }>();
 
-const directLink = () => {
-  // https://editor.dev.gencaster.org/graph/c5408723-7a2d-4111-826c-9ec507c0b65e
-  // to https://dev.gencaster.org/listen/demo/
+const gencasterFrontUrl = (): string | undefined => {
+  // see https://github.com/Gencaster/gencaster/pull/552/files#r1315599653
+  let url: string | undefined = undefined;
+  if (window.location.host === "127.0.0.1") {
+    url = "http://127.0.0.1:3000";
+  } else if (import.meta.env.GENCASTER_FRONT_URL) {
+    url = import.meta.env.GENCASTER_FRONT_URL;
+  }
+  return url;
+};
 
-  if (import.meta.env.DEV) {
-    const newUrl = "http://127.0.0.1:3000/listen/" + props.graph.slugName;
-    window.open(newUrl, "_blank");
+const directLink = () => {
+  const frontUrl = gencasterFrontUrl();
+  if (frontUrl) {
+    window.open(`${frontUrl}/listen/${props.graph.slugName}`, "_blank");
   } else {
-    const host = window.location.host;
-    const newUrl = "https://" + host + "/listen/" + props.graph.slugName;
-    window.open(newUrl, "_blank");
+    ElMessage.error(`Could not find the URL for the Gencaster frontend`);
   }
 };
 
 const debug = () => {
-  if (import.meta.env.DEV) {
-    const newUrl = "http://127.0.0.1:3000/debug";
-    window.open(newUrl, "_blank");
+  const frontUrl = gencasterFrontUrl();
+  if (frontUrl) {
+    window.open(`${frontUrl}/debug`, "_blank");
   } else {
-    const host = window.location.host;
-    const newUrl = "https://" + host + "/debug/";
-    window.open(newUrl, "_blank");
+    ElMessage.error(`Could not find the URL for the Gencaster frontend`);
   }
 };
 </script>
