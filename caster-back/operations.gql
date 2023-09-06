@@ -115,6 +115,7 @@ mutation deleteScriptCell($scriptCellUuid:UUID!) {
 subscription graph($uuid: UUID!) {
   graph(graphUuid: $uuid) {
     name
+    slugName
     uuid
     edges {
       uuid

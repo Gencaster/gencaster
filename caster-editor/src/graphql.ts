@@ -952,6 +952,7 @@ export type GraphSubscriptionVariables = Exact<{
 export type GraphSubscription = {
   graph: {
     name: string;
+    slugName: string;
     uuid: any;
     edges: Array<{ uuid: any; outNode: { uuid: any }; inNode: { uuid: any } }>;
     nodes: Array<{
@@ -1508,8 +1509,8 @@ export const GraphDocument = gql`
   subscription graph($uuid: UUID!) {
     graph(graphUuid: $uuid) {
       name
-      uuid
       slugName
+      uuid
       edges {
         uuid
         outNode {
