@@ -22,11 +22,7 @@
 
 <script setup lang="ts">
 import type { Graph } from "@/graphql";
-import {
-  useCreateEdgeMutation,
-  useDeleteEdgeMutation,
-  useDeleteNodeMutation,
-} from "@/graphql";
+import { useDeleteEdgeMutation, useDeleteNodeMutation } from "@/graphql";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 import { ElMessage } from "element-plus";
 import { storeToRefs } from "pinia";
@@ -71,22 +67,5 @@ const removeSelection = async () => {
     }
     ElMessage.info(`Deleted node ${nodeUuid}`);
   });
-};
-
-const createEdgeMutation = useCreateEdgeMutation();
-const createEdge = async () => {
-  if (selectedNodeUUIDs.value.length !== 2) {
-    ElMessage.info("Creating a connection requires exactly 2 selected scenes.");
-    return;
-  }
-  const [nodeInUuid, nodeOutUuid] = selectedNodeUUIDs.value;
-  const { error } = await createEdgeMutation.executeMutation({
-    nodeInUuid,
-    nodeOutUuid,
-  });
-  if (error) {
-    ElMessage.error(`Could not create edge: ${error.message}`);
-  }
-  ElMessage.success(`Created new edge`);
 };
 </script>
