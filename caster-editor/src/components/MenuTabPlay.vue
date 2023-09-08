@@ -26,7 +26,7 @@ const props = defineProps<{
 const gencasterFrontUrl = (): string | undefined => {
   // see https://github.com/Gencaster/gencaster/pull/552/files#r1315599653
   let url: string | undefined = undefined;
-  if (window.location.host === "127.0.0.1") {
+  if (window.location.hostname === "127.0.0.1") {
     url = "http://127.0.0.1:3000";
   } else if (import.meta.env.GENCASTER_FRONT_URL) {
     url = import.meta.env.GENCASTER_FRONT_URL;
