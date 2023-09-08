@@ -51,7 +51,7 @@
     "@types/node": "^20.2.1",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitest/coverage-c8": "^0.31.0",
-    "@vue/eslint-config-prettier": "^7.0.0",
+    "@vue/eslint-config-prettier": "^7.1.0",
     "@vue/eslint-config-typescript": "^11.0.0",
     "@vue/test-utils": "^2.2.6",
     "@vue/tsconfig": "^0.1.3",
