@@ -96,10 +96,10 @@ function edges(): GraphEdge[] {
     if (edge.inNodeDoor && edge.outNodeDoor) {
       const graphEdge: GraphEdge = {
         id: edge.uuid,
-        source: edge.inNodeDoor.node.uuid,
-        sourceHandle: edge.inNodeDoor.uuid,
-        target: edge.outNodeDoor.node.uuid,
-        targetHandle: edge.outNodeDoor.uuid,
+        source: edge.outNodeDoor.node.uuid,
+        sourceHandle: edge.outNodeDoor.uuid,
+        target: edge.inNodeDoor.node.uuid,
+        targetHandle: edge.inNodeDoor.uuid,
         animated: true,
       };
       e.push(graphEdge);
