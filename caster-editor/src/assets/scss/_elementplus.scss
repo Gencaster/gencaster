@@ -45,11 +45,19 @@
       margin: 0;
       color: #{$black};
       background-color: transparent;
+
       border: none;
       border-left: none !important;
+      box-shadow: none !important;
 
       &:hover {
         color: #{$black};
+        background-color: $grey;
+      }
+    }
+
+    &.is-active {
+      .el-radio-button__inner {
         background-color: $grey;
       }
     }
