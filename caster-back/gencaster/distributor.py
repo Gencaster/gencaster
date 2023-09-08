@@ -63,6 +63,8 @@ class GenCasterChannel:
 
     GRAPH_UPDATE_TYPE = "graph.update"
     NODE_UPDATE_TYPE = "node.update"
+    STREAM_LOG_UPDATE_TYPE = "stream_log.update"
+    STREAMS_UPDATE_TYPE = "streams.update"
 
     def __init__(self) -> None:
         pass
@@ -81,9 +83,28 @@ class GenCasterChannel:
         )
 
     @staticmethod
+    async def send_log_update(
+        layer: RedisChannelLayer, stream_log_message: "StreamLogUpdateMessage"
+    ):
+        return await GenCasterChannel.send_message(
+            layer=layer, message=stream_log_message
+        )
+
+    @staticmethod
+    async def send_streams_update(layer: RedisChannelLayer, stream_uuid: str):
+        return await GenCasterChannel.send_message(
+            layer=layer, message=StreamsUpdateMessage(uuid=str(stream_uuid))
+        )
+
+    @staticmethod
     async def send_message(
         layer: RedisChannelLayer,
-        message: Union["GraphUpdateMessage", "NodeUpdateMessage"],
+        message: Union[
+            "GraphUpdateMessage",
+            "NodeUpdateMessage",
+            "StreamLogUpdateMessage",
+            "StreamsUpdateMessage",
+        ],
     ):
         for channel in message.channels:
             await layer.group_send(channel, asdict(message))
@@ -116,6 +137,34 @@ class GenCasterChannel:
         ):
             yield NodeUpdateMessage(**message)
 
+    @staticmethod
+    async def receive_stream_log_updates(
+        consumer: GraphQLWSConsumer,
+    ) -> AsyncGenerator["StreamLogUpdateMessage", None]:
+        group_name = GenCasterChannel.STREAM_LOG_UPDATE_TYPE
+        if not consumer.channel_layer:
+            raise MissingChannelLayer()
+        await consumer.channel_layer.group_add(group_name, consumer.channel_name)
+        async for message in consumer.channel_listen(
+            GenCasterChannel.STREAM_LOG_UPDATE_TYPE,
+            groups=[group_name],
+        ):
+            yield StreamLogUpdateMessage(**message)
+
+    @staticmethod
+    async def receive_streams_updates(
+        consumer: GraphQLWSConsumer,
+    ) -> AsyncGenerator["StreamsUpdateMessage", None]:
+        group_name = GenCasterChannel.STREAMS_UPDATE_TYPE
+        if not consumer.channel_layer:
+            raise MissingChannelLayer()
+        await consumer.channel_layer.group_add(group_name, consumer.channel_name)
+        async for message in consumer.channel_listen(
+            GenCasterChannel.STREAMS_UPDATE_TYPE,
+            groups=[group_name],
+        ):
+            yield StreamsUpdateMessage(**message)
+
 
 @dataclass
 class GraphUpdateMessage:
@@ -138,3 +187,32 @@ class NodeUpdateMessage:
     @property
     def channels(self) -> List[str]:
         return [uuid_to_group(self.uuid)] + self.additional_channels
+
+
+@dataclass
+class StreamLogUpdateMessage:
+    # todo if a str is inserted here it will fail
+    uuid: str
+    stream_point_uuid: Optional[str]
+    stream_uuid: Optional[str]
+
+    type: str = GenCasterChannel.STREAM_LOG_UPDATE_TYPE
+
+    additional_channels: List[str] = field(default_factory=list)
+
+    @property
+    def channels(self) -> List[str]:
+        return [GenCasterChannel.STREAM_LOG_UPDATE_TYPE] + self.additional_channels
+
+
+@dataclass
+class StreamsUpdateMessage:
+    uuid: str
+
+    type: str = GenCasterChannel.STREAMS_UPDATE_TYPE
+
+    additional_channels: List[str] = field(default_factory=list)
+
+    @property
+    def channels(self) -> List[str]:
+        return [GenCasterChannel.STREAMS_UPDATE_TYPE] + self.additional_channels

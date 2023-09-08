@@ -25,7 +25,7 @@
         </ElFormItem>
         <ElFormItem>
           <ElButton
-            :color="variables.greenLight"
+            type="primary"
             class="login-button"
             native-type="submit"
             @click="onSubmit"
@@ -44,7 +44,6 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import type { Ref } from "vue";
 import { ElButton, ElForm, ElInput, type ElFormItem } from "element-plus";
-
 
 const router = useRouter();
 
@@ -88,15 +87,15 @@ const onSubmit = () => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/variables.module.scss';
+@import "@/assets/scss/variables.module.scss";
 
 .login-wrapper {
-        margin-top: $globalPadding;
-        .el-form {
-            display: flex;
-            .el-form-item {
-                margin-right: $globalPadding;
-            }
-        }
+  margin-top: $globalPadding;
+  .el-form {
+    display: flex;
+    .el-form-item {
+      margin-right: $globalPadding;
     }
+  }
+}
 </style>

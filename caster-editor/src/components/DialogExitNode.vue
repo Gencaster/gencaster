@@ -2,31 +2,34 @@
   <div>
     <ElDialog
       v-model="showDialog"
-      title="Careful"
-      width="25%"
+      title="Exit node"
       center
+      align-center
       lock-scroll
       :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <span>
-        Unsaved changes in the editor! <br>
-        Are you sure to switch node without saving?
+        Unsaved changes in the script cells! <br>
+        Are you sure to switch or exit the node without saving?
       </span>
       <template #footer>
         <span class="dialog-footer">
           <ElButton
-            text
-            bg
+            type="info"
+            @click="emit('cancel')"
+          > Cancel </ElButton>
+          <ElButton
+            type="danger"
             @click="emit('noSave')"
           >
-            Switch without saving
+            Discard changes
           </ElButton>
           <ElButton
-            color="#ADFF00"
-            @click="emit('cancel')"
-          >
-            Cancel
-          </ElButton>
+            type="primary"
+            @click="emit('save')"
+          > Save </ElButton>
         </span>
       </template>
     </ElDialog>
@@ -34,13 +37,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type Ref } from 'vue';
+import { ref, type Ref } from "vue";
+import { ElDialog } from "element-plus";
 
 const emit = defineEmits<{
-  (e: 'noSave'): void,
-  (e: 'cancel'): void,
+  (e: "noSave"): void;
+  (e: "save"): void;
+  (e: "cancel"): void;
 }>();
 
 const showDialog: Ref<boolean> = ref(true);
-
 </script>

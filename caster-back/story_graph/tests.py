@@ -105,10 +105,10 @@ class GencasterMarkdownTestCase(TransactionTestCase):
         self.assertEqual(self.SPEAK.format("Hello World"), self.gm_md("Hello World"))
 
     def test_female(self):
-        self.assertTrue("de-DE-Standard-A" in self.gm_md("{female}`foo`"))
+        self.assertTrue("de-DE-Neural2-C" in self.gm_md("{female}`foo`"))
 
     def test_male(self):
-        self.assertTrue("de-DE-Standard-B" in self.gm_md("{male}`foo`"))
+        self.assertTrue("de-DE-Neural2-B" in self.gm_md("{male}`foo`"))
 
     def test_break(self):
         self.assertEqual(
@@ -162,6 +162,12 @@ baz.
         self.assertEqual(
             self.SPEAK.format("hello world"),
             self.gm_md("hello {var}`foo|bar`", {"foo": "world"}),
+        )
+
+    def test_raw_ssml(self):
+        self.assertEqual(
+            self.SPEAK.format('Hello <emphasis level="moderate">world</emphasis>'),
+            self.gm_md('Hello {raw_ssml}`<emphasis level="moderate">world</emphasis>`'),
         )
 
 
@@ -429,3 +435,23 @@ vars['foo'] = 42"""
             engine.wait_for_stream_variable("start", timeout=1.0, update_speed=0.1),
         )
         await asyncio.wait_for(job, timeout=0.5)
+
+    async def test_yield_dialog(self):
+        # if this fails please update the docs for the editor as well!
+        from stream.frontend_types import Dialog
+
+        await sync_to_async(self.setup_with_script_cell)(
+            "yield Dialog(title='Hello', content=[Text(text='Hello World')], buttons=[Button.ok()])"
+        )
+
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        x = engine.start().__aiter__()
+        dialog: Dialog = await asyncio.wait_for(x.__anext__(), 0.2)  # type: ignore
+        with self.assertRaises(StopAsyncIteration):
+            await asyncio.wait_for(x.__anext__(), 0.2)
+
+        self.assertEqual(dialog.title, "Hello")
+        self.assertEqual(len(dialog.content), 1)
+        self.assertEqual(dialog.content[0].text, "Hello World")  # type: ignore
+        self.assertEqual(len(dialog.buttons), 1)
+        self.assertEqual(dialog.buttons[0].text, "OK")

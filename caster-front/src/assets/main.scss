@@ -1,9 +1,9 @@
-@use 'element-plus/theme-chalk/src/dark/css-vars.scss' as *;
+@use "element-plus/theme-chalk/src/dark/css-vars.scss" as *;
 
-@import 'variables.scss';
-@import 'mixins.scss';
-@import 'typography.scss';
-@import 'elementplus.scss';
+@import "variables.scss";
+@import "mixins.scss";
+@import "typography.scss";
+@import "elementplus.scss";
 
 html,
 body,
@@ -102,8 +102,23 @@ body {
 .general-padding {
   padding-left: $mobilePadding;
   padding-right: $mobilePadding;
+
+  @include onScreen("tablet-portrait-up") {
+    padding-left: calc($mobilePadding * 2);
+    padding-right: calc($mobilePadding * 2);
+  }
 }
 
+// error
+.error {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background-color: $white;
+  width: 100%;
+  height: 100%;
+}
 
 // transitions
 

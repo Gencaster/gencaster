@@ -5,7 +5,7 @@ import MarkdownIt from "markdown-it";
 import Content from "@/components/ContentParser.vue";
 
 const props = defineProps<{
-  text: string
+  text: string;
 }>();
 
 const description = computed<string>(() => {
@@ -28,8 +28,8 @@ const description = computed<string>(() => {
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/mixins.scss';
-@import '@/assets/variables.scss';
+@import "@/assets/mixins.scss";
+@import "@/assets/variables.scss";
 
 .intro-info-screen {
   padding: 0;

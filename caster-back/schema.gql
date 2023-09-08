@@ -1,3 +1,4 @@
+### START LOGGING THREAD LOOP ###
 input AddAudioFile {
   file: Upload!
   description: String!
@@ -121,6 +122,48 @@ input AudioFileReference {
 
 union AudioFileUploadResponse = AudioFile | InvalidAudioFile
 
+"""A button which can also trigger a set of functionality."""
+type Button {
+  text: String!
+  value: String!
+  key: String!
+  buttonType: ButtonType!
+  callbackActions: [CallbackAction!]!
+}
+
+"""
+Derived from ElementPlus framework, see
+`https://element-plus.org/en-US/component/button.html`_.
+"""
+enum ButtonType {
+  DEFAULT
+  PRIMARY
+  SUCCESS
+  WARNING
+  INFO
+  DANGER
+}
+
+"""
+Allows to add a pre-defined JavaScript callback to a button or a checkbox.
+
+ACTIVATE_GPS_STREAMING          Activates streaming of GPS coordinates
+                                as :class:`~stream.models.StreamVariable`.
+                                If the GPS request succeeds the dialog will be closed,
+                                if not it the user will be forwarded to an error page
+                                which describes the setup procedure for the OS.
+SEND_VARIABLES                  Send all variables of the form / dialog to
+                                the server.
+SEND_VARIABLE                   Sends a single :class:`~stream.models.StreamVariable`
+                                with the key/value of the where the callback is
+                                attached to.
+"""
+enum CallbackAction {
+  ACTIVATE_GPS_STREAMING
+  SEND_VARIABLES
+  SEND_VARIABLE
+}
+
 """Choice of foobar"""
 enum CellType {
   MARKDOWN
@@ -130,8 +173,28 @@ enum CellType {
   AUDIO
 }
 
+"""
+A classic ``<checkbox>`` whose state (``true``/``false``) will be
+saved **as a string** under ``key`` in a :class:`~stream.models.StreamVariable`.
+"""
+type Checkbox {
+  key: String!
+  label: String!
+  checked: Boolean!
+  callbackActions: [CallbackAction!]!
+}
+
+union Content = Text | Input | Checkbox
+
 """Date with time (isoformat)"""
 scalar DateTime
+
+"""Triggers a popup on the frontend of the listener."""
+type Dialog {
+  title: String!
+  content: [Content!]!
+  buttons: [Button!]!
+}
 
 type DjangoFileType {
   name: String!
@@ -210,7 +273,6 @@ type Graph {
 """An enumeration."""
 enum GraphDetailTemplate {
   DEFAULT
-  DRIFTER
 }
 
 """
@@ -232,6 +294,16 @@ input GraphFilter {
 
   """Will be used as a URL"""
   slugName: StrFilterLookup
+}
+
+"""
+A classic ``<inptut>`` which will save its content
+under the ``key`` as a :class:`~stream.models.StreamVariable`.
+"""
+type Input {
+  key: String!
+  label: String!
+  placeholder: String!
 }
 
 input IntFilterLookup {
@@ -259,8 +331,20 @@ type InvalidAudioFile {
   error: String!
 }
 
+type LoginError {
+  errorMessage: String
+}
+
+union LoginRequestResponse = LoginError | User
+
 """Mutations for Gencaster via GraphQL."""
 type Mutation {
+  authLogin(username: String!, password: String!): LoginRequestResponse!
+  authLogout: Boolean!
+
+  """Update metadata of an :class:`~stream.models.AudioFile` via a UUID"""
+  updateAudioFile(uuid: UUID!, updateAudioFile: UpdateAudioFile!): AudioFile!
+
   """
   Creates a new :class:`~story_graph.models.Node` in a given
   ~class:`~story_graph.models.Graph`.
@@ -290,7 +374,8 @@ type Mutation {
   """
   Creates or updates a given :class:`~story_graph.models.ScriptCell` to change its content.
   """
-  createUpdateScriptCells(scriptCellInputs: [ScriptCellInput!]!, nodeUuid: UUID!): [ScriptCell!]!
+  createScriptCells(scriptCellInputs: [ScriptCellInputCreate!]!, nodeUuid: UUID!): [ScriptCell!]!
+  updateScriptCells(scriptCellInputs: [ScriptCellInputUpdate!]!): [ScriptCell!]!
 
   """Deletes a given :class:`~story_graph.models.ScriptCell`."""
   deleteScriptCell(scriptCellUuid: UUID!): Void
@@ -365,7 +450,7 @@ type Query {
   audioFiles(filters: AudioFileFilter, pagination: OffsetPaginationInput): [AudioFile!]!
   audioFile(pk: ID!, pagination: OffsetPaginationInput): AudioFile!
   streamVariable(pk: ID!): StreamVariable!
-  isAuthenticated: User!
+  isAuthenticated: User
 }
 
 """
@@ -387,11 +472,23 @@ Stores a script which can be executed
 with our :class:`~story_graph.engine.Engine` on a
 :class:`~stream.models.Stream`.
 """
-input ScriptCellInput {
-  uuid: UUID = null
+input ScriptCellInputCreate {
   cellType: CellType
   cellCode: String!
   cellOrder: Int = null
+  audioCell: AudioCellInput
+}
+
+"""
+Stores a script which can be executed
+with our :class:`~story_graph.engine.Engine` on a
+:class:`~stream.models.Stream`.
+"""
+input ScriptCellInputUpdate {
+  uuid: UUID = "<class 'uuid.UUID'>"
+  cellType: CellType
+  cellCode: String
+  cellOrder: Int
   audioCell: AudioCellInput
 }
 
@@ -438,7 +535,7 @@ type StreamInfo {
   streamInstruction: StreamInstruction
 }
 
-union StreamInfoResponse = StreamInfo | NoStreamAvailable
+union StreamInfoResponse = StreamInfo | Dialog | NoStreamAvailable
 
 """
 Instruction for a :class:`StreamPoint`, most likely to be
@@ -451,6 +548,21 @@ type StreamInstruction {
   instructionText: String!
   state: String!
   returnValue: String!
+  frontendDisplay: Dialog!
+}
+
+"""
+StreamLog(uuid, created_date, modified_date, stream_point, stream, origin, level, message, name)
+"""
+type StreamLog {
+  uuid: UUID!
+  createdDate: DateTime!
+  streamPoint: StreamPoint
+  stream: Stream
+  origin: String
+  level: Int!
+  message: String!
+  name: String
 }
 
 """
@@ -506,7 +618,12 @@ input StreamPointFilter {
 
 """
 Allows to store variables in a stream session as a key/value pair.
-Due to database constraints we will store any value a string.
+
+.. warning::
+
+    Due to database constraints all keys and values will be stored
+    as a string, so parsing a float, int or boolean requires
+    type conversion.
 """
 type StreamVariable {
   uuid: UUID!
@@ -526,10 +643,36 @@ input StreamVariableInput {
 }
 
 type Subscription {
-  count(target: Int! = 100): Int!
+  """
+  Used within the editor to synchronize any updates of the graph such as movement
+  of a :class:`~story_graph.models.Node`.
+  """
   graph(graphUuid: UUID!): Graph!
+
+  """
+  Used within the editor to synchronize any updates on a node such as updates on a
+  :class:`~story_graph.models.ScriptCell`.
+  """
   node(nodeUuid: UUID!): Node!
+
+  """
+  Used within the frontend to attach a user to a stream.
+  :class:`~story_graph.engine.Engine` contains the specifics of how the iteration over a
+  graph is handled.
+
+  Upon visit the ``num_of_listeners`` of the associated
+  :class:~stream.models.Stream` will be incremented which indicates
+  if a given stream is free or used.
+  Upon connection stop this will be decremented again.
+  """
   streamInfo(graphUuid: UUID!): StreamInfoResponse!
+  streamLogs(streamUuid: UUID = null, streamPointUuid: UUID = null): StreamLog!
+  streams(limit: Int! = 20): [Stream!]!
+}
+
+"""Displays plain text."""
+type Text {
+  text: String!
 }
 
 scalar UUID
@@ -552,6 +695,11 @@ input UUIDFilterLookup {
   isNull: Boolean
   regex: String
   iRegex: String
+}
+
+input UpdateAudioFile {
+  description: String
+  name: String
 }
 
 scalar Upload

@@ -7,12 +7,12 @@ import { PlayerState } from "@/models";
 import type { Graph } from "@/graphql";
 import AudioInfo from "@/components/AudioInfo.vue";
 
-defineProps<{
-  graph: Pick<Graph, "displayName" | "aboutText">
+const props = defineProps<{
+  graph: Pick<Graph, "displayName" | "aboutText">;
 }>();
 
 const emit = defineEmits<{
-  (e: "clicked-stop"): void
+  (e: "clicked-stop"): void;
 }>();
 
 const { startingTimestamp, play, playerState } = storeToRefs(usePlayerStore());
@@ -25,8 +25,7 @@ let interval: number;
 const duration: Ref<number> = ref(0);
 
 const stopInterval = (): void => {
-  if (interval)
-    window.clearInterval(interval);
+  if (interval) window.clearInterval(interval);
 };
 
 const initInterval = (): void => {
@@ -66,6 +65,10 @@ onBeforeUnmount(() => {
   stopInterval();
 });
 
+const infoAvailable = computed<boolean>(() => {
+  return props.graph.aboutText ? true : false;
+});
+
 const showInfo: Ref<boolean> = ref(false);
 </script>
 
@@ -81,21 +84,22 @@ const showInfo: Ref<boolean> = ref(false);
       <div v-if="showInfo">
         <AudioInfo
           :text="graph.aboutText"
-          @clicked-close="() => showInfo = false"
+          @clicked-close="() => (showInfo = false)"
         />
       </div>
     </Transition>
     <ElRow class="player-bar general-padding">
-      <ElCol :span="8">
+      <ElCol
+        v-if="infoAvailable"
+        :span="8"
+      >
         <ElButton
           class="caps"
           size="default"
           text
           @click="showInfo = !showInfo"
         >
-          <span>
-            Info
-          </span>
+          <span> Info </span>
         </ElButton>
       </ElCol>
       <ElCol
@@ -130,8 +134,8 @@ const showInfo: Ref<boolean> = ref(false);
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/mixins.scss';
-@import '@/assets/variables.scss';
+@import "@/assets/mixins.scss";
+@import "@/assets/variables.scss";
 
 .title {
   margin: 0;
@@ -143,10 +147,9 @@ const showInfo: Ref<boolean> = ref(false);
   margin-bottom: 8px;
   line-height: 1.2;
 
-  @include onScreen('phone-only') {
+  @include onScreen("phone-only") {
     max-width: 100%;
   }
-
 }
 
 .player-bar {
@@ -177,12 +180,12 @@ const showInfo: Ref<boolean> = ref(false);
   }
 
   .stop-icon {
-  width: 18px;
-  height: 18px;
-  background-color: $black;
-  border-radius: $borderRadius;
-  transform: translateY(-1px);
-  margin-right: 4px;
-}
+    width: 18px;
+    height: 18px;
+    background-color: $black;
+    border-radius: $borderRadius;
+    transform: translateY(-1px);
+    margin-right: 4px;
+  }
 }
 </style>

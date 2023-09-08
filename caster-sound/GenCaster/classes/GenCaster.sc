@@ -134,12 +134,14 @@ GenCaster {
 	var <netClient;
 	var <servers;
 
+	var <targets;
+
 	*initClass {
 		activeClients = ();
 	}
 
 
-	*new {|hostname="195.201.163.94", port=7000, password="demo"|
+	*new {|hostname="88.99.60.112", port=7000, password="demo"|
 		^super.newCopyArgs(hostname, port, password).init;
 	}
 
@@ -149,6 +151,7 @@ GenCaster {
 		(0..15).do({|i|
 			clients[i] = GenCasterClient(i, netClient, password);
 		});
+		targets = [nil];
 	}
 
 	sendAll {|code, action=\code|
@@ -183,6 +186,45 @@ GenCaster {
 		interp.codeDump = interp.codeDump.addFunc(fun);
 	}
 
+	broadcastDocument {
+		var interp, fun, document;
+		this.clear;
+
+		interp = thisProcess.interpreter;
+		document = thisProcess.nowExecutingPath;
+
+		if(document.isNil, {
+			Error("Can only broadcast from a saved document").throw;
+		});
+
+		fun = {|code|
+			var msg;
+
+			if(ScIDE.currentPath == document, {
+				var targetName = if(targets[0].isNil, {"all"}, {targets});
+				"sending to %: '%'".format(targetName, code).postln;
+
+				targets.do({|target|
+					target.postln;
+					netClient.sendMsg(GenCasterMessage.addressRemoteAction, *GenCasterMessage.remoteAction(
+						action: \code,
+						password: password,
+						cmd: code,
+						target: target,
+					));
+				});
+				nil;
+			}, {
+				code;
+			});
+		};
+		interp.preProcessor = fun;
+	}
+
+	broadcastDocumentReset {
+		thisProcess.interpreter.preProcessor = nil;
+	}
+
 	broadcast {
 		var interp, fun;
 		this.clear;
@@ -198,6 +240,12 @@ GenCaster {
 			));
 		};
 		interp.codeDump = interp.codeDump.addFunc(fun);
+	}
+
+	targets_ {|v|
+		// the nil target will not be deleted, therefore
+		// sending it to all clients
+		targets = if(v.isNil, {[nil]}, {v.asArray});
 	}
 
 	clear {
@@ -263,6 +311,7 @@ GenCasterServer {
 	var <>oscBackendClient;
 	var <>environment; // shall this be a proxy space?
 	var <>server;
+	var <beacon;
 
 	// basically a constructor which allows us to set
 	// the necessary values directly or via env variables
@@ -319,6 +368,17 @@ GenCasterServer {
 		environment[\oscBackendClient] = oscBackendClient;
 		environment[\this] = this;
 		this.loadSynthDefs;
+		beacon = Task({
+			inf.do({
+				this.sendAck(
+					status: GenCasterStatus.beacon,
+					uuid: 0,
+					message: this.serverInfo,
+					address: "/beacon",
+				);
+				5.wait;
+			});
+		});
 	}
 
 	loadSynthDefs {
@@ -426,20 +486,6 @@ GenCasterServer {
 		server.waitForBoot(onComplete: this.postStartServer);
 	}
 
-	beacon { |waitTime=5.0|
-		^Tdef(\beacon, {
-			inf.do({
-				this.sendAck(
-					status: GenCasterStatus.beacon,
-					uuid: 0,
-					message: this.serverInfo,
-					address: "/beacon",
-				);
-				waitTime.wait;
-			});
-		});
-	}
-
 	instructionReceiver {
 		^OSCdef(\instructionReceiver, {|msg, time, addr, recvPort|
 			var uuid = msg[1];
@@ -471,7 +517,7 @@ GenCasterServer {
 	postStartServer {
 		"Finished booting server".postln;
 		"Start beacon".postln;
-		this.beacon.play;
+		beacon.play;
 		this.instructionReceiver;
 	}
 }

@@ -5,11 +5,11 @@ import MarkdownIt from "markdown-it";
 import Content from "@/components/ContentParser.vue";
 
 const props = defineProps<{
-  text: string
+  text: string;
 }>();
 
 const emit = defineEmits<{
-  (e: "clicked-close"): void
+  (e: "clicked-close"): void;
 }>();
 
 const description = computed<string>(() => {
@@ -28,9 +28,7 @@ const description = computed<string>(() => {
           text
           @click="emit('clicked-close')"
         >
-          <span>
-            Schließen
-          </span>
+          <span> Close </span>
         </ElButton>
       </ElHeader>
       <ElMain>
@@ -44,8 +42,8 @@ const description = computed<string>(() => {
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/mixins.scss';
-@import '@/assets/variables.scss';
+@import "@/assets/mixins.scss";
+@import "@/assets/variables.scss";
 
 .info-screen {
   padding: 0;
@@ -68,7 +66,7 @@ const description = computed<string>(() => {
   margin-bottom: $spacingM;
 }
 
-:deep(.text)> :first-child {
+:deep(.text) > :first-child {
   margin-top: 0;
 }
 

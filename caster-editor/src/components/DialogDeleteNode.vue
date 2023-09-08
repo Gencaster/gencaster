@@ -3,27 +3,22 @@
     <ElDialog
       v-model="showDialog"
       title="Careful"
-      width="25%"
       center
       lock-scroll
       :show-close="false"
+      align-center
     >
-      <span>
-        Are you sure to delete Node "{{ node.name }}"?
-      </span>
+      <span> Are you sure to delete Node "{{ node.name }}"? </span>
       <template #footer>
         <span class="dialog-footer">
           <ElButton
-            text
-            bg
+            type="info"
             @click="emit('cancel')"
           >Cancel</ElButton>
           <ElButton
-            color="#FF0000"
+            type="danger"
             @click="deleteNode()"
-          >
-            Delete Node
-          </ElButton>
+          > Delete Node </ElButton>
         </span>
       </template>
     </ElDialog>
@@ -31,18 +26,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type Ref } from 'vue';
+import { ref, type Ref } from "vue";
 import { type Node, useDeleteNodeMutation } from "@/graphql";
 
-export type NodeDelete = Pick<Node, 'name' | 'uuid'>
+export type NodeDelete = Pick<Node, "name" | "uuid">;
 
 const emit = defineEmits<{
-    (e: 'deleted'): void,
-    (e: 'cancel'): void
+  (e: "deleted"): void;
+  (e: "cancel"): void;
 }>();
 
 const props = defineProps<{
-    node: NodeDelete
+  node: NodeDelete;
 }>();
 
 const showDialog: Ref<boolean> = ref(true);
@@ -50,12 +45,13 @@ const showDialog: Ref<boolean> = ref(true);
 const deleteNodeMutation = useDeleteNodeMutation();
 
 const deleteNode = async () => {
-    const { error } = await deleteNodeMutation.executeMutation({nodeUuid: props.node.uuid});
-    if(error) {
-        alert(`Failed to delete Node: ${error.message}`);
-    } else {
-        emit('deleted');
-    }
+  const { error } = await deleteNodeMutation.executeMutation({
+    nodeUuid: props.node.uuid,
+  });
+  if (error) {
+    alert(`Failed to delete Node: ${error.message}`);
+  } else {
+    emit("deleted");
+  }
 };
-
 </script>

@@ -1,3 +1,5 @@
+s.options.blockSize = 4096;
+
 g = GenCasterServer(verbosity: GenCasterVerbosity.debug);
 
 g.postServerInfo();

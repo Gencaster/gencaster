@@ -39,6 +39,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
+    "sphinx.ext.graphviz",
     "sphinx_autodoc_typehints",
     "sphinxcontrib_django",
     "sphinx-pydantic",

@@ -1,329 +1,390 @@
-@import 'variables.scss';
+@import "variables.scss";
 
 /* ============ Element Plus ============ */
 
 // general sizing
 .debug-layout {
+  font-size: 16px;
+
+  .el-collapse-item__header,
+  .cell,
+  .el-button,
+  .is-link {
     font-size: 16px;
 
-    .el-collapse-item__header,
-    .cell,
-    .el-button,
-    .is-link {
-        font-size: 16px;
-
-        span {
-            font-size: 16px !important;
-        }
+    span {
+      font-size: 16px !important;
     }
+  }
 
-    .el-table {
-        --el-table-border: #{$lineThin} solid var(--el-table-border-color);
-    }
+  .el-table {
+    --el-table-border: #{$lineThin} solid var(--el-table-border-color);
+  }
 }
 
 .common-layout {
-    .el-container {
-        justify-content: center;
-        padding-left: $mobilePadding;
-        padding-right: $mobilePadding;
+  .el-container {
+    justify-content: center;
+    padding-left: $mobilePadding;
+    padding-right: $mobilePadding;
+  }
 
-    }
-
-    .el-main {
-        --el-main-padding: 0px;
-        max-width: $desktopMaxWidth;
-    }
+  .el-main {
+    --el-main-padding: 0px;
+    max-width: $desktopMaxWidth;
+  }
 }
 
 .el-header {
-    width: 100%;
-    background-color: transparent;
-    height: 50px;
-    position: fixed;
-    top: 0;
-    z-index: 12;
+  width: 100%;
+  background-color: transparent;
+  height: 50px;
+  position: fixed;
+  top: 0;
+  z-index: 12;
+}
+
+// accordion
+.el-collapse {
+  font-size: $baseFontSize;
+  background-color: transparent;
+  --el-collapse-header-bg-color: transparent;
+  --el-collapse-content-bg-color: transparent;
+  --el-collapse-border-color: #{$black};
+  border-top: $lineThin solid $black;
+
+  .el-collapse-item__header,
+  .el-collapse-item__content {
+    font-size: $baseFontSize;
+  }
 }
 
 // dialog
 .el-dialog {
-    border-radius: $borderRadius;
-    border: $lineStandard solid $black;
-    padding: 20px;
-    padding-top: 10px;
-    background-color: $white;
-    width: calc(100% - 2 * $mobilePadding);
-    max-width: $cardMaxWidth;
-    height: auto;
-    max-height: calc(70vh - 4 * $mobilePadding);
-    overflow-y: scroll;
+  border-radius: $borderRadius;
+  border: $lineStandard solid $black;
+  padding: 20px;
+  padding-top: 10px;
+  background-color: $white;
+  width: calc(100% - 2 * $mobilePadding);
+  max-width: $cardMaxWidth;
+  height: auto;
+  max-height: calc(70vh - 4 * $mobilePadding);
+  overflow-y: scroll;
 
-    .el-dialog__header {
-        display: none
-    }
+  .el-dialog__body {
+    padding: 0;
+    @include fontStyle("body");
+    margin: 0;
 
-    .el-dialog__body {
-        padding: 0
+    .el-form-item__label {
+      @include fontStyle("body");
     }
+  }
 
-    .description {
-        @include fontStyle('smallHeadline');
-        color: $black;
-        margin-top: $spacingM;
-        margin-bottom: $spacingM;
-    }
+  // string dialog
+  .el-input {
+    margin-bottom: 0;
+  }
 
-    .el-dialog__footer {
-        padding: 0;
-        margin-top: $spacingM;
+  .description {
+    @include fontStyle("body");
+    color: $black;
+    margin-top: $spacingM;
+    margin-bottom: $spacingM;
+  }
+
+  .el-dialog__header {
+    padding: 0;
+    margin: 0;
+    margin-top: $spacingM;
+    margin-bottom: $spacingM;
+
+    .el-dialog__title {
+      font-size: $mediumFontSize;
     }
+  }
+
+  .el-form-item {
+    margin-bottom: 0;
+  }
+
+  .el-dialog__footer {
+    padding: 0;
+    margin-top: $spacingM;
+
+    .el-button {
+      @include fontStyle("body");
+      padding-top: 10px;
+      text-decoration: none;
+      border: none;
+      color: $black;
+
+      &.el-button--primary {
+        background-color: $green-light;
+      }
+
+      &.el-button--warning {
+        background-color: $grey;
+      }
+    }
+  }
 }
 
 .el-overlay-dialog {
-    .is-align-center {
-        transform: translateY(-5vh) !important;
-    }
+  .is-align-center {
+    transform: translateY(-5vh) !important;
+  }
 }
 
 // card
 .el-card {
-    box-sizing: border-box;
-    box-shadow: none !important;
-    border-radius: $borderRadius;
-    border: $lineStandard solid $black;
-    padding: 20px;
-    background-color: $white;
-    width: calc(100% - 2 * $mobilePadding);
-    max-width: $cardMaxWidth;
-    overflow: visible;
+  box-sizing: border-box;
+  box-shadow: none !important;
+  border-radius: $borderRadius;
+  border: $lineStandard solid $black;
+  padding: 20px;
+  background-color: $white;
+  width: calc(100% - 2 * $mobilePadding);
+  max-width: $cardMaxWidth;
+  overflow: visible;
 
+  .el-card__header {
+    text-align: center;
+    padding: 0;
+    border: none;
 
-    .el-card__header {
-        text-align: center;
-        padding: 0;
-        border: none;
-
-        h1 {
-            margin-top: 8px;
-        }
+    h1 {
+      margin-top: 8px;
     }
+  }
 
-    .el-card__body {
-        @include fontStyle('smallHeadline');
-        padding: 0;
-        margin: 0;
-        text-align: center;
-        margin-bottom: 0;
-        position: relative;
-        padding-left: 20px;
-        padding-right: 20px;
+  .el-card__body {
+    @include fontStyle("smallHeadline");
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    margin-bottom: 0;
+    position: relative;
+    padding-left: 20px;
+    padding-right: 20px;
 
-        .button-wrapper {
-            position: relative;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            left: 0;
-            height: 22px;
+    .button-wrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      left: 0;
+      height: 22px;
 
-            .el-button {
-                position: absolute;
-                top: 12px;
-                display: inline-block;
-            }
-        }
+      .el-button {
+        position: absolute;
+        top: 12px;
+        display: inline-block;
+      }
     }
-
+  }
 }
 
 // single line input
 .el-input {
-    height: 40px;
-    @include fontStyle('smallHeadline');
-    --el-input-text-color: #{$black};
-    --el-button-active-text-color: #{$black};
+  height: 40px;
+  @include fontStyle("smallHeadline");
+  --el-input-text-color: #{$black};
+  --el-button-active-text-color: #{$black};
 
-    --el-input-border-color: #{$black};
-    --el-input-focus-border-color: #{$green-light};
+  --el-input-border-color: #{$black};
+  --el-input-focus-border-color: #{$green-light};
 
-    margin-bottom: $spacingM;
+  margin-bottom: $spacingM;
 
-    .el-input__wrapper {
-        border-radius: $borderRadius;
-        box-shadow: 0 0 0 $lineStandard var(--el-input-border-color, var(--el-border-color)) inset;
-    }
-
+  .el-input__wrapper {
+    border-radius: $borderRadius;
+    box-shadow: 0 0 0 $lineStandard
+      var(--el-input-border-color, var(--el-border-color)) inset;
+  }
 }
 
 // checkbox
 .el-checkbox {
-    .el-checkbox__inner {
-        width: 25px;
-        height: 25px;
-        border: $lineStandard solid $black;
-        border-radius: $borderRadius;
-    }
+  .el-checkbox__inner {
+    width: 25px;
+    height: 25px;
+    border: $lineStandard solid $black;
+    border-radius: $borderRadius;
+  }
 
-    .el-checkbox__input.is-checked .el-checkbox__inner {
-        background-color: $green-light;
-        border-color: $black;
-    }
+  .el-checkbox__input.is-checked .el-checkbox__inner {
+    background-color: $green-light;
+    border-color: $black;
+  }
 
-    .el-checkbox__inner::after {
-        border: 1px solid var($green-light);
-        left: 7px;
-        top: 3px;
-        height: 10px;
-        width: 5px;
-        border-color: $black;
-        border-width: 2px;
-    }
+  .el-checkbox__inner::after {
+    border: 1px solid var($green-light);
+    left: 7px;
+    top: 3px;
+    height: 10px;
+    width: 5px;
+    border-color: $black;
+    border-width: 2px;
+  }
 }
 
 // button
 .el-button {
-    width: auto !important;
+  width: auto !important;
 
-    &.caps {
-        text-transform: uppercase;
+  &.caps {
+    text-transform: uppercase;
+  }
+
+  &.green {
+    background-color: $green-light;
+    border: $lineStandard solid $black;
+    --el-button-bg-color: #{$green-light};
+
+    &:hover {
+      color: $black;
+      // --el-button-bg-color: white;
+      // background-color: white;
+      transform: scale($buttonScale);
     }
+  }
 
-    &.green {
-        background-color: $green-light;
-        border: $lineStandard solid $black;
-        --el-button-bg-color: #{$green-light};
+  &.underline span {
+    text-decoration: underline;
+    text-underline-offset: 0.15em !important;
+    text-decoration-thickness: 0.1rem !important;
+  }
 
-        &:hover {
-            color: $black;
-            // --el-button-bg-color: white;
-            // background-color: white;
-            transform: scale($buttonScale);
-        }
+  &.is-text {
+    color: $black;
+    background-color: transparent;
+    padding: 0;
+
+    &:hover {
+      transform: scale($buttonScale);
+      background-color: transparent !important;
     }
+  }
 
-    &.underline span {
-        text-decoration: underline;
-        text-underline-offset: 0.15em !important;
-        text-decoration-thickness: 0.1rem !important;
+  &.no-hover {
+    &:hover {
+      transform: scale(1);
+      text-decoration: none !important;
     }
-
-    &.is-text {
-        color: $black;
-        background-color: transparent;
-        padding: 0;
-
-        &:hover {
-            transform: scale($buttonScale);
-            background-color: transparent !important;
-        }
-    }
-
-    &.no-hover {
-        &:hover {
-            transform: scale(1);
-            text-decoration: none !important;
-        }
-    }
+  }
 }
 
 .el-button--default {
-    display: inline-block;
-    box-sizing: border-box;
-    text-decoration: none;
-    color: $black;
-    width: auto;
-    padding: 4px 10px 2px 10px;
-    --el-button-size: auto;
-    height: auto;
+  display: inline-block;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: $black;
+  width: auto;
+  padding: 4px 10px 2px 10px;
+  --el-button-size: auto;
+  height: auto;
 
-    span {
-        @include fontStyle('smallHeadline');
-        line-height: 1;
-    }
+  span {
+    @include fontStyle("smallHeadline");
+    line-height: 1;
+  }
 }
 
 .el-button--large {
-    display: inline-block;
-    box-sizing: border-box;
-    text-decoration: none;
-    color: $black;
-    width: auto;
-    padding: 5px 10px 2px 10px;
-    --el-button-size: auto;
-    height: auto;
+  display: inline-block;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: $black;
+  width: auto;
+  padding: 5px 10px 2px 10px;
+  --el-button-size: auto;
+  height: auto;
 
-    span {
-        @include fontStyle('headline');
-        line-height: 1;
-    }
+  span {
+    @include fontStyle("headline");
+    line-height: 1;
+  }
 }
-
 
 // table
 .el-table {
-    --el-table-border-color: #{$black};
-    --el-table-border: #{$lineStandard} solid var(--el-table-border-color);
-    --el-table-text-color: #{$black};
+  --el-table-border-color: #{$black};
+  --el-table-border: #{$lineStandard} solid var(--el-table-border-color);
+  --el-table-text-color: #{$black};
 
+  --el-table-header-text-color: #{$black};
+  --el-table-row-hover-bg-color: #{$green-light};
 
-    --el-table-header-text-color: #{$black};
-    --el-table-row-hover-bg-color: #{$green-light};
+  --el-table-header-bg-color: transparent;
+  --el-table-bg-color: transparent;
+  --el-table-tr-bg-color: transparent;
+  --el-menu-bg-color: transparent;
+  --el-table-expanded-cell-bg-color: transparent;
 
-    --el-table-header-bg-color: transparent;
-    --el-table-bg-color: transparent;
-    --el-table-tr-bg-color: transparent;
-    --el-menu-bg-color: transparent;
-    --el-table-expanded-cell-bg-color: transparent;
+  font-size: #{$mediumFontSize};
 
-    font-size: #{$mediumFontSize};
+  .cell {
+    padding: 0;
 
+    span {
+      font-size: $mediumFontSize;
+      text-decoration: none;
+    }
+  }
+
+  .el-table__cell {
+    padding: 0;
+  }
+
+  .el-table__header-wrapper {
     .cell {
-        padding: 0;
+      margin-bottom: 12px;
+      font-weight: 300;
 
-        span {
-            font-size: $mediumFontSize ;
-            text-decoration: none;
-        }
+      .caret-wrapper {
+        transform: scale(1.3) translateX(2px);
+      }
     }
+  }
 
-    .el-table__cell {
-        padding: 0;
+  .el-button {
+    --el-button-hover-link-text-color: #{$black};
+    --el-button-hover-link-text-color: #{$black};
+
+    width: 100% !important;
+    justify-content: flex-start;
+    text-decoration: none;
+    color: $black;
+    padding: 0;
+    border: 0;
+    height: 50px;
+
+    &::hover {
+      color: $black;
     }
-
-    .el-table__header-wrapper {
-        .cell {
-            margin-bottom: 12px;
-            font-weight: 300;
-
-            .caret-wrapper {
-                transform: scale(1.3) translateX(2px);
-            }
-        }
-    }
-
-    .el-button {
-        --el-button-hover-link-text-color: #{$black};
-        --el-button-hover-link-text-color: #{$black};
-
-        width: 100% !important;
-        justify-content: flex-start;
-        text-decoration: none;
-        color: $black;
-        padding: 0;
-        border: 0;
-        height: 50px;
-
-        &::hover {
-            color: $black;
-
-        }
-    }
+  }
 }
 
 .el-table .ascending .sort-caret.ascending {
-    border-bottom-color: #{$black};
+  border-bottom-color: #{$black};
 }
 
 .el-table .descending .sort-caret.descending {
-    border-top-color: #{$black};
+  border-top-color: #{$black};
+}
+
+// spinner
+.el-loading-mask {
+  background-color: $white-transparent;
+  color: #{$black};
+}
+
+.el-loading-spinner .el-loading-text {
+  color: #{$black};
+}
+
+.el-loading-spinner .path {
+  stroke: #{$black};
 }

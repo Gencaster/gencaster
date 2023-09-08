@@ -7,27 +7,32 @@ import { usePlayerStore } from "@/stores/Player";
 import GpsStreaming from "@/components/GpsStreaming.vue";
 import type { Stream, StreamPoint } from "@/graphql";
 
-const props = withDefaults(defineProps<{
-  showPlayer?: boolean
-  showRawControls?: boolean
-  showPlayerInfo?: boolean
-  showGpsStreaming?: boolean
-  streamPoint: StreamPoint
-  stream?: Pick<Stream, "uuid">
-}>(), {
-  showPlayer: false,
-  showRawControls: false,
-  showPlayerInfo: false,
-  showGpsStreaming: false,
-  stream: undefined,
-});
+const props = withDefaults(
+  defineProps<{
+    showPlayer?: boolean;
+    showRawControls?: boolean;
+    showPlayerInfo?: boolean;
+    showGpsStreaming?: boolean;
+    streamPoint: StreamPoint;
+    stream?: Pick<Stream, "uuid">;
+  }>(),
+  {
+    showPlayer: false,
+    showRawControls: false,
+    showPlayerInfo: false,
+    showGpsStreaming: false,
+    stream: undefined,
+  },
+);
 
-const { micActive, play, streamGPS } = storeToRefs(usePlayerStore());
+const { micActive, play, streamGPS, playerMounted } = storeToRefs(
+  usePlayerStore(),
+);
 
 let audioBridgeWebRtcUp = false;
 const { hostname, protocol } = window.location;
-const windowServer
-  = protocol === "http:"
+const windowServer =
+  protocol === "http:"
     ? `http://${hostname}:8088/janus`
     : `https://${hostname}:8089/janus`;
 
@@ -97,8 +102,7 @@ const setupJanusAudioBridge = () => {
       switch (event) {
         case "joined":
           Janus.log(`Successfully joined room ${msg.room}`);
-          if (audioBridgeWebRtcUp)
-            return;
+          if (audioBridgeWebRtcUp) return;
           audioBridgeWebRtcUp = true;
           makeJanusMicOffer();
           break;
@@ -106,8 +110,7 @@ const setupJanusAudioBridge = () => {
           console.log("Error on sending stream", msg.error);
           break;
       }
-      if (jsep)
-        audioBridge.handleRemoteJsep({ jsep });
+      if (jsep) audioBridge.handleRemoteJsep({ jsep });
     },
   });
 };
@@ -151,7 +154,9 @@ const setupJanusStreaming = () => {
     opaqueId,
     success: (pluginHandle: any) => {
       streaming = pluginHandle;
-      console.log(`Plugin attached! (${streaming.getPlugin()}, id=${streaming.getId()})`);
+      console.log(
+        `Plugin attached! (${streaming.getPlugin()}, id=${streaming.getId()})`,
+      );
     },
     error(error: any) {
       console.error("  -- Error attaching plugin... ", error);
@@ -160,7 +165,9 @@ const setupJanusStreaming = () => {
       console.log(`ICE state changed to ${state}`);
     },
     webrtcState(on: any) {
-      console.log(`Janus says our WebRTC PeerConnection is ${on ? "up" : "down"} now`);
+      console.log(
+        `Janus says our WebRTC PeerConnection is ${on ? "up" : "down"} now`,
+      );
     },
     onmessage(msg: any, jsep: RTCSessionDescription) {
       if (jsep) {
@@ -248,20 +255,18 @@ onBeforeRouteLeave(() => {
   stopMicStreaming();
   stopStreaming();
   play.value = false;
+  playerMounted.value = false;
   micActive.value = false;
   streamGPS.value = false;
 });
 
 watch(toRef(props, "streamPoint"), (newStreamPoint, oldStreamPoint) => {
-  if (newStreamPoint === undefined)
-    return;
+  if (newStreamPoint === undefined) return;
 
-  if (newStreamPoint.uuid === oldStreamPoint?.uuid)
-    return;
+  if (newStreamPoint.uuid === oldStreamPoint?.uuid) return;
 
   console.log("Change to stream", newStreamPoint);
-  if (newStreamPoint.janusOutRoom)
-    switchStream(newStreamPoint.janusOutRoom);
+  if (newStreamPoint.janusOutRoom) switchStream(newStreamPoint.janusOutRoom);
   if (newStreamPoint.janusInRoom && micActive.value)
     switchAudioBridgeRoom(newStreamPoint.janusInRoom);
 });
@@ -271,14 +276,14 @@ onMounted(async () => {
   await initJanus();
   // todo this is rather nasty way of setting things up
   await setTimeout(() => {
+    playerMounted.value = true;
     switchStream(props.streamPoint.janusOutRoom ?? 0);
   }, 1000.0);
 });
 
 watch(micActive, (micState) => {
   console.log(`Change mic status to ${micState}`);
-  if (micState === false)
-    stopMicStreaming();
+  if (micState === false) stopMicStreaming();
 
   if (toRef(props, "streamPoint").value.janusInRoom)
     switchAudioBridgeRoom(toRef(props, "streamPoint").value.janusInRoom ?? 0);
@@ -304,17 +309,31 @@ watch(play, (playState) => {
     >
       <button
         :disabled="streamPoint === null"
-        @click="() => { play = true }"
+        @click="
+          () => {
+            play = true;
+          }
+        "
       >
         Play
       </button>
       <button
         :disabled="streamPoint === null"
-        @click="() => { play = false }"
+        @click="
+          () => {
+            play = false;
+          }
+        "
       >
         Pause
       </button>
-      <button @click="() => { micActive = !micActive }">
+      <button
+        @click="
+          () => {
+            micActive = !micActive;
+          }
+        "
+      >
         Change mic status
       </button>
     </div>
@@ -322,7 +341,7 @@ watch(play, (playState) => {
     <div v-if="stream">
       <GpsStreaming :stream="stream" />
     </div>
-    <div v-else>
+    <div v-else-if="showRawControls">
       GPS works only on a Gencaster stream
     </div>
 

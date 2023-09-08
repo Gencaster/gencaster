@@ -5,12 +5,12 @@ import type { UserDataRequest } from "@/models";
 import { type Scalars, useSendStreamVariableMutation } from "@/graphql";
 
 const props = defineProps<{
-  request: UserDataRequest
-  streamUuid: Scalars["UUID"]
+  request: UserDataRequest;
+  streamUuid: Scalars["UUID"];
 }>();
 
 const emit = defineEmits<{
-  (e: "submitted"): void
+  (e: "submitted"): void;
 }>();
 
 const userInput: Ref<string> = ref("");
@@ -20,12 +20,14 @@ const dialogVisible: Ref<boolean> = ref(true);
 
 const execute = async () => {
   await streamVariableMutation.executeMutation({
-    streamVariables: [{
-      streamUuid: props.streamUuid,
-      streamToSc: false,
-      key: props.request.key,
-      value: userInput.value,
-    }],
+    streamVariables: [
+      {
+        streamUuid: props.streamUuid,
+        streamToSc: false,
+        key: props.request.key,
+        value: userInput.value,
+      },
+    ],
   });
   dialogVisible.value = false;
 };

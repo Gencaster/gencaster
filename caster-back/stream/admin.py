@@ -4,6 +4,7 @@ from .models import (
     AudioFile,
     Stream,
     StreamInstruction,
+    StreamLog,
     StreamPoint,
     StreamVariable,
     TextToSpeech,
@@ -15,9 +16,18 @@ class StreamVariableInline(admin.TabularInline):
     extra: int = 0
 
 
+class StreamLogInline(admin.TabularInline):
+    model = StreamLog
+    extra: int = 0
+
+    fields = ["created_date", "name", "level", "message"]
+
+    readonly_fields = fields
+
+
 @admin.register(Stream)
 class StreamAdmin(admin.ModelAdmin):
-    inlines = [StreamVariableInline]
+    inlines = [StreamVariableInline, StreamLogInline]
 
     list_display = [
         "stream_point",
@@ -127,3 +137,19 @@ class StreamVariableAdmin(admin.ModelAdmin):
         "stream",
         "stream__stream_point",
     ]
+
+
+@admin.register(StreamLog)
+class StreamLogAdmin(admin.ModelAdmin):
+    list_display = ("uuid", "created_date", "name", "level", "message")
+
+    readonly_fields = ["uuid", "stream_point", "stream"]
+
+    list_filter = [
+        "created_date",
+        "stream_point",
+        "stream",
+        "level",
+    ]
+
+    search_fields = ["message"]

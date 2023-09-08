@@ -1,6 +1,6 @@
 .. _caster-back:
 
-Caster back
+Caster Back
 ===========
 
 *caster-back* is the backend of Gencaster written in Django which takes care of all database, file storage and connection management.

@@ -8,15 +8,16 @@ const audioPlaying = ref(false);
 const position: Ref<number> = ref(0.0);
 
 const props = defineProps<{
-  audioFile: Pick<AudioFile, 'name'> & {
-    createdDate?: string
-    file?: undefined | null | Pick<DjangoFileType, 'url'>
+  audioFile: Pick<AudioFile, "name"> & {
+    createdDate?: string;
+    file?: undefined | null | Pick<DjangoFileType, "url">;
   };
-  type: 'minimal' | 'browser';
+  type: "minimal" | "browser";
   volume?: number;
 }>();
 
-const baseURL: string = import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081";
+const baseURL: string =
+  import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:8081";
 
 const toggleAudio = () => {
   if (audioPlayer.value === null) return;
@@ -48,7 +49,9 @@ watch(normalizedVolume, () => {
 });
 
 const updatePosition = () => {
-  position.value = ((audioPlayer.value?.currentTime ?? 0.0) / (audioPlayer.value?.duration ?? 1.0));
+  position.value =
+    (audioPlayer.value?.currentTime ?? 0.0) /
+    (audioPlayer.value?.duration ?? 1.0);
 };
 
 const setVolume = () => {
@@ -57,13 +60,16 @@ const setVolume = () => {
 };
 
 onMounted(() => {
-  audioPlayer.value?.addEventListener('ended', () => {
+  audioPlayer.value?.addEventListener("ended", () => {
     audioPlaying.value = false;
   });
 
   setVolume();
 });
 
+const url = computed(() => {
+  return `${baseURL}${props.audioFile?.file?.url}`;
+});
 </script>
 
 <template>
@@ -82,13 +88,10 @@ onMounted(() => {
           alt="Play button"
         >
       </button>
-      <p>{{ audioFile.name }}</p>
-      <!-- <p>{{ audioFile.createdDate }}</p> -->
-
       <audio
         v-if="audioFile.file"
         ref="audioPlayer"
-        :src="`${baseURL}${audioFile.file.url}`"
+        :src="url"
       />
     </div>
     <div
@@ -120,19 +123,19 @@ onMounted(() => {
         :max="1.0"
       />
       <p v-if="audioPlayer">
-        {{ (position * (audioPlayer?.duration)).toFixed(0) ?? '' }}s / {{ (audioPlayer?.duration).toFixed(0) ?? '' }}s
+        {{ (position * audioPlayer?.duration).toFixed(0) ?? "" }}s /
+        {{ (audioPlayer?.duration).toFixed(0) ?? "" }}s
       </p>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/variables.module.scss';
+@import "@/assets/scss/variables.module.scss";
 
 .media-player {
   display: flex;
   height: 26px;
-  width: 100%;
 
   div {
     align-items: center;
@@ -170,7 +173,6 @@ button {
 }
 
 .minimal {
-
   .el-slider {
     width: 100px;
     margin-right: 16px;

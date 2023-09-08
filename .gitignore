@@ -1,6 +1,7 @@
 .secrets.env
 data/
 docs/graphs
+caster-back/engineVars.json
 
 # Logs
 logs

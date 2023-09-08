@@ -1,6 +1,6 @@
 .. _caster-front:
 
-Caster front
+Caster Front
 ============
 
 A Javascript frontend which gets data from *caster-back* and allows to build a connection to *caster-sound* to obtain a stream.

@@ -5,17 +5,20 @@ from datetime import timedelta
 from typing import Optional
 
 from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib import admin
 from django.core.files import File
 from django.db import models
-from django.db.models import F
+from django.db.models import signals
+from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext as _
 from google.cloud import texttospeech
 from pythonosc.udp_client import SimpleUDPClient
 
 import story_graph.models
+from gencaster.distributor import GenCasterChannel
 
 from .exceptions import NoStreamAvailableException
 
@@ -301,14 +304,20 @@ class Stream(models.Model):
     )
 
     async def increment_num_listeners(self):
-        await Stream.objects.filter(uuid=self.uuid).aupdate(
-            num_listeners=F("num_listeners") + 1
-        )
+        log.debug("Increment number of listeners")
+        self.num_listeners = self.num_listeners + 1
+        await self.asave()
+        # await Stream.objects.filter(uuid=self.uuid).aupdate(
+        #     num_listeners=F("num_listeners") + 1
+        # )
 
     async def decrement_num_listeners(self):
-        await Stream.objects.filter(uuid=self.uuid).aupdate(
-            num_listeners=F("num_listeners") - 1
-        )
+        log.debug("Decrement number of listeners")
+        self.num_listeners = self.num_listeners - 1
+        await self.asave()
+        # await Stream.objects.filter(uuid=self.uuid).aupdate(
+        #     num_listeners=F("num_listeners") - 1
+        # )
 
     def disconnect(self):
         log.info(f"Disconnect stream {self.uuid}")
@@ -324,9 +333,22 @@ class Stream(models.Model):
         return f"Stream on {self.stream_point}"
 
 
+@receiver(signals.post_save, sender=Stream, dispatch_uid="update_streams_ws")
+def update_streams_ws(sender, instance: Stream, **kwargs):
+    async_to_sync(GenCasterChannel.send_streams_update)(
+        get_channel_layer(), str(instance.uuid)
+    )
+
+
 class StreamVariable(models.Model):
     """Allows to store variables in a stream session as a key/value pair.
-    Due to database constraints we will store any value a string.
+
+    .. warning::
+
+        Due to database constraints all keys and values will be stored
+        as a string, so parsing a float, int or boolean requires
+        type conversion.
+
     """
 
     uuid = models.UUIDField(
@@ -360,8 +382,27 @@ class StreamVariable(models.Model):
     )
 
     def send_to_sc(self) -> "StreamInstruction":
+        """Makes the stream variable available on the scsynth server under the same name as an Ndef.
+
+        .. note::
+
+            This used to be solved with
+
+            .. code-block:: supercollider
+
+                Ndef(\\foo, {val});
+
+            but this introduced a clicking noise on each update.
+            The solution seems to be to use instead
+
+            .. code-block:: supercollider
+
+                Ndef(\\foo, val);
+
+            without the surrounding curly brackets for the value.
+        """
         return self.stream.stream_point.send_raw_instruction(
-            instruction_text=f"Ndef(\\{self.key}, {{{self.value}}});"
+            instruction_text=f'Ndef("{self.key}".asSymbol, {self.value});'
         )
 
     class Meta:
@@ -545,6 +586,13 @@ class TextToSpeech(models.Model):
         DE_WAVENET_E__MALE = "de-DE-Wavenet-E", _("de-DE-Wavenet-E__MALE")
         DE_WAVENET_F__FEMALE = "de-DE-Wavenet-F", _("de-DE-Wavenet-F__FEMALE")
 
+        DE_NEURAL2_B__MALE = "de-DE-Neural2-B", _("de-DE-Neural2-B__MALE")
+        DE_NEURAL2_C__FEMALE = "de-DE-Neural2-C", _("de-DE-Neural2-C__FEMALE")
+        DE_NEURAL2_D__MALE = "de-DE-Neural2-D", _("de-DE-Neural2-D__MALE")
+        DE_NEURAL2_F__FEMALE = "de-DE-Neural2-F", _("de-DE-Neural2-F__FEMALE")
+
+        DE_POLYGLOT_1__MALE = "de-DE-Polyglot-1", _("de-DE-Polyglot-1__MALE")
+
     uuid = models.UUIDField(
         primary_key=True,
         editable=False,
@@ -573,14 +621,14 @@ class TextToSpeech(models.Model):
         max_length=64,
         verbose_name=_("Name of voice used to generate"),
         choices=VoiceNameChoices.choices,
-        default=VoiceNameChoices.DE_STANDARD_D__MALE,
+        default=VoiceNameChoices.DE_NEURAL2_C__FEMALE,
     )
 
     @classmethod
     def create_from_text(
         cls,
         ssml_text: str,
-        voice_name: str = VoiceNameChoices.DE_STANDARD_D__MALE,
+        voice_name: str = VoiceNameChoices.DE_NEURAL2_C__FEMALE,
         force_new: bool = False,
     ) -> "TextToSpeech":
         """
@@ -601,10 +649,10 @@ class TextToSpeech(models.Model):
             with the same text.
         """
         if not force_new:
-            existing_text = cls.objects.filter(
+            if existing_text := cls.objects.filter(
                 text=ssml_text,
-            ).first()
-            if existing_text:
+                voice_name=voice_name,
+            ).first():
                 return existing_text
 
         client = texttospeech.TextToSpeechClient()
@@ -640,3 +688,75 @@ class TextToSpeech(models.Model):
 
     def __str__(self) -> str:
         return f"{self.text[0:100]}"
+
+
+class StreamLog(models.Model):
+    class LogLevel(models.IntegerChoices):
+        """Taken from ``logging`` module but omitting ``FATAL`` and ``WARN``."""
+
+        CRITICAL = 50, _("Critical")
+        ERROR = 40, _("Error")
+        WARNING = 30, _("Warning")
+        INFO = 20, _("Info")
+        DEBUG = 10, _("Debug")
+        NOTSET = 0, _("Not set")
+
+    class Origin(models.TextChoices):
+        """States from which module the current logging occurs"""
+
+        GRAPH_ENGINE = "graph_engine", _("Graph engine")
+        SUPERCOLLIDER = "supercollider", _("SuperCollider")
+        JANUS = "janus", _("Janus")
+
+    uuid = models.UUIDField(
+        primary_key=True,
+        editable=False,
+        default=uuid.uuid4,
+        unique=True,
+    )
+
+    created_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+    stream_point = models.ForeignKey(
+        StreamPoint,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+
+    stream = models.ForeignKey(
+        Stream,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+
+    origin = models.TextField(
+        choices=Origin.choices,
+        blank=True,
+        null=True,
+    )
+
+    level = models.IntegerField(
+        choices=LogLevel.choices,
+        default=LogLevel.INFO,
+    )
+
+    message = models.TextField(
+        blank=True,
+        null=False,
+    )
+
+    name = models.TextField(
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        ordering = ["-created_date"]
+        verbose_name = _("Stream log")
+        verbose_name_plural = _("Stream logs")
+
+    def __str__(self) -> str:
+        return f"Stream log {self.uuid}"

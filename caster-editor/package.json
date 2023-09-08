@@ -12,7 +12,10 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint:fix": "eslint . --fix",
+    "lint:ci": "eslint . --max-warnings 0",
     "codegen": "graphql-codegen --config codegen.ts",
+    "format": "prettier --write src/",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
   },
@@ -21,6 +24,7 @@
     "@codemirror/lang-python": "^6.1.2",
     "@element-plus/icons-vue": "^2.1.0",
     "@rah-emil/vite-plugin-vue-type-imports": "^0.2.5",
+    "@sentry/vue": "^7.57.0",
     "@toast-ui/editor": "^3.2.2",
     "@urql/exchange-multipart-fetch": "^1.0.1",
     "@urql/vue": "^1.0.4",

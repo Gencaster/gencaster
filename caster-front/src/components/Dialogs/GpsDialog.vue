@@ -7,11 +7,11 @@ import type { UserDataRequest } from "@/models";
 import { usePlayerStore } from "@/stores/Player";
 
 defineProps<{
-  request: UserDataRequest
+  request: UserDataRequest;
 }>();
 
 const emit = defineEmits<{
-  (e: "submitted"): void
+  (e: "submitted"): void;
 }>();
 
 const router = useRouter();
@@ -32,12 +32,20 @@ const closedDialog = () => {
 
 watch(gpsError, () => {
   if (gpsError.value) {
-    console.log(`Error at obtaining GPS handle: ${gpsError.value}`, gpsError.value);
+    console.log(
+      `Error at obtaining GPS handle: ${gpsError.value}`,
+      gpsError.value,
+    );
     if (gpsError.value.PERMISSION_DENIED)
       ElMessage.error("Plesae allow GPS :>");
-    else if (gpsError.value.POSITION_UNAVAILABLE || gpsError.value.PERMISSION_DENIED)
-      ElMessage.error(`Could not obtain a GPS position: ${gpsError.value.message}`);
-    router.push("/gpsError");
+    else if (
+      gpsError.value.POSITION_UNAVAILABLE ||
+      gpsError.value.PERMISSION_DENIED
+    )
+      ElMessage.error(
+        `Could not obtain a GPS position: ${gpsError.value.message}`,
+      );
+    router.push("/gps-error");
   }
 });
 
@@ -47,13 +55,14 @@ const refreshIntervalId = setInterval(async () => {
   // i don't have a clue if this works properly b/c I always receive a GPS location first
   // but "in theory" it should also help us
   const { state } = await navigator.permissions.query({ name: "geolocation" });
-  console.log("state is", state);
   if (state === "granted") {
+    console.log("GPS has been granted");
     granted.value = true;
     gpsSuccess.value = true;
+    streamGPS.value = true;
     clearInterval(refreshIntervalId);
   }
-}, 100);
+}, 50);
 
 const gpsRequest = async () => {
   // as it makes only sense to have one GPS stream we refer to
@@ -85,9 +94,7 @@ const gpsRequest = async () => {
               text
               @click="gpsRequest()"
             >
-              <span>
-                GPS Freigeben
-              </span>
+              <span> GPS Freigeben </span>
             </ElButton>
             <ElCheckbox
               v-model="gpsAllowed"
@@ -116,8 +123,8 @@ const gpsRequest = async () => {
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/mixins.scss';
-@import '@/assets/variables.scss';
+@import "@/assets/mixins.scss";
+@import "@/assets/variables.scss";
 
 .gps-wrapper {
   display: flex;

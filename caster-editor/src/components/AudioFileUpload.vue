@@ -1,27 +1,42 @@
 <script lang="ts" setup>
-import { ElButton, ElMessage, ElUpload, type UploadUserFile, ElInput, ElForm, ElFormItem, type FormRules, type FormInstance } from "element-plus";
+import {
+  ElButton,
+  ElMessage,
+  ElUpload,
+  type UploadUserFile,
+  ElInput,
+  ElForm,
+  ElFormItem,
+  type FormRules,
+  type FormInstance,
+} from "element-plus";
 
 import { reactive, ref, type Ref } from "vue";
-import { useUploadAudioFileMutation, type AddAudioFile, type Scalars} from "@/graphql";
+import {
+  useUploadAudioFileMutation,
+  type AddAudioFile,
+  type Scalars,
+} from "@/graphql";
 
 const fileList: Ref<UploadUserFile[]> = ref([]);
 
 const audioFileUpload = useUploadAudioFileMutation();
 
 const emit = defineEmits<{
-  (e: 'uploadedNewFile', audioFileUUID: Scalars['UUID']): void
+  (e: "uploadedNewFile", audioFileUUID: Scalars["UUID"]): void;
 }>();
 
-const form: {name: string | undefined, description: string | undefined} = reactive({
-  name: undefined,
-  description: undefined,
-});
+const form: { name: string | undefined; description: string | undefined } =
+  reactive({
+    name: undefined,
+    description: undefined,
+  });
 
 const formRef = ref<FormInstance>();
 
 const rules = reactive<FormRules>({
-  name: {required: true, message: 'Please insert a name', trigger: 'blur'},
-  description: {required: false},
+  name: { required: true, message: "Please insert a name", trigger: "blur" },
+  description: { required: false },
 });
 
 const submitUpload = async () => {
@@ -35,7 +50,7 @@ const submitUpload = async () => {
   });
 };
 
-const doSubmit = async() => {
+const doSubmit = async () => {
   const audioUpload: AddAudioFile = {
     name: form.name ?? (Math.random() + 1).toString(36).substring(7),
     description: form.description ?? "",
@@ -43,17 +58,22 @@ const doSubmit = async() => {
     file: fileList.value[0].raw as File,
   };
 
-  const { data, error } = await audioFileUpload.executeMutation({addAudioFile: audioUpload});
-  if(error) {
-    ElMessage.error("Unexpected error on uploading the audio: " + error.message);
+  const { data, error } = await audioFileUpload.executeMutation({
+    addAudioFile: audioUpload,
+  });
+  if (error) {
+    ElMessage.error(
+      "Unexpected error on uploading the audio: " + error.message,
+    );
   }
-  if(data?.addAudioFile.__typename=="InvalidAudioFile") {
+  if (data?.addAudioFile.__typename == "InvalidAudioFile") {
     ElMessage.error(`Uploaded invalid audio file: ${data.addAudioFile.error}`);
-  } else if(data) {
+  } else if (data) {
     ElMessage.success(`Uploaded audio file successfully`);
-    emit('uploadedNewFile', data.addAudioFile.uuid);
+    emit("uploadedNewFile", data.addAudioFile.uuid);
     form.description = undefined;
     form.name = undefined;
+    fileList.value = [];
   }
 };
 </script>
@@ -108,20 +128,25 @@ const doSubmit = async() => {
       <ElButton
         class="ml-3"
         type="primary"
-        style="margin-top: 10px;"
+        style="margin-top: 10px"
         @click="submitUpload()"
       >
-        upload to server
+        Upload
       </ElButton>
     </ElForm>
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/variables.module.scss';
+@import "@/assets/scss/variables.module.scss";
 
 .uploader {
-
+  .el-upload__text {
+    color: $black;
+    em {
+      text-decoration: underline;
+      color: $black;
+    }
+  }
 }
-
 </style>

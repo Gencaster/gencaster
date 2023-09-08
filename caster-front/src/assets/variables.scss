@@ -9,7 +9,7 @@ $spacingXL: 6rem;
 // sizes
 $desktopMaxWidth: 1280px;
 $desktopMaxWidthText: 900px;
-$cardMaxWidth: 600px;
+$cardMaxWidth: 500px;
 $playerBarHeight: 50px;
 
 $mobilePadding: 12px;
@@ -37,10 +37,10 @@ $largerFontSize: 3.5rem;
 $borderRadius: 4px;
 $buttonScale: 1.1;
 
-
 // colors
-$white: #FFFEF9;
-$green-light: #ADFF00;
-$grey-light: #F7F7F3;
-$grey: #CDCDCD;
+$white: #ffffff;
+$white-transparent: rgba(255, 255, 255, 0.9);
+$green-light: #adff00;
+$grey-light: #f7f7f3;
+$grey: #cdcdcd;
 $black: #111111;

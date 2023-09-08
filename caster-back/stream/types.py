@@ -1,6 +1,6 @@
-import uuid
 from datetime import timedelta
 from typing import Optional
+from uuid import UUID
 
 import strawberry
 import strawberry.django
@@ -10,7 +10,7 @@ from strawberry import auto
 from strawberry.file_uploads import Upload
 from strawberry_django.filters import FilterLookup
 
-from . import models
+from . import frontend_types, models
 
 
 @strawberry.django.filters.filter(models.StreamPoint, lookups=True)
@@ -76,6 +76,12 @@ class AddAudioFile:
     name: str
 
 
+@strawberry.input
+class UpdateAudioFile:
+    description: Optional[str]
+    name: Optional[str]
+
+
 @strawberry.django.type(models.StreamInstruction)
 class StreamInstruction:
     uuid: auto
@@ -84,6 +90,7 @@ class StreamInstruction:
     instruction_text: auto
     state: auto
     return_value: auto
+    frontend_display: frontend_types.Dialog
 
 
 @strawberry.type
@@ -113,7 +120,7 @@ class InvalidAudioFile:
 # combined types - can't be declared as type annotation
 
 StreamInfoResponse = strawberry.union(
-    "StreamInfoResponse", [StreamInfo, NoStreamAvailable]
+    "StreamInfoResponse", [StreamInfo, frontend_types.Dialog, NoStreamAvailable]
 )
 
 AudioFileUploadResponse = strawberry.union(
@@ -132,7 +139,19 @@ class StreamVariable:
 
 @strawberry.input
 class StreamVariableInput:
-    stream_uuid: uuid.UUID
+    stream_uuid: UUID
     key: str
     value: str
     stream_to_sc: bool = False
+
+
+@strawberry.django.type(models.StreamLog)
+class StreamLog:
+    uuid: auto
+    created_date: auto
+    stream_point: StreamPoint
+    stream: Stream
+    origin: auto
+    level: auto
+    message: auto
+    name: auto

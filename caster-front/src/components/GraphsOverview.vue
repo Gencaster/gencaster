@@ -1,5 +1,11 @@
 <script lang="ts" setup>
-import { ElButton, ElContainer, ElMain, ElTable, ElTableColumn } from "element-plus";
+import {
+  ElButton,
+  ElContainer,
+  ElMain,
+  ElTable,
+  ElTableColumn,
+} from "element-plus";
 import { useRouter } from "vue-router";
 import { useGetGraphsQuery } from "@/graphql";
 
@@ -28,7 +34,12 @@ const { data, fetching } = useGetGraphsQuery();
                 <ElButton
                   link
                   size="small"
-                  @click.prevent="router.push({ name: 'graphPlayer', params: { graphSlug: scope.row.slugName } })"
+                  @click.prevent="
+                    router.push({
+                      name: 'graphPlayer',
+                      params: { graphSlug: scope.row.slugName },
+                    })
+                  "
                 >
                   {{ scope.row.name }}
                 </ElButton>

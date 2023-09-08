@@ -2,16 +2,16 @@
 import { ElButton, ElCard } from "element-plus";
 import MarkdownIt from "markdown-it";
 import { computed } from "vue";
-import GraphPlayerCredits from "@/components/GraphPlayerCredits.vue";
 
 const props = defineProps<{
-  title: string
-  descriptionText: string
-  buttonText: string
+  title: string;
+  descriptionText: string;
+  buttonText: string;
+  moreInfo: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: "buttonClicked"): void
+  (e: "buttonClicked"): void;
 }>();
 
 const description = computed<string>(() => {
@@ -46,10 +46,31 @@ const description = computed<string>(() => {
         </ElButton>
       </div>
     </ElCard>
-    <GraphPlayerCredits />
+    <div class="credits">
+      <p>
+        made with <a
+          href="https://gencaster.org/"
+          target="_blank"
+        >gencaster</a>
+        <span v-if="moreInfo"> - more info ↓</span>
+      </p>
+      <p />
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+@import "@/assets/mixins.scss";
+@import "@/assets/variables.scss";
 
+.credits {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
+  p {
+    text-align: center;
+  }
+}
 </style>

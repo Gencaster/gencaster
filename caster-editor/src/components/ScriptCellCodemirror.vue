@@ -1,51 +1,25 @@
-<template>
-  <div class="block block-codemirror">
-    <div
-      :class="{
-        'editor-supercollider' : cellType===CellType.Supercollider,
-        'editor-python' : cellType === CellType.Python}
-      "
-    >
-      <!-- :disable="dragging" -->
-      <Codemirror
-        v-model="scriptText"
-        placeholder="Code goes here..."
-        :autofocus="false"
-        :indent-with-tab="true"
-        :tab-size="2"
-        :extensions="[python()]"
-        @ready="
-          () => {
-            domReady = true;
-          }
-        "
-        @change="emitCodemirror('change')"
-        @focus="emitCodemirror('focus')"
-        @blur="emitCodemirror('blur')"
-      />
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
-
-import { Codemirror } from "vue-codemirror";
-import { python } from "@codemirror/lang-python";
 import { computed, ref } from "vue";
 import type { Ref } from "vue";
 import { storeToRefs } from "pinia";
 import { CellType } from "@/graphql";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 
+// Codemirror
+import { Codemirror } from "vue-codemirror";
+import { python, pythonLanguage } from "@codemirror/lang-python";
+
+// autocomplete
+import completePython from "@/assets/js/completePython";
+import completeSC from "@/assets/js/completeSC";
+
 const props = defineProps<{
-  text: string,
-  cellType: CellType.Python | CellType.Supercollider
-}>();
-const emit = defineEmits<{
-  (e: "update:text", text: string): void
+  text: string;
+  cellType: CellType.Python | CellType.Supercollider;
+  uuid: string;
 }>();
 
-const { scriptCellsModified } = storeToRefs(useInterfaceStore());
+const { newScriptCellUpdates } = storeToRefs(useInterfaceStore());
 
 const domReady: Ref<boolean> = ref(false);
 
@@ -54,14 +28,62 @@ const scriptText = computed<string>({
     return props.text;
   },
   set(value) {
-    emit('update:text', value);
+    let update = newScriptCellUpdates.value.get(props.uuid);
+
+    if (update) {
+      update.cellCode = value;
+    } else {
+      newScriptCellUpdates.value.set(props.uuid, {
+        uuid: props.uuid,
+        cellCode: value,
+      });
+    }
     return value;
   },
 });
 
-const emitCodemirror = (eventType?: string) => {
-  if (!domReady.value) return;
+// autocomplete
+const pythonDocCompletions = pythonLanguage.data.of({
+  autocomplete: completePython,
+});
 
-  if (eventType === "change") scriptCellsModified.value = true;
-};
+// TODO: add scDocCompletions. Not working like this
+const scDocCompletions = pythonLanguage.data.of({
+  autocomplete: completeSC,
+});
+
+// extensions
+const extensions = computed(() => {
+  if (props.cellType === CellType.Python) {
+    return [python(), pythonDocCompletions];
+  } else {
+    return [];
+  }
+});
 </script>
+
+<template>
+  <div class="block block-codemirror">
+    <div
+      :class="{
+        'editor-supercollider': cellType === CellType.Supercollider,
+        'editor-python': cellType === CellType.Python,
+      }"
+    >
+      <!-- :disable="dragging" -->
+      <Codemirror
+        v-model="scriptText"
+        placeholder="Code goes here..."
+        :autofocus="false"
+        :indent-with-tab="true"
+        :tab-size="2"
+        :extensions="extensions"
+        @ready="
+          () => {
+            domReady = true;
+          }
+        "
+      />
+    </div>
+  </div>
+</template>

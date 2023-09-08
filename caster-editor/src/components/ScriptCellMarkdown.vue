@@ -3,7 +3,7 @@
     <div
       :class="{
         'editor-comment': cellType === CellType.Comment,
-        'editor-markdown': cellType === CellType.Markdown
+        'editor-markdown': cellType === CellType.Markdown,
       }"
     >
       <div ref="editorDom" />
@@ -19,21 +19,19 @@ import Editor from "@toast-ui/editor";
 import type { EditorOptions, Editor as EditorType } from "@toast-ui/editor";
 import { storeToRefs } from "pinia";
 import { CellType } from "@/graphql";
-import { computed, onMounted, onUnmounted, ref, type Ref } from "vue";
+import { computed, onMounted, onDeactivated, ref, type Ref } from "vue";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 
-
 const props = defineProps<{
-    text: string,
-    cellType: CellType.Markdown | CellType.Comment
-}>();
-
-const emit = defineEmits<{
-  (e: 'update:text', text: string): void
+  // receiving any updates does not work b/c TUI does not support a v-model binding
+  // see https://github.com/nhn/tui.editor/issues/1023
+  text: string;
+  uuid: string;
+  cellType: CellType.Markdown | CellType.Comment;
 }>();
 
 // Store
-const { scriptCellsModified } = storeToRefs(useInterfaceStore());
+const { newScriptCellUpdates } = storeToRefs(useInterfaceStore());
 
 // Variables
 const editorDom: Ref<HTMLElement | undefined> = ref();
@@ -41,16 +39,25 @@ const editor: Ref<EditorType | undefined> = ref();
 
 const scriptCellText = computed<string>({
   get() {
-      return props.text;
+    return props.text;
   },
   set(value) {
-      emit('update:text', value);
-      return value;
+    let update = newScriptCellUpdates.value.get(props.uuid);
+
+    if (update) {
+      update.cellCode = value;
+    } else {
+      newScriptCellUpdates.value.set(props.uuid, {
+        uuid: props.uuid,
+        cellCode: value,
+      });
+    }
+    return value;
   },
 });
 
 onMounted(() => {
-const options: EditorOptions = {
+  const options: EditorOptions = {
     el: editorDom.value as HTMLElement,
     height: "auto",
     initialEditType: "markdown",
@@ -60,33 +67,31 @@ const options: EditorOptions = {
     toolbarItems: [],
     hideModeSwitch: true,
     autofocus: false,
-};
+  };
 
-editor.value = new Editor(options);
+  editor.value = new Editor(options);
 
-// add events
-editor.value.on("change", () => {
-    scriptCellsModified.value = true;
+  // add events
+  editor.value.on("change", () => {
     scriptCellText.value = editor.value?.getMarkdown() || "";
-});
-});
-
-onUnmounted(() => {
-    if (editor.value) {
-        editor.value.destroy();
-    }
+  });
 });
 
+onDeactivated(() => {
+  if (editor.value) {
+    editor.value.destroy();
+  }
+});
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/variables.module.scss';
+@import "@/assets/scss/variables.module.scss";
 
 .editor-comment,
 .editor-markdown {
-
   :deep(.toastui-editor-defaultUI) {
     border: none;
+    z-index: 1;
 
     .toastui-editor {
       min-height: 60px !important;
@@ -109,5 +114,4 @@ onUnmounted(() => {
     display: none;
   }
 }
-
 </style>

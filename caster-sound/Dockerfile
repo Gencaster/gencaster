@@ -150,6 +150,10 @@ RUN apk add parallel
 # are served via a python http server - only for debugging
 COPY html_test /root/html_test/
 
+# ------------------  SuperCollider extensions
+COPY install_mi.sh .
+RUN ./install_mi.sh
+
 # apply config files
 
 COPY janus.plugin.streaming.jcfg /opt/janus/etc/janus/janus.plugin.streaming.jcfg
@@ -166,6 +170,7 @@ COPY GenCaster/ /usr/local/share/SuperCollider/Extensions/GenCaster/
 COPY create_config.sh /root/create_config.sh
 COPY janus.plugin.audiobridge.jcfg.template /root/janus.plugin.audiobridge.jcfg.template
 COPY janus.plugin.streaming.jcfg.template /root/janus.plugin.streaming.jcfg.template
+COPY pipewire.conf /usr/share/pipewire/pipewire.conf
 
 # CMD ["tail", "-f", "/dev/null"]
 CMD ["/bin/sh", "-c", "/root/create_config.sh && /usr/bin/supervisord -c /root/caster-sound.conf"]

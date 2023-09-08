@@ -11,7 +11,13 @@
         <div class="menu-items right">
           <button
             class="unstyled"
-            @click="showExitGraphDialog=true"
+            @click="goToDocs()"
+          >
+            Docs
+          </button>
+          <button
+            class="unstyled"
+            @click="showExitGraphDialog = true"
           >
             Exit
           </button>
@@ -22,9 +28,7 @@
           v-if="tab === Tab.Edit"
           class="left"
         >
-          <MenuTabEdit
-            :graph="graph"
-          />
+          <MenuTabEdit :graph="graph" />
         </div>
         <div v-if="tab === Tab.Play" />
       </div>
@@ -34,7 +38,7 @@
     <!-- Exit Page -->
     <DialogExitGraph
       v-if="showExitGraphDialog"
-      @cancel="showExitGraphDialog=false"
+      @cancel="showExitGraphDialog = false"
     />
   </div>
 </template>
@@ -48,22 +52,25 @@ import MenuTab from "./MenuTabHeader.vue";
 import MenuTabEdit from "./MenuTabEdit.vue";
 import DialogExitGraph from "./DialogExitGraph.vue";
 
-export type GraphMenu = Pick<Graph, 'name' | 'uuid'>;
+export type GraphMenu = Pick<Graph, "name" | "uuid">;
 
 // Props
 defineProps<{
-  graph: GraphMenu
+  graph: GraphMenu;
 }>();
 
 // Store
 const { tab } = storeToRefs(useInterfaceStore());
 
 const showExitGraphDialog: Ref<boolean> = ref(false);
+
+const goToDocs = () => {
+  window.open("https://docs.gencaster.org/editor", "_blank");
+};
 </script>
 
-
 <style lang="scss" scoped>
-@import '@/assets/scss/variables.module.scss';
+@import "@/assets/scss/variables.module.scss";
 
 .menu {
   width: 100vw;
@@ -71,7 +78,6 @@ const showExitGraphDialog: Ref<boolean> = ref(false);
   top: 0;
   left: 0;
   z-index: 100;
-
 
   .level {
     height: $menuHeight;
@@ -90,7 +96,9 @@ const showExitGraphDialog: Ref<boolean> = ref(false);
     }
 
     &.level-2 {
-      .left, .middle, .right {
+      .left,
+      .middle,
+      .right {
         width: auto;
       }
     }
@@ -112,11 +120,13 @@ const showExitGraphDialog: Ref<boolean> = ref(false);
       height: 30px;
       display: flex;
       align-items: center;
+
       .state {
         display: flex;
         justify-content: center;
         align-items: center;
       }
+
       .state-indicator {
         width: 11px;
         height: 11px;
@@ -130,7 +140,6 @@ const showExitGraphDialog: Ref<boolean> = ref(false);
       }
     }
 
-
     .margin-left {
       margin-left: $buttonMargin;
     }
@@ -138,18 +147,12 @@ const showExitGraphDialog: Ref<boolean> = ref(false);
     .margin-right {
       margin-right: $buttonMargin;
     }
-
-
   }
-
 }
-
-
 
 .menu-spacer {
   position: relative;
   height: 64px;
   background-color: white;
 }
-
 </style>

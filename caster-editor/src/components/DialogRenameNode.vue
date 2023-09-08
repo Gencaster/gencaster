@@ -2,9 +2,11 @@
   <div class="rename-node-dialog">
     <ElDialog
       v-model="showDialog"
-      width="25%"
       title="Rename Node"
       :show-close="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      align-center
     >
       <ElInput
         v-model="newName"
@@ -12,14 +14,14 @@
       />
       <template #footer>
         <span class="dialog-footer">
-          <ElButton @click="emit('cancel')">Cancel</ElButton>
           <ElButton
-            color="#ADFF00"
+            type="danger"
+            @click="emit('cancel')"
+          >Cancel</ElButton>
+          <ElButton
             type="primary"
             @click="renameNode()"
-          >
-            Confirm
-          </ElButton>
+          > Confirm </ElButton>
         </span>
       </template>
     </ElDialog>
@@ -30,15 +32,15 @@
 import { type Node, useUpdateNodeMutation } from "@/graphql";
 import { ref, type Ref } from "vue";
 
-export type NodeRename = Pick<Node, 'uuid' | 'name'>
+export type NodeRename = Pick<Node, "uuid" | "name">;
 
 const emit = defineEmits<{
-    (e: 'renamed'): void
-    (e: 'cancel'): void
+  (e: "renamed"): void;
+  (e: "cancel"): void;
 }>();
 
 const props = defineProps<{
-    node: NodeRename
+  node: NodeRename;
 }>();
 
 const showDialog: Ref<boolean> = ref(true);
@@ -47,15 +49,14 @@ const newName: Ref<string> = ref(props.node.name);
 const udpateNodeMutation = useUpdateNodeMutation();
 
 const renameNode = async () => {
-    const { error } = await udpateNodeMutation.executeMutation({
-        name: newName.value,
-        nodeUuid: props.node.uuid,
-    });
-    if(error) {
-        alert(`Could not rename node: ${error.message}`);
-        return;
-    }
-    emit('renamed');
+  const { error } = await udpateNodeMutation.executeMutation({
+    name: newName.value,
+    nodeUuid: props.node.uuid,
+  });
+  if (error) {
+    alert(`Could not rename node: ${error.message}`);
+    return;
+  }
+  emit("renamed");
 };
-
 </script>

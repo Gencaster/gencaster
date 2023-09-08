@@ -5,10 +5,13 @@ import { usePlayerStore } from "@/stores/Player";
 import type { Stream, StreamInstruction, StreamPoint } from "@/graphql";
 
 defineProps<{
-  streamInstruction?: null | undefined | Pick<StreamInstruction, "instructionText">
+  streamInstruction?:
+    | null
+    | undefined
+    | Pick<StreamInstruction, "instructionText">;
   stream?: Pick<Stream, "uuid"> & {
-    streamPoint?: Pick<StreamPoint, "janusInRoom" | "janusOutRoom" | "port">
-  }
+    streamPoint?: Pick<StreamPoint, "janusInRoom" | "janusOutRoom" | "port">;
+  };
 }>();
 
 const { play, micActive, streamGPS } = storeToRefs(usePlayerStore());

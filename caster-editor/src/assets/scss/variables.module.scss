@@ -8,6 +8,8 @@ $spacingM: 1rem;
 $spacingL: 2.5rem;
 $spacingXL: 6rem;
 
+$mobilePadding: 12px;
+
 // font sizes
 $smallFontSizeMobile: 0.8rem;
 $smallFontSize: 0.8rem;
@@ -21,19 +23,24 @@ $largerFontSizeMobile: 2.5rem;
 $largerFontSize: 3.5rem;
 
 // colors
-$green-light: #ADFF00;
-$grey: #CDCDCD;
-$grey-medium: #E4E4E4;
-$grey-light: #F5F5F5;
+$hover-color: #5200ff;
+$green-light: #adff00;
+$grey: #cdcdcd;
+$grey-medium: #e4e4e4;
+$grey-light: #f5f5f5;
 $grey-dark: #898989;
 $black: #000;
-$alertRed: #FF0000;
+$alertRed: #ff0000;
 $white: #ffffff;
 $white08: rgba(255, 255, 255, 0.8);
 
 // paddings
 $paddingSidesDesktop: 15px;
 $buttonMargin: 10px;
+
+// other
+$borderRadius: 4px;
+$buttonScale: 1.1;
 
 // menu
 $menuHeight: 32px;
@@ -48,13 +55,13 @@ $hoverColor: lightgrey;
 // $transitionDefault: 300ms ease;
 // $transitionFast: 1750ms ease;
 :export {
-    greenLight: $green-light;
-    grey: $grey;
-    greyLight: $grey-light;
-    greyMedium: $grey-medium;
-    greyDark: $grey-dark;
-    black: $black;
-    alertRed: $alertRed;
-    white: $white;
-    white08: $white08;
-  }
+  greenLight: $green-light;
+  grey: $grey;
+  greyLight: $grey-light;
+  greyMedium: $grey-medium;
+  greyDark: $grey-dark;
+  black: $black;
+  alertRed: $alertRed;
+  white: $white;
+  white08: $white08;
+}

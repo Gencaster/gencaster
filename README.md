@@ -36,6 +36,16 @@ make docs
 In order to have consistent styles and a good history Gencaster uses [`pre-commit`](https://pre-commit.com/).
 After installation of pre-commit and cloning the repository the necessary scripts can be set up via `pre-commit install`.
 
+### Secrets
+
+The secrets are located in a `.secrets.env` file and are not checked in with the repository, so it is necessary to create one via
+
+```shell
+touch .secrets.env
+```
+
+An empty file is sufficient, the docs cover the optional variables.
+
 ### Local development
 
 To start a local instance of Gencaster with all its services using [Docker](https://www.docker.com/) simply use
@@ -54,7 +64,16 @@ flag | comment
 
 **Example:** `make no-editor=1 no-frontend=1 docker-local` starts without editor and frontend.
 
-This allows e.g. to have access to the Gencaster backend but use the host environment to develop the editor and frontend as development with NodeJS within Docker is a bit complicated due to the shared `node_modules` directory.
+This allows e.g. to have access to the Gencaster backend but use the host environment to develop the editor and frontend as development with NodeJS within Docker is complicated due to the shared `node_modules` directory.
+
+The default development credentials for the backend <http://127.0.0.1:8081/admin> are located in `vars.env` and are
+
+key | value
+--- | ---
+username | `admin`
+passworrd | `admin`
+
+> Due to shared cookies it is necessary to access the frontend and the editor via `127.0.0.1` instead of `localhost`!
 
 ### Network
 
