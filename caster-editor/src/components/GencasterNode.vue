@@ -31,7 +31,9 @@ onMounted(() => {
           type="target"
           :position="Position.Left"
         >
-          <span>{{ inDoor.name }}</span>
+          <slot>
+            <span style="pointer-events: none"> {{ inDoor.name }} </span>
+          </slot>
         </Handle>
       </div>
     </div>
@@ -48,11 +50,9 @@ onMounted(() => {
           type="source"
           style="background-color: green; top: unset"
         >
-          <div>
-            <span class="node-exit-name">
-              {{ outDoor.name }}
-            </span>
-          </div>
+          <slot>
+            <span style="pointer-events: none"> {{ outDoor.name }} </span>
+          </slot>
         </Handle>
       </div>
     </div>
