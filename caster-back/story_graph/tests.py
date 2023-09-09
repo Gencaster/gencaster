@@ -177,6 +177,23 @@ class NodeDoorTestCase(TransactionTestCase):
         with self.assertRaises(NodeDoorMissing):
             node.get_default_out_door()
 
+    def test_invalid_python_code(self):
+        node = NodeTestCase.get_node()
+        door = node.get_default_in_door()
+        door.code = "2+/+2"
+        with self.assertRaises(SyntaxError):
+            door.save()
+
+    # same as above but async as gql runs async
+    # therefore it makes sense to also test if the
+    # async variant calls the sync save code
+    async def test_invalid_python_code_async(self):
+        node = await sync_to_async(NodeTestCase.get_node)()
+        door = await node.aget_default_in_door()
+        door.code = "2+/+2"
+        with self.assertRaises(SyntaxError):
+            await door.asave()
+
 
 class GencasterMarkdownTestCase(TransactionTestCase):
     @staticmethod
@@ -764,7 +781,7 @@ vars['foo'] = 42"""
             node=node_a,
             name="foobar",
             is_default=False,
-            code="2==",
+            code="foo+bar",
         )
 
         await Edge.objects.acreate(

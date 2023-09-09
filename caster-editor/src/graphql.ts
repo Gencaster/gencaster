@@ -223,7 +223,6 @@ export enum CallbackAction {
  *       - - :class:`~story_graph.models.AudioCell`
  *         - :class:`~stream.models.AudioFile`
  *       - - :func:`~story_graph.engine.Engine.execute_audio_cell`
- *
  */
 export enum CellType {
   Audio = "AUDIO",
@@ -432,6 +431,12 @@ export type InvalidAudioFile = {
   error: Scalars["String"];
 };
 
+export type InvalidPythonCode = {
+  errorCode: Scalars["String"];
+  errorMessage: Scalars["String"];
+  errorType: Scalars["String"];
+};
+
 export type LoginError = {
   errorMessage?: Maybe<Scalars["String"]>;
 };
@@ -478,7 +483,7 @@ export type Mutation = {
    * for renaming or moving it across the canvas.
    */
   updateNode?: Maybe<Scalars["Void"]>;
-  updateNodeDoor: NodeDoor;
+  updateNodeDoor: NodeDoorResponse;
   updateScriptCells: Array<ScriptCell>;
 };
 
@@ -685,6 +690,8 @@ export type NodeDoorInputUpdate = {
   order?: InputMaybe<Scalars["Int"]>;
   uuid: Scalars["UUID"];
 };
+
+export type NodeDoorResponse = InvalidPythonCode | NodeDoor;
 
 export type NodeUpdate = {
   color?: InputMaybe<Scalars["String"]>;
@@ -1582,7 +1589,16 @@ export type UpdateNodeDoorMutationVariables = Exact<{
   order?: InputMaybe<Scalars["Int"]>;
 }>;
 
-export type UpdateNodeDoorMutation = { updateNodeDoor: { uuid: any } };
+export type UpdateNodeDoorMutation = {
+  updateNodeDoor:
+    | {
+        __typename: "InvalidPythonCode";
+        errorCode: string;
+        errorMessage: string;
+        errorType: string;
+      }
+    | { __typename: "NodeDoor"; uuid: any };
+};
 
 export const FullStreamInfoFragmentDoc = gql`
   fragment FullStreamInfo on StreamInfo {
@@ -2314,7 +2330,16 @@ export const UpdateNodeDoorDocument = gql`
     updateNodeDoor(
       nodeDoorInput: { name: $name, code: $code, order: $order, uuid: $uuid }
     ) {
-      uuid
+      ... on NodeDoor {
+        __typename
+        uuid
+      }
+      ... on InvalidPythonCode {
+        __typename
+        errorCode
+        errorMessage
+        errorType
+      }
     }
   }
 `;

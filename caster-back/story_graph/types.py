@@ -24,6 +24,30 @@ TemplateType = strawberry.enum(models.Graph.GraphDetailTemplate)  # type: ignore
 NodeDoorType = strawberry.enum(models.NodeDoor.DoorType)  # type: ignore
 
 
+def create_python_highlight_string(e: SyntaxError) -> str:
+    """Creates from a given error a string which highlights
+    the error, so it will return for example
+
+        foo++
+             ^
+
+    """
+    if not (e.text and e.lineno and e.offset and e.end_offset):
+        raise Exception(f"Missing syntax error information {e}")
+    t = e.text.split("\n")
+    patch = [" "] * e.end_offset
+    patch[max(e.offset - 1, 0) : max(e.end_offset - 1, 0)] = "^"
+    t.insert(e.lineno, "".join(patch))
+    return "\n".join(t)
+
+
+@strawberry.type
+class InvalidPythonCode:
+    error_type: str
+    error_message: str
+    error_code: str
+
+
 @strawberry.input
 class NodeCreate:
     name: str
@@ -128,6 +152,9 @@ class NodeDoorInputUpdate:
     name: Optional[str] = None
     order: Optional[int] = None
     code: Optional[str] = None
+
+
+NodeDoorResponse = strawberry.union("NodeDoorResponse", [NodeDoor, InvalidPythonCode])
 
 
 @strawberry.django.type(models.Edge)

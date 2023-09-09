@@ -163,7 +163,56 @@ enum CallbackAction {
   SEND_VARIABLE
 }
 
-"A :class:`~story_graph.models.ScriptCell` can contain\ndifferent types of code, each with unique functionality.\n\nBoth, the database and :class:`~story_graph.engine.Engine`,\nimplement some specific details according to these types.\n\n.. list-table:: Cell types\n    :header-rows: 1\n\n    * - Name\n      - Description\n      - Database\n      - Engine\n    * - Markdown\n      - Allows to write arbitrary text which will get\n        rendered as an audio file via a text to speech service,\n        see :class:`~stream.models.TextToSpeech` for conversion\n        and :class:`~story_graph.markdown_parser.GencasterRenderer`\n        for the extended Markdown syntax.\n      - - :class:`~stream.models.TextToSpeech`\n      - - :func:`~story_graph.engine.Engine.execute_markdown_code`\n        - :class:`~story_graph.markdown_parser.GencasterRenderer`\n    * - Python\n      - Allows to execute python code via :func:`exec` which allows\n        to trigger e.g. Dialogs in the frontend\n        (see :class:`~stream.frontend_types.Dialog`)\n        or calculate or fetch any kind of data and store its value\n        as a :class:`~stream.models.StreamVariable`.\n      - \n      - - :func:`~story_graph.engine.Engine.execute_python_cell`\n    * - SuperCollider\n      - Executes *sclang* code on the associated server.\n        This can be used to control the sonic content on the server.\n      - - :class:`~stream.models.StreamInstruction`\n      - - :func:`~story_graph.engine.Engine.execute_sc_code`\n        - :ref:`OSC Server`\n    * - Comment\n      - Does not get executed, but allows to put comments into\n        the graph.\n      - \n      -\n    * - Audio\n      - Allows to playback static audio files.\n        The instruction will be translated into *sclang* code and will\n        be executed as such on the associated stream.\n      - - :class:`~story_graph.models.AudioCell`\n        - :class:`~stream.models.AudioFile`\n      - - :func:`~story_graph.engine.Engine.execute_audio_cell`\n    "
+"""
+A :class:`~story_graph.models.ScriptCell` can contain
+different types of code, each with unique functionality.
+
+Both, the database and :class:`~story_graph.engine.Engine`,
+implement some specific details according to these types.
+
+.. list-table:: Cell types
+    :header-rows: 1
+
+    * - Name
+      - Description
+      - Database
+      - Engine
+    * - Markdown
+      - Allows to write arbitrary text which will get
+        rendered as an audio file via a text to speech service,
+        see :class:`~stream.models.TextToSpeech` for conversion
+        and :class:`~story_graph.markdown_parser.GencasterRenderer`
+        for the extended Markdown syntax.
+      - - :class:`~stream.models.TextToSpeech`
+      - - :func:`~story_graph.engine.Engine.execute_markdown_code`
+        - :class:`~story_graph.markdown_parser.GencasterRenderer`
+    * - Python
+      - Allows to execute python code via :func:`exec` which allows
+        to trigger e.g. Dialogs in the frontend
+        (see :class:`~stream.frontend_types.Dialog`)
+        or calculate or fetch any kind of data and store its value
+        as a :class:`~stream.models.StreamVariable`.
+      -
+      - - :func:`~story_graph.engine.Engine.execute_python_cell`
+    * - SuperCollider
+      - Executes *sclang* code on the associated server.
+        This can be used to control the sonic content on the server.
+      - - :class:`~stream.models.StreamInstruction`
+      - - :func:`~story_graph.engine.Engine.execute_sc_code`
+        - :ref:`OSC Server`
+    * - Comment
+      - Does not get executed, but allows to put comments into
+        the graph.
+      -
+      -
+    * - Audio
+      - Allows to playback static audio files.
+        The instruction will be translated into *sclang* code and will
+        be executed as such on the associated stream.
+      - - :class:`~story_graph.models.AudioCell`
+        - :class:`~stream.models.AudioFile`
+      - - :func:`~story_graph.engine.Engine.execute_audio_cell`
+"""
 enum CellType {
   MARKDOWN
   PYTHON
@@ -388,6 +437,12 @@ type InvalidAudioFile {
   error: String!
 }
 
+type InvalidPythonCode {
+  errorType: String!
+  errorMessage: String!
+  errorCode: String!
+}
+
 type LoginError {
   errorMessage: String
 }
@@ -440,7 +495,7 @@ type Mutation {
   addAudioFile(newAudioFile: AddAudioFile!): AudioFileUploadResponse!
   createUpdateStreamVariable(streamVariables: [StreamVariableInput!]!): [StreamVariable!]!
   createNodeDoor(nodeDoorInput: NodeDoorInputCreate!, nodeUuid: UUID!): NodeDoor!
-  updateNodeDoor(nodeDoorInput: NodeDoorInputUpdate!): NodeDoor!
+  updateNodeDoor(nodeDoorInput: NodeDoorInputUpdate!): NodeDoorResponse!
 
   """
   Allows to delete a non-default NodeDoor.
@@ -574,6 +629,8 @@ input NodeDoorInputUpdate {
   order: Int = null
   code: String = null
 }
+
+union NodeDoorResponse = NodeDoor | InvalidPythonCode
 
 input NodeUpdate {
   uuid: UUID!

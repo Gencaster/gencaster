@@ -82,10 +82,22 @@ export const useInterfaceStore = defineStore("interface", () => {
   const executeNodeDoorUpdates = async () => {
     const toDelete: string[] = [];
     newNodeDoorUpdates.value.forEach(async (nodeDoor, nodeDoorUUID) => {
-      const { error } = await updateNodeDoorMutation.executeMutation({
+      const { data, error } = await updateNodeDoorMutation.executeMutation({
         ...nodeDoor,
       });
-      if (error) {
+      if (data?.updateNodeDoor.__typename == "InvalidPythonCode") {
+        console.log(data.updateNodeDoor);
+        ElMessage.error({
+          message: `Invalid python code on node door ${
+            nodeDoor.uuid
+          }<br/><pre style="white-space: pre; font-family: monospace !important;">${data.updateNodeDoor.errorMessage.replace(
+            "\n",
+            "<br/>",
+          )}</pre>`,
+          dangerouslyUseHTMLString: true,
+          duration: 6000,
+        });
+      } else if (error) {
         ElMessage.error(
           `Failed to update node door ${nodeDoorUUID}: ${error.message}`,
         );

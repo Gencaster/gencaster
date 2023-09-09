@@ -3,6 +3,7 @@ Models
 ======
 """
 
+import ast
 import logging
 import uuid
 
@@ -381,6 +382,18 @@ class NodeDoor(models.Model):
                 name="unique_default_per_type_and_node",
             ),
         ]
+
+    def save(self, *args, **kwargs):
+        try:
+            ast.parse(self.code)
+        except SyntaxError as e:
+            log.debug(f"Syntax error on node door {self}: {e}")
+            raise e
+        except Exception as e:
+            log.error(f"Unexpected error on saving {self}: {e}")
+            raise e
+        # ignore args/kwargs b/c of "Cannot force both insert and updating in model saving" problem
+        return super().save()
 
     def __str__(self) -> str:
         return f"{self.node}: {self.door_type}_{self.name}"

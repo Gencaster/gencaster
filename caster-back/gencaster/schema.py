@@ -43,15 +43,18 @@ from story_graph.types import (
     EdgeInput,
     Graph,
     GraphFilter,
+    InvalidPythonCode,
     Node,
     NodeCreate,
     NodeDoor,
     NodeDoorInputCreate,
     NodeDoorInputUpdate,
+    NodeDoorResponse,
     NodeUpdate,
     ScriptCell,
     ScriptCellInputCreate,
     ScriptCellInputUpdate,
+    create_python_highlight_string,
 )
 from stream.exceptions import NoStreamAvailableException
 from stream.frontend_types import Dialog
@@ -553,7 +556,7 @@ class Mutation:
         self,
         info,
         node_door_input: NodeDoorInputUpdate,
-    ) -> NodeDoor:
+    ) -> NodeDoorResponse:
         await graphql_check_authenticated(info)
         node_door = await story_graph_models.NodeDoor.objects.aget(
             uuid=node_door_input.uuid
@@ -565,7 +568,14 @@ class Mutation:
             node_door.name = node_door_input.name
         if node_door_input.order:
             node_door.order = node_door_input.order
-        await node_door.asave()
+        try:
+            await node_door.asave()
+        except SyntaxError as e:
+            return InvalidPythonCode(
+                error_type=e.msg,
+                error_code=e.text if e.text else "",
+                error_message=create_python_highlight_string(e),
+            )
         return node_door  # type: ignore
 
     @strawberry.mutation

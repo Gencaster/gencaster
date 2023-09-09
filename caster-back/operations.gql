@@ -406,6 +406,15 @@ mutation updateNodeDoor($uuid: UUID!, $name: String, $code: String, $order: Int)
   updateNodeDoor(
     nodeDoorInput: {name: $name, code: $code, order: $order, uuid: $uuid}
   ) {
-    uuid
+    ... on NodeDoor {
+      __typename
+      uuid
+    }
+    ... on InvalidPythonCode {
+      __typename
+      errorCode
+      errorMessage
+      errorType
+    }
   }
 }
