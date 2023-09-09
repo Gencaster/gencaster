@@ -34,7 +34,7 @@ const {
   showNodeEditor,
   selectedNodeUUIDs,
   selectedEdgeUUIDs,
-  newScriptCellUpdates,
+  unsavedNodeChanges,
   selectedNodeForEditorUuid,
   vueFlowRef,
 } = storeToRefs(interfaceStore);
@@ -129,7 +129,7 @@ const onNodeDoubleClick = (uuid: string) => {
   console.log("uuid is", uuid);
   nextNodeDoubleClicked.value = uuid;
 
-  if (showNodeEditor.value && newScriptCellUpdates.value.size > 0) {
+  if (showNodeEditor.value && unsavedNodeChanges.value > 0) {
     showSwitchNodeDialog.value = true;
     return;
   }

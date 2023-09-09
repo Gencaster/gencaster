@@ -54,39 +54,44 @@ export const useInterfaceStore = defineStore("interface", () => {
 
   const executeUpdates = async () => {
     waitForNodeUpdate.value = true;
-    await executeScriptCellUpdates();
-    await executeNodeDoorUpdates();
+    const scriptUpdateSuccess = await executeScriptCellUpdates();
+    const nodeDoorUpdateSuccess = await executeNodeDoorUpdates();
+    if (scriptUpdateSuccess && nodeDoorUpdateSuccess) {
+      console.log(`Node door update is ${nodeDoorUpdateSuccess}`);
+      ElMessage.success(`Successfully saved node`);
+    }
     waitForNodeUpdate.value = false;
   };
 
   const unsavedNodeChanges = computed<boolean>((): boolean => {
     return (
-      newNodeDoorUpdates.value.size > 0 || newScriptCellUpdates.value.size > 1
+      newNodeDoorUpdates.value.size > 0 || newScriptCellUpdates.value.size > 0
     );
   });
 
-  const executeScriptCellUpdates = async () => {
+  const executeScriptCellUpdates = async (): Promise<boolean> => {
     const { error } = await updateScriptCellsMutation.executeMutation({
       scriptCellInputs: Array.from(newScriptCellUpdates.value.values()),
     });
 
     if (error) {
       ElMessage.error(`Could not update script cells: ${error.message}`);
-      return;
+      return false;
     } else {
       newScriptCellUpdates.value = new Map();
-      ElMessage.success(`Successfully saved script cells`);
+      return true;
     }
   };
 
-  const executeNodeDoorUpdates = async () => {
+  const executeNodeDoorUpdates = async (): Promise<Boolean> => {
     const toDelete: string[] = [];
-    newNodeDoorUpdates.value.forEach(async (nodeDoor, nodeDoorUUID) => {
+    let onlySuccess = true;
+    for (const [nodeDoorUUID, nodeDoor] of newNodeDoorUpdates.value) {
       const { data, error } = await updateNodeDoorMutation.executeMutation({
         ...nodeDoor,
       });
       if (data?.updateNodeDoor.__typename == "InvalidPythonCode") {
-        console.log(data.updateNodeDoor);
+        onlySuccess = false;
         ElMessage.error({
           message: `Invalid python code on node door ${
             nodeDoor.uuid
@@ -98,15 +103,18 @@ export const useInterfaceStore = defineStore("interface", () => {
           duration: 6000,
         });
       } else if (error) {
+        onlySuccess = false;
         ElMessage.error(
           `Failed to update node door ${nodeDoorUUID}: ${error.message}`,
         );
       } else {
         toDelete.push(nodeDoorUUID);
       }
-    });
-    // @todo should only delete successful transactions
-    newNodeDoorUpdates.value = new Map();
+    }
+    for (const uuid of toDelete) {
+      newNodeDoorUpdates.value.delete(uuid);
+    }
+    return onlySuccess;
   };
 
   return {
