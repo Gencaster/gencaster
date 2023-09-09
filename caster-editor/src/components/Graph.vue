@@ -126,10 +126,9 @@ const onNodeDragStop = (nodeDragEvent: NodeDragEvent) => {
 };
 
 const onNodeDoubleClick = (uuid: string) => {
-  console.log("uuid is", uuid);
   nextNodeDoubleClicked.value = uuid;
 
-  if (showNodeEditor.value && unsavedNodeChanges.value > 0) {
+  if (showNodeEditor.value && unsavedNodeChanges.value) {
     showSwitchNodeDialog.value = true;
     return;
   }
