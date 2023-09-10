@@ -2,6 +2,7 @@
 import NodeEditorHeader from "@/components/NodeEditorHeader.vue";
 
 import NodeEditorCells from "./NodeEditorCells.vue";
+import NodeDoors from "@/components/NodeDoors.vue";
 import { useNodeSubscription } from "@/graphql";
 import { computed, watch, type Ref, toRef } from "vue";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
@@ -14,8 +15,9 @@ const props = defineProps<{
 
 const refUuid: Ref<string> = toRef(props, "uuid");
 
-const { waitForScriptCellsUpdate, newScriptCellUpdates, cachedNodeData } =
-  storeToRefs(useInterfaceStore());
+const { waitForNodeUpdate, newScriptCellUpdates, cachedNodeData } = storeToRefs(
+  useInterfaceStore(),
+);
 
 const { data, error } = useNodeSubscription(
   {
@@ -28,7 +30,7 @@ const { data, error } = useNodeSubscription(
   (messages, response) => {
     // callback on receiving an update from subscription
     console.log("Received node update", response);
-    waitForScriptCellsUpdate.value = false;
+    waitForNodeUpdate.value = false;
     cachedNodeData.value = response;
     return response;
   },
@@ -41,7 +43,7 @@ watch(error, (x) => {
 
 <template>
   <div
-    v-loading="!data || waitForScriptCellsUpdate || data.node.uuid != refUuid"
+    v-loading="!data || waitForNodeUpdate || data.node.uuid != refUuid"
     class="node-editor"
   >
     <NodeEditorHeader
@@ -53,6 +55,14 @@ watch(error, (x) => {
       v-if="cachedNodeData"
       v-model:script-cells="cachedNodeData.node.scriptCells"
     />
+    <div>
+      <NodeDoors
+        v-if="data"
+        :in-node-doors="[]"
+        :out-node-doors="data.node.outNodeDoors"
+        :node-uuid="data.node.uuid"
+      />
+    </div>
   </div>
 </template>
 

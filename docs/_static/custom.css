@@ -49,3 +49,7 @@ html[data-theme='light'] a {
 }
 
 /* {--background-color: #212a2e;--text-color: #F7F8F8;--link-color: #828fff;} */
+
+.sig-name.descname .pre {
+    background-color: var(--green);
+}

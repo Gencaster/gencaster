@@ -2,8 +2,10 @@ import asyncio
 import random
 from datetime import datetime
 from typing import Dict, Optional
+from unittest import mock
 
 from asgiref.sync import async_to_sync, sync_to_async
+from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.test import TransactionTestCase
 from mistletoe import Document
@@ -11,9 +13,18 @@ from mixer.backend.django import mixer
 
 from stream.models import StreamVariable
 
-from .engine import Engine, ScriptCellTimeout
+from .engine import Engine, GraphDeadEnd, InvalidPythonCode, ScriptCellTimeout
 from .markdown_parser import GencasterRenderer
-from .models import AudioCell, CellType, Edge, Graph, Node, ScriptCell
+from .models import (
+    AudioCell,
+    CellType,
+    Edge,
+    Graph,
+    Node,
+    NodeDoor,
+    NodeDoorMissing,
+    ScriptCell,
+)
 
 
 class GraphTestCase(TransactionTestCase):
@@ -62,33 +73,126 @@ class EdgeTestCase(TransactionTestCase):
         self.out_node: Node = mixer.blend(Node, graph=self.graph)  # type: ignore
 
     @staticmethod
-    def get_edge(**kwargs) -> Edge:
+    def get_edge(create_nodes: bool = True, **kwargs) -> Edge:
+        if create_nodes:
+            node_a = NodeTestCase.get_node()
+            node_b = NodeTestCase.get_node()
+            kwargs["in_node_door"] = node_b.get_default_in_door()
+            kwargs["out_node_door"] = node_a.get_default_out_door()
         return mixer.blend(Edge, **kwargs)  # type: ignore
 
     def test_fail_unique(self):
         Edge(
-            in_node=self.in_node,
-            out_node=self.out_node,
+            in_node_door=self.in_node.get_default_in_door(),
+            out_node_door=self.out_node.get_default_out_door(),
         ).save()
 
         # creating the same edge should fail
         with self.assertRaises(IntegrityError):
             Edge(
-                in_node=self.in_node,
-                out_node=self.out_node,
+                in_node_door=self.in_node.get_default_in_door(),
+                out_node_door=self.out_node.get_default_out_door(),
             ).save()
-
-        # but reverse is possible
-        Edge(
-            in_node=self.out_node,
-            out_node=self.in_node,
-        ).save()
 
     def test_loop(self):
         Edge(
-            in_node=self.in_node,
-            out_node=self.in_node,
+            in_node_door=self.in_node.get_default_in_door(),
+            out_node_door=self.out_node.get_default_out_door(),
         ).save()
+
+    def test_in_node_door_is_input_door(self):
+        node = NodeTestCase.get_node()
+        edge = Edge(
+            in_node_door=node.get_default_out_door(),
+            out_node_door=node.get_default_out_door(),
+        )
+
+        with self.assertRaises(ValidationError):
+            edge.save()
+
+        edge = Edge(
+            in_node_door=node.get_default_in_door(),
+            out_node_door=node.get_default_in_door(),
+        )
+
+        with self.assertRaises(ValidationError):
+            edge.save()
+
+    async def test_outgoing_edges(self):
+        graph = await sync_to_async(GraphTestCase.get_graph)()
+        node_a = await sync_to_async(NodeTestCase.get_node)(
+            graph=graph,
+        )
+        node_b = await sync_to_async(NodeTestCase.get_node)(
+            graph=graph,
+        )
+        node_door_out_a = await node_a.aget_default_out_door()
+        node_door_in_b = await node_b.aget_default_in_door()
+        edge = await Edge.objects.acreate(
+            in_node_door=node_door_in_b,
+            out_node_door=node_door_out_a,
+        )
+        self.assertEqual((await node_door_out_a.out_edges.afirst()).uuid, edge.uuid)  # type: ignore
+        self.assertEqual((await node_door_in_b.in_edges.afirst()).uuid, edge.uuid)  # type: ignore
+
+
+class NodeDoorTestCase(TransactionTestCase):
+    @staticmethod
+    def get_node_door(**kwargs) -> NodeDoor:
+        return mixer.blend(NodeDoor, **kwargs)  # type: ignore
+
+    def test_create_default_doors(self):
+        node = NodeTestCase.get_node()
+        self.assertEqual(NodeDoor.objects.count(), 2)
+        default_in_door = node.get_default_in_door()
+        self.assertEqual(default_in_door.door_type, NodeDoor.DoorType.INPUT)
+        self.assertEqual(default_in_door.node.uuid, node.uuid)
+
+        default_out_door = node.get_default_out_door()
+        self.assertEqual(default_out_door.door_type, NodeDoor.DoorType.OUTPUT)
+        self.assertEqual(default_out_door.node.uuid, node.uuid)
+
+    def test_default_unique(self):
+        node = NodeTestCase.get_node()
+
+        with self.assertRaises(IntegrityError):
+            NodeDoor(
+                node=node,
+                is_default=True,
+                door_type=NodeDoor.DoorType.INPUT,
+            ).save()
+
+        with self.assertRaises(IntegrityError):
+            NodeDoor(
+                node=node,
+                is_default=True,
+                door_type=NodeDoor.DoorType.OUTPUT,
+            ).save()
+
+    def test_get_default_door_missing_exception(self):
+        node = NodeTestCase.get_node()
+        NodeDoor.objects.all().delete()
+        with self.assertRaises(NodeDoorMissing):
+            node.get_default_in_door()
+        with self.assertRaises(NodeDoorMissing):
+            node.get_default_out_door()
+
+    def test_invalid_python_code(self):
+        node = NodeTestCase.get_node()
+        door = node.get_default_in_door()
+        door.code = "2+/+2"
+        with self.assertRaises(SyntaxError):
+            door.save()
+
+    # same as above but async as gql runs async
+    # therefore it makes sense to also test if the
+    # async variant calls the sync save code
+    async def test_invalid_python_code_async(self):
+        node = await sync_to_async(NodeTestCase.get_node)()
+        door = await node.aget_default_in_door()
+        door.code = "2+/+2"
+        with self.assertRaises(SyntaxError):
+            await door.asave()
 
 
 class GencasterMarkdownTestCase(TransactionTestCase):
@@ -256,8 +360,8 @@ class EngineTestCase(TransactionTestCase):
         await sync_to_async(self.setup_graph_without_start)()
         entry_node = await self.graph.acreate_entry_node()
         await Edge.objects.acreate(
-            out_node=self.node,
-            in_node=entry_node,
+            out_node_door=await self.node.aget_default_out_door(),
+            in_node_door=await entry_node.aget_default_in_door(),
         )
         self.node.is_blocking_node = False
         await sync_to_async(self.node.save)()
@@ -273,14 +377,20 @@ class EngineTestCase(TransactionTestCase):
         cell_code: str,
         stream_variables: Optional[Dict] = None,
         cell_type: CellType = CellType.PYTHON,
+        cell_kwargs: Optional[Dict] = None,
     ):
         from stream.tests import StreamTestCase
+
+        cell_kwargs = cell_kwargs if cell_kwargs else {}
 
         self.graph = GraphTestCase.get_graph()
         self.stream = StreamTestCase.get_stream()
         entry_node = async_to_sync(self.graph.acreate_entry_node)
         self.script_cell = ScriptCellTestCase.get_script_cell(
-            node=entry_node, cell_type=cell_type, cell_code=cell_code
+            node=entry_node,
+            cell_type=cell_type,
+            cell_code=cell_code,
+            **cell_kwargs,
         )
 
     async def helper_create_delayed_stream_variable(
@@ -455,3 +565,290 @@ vars['foo'] = 42"""
         self.assertEqual(dialog.content[0].text, "Hello World")  # type: ignore
         self.assertEqual(len(dialog.buttons), 1)
         self.assertEqual(dialog.buttons[0].text, "OK")
+
+    @mock.patch("stream.models.StreamPoint.speak_on_stream")
+    async def test_execute_markdown_code(self, speak_mock: mock.MagicMock):
+        await sync_to_async(self.setup_with_script_cell)(
+            "Hello world",
+            None,
+            cell_type=CellType.MARKDOWN,
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with mock.patch.object(engine, "wait_for_finished_instruction") as patch:
+            x = engine.start().__aiter__()
+            with self.assertRaises(StopAsyncIteration):
+                for _ in range(2):
+                    await asyncio.wait_for(x.__anext__(), 0.2)
+            assert patch.called
+        speak_mock.assert_called_once_with("<speak>Hello world</speak>")
+
+    @mock.patch("stream.models.StreamPoint.send_raw_instruction")
+    async def text_execute_sc_code(self, sc_instruction_mock: mock.MagicMock):
+        # @todo this yields no coverage although the tests makes it obvious
+        # that the code is executed
+        from stream.models import StreamInstruction
+
+        await sync_to_async(self.setup_with_script_cell)(
+            "2+2",
+            None,
+            cell_type=CellType.SUPERCOLLIDER,
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with mock.patch.object(engine, "wait_for_finished_instruction") as patch:
+            x = engine.start().__aiter__()
+            with self.assertRaises(StopAsyncIteration):
+                for _ in range(4):
+                    await asyncio.wait_for(x.__anext__(), 0.2)
+            assert patch.called
+        self.assertEqual(await StreamInstruction.objects.acount(), 1)
+        sc_instruction_mock.assert_called_once_with("2+2")
+
+    @mock.patch("stream.models.StreamPoint.play_audio_file")
+    async def test_execute_audio_cell(self, play_audio_file_mock: mock.MagicMock):
+        audio_cell = await sync_to_async(AudioCellTestCase.get_audio_cell)()
+        await sync_to_async(self.setup_with_script_cell)(
+            cell_code="2+2",
+            stream_variables=None,
+            cell_type=CellType.AUDIO,
+            cell_kwargs={"audio_cell": audio_cell},
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        with mock.patch.object(engine, "wait_for_finished_instruction") as patch:
+            x = engine.start().__aiter__()
+            with self.assertRaises(StopAsyncIteration):
+                for _ in range(4):
+                    await asyncio.wait_for(x.__anext__(), 0.2)
+            assert patch.called
+        play_audio_file_mock.assert_called_once_with(
+            audio_cell.audio_file, audio_cell.playback
+        )
+
+    async def test_wait_for_finished_instruction_timeout(self):
+        from stream.models import StreamInstruction
+
+        await sync_to_async(self.setup_with_script_cell)(
+            cell_code="2+2",
+            cell_type=CellType.SUPERCOLLIDER,
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        instruction = StreamInstruction(
+            stream_point=self.stream.stream_point,
+            state=StreamInstruction.InstructionState.SENT,
+            instruction_text="",
+        )
+        await instruction.asave()
+
+        with self.assertRaises(asyncio.TimeoutError):
+            await engine.wait_for_finished_instruction(
+                instruction=instruction,
+                timeout=0.01,
+                interval=0.001,
+            )
+
+    async def test_wait_for_finished_instruction(self):
+        from stream.models import StreamInstruction
+
+        async def set_instruction_finished_with_delay(
+            stream_instruction: StreamInstruction, delay: float
+        ):
+            await asyncio.sleep(delay)
+            stream_instruction.state = StreamInstruction.InstructionState.FINISHED
+            await stream_instruction.asave()
+
+        await sync_to_async(self.setup_with_script_cell)(
+            cell_code="2+2",
+            cell_type=CellType.SUPERCOLLIDER,
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        instruction = StreamInstruction(
+            stream_point=self.stream.stream_point,
+            state=StreamInstruction.InstructionState.SENT,
+            instruction_text="",
+        )
+        await instruction.asave()
+
+        job = asyncio.gather(
+            set_instruction_finished_with_delay(instruction, 0.1),
+            engine.wait_for_finished_instruction(
+                instruction=instruction,
+                timeout=1.0,
+                interval=0.1,
+            ),
+        )
+        await asyncio.wait_for(job, timeout=0.5)
+
+        self.assertEqual((await StreamInstruction.objects.afirst()).state, StreamInstruction.InstructionState.FINISHED)  # type: ignore
+
+    async def test_evaluate_python_code(self):
+        await sync_to_async(self.setup_with_script_cell)(
+            cell_code="2+2",
+            cell_type=CellType.SUPERCOLLIDER,
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+
+        with self.assertRaises(InvalidPythonCode):
+            await engine._evaluate_python_code("2+")
+
+        with self.assertRaises(InvalidPythonCode):
+            await engine._evaluate_python_code("'foobar'")
+
+        self.assertTrue(await engine._evaluate_python_code("2==2"))
+        self.assertFalse(await engine._evaluate_python_code("2==1"))
+
+    async def test_get_next_node(self):
+        await sync_to_async(self.setup_with_script_cell)(
+            "2+2",
+            None,
+            cell_type=CellType.PYTHON,
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        # start node
+        node_a: Node = await Node.objects.afirst()  # type: ignore
+        node_b = await Node.objects.acreate(
+            graph=self.graph,
+        )
+        # make sure all default doors are there
+        self.assertEqual(await NodeDoor.objects.acount(), 4)
+        await Edge.objects.acreate(
+            out_node_door=await node_a.aget_default_out_door(),
+            in_node_door=await node_b.aget_default_in_door(),
+        )
+        self.assertEqual(await Edge.objects.acount(), 1)
+        engine._current_node = node_a
+        next_node = await engine.get_next_node()
+        self.assertEqual(next_node.uuid, node_b.uuid)
+
+    async def test_get_next_node_with_vars(self):
+        await sync_to_async(self.setup_with_script_cell)(
+            "2+2",
+            None,
+            cell_type=CellType.PYTHON,
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        # start node
+        node_a: Node = await Node.objects.afirst()  # type: ignore
+        node_b = await Node.objects.acreate(
+            graph=self.graph,
+        )
+        node_c = await Node.objects.acreate(
+            graph=self.graph,
+        )
+        await Edge.objects.acreate(
+            out_node_door=await node_a.aget_default_out_door(),
+            in_node_door=await node_b.aget_default_in_door(),
+        )
+        custom_node_door = await NodeDoor.objects.acreate(
+            door_type=NodeDoor.DoorType.OUTPUT,
+            node=node_a,
+            name="foobar",
+            is_default=False,
+            code="2==2",
+        )
+
+        await Edge.objects.acreate(
+            out_node_door=custom_node_door,
+            in_node_door=await node_c.aget_default_in_door(),
+        )
+        self.assertEqual(await Edge.objects.acount(), 2)
+        # make sure all default doors are there
+        self.assertEqual(await NodeDoor.objects.acount(), 7)
+
+        engine._current_node = node_a
+        next_node = await engine.get_next_node()
+        self.assertEqual(next_node.uuid, node_c.uuid)
+
+    async def test_failed_node_door_code(self):
+        await sync_to_async(self.setup_with_script_cell)(
+            "2+2",
+            None,
+            cell_type=CellType.PYTHON,
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        # start node
+        node_a: Node = await Node.objects.afirst()  # type: ignore
+        node_b = await Node.objects.acreate(
+            graph=self.graph,
+        )
+        node_c = await Node.objects.acreate(
+            graph=self.graph,
+        )
+        await Edge.objects.acreate(
+            out_node_door=await node_a.aget_default_out_door(),
+            in_node_door=await node_b.aget_default_in_door(),
+        )
+        custom_node_door = await NodeDoor.objects.acreate(
+            door_type=NodeDoor.DoorType.OUTPUT,
+            node=node_a,
+            name="foobar",
+            is_default=False,
+            code="foo+bar",
+        )
+
+        await Edge.objects.acreate(
+            out_node_door=custom_node_door,
+            in_node_door=await node_c.aget_default_in_door(),
+        )
+        self.assertEqual(await Edge.objects.acount(), 2)
+        # make sure all default doors are there
+        self.assertEqual(await NodeDoor.objects.acount(), 7)
+
+        engine._current_node = node_a
+        next_node = await engine.get_next_node()
+        self.assertEqual(next_node.uuid, node_b.uuid)
+
+    async def test_node_door_code_false(self):
+        await sync_to_async(self.setup_with_script_cell)(
+            "2+2",
+            None,
+            cell_type=CellType.PYTHON,
+        )
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        # start node
+        node_a: Node = await Node.objects.afirst()  # type: ignore
+        node_b = await Node.objects.acreate(
+            graph=self.graph,
+        )
+        node_c = await Node.objects.acreate(
+            graph=self.graph,
+        )
+        await Edge.objects.acreate(
+            out_node_door=await node_a.aget_default_out_door(),
+            in_node_door=await node_b.aget_default_in_door(),
+        )
+        stream_variable = await StreamVariable.objects.acreate(
+            stream=self.stream,
+            key="foo",
+            value="bar",
+        )
+        custom_node_door = await NodeDoor.objects.acreate(
+            door_type=NodeDoor.DoorType.OUTPUT,
+            node=node_a,
+            name="foobar",
+            is_default=False,
+            code='vars["foo"]=="bar"',
+        )
+
+        await Edge.objects.acreate(
+            out_node_door=custom_node_door,
+            in_node_door=await node_c.aget_default_in_door(),
+        )
+        self.assertEqual(await Edge.objects.acount(), 2)
+        # make sure all default doors are there
+        self.assertEqual(await NodeDoor.objects.acount(), 7)
+
+        engine._current_node = node_a
+        next_node = await engine.get_next_node()
+        self.assertEqual(next_node.uuid, node_c.uuid)
+
+    async def test_run_into_dead_end(self):
+        await sync_to_async(self.setup_with_script_cell)(
+            "2+2",
+            None,
+            cell_type=CellType.PYTHON,
+        )
+        start_node = await Node.objects.afirst()
+        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine._current_node = start_node  # type: ignore
+
+        with self.assertRaises(GraphDeadEnd):
+            await engine.get_next_node()

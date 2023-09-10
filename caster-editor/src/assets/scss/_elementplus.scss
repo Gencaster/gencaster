@@ -12,12 +12,18 @@
 
   --el-button-text-color: #{$black} !important;
   --el-button-hover-text-color: #{$black} !important;
+
+  --el-input-border-radius: 0 !important;
+  --el-input-focus-border-color: #{$green-light} !important;
+  --el-disabled-bg-color: #{$grey-light} !important;
 }
 
 .el-button--primary {
   --el-color-primary: #{$green-light} !important;
   --el-button-hover-border-color: #{$green-light} !important;
   --el-button-hover-bg-color: #{$green-light} !important;
+  --el-button-disabled-bg-color: #{$grey} !important;
+  --el-button-disabled-border-color: #{$grey} !important;
 }
 
 .el-button--danger {
@@ -62,6 +68,17 @@
       }
     }
   }
+}
+
+.el-input {
+  background-color: #{$grey-light};
+  box-shadow: unset;
+}
+
+.el-textarea,
+.el-textarea__inner {
+  background-color: #{$grey-light};
+  box-shadow: unset;
 }
 
 /* MODALS */

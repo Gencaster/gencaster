@@ -118,16 +118,18 @@ class SchemaTestCase(TransactionTestCase):
         out_node: Node = await sync_to_async(NodeTestCase.get_node)(graph=graph)
 
         mutation = """
-            mutation TestMutation($nodeInUuid:UUID!, $nodeOutUuid:UUID!) {
-                addEdge(newEdge: {nodeInUuid: $nodeInUuid, nodeOutUuid: $nodeOutUuid})
+            mutation TestMutation($nodeDoorInUuid:UUID!, $nodeDoorOutUuid:UUID!) {
+                addEdge(newEdge: {nodeDoorInUuid: $nodeDoorInUuid, nodeDoorOutUuid: $nodeDoorOutUuid}) {
+                    uuid
+                }
             }
         """
 
         resp = await schema.execute(
             mutation,
             variable_values={
-                "nodeInUuid": str(in_node.uuid),
-                "nodeOutUuid": str(out_node.uuid),
+                "nodeDoorInUuid": str((await in_node.aget_default_in_door()).uuid),
+                "nodeDoorOutUuid": str((await out_node.aget_default_out_door()).uuid),
             },
             context_value=self.get_login_context(),
         )
@@ -137,8 +139,8 @@ class SchemaTestCase(TransactionTestCase):
         self.assertEqual(await Edge.objects.all().acount(), 1)
 
         edge: Edge = await Edge.objects.all().afirst()  # type: ignore
-        self.assertEqual(await sync_to_async(lambda: edge.in_node)(), in_node)
-        self.assertEqual(await sync_to_async(lambda: edge.out_node)(), out_node)
+        self.assertEqual((await sync_to_async(lambda: edge.in_node_door.node)()).uuid, in_node.uuid)  # type: ignore
+        self.assertEqual((await sync_to_async(lambda: edge.out_node_door.node)()).uuid, out_node.uuid)  # type: ignore
 
     GRAPH_QUERY = """
         query TestQuery {

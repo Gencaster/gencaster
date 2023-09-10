@@ -12,15 +12,14 @@ const props = defineProps<{
 
 const drag: Ref<boolean> = ref(false);
 const interfaceStore = useInterfaceStore();
-const { waitForScriptCellsUpdate, newScriptCellUpdates } =
-  storeToRefs(interfaceStore);
+const { waitForNodeUpdate, newScriptCellUpdates } = storeToRefs(interfaceStore);
 
 const updateOrder = async (
   newOrder: NodeSubscription["node"]["scriptCells"],
 ) => {
   // block dragging if script cell has not been updated
   console.log("Calculate new script cell order");
-  waitForScriptCellsUpdate.value = true;
+  waitForNodeUpdate.value = true;
   newOrder.map((x, i) => {
     let update = newScriptCellUpdates.value.get(x.uuid);
     if (update) {
@@ -32,7 +31,7 @@ const updateOrder = async (
       });
     }
   });
-  interfaceStore.executeScriptCellUpdates();
+  interfaceStore.executeUpdates();
 };
 
 const moveableScriptCells = computed<NodeSubscription["node"]["scriptCells"]>({

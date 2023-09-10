@@ -17,12 +17,20 @@ from stream.frontend_types import Button, Checkbox, Dialog, Input, Text
 from stream.models import Stream, StreamInstruction, StreamVariable
 
 from .markdown_parser import md_to_ssml
-from .models import AudioCell, CellType, Graph, Node, ScriptCell
+from .models import AudioCell, CellType, Graph, Node, NodeDoor, ScriptCell
 
 log = logging.getLogger(__name__)
 
 
 class ScriptCellTimeout(Exception):
+    pass
+
+
+class GraphDeadEnd(Exception):
+    pass
+
+
+class InvalidPythonCode(Exception):
     pass
 
 
@@ -265,7 +273,10 @@ class Engine:
         stream_variables.get("return", None)
 
     async def wait_for_finished_instruction(
-        self, instruction: StreamInstruction, timeout: int = 30, interval: float = 0.2
+        self,
+        instruction: StreamInstruction,
+        timeout: float = 300.0,
+        interval: float = 0.2,
     ) -> None:
         log.debug(f"Wait for finished instruction {instruction.uuid}")
         for _ in range(int(timeout / interval)):
@@ -274,6 +285,7 @@ class Engine:
                 return
             await asyncio.sleep(interval)
         log.info(f"Timed out on waiting for stream instruction {instruction.uuid}")
+        raise asyncio.TimeoutError()
 
     async def execute_node(
         self, node: Node, blocking_sleep_time: int = 10000
@@ -311,6 +323,79 @@ class Engine:
             else:
                 log.error(f"Occured invalid/unknown CellType {cell_type}")
 
+    async def _evaluate_python_code(self, code: str) -> bool:
+        stream_variables = await self.get_stream_variables()
+        try:
+            r = eval(
+                code,
+                self.get_engine_global_vars(
+                    {
+                        "loop": asyncio.get_event_loop(),
+                        "vars": stream_variables,
+                        "self": self,
+                        "get_stream_variables": self.get_stream_variables,
+                        "wait_for_stream_variable": self.wait_for_stream_variable,
+                    }
+                ),
+            )
+        except Exception:
+            raise InvalidPythonCode()
+        if not isinstance(r, bool):
+            log.debug(f"Return type of '{code}' is not a boolean but {type(r)}")
+            raise InvalidPythonCode()
+        return r
+
+    async def get_next_node(self) -> Node:
+        """Iterates over each exit :class:`~NodeDoor`
+        of the current node and evaluates its boolean value
+        and decides.
+
+        If the node door code consists of invalid code it will be skipped.
+        If all boolean evaluations result in ``False`` or invalid code,
+        the default exit will be used.
+
+        If multiple out-going edges are connected to an active door,
+        a random edge will be picked to follow for the next node.
+
+        If the node does not have any out-going edges a :class:`~GraphDeadEnd`
+        exception will be raised.
+        """
+        exit_door: Optional[NodeDoor]
+        async for node_door in NodeDoor.objects.filter(
+            node=self._current_node,
+            door_type=NodeDoor.DoorType.OUTPUT,
+        ).prefetch_related("node"):
+            try:
+                active_exit = await self._evaluate_python_code(node_door.code)
+            # a broad exception because many things can go wrong here while evaluating
+            # python code (e.g. even raising a custom exception), therefore we catch all
+            # possible exceptions here
+            except Exception:
+                log.debug(
+                    f"Exception raised on evaluating code of node door {node_door}"
+                )
+                continue
+            if active_exit:
+                log.debug(f"Choose exit {node_door} on {self._current_node}")
+                exit_door = node_door
+                break
+        else:
+            log.debug(f"Fallback to default node door on {self._current_node}")
+            exit_door = await NodeDoor.objects.filter(
+                node=self._current_node,
+                door_type=NodeDoor.DoorType.OUTPUT,
+                is_default=True,
+            ).afirst()
+        # else return default out
+
+        if exit_door is None:
+            raise GraphDeadEnd()
+
+        try:
+            return (await exit_door.out_edges.order_by("?").select_related("in_node_door__node").afirst()).in_node_door.node  # type: ignore
+        except AttributeError:
+            raise GraphDeadEnd()
+
     async def start(
         self, max_steps: int = 1000
     ) -> AsyncGenerator[Union[StreamInstruction, Dialog], None]:
@@ -334,17 +419,11 @@ class Engine:
                 await asyncio.sleep(self.blocking_time)
 
             # search for next node
-            if (
-                new_node := await Node.objects.filter(
-                    in_edges__in_node=self._current_node
-                )
-                .order_by("?")
-                .afirst()
-            ):
-                self._current_node = new_node
-            else:
-                log.error(
-                    f"Ran into a dead end on {self.graph} on {self._current_node}"
-                )
+            try:
+                await self.get_next_node()
+            except GraphDeadEnd:
+                log.info(f"Ran into a dead end on {self.graph} on {self._current_node}")
                 return
             await asyncio.sleep(0.1)
+        else:
+            log.info(f"Reached maximum steps on graph {self.graph} - stop execution")

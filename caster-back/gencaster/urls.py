@@ -20,8 +20,7 @@ from channels.layers import BaseChannelLayer, get_channel_layer
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.http import HttpRequest
-from django.shortcuts import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.urls import path
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt

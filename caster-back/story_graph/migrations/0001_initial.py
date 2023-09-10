@@ -128,6 +128,7 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="out_edges",
                         to="story_graph.node",
+                        null=True,
                     ),
                 ),
                 (
@@ -136,6 +137,7 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="in_edges",
                         to="story_graph.node",
+                        null=True,
                     ),
                 ),
             ],

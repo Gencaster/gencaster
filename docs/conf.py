@@ -84,3 +84,7 @@ html_theme_options = {
     "path_to_docs": "docs",
     "use_repository_button": True,
 }
+
+autodoc_default_options = {
+    "exclude-members": "DoesNotExist,MultipleObjectsReturned",
+}

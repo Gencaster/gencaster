@@ -1,12 +1,14 @@
 import { defineStore } from "pinia";
-import { type Ref, ref } from "vue";
+import { type Ref, ref, computed } from "vue";
 import {
   type NodeSubscription,
   type ScriptCellInputUpdate,
   type User,
+  type NodeDoorInputUpdate,
   useUpdateScriptCellsMutation,
+  useUpdateNodeDoorMutation,
 } from "@/graphql";
-import type { Instance as GraphInstance } from "v-network-graph";
+import type { VueFlowStore as GraphInstance } from "@vue-flow/core";
 import { ElMessage } from "element-plus";
 
 export enum Tab {
@@ -25,7 +27,7 @@ export const useInterfaceStore = defineStore("interface", () => {
   const selectedNodeUUIDs: Ref<string[]> = ref([]);
   const selectedEdgeUUIDs: Ref<string[]> = ref([]);
 
-  const vNetworkGraph: Ref<CustomGraph | undefined> = ref(undefined);
+  const vueFlowRef: Ref<CustomGraph | undefined> = ref(undefined);
 
   const tab: Ref<Tab> = ref(Tab.Edit);
 
@@ -35,31 +37,84 @@ export const useInterfaceStore = defineStore("interface", () => {
   const newScriptCellUpdates: Ref<Map<string, ScriptCellInputUpdate>> = ref(
     new Map(),
   );
-  const waitForScriptCellsUpdate: Ref<boolean> = ref(false);
+  const newNodeDoorUpdates: Ref<Map<string, NodeDoorInputUpdate>> = ref(
+    new Map(),
+  );
+  const waitForNodeUpdate: Ref<boolean> = ref(false);
 
   const user: Ref<User | undefined> = ref(undefined);
 
   const updateScriptCellsMutation = useUpdateScriptCellsMutation();
+  const updateNodeDoorMutation = useUpdateNodeDoorMutation();
 
-  const resetScriptCellUpdates = () => {
+  const resetUpdates = () => {
     newScriptCellUpdates.value = new Map();
+    newNodeDoorUpdates.value = new Map();
   };
 
-  const executeScriptCellUpdates = async () => {
-    waitForScriptCellsUpdate.value = true;
+  const executeUpdates = async () => {
+    waitForNodeUpdate.value = true;
+    const scriptUpdateSuccess = await executeScriptCellUpdates();
+    const nodeDoorUpdateSuccess = await executeNodeDoorUpdates();
+    if (scriptUpdateSuccess && nodeDoorUpdateSuccess) {
+      console.log(`Node door update is ${nodeDoorUpdateSuccess}`);
+      ElMessage.success(`Successfully saved node`);
+    }
+    waitForNodeUpdate.value = false;
+  };
 
+  const unsavedNodeChanges = computed<boolean>((): boolean => {
+    return (
+      newNodeDoorUpdates.value.size > 0 || newScriptCellUpdates.value.size > 0
+    );
+  });
+
+  const executeScriptCellUpdates = async (): Promise<boolean> => {
     const { error } = await updateScriptCellsMutation.executeMutation({
       scriptCellInputs: Array.from(newScriptCellUpdates.value.values()),
     });
 
     if (error) {
       ElMessage.error(`Could not update script cells: ${error.message}`);
-      waitForScriptCellsUpdate.value = false;
-      return;
+      return false;
     } else {
-      resetScriptCellUpdates();
-      ElMessage.success(`Successfully saved script cells`);
+      newScriptCellUpdates.value = new Map();
+      return true;
     }
+  };
+
+  const executeNodeDoorUpdates = async (): Promise<Boolean> => {
+    const toDelete: string[] = [];
+    let onlySuccess = true;
+    for (const [nodeDoorUUID, nodeDoor] of newNodeDoorUpdates.value) {
+      const { data, error } = await updateNodeDoorMutation.executeMutation({
+        ...nodeDoor,
+      });
+      if (data?.updateNodeDoor.__typename == "InvalidPythonCode") {
+        onlySuccess = false;
+        ElMessage.error({
+          message: `Invalid python code on node door ${
+            nodeDoor.uuid
+          }<br/><pre style="white-space: pre; font-family: monospace !important;">${data.updateNodeDoor.errorMessage.replace(
+            "\n",
+            "<br/>",
+          )}</pre>`,
+          dangerouslyUseHTMLString: true,
+          duration: 6000,
+        });
+      } else if (error) {
+        onlySuccess = false;
+        ElMessage.error(
+          `Failed to update node door ${nodeDoorUUID}: ${error.message}`,
+        );
+      } else {
+        toDelete.push(nodeDoorUUID);
+      }
+    }
+    for (const uuid of toDelete) {
+      newNodeDoorUpdates.value.delete(uuid);
+    }
+    return onlySuccess;
   };
 
   return {
@@ -68,12 +123,14 @@ export const useInterfaceStore = defineStore("interface", () => {
     selectedNodeUUIDs,
     selectedEdgeUUIDs,
     tab,
-    vNetworkGraph,
+    vueFlowRef,
     cachedNodeData,
-    waitForScriptCellsUpdate,
+    waitForNodeUpdate,
     newScriptCellUpdates,
-    resetScriptCellUpdates,
-    executeScriptCellUpdates,
+    newNodeDoorUpdates,
+    unsavedNodeChanges,
+    resetUpdates,
+    executeUpdates,
     user,
   };
 });

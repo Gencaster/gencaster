@@ -1,4 +1,3 @@
-### START LOGGING THREAD LOOP ###
 input AddAudioFile {
   file: Upload!
   description: String!
@@ -56,7 +55,7 @@ input AddGraphInput {
   templateName: GraphDetailTemplate
 }
 
-"""AudioCell(uuid, playback, audio_file, volume)"""
+"""Stores information for playback of static audio files."""
 type AudioCell {
   uuid: UUID!
   playback: PlaybackChoices!
@@ -64,7 +63,7 @@ type AudioCell {
   audioFile(pagination: OffsetPaginationInput): AudioFile!
 }
 
-"""AudioCell(uuid, playback, audio_file, volume)"""
+"""Stores information for playback of static audio files."""
 input AudioCellInput {
   uuid: UUID = null
   playback: PlaybackChoices
@@ -164,7 +163,56 @@ enum CallbackAction {
   SEND_VARIABLE
 }
 
-"""Choice of foobar"""
+"""
+A :class:`~story_graph.models.ScriptCell` can contain
+different types of code, each with unique functionality.
+
+Both, the database and :class:`~story_graph.engine.Engine`,
+implement some specific details according to these types.
+
+.. list-table:: Cell types
+    :header-rows: 1
+
+    * - Name
+      - Description
+      - Database
+      - Engine
+    * - Markdown
+      - Allows to write arbitrary text which will get
+        rendered as an audio file via a text to speech service,
+        see :class:`~stream.models.TextToSpeech` for conversion
+        and :class:`~story_graph.markdown_parser.GencasterRenderer`
+        for the extended Markdown syntax.
+      - - :class:`~stream.models.TextToSpeech`
+      - - :func:`~story_graph.engine.Engine.execute_markdown_code`
+        - :class:`~story_graph.markdown_parser.GencasterRenderer`
+    * - Python
+      - Allows to execute python code via :func:`exec` which allows
+        to trigger e.g. Dialogs in the frontend
+        (see :class:`~stream.frontend_types.Dialog`)
+        or calculate or fetch any kind of data and store its value
+        as a :class:`~stream.models.StreamVariable`.
+      -
+      - - :func:`~story_graph.engine.Engine.execute_python_cell`
+    * - SuperCollider
+      - Executes *sclang* code on the associated server.
+        This can be used to control the sonic content on the server.
+      - - :class:`~stream.models.StreamInstruction`
+      - - :func:`~story_graph.engine.Engine.execute_sc_code`
+        - :ref:`OSC Server`
+    * - Comment
+      - Does not get executed, but allows to put comments into
+        the graph.
+      -
+      -
+    * - Audio
+      - Allows to playback static audio files.
+        The instruction will be translated into *sclang* code and will
+        be executed as such on the associated stream.
+      - - :class:`~story_graph.models.AudioCell`
+        - :class:`~stream.models.AudioFile`
+      - - :func:`~story_graph.engine.Engine.execute_audio_cell`
+"""
 enum CellType {
   MARKDOWN
   PYTHON
@@ -203,25 +251,83 @@ type DjangoFileType {
   url: String!
 }
 
+"""An enumeration."""
+enum DoorType {
+  INPUT
+  OUTPUT
+}
+
 """
-Connects two :class:`~Node` with each other.
+Connects two :class:`~Node` with each other by
+using their respective :class:`~NodeDoor`.
 
-.. todo::
+.. important::
 
-    With a script we can also jump to any other node
-    so it is not clear how to use this.
-    Maybe take a look at visual programming languages
-    such as MSP or Scratch how they handle this?
+    It is important to note that an edge flows from
+    ``out_node_door`` to ``in_node_door`` as we follow
+    the notion from the perspective of a
+    :class:`story_graph.models.Node` rather than from the
+    edge.
+
+
+.. graphviz::
+
+    digraph Connection {
+        rank = same;
+        subgraph cluster_node_a {
+            rank = same;
+            label = "NODE_A";
+            NODE_A [shape=Msquare, label="NODE_A\n\nscript_cell_1\nscript_cell_2"];
+            subgraph cluster_in_nodes_a {
+                label = "IN_NODES";
+                in_node_door_a [label="in_node_door"];
+            }
+            subgraph cluster_out_nodes_a {
+                label = "OUT_NODES";
+                out_node_door_a_1 [label="out_node_door 1"];
+                out_node_door_a_2 [label="out_node_door 2"];
+            }
+            in_node_door_a -> NODE_A [label="DB\nreference"];
+            {out_node_door_a_1, out_node_door_a_2} -> NODE_A;
+            in_node_door_a -> NODE_A [style=dashed, color=red, fontcolor=red, label="Engine\nProgression"];
+            NODE_A -> out_node_door_a_1 [style=dashed, color=red];
+        }
+
+        edge_ [shape=Msquare, label="EDGE"];
+        edge_ -> out_node_door_a_1 [label="out_node_door"];
+        edge_ -> in_node_door_b [label="in_node_door"];
+        out_node_door_a_1 -> edge_ [style=dashed, color=red];
+        edge_ -> in_node_door_b [style=dashed, color=red];
+
+        subgraph cluster_node_b {
+            rank = same;
+            label = "NODE_B";
+            NODE_B [shape=Msquare];
+            subgraph cluster_in_nodes_b {
+                label = "IN_NODES";
+                in_node_door_b [label="in_node_door"];
+            }
+            subgraph cluster_out_nodes_b {
+                label = "OUT_NODES";
+                out_node_door_b_1 [label="out_node_door 1"];
+                out_node_door_b_2 [label="out_node_door 2"];
+            }
+            in_node_door_b -> NODE_B;
+            {out_node_door_b_1, out_node_door_b_2} -> NODE_B;
+            in_node_door_b -> NODE_B [style=dashed, color=red];
+            NODE_B -> out_node_door_b_1 [style=dashed, color=red];
+        }
+    }
 """
 type Edge {
   uuid: UUID!
-  inNode: Node!
-  outNode: Node!
+  inNodeDoor: NodeDoor
+  outNodeDoor: NodeDoor
 }
 
 input EdgeInput {
-  nodeInUuid: UUID!
-  nodeOutUuid: UUID!
+  nodeDoorInUuid: UUID!
+  nodeDoorOutUuid: UUID!
 }
 
 """
@@ -331,6 +437,12 @@ type InvalidAudioFile {
   error: String!
 }
 
+type InvalidPythonCode {
+  errorType: String!
+  errorMessage: String!
+  errorCode: String!
+}
+
 type LoginError {
   errorMessage: String
 }
@@ -361,9 +473,9 @@ type Mutation {
   """
   Creates a :class:`~story_graph.models.Edge` for a given
   :class:`~story_graph.models.Graph`.
-  It does not return the created edge.
+  It returns the created edge.
   """
-  addEdge(newEdge: EdgeInput!): Void
+  addEdge(newEdge: EdgeInput!): Edge!
 
   """Deletes a given :class:`~story_graph.models.Edge`."""
   deleteEdge(edgeUuid: UUID!): Void
@@ -382,6 +494,14 @@ type Mutation {
   addGraph(graphInput: AddGraphInput!): Graph!
   addAudioFile(newAudioFile: AddAudioFile!): AudioFileUploadResponse!
   createUpdateStreamVariable(streamVariables: [StreamVariableInput!]!): [StreamVariable!]!
+  createNodeDoor(nodeDoorInput: NodeDoorInputCreate!, nodeUuid: UUID!): NodeDoor!
+  updateNodeDoor(nodeDoorInput: NodeDoorInputUpdate!): NodeDoorResponse!
+
+  """
+  Allows to delete a non-default NodeDoor.
+  If a node door was deleted it will return ``True``, otherwise ``False``.
+  """
+  deleteNodeDoor(nodeDoorUuid: UUID!): Boolean!
 }
 
 """Matches :class:`gencaster.stream.exceptions.NoStreamAvailable`."""
@@ -407,9 +527,10 @@ type Node {
   Acts as a singular entrypoint for our graph.Only one such node can exist per graph.
   """
   isEntryNode: Boolean!
-  inEdges: [Edge!]!
-  outEdges: [Edge!]!
   scriptCells: [ScriptCell!]!
+  nodeDoors: [NodeDoor!]!
+  inNodeDoors: [NodeDoor!]!
+  outNodeDoors: [NodeDoor!]!
 }
 
 input NodeCreate {
@@ -419,6 +540,97 @@ input NodeCreate {
   positionY: Float = null
   color: String = null
 }
+
+"""
+A :class:`~Node` can be entered and exited via
+multiple paths, where each of these exits and
+entrances is called a *door*.
+
+A connection between nodes can only be made via their
+doors.
+There are two types of doors:
+
+.. list-table:: Door types
+    :header-rows: 1
+
+    * - Kind
+      - Description
+    * - **INPUT**
+      - Allows to enter a node.
+        Currently each Node only has one entry point
+        but for future development and a nicer
+        database operations it is also represented.
+    * - **OUTPUT**
+      - Allows to exit a node.
+        After all script cells of a node has been
+        executed, the condition of each door will
+        be evaluated (like in a switch case).
+        Once a condition has been met, the door
+        will be stepped through.
+        This allows to have a visual representation
+        of logic branches.
+
+It is only possible to connect an **OUTPUT** to an
+**INPUT** door via an :class:`~Edge`.
+"""
+type NodeDoor {
+  uuid: UUID!
+  doorType: DoorType!
+  node: Node!
+  name: String!
+  order: Int!
+  isDefault: Boolean!
+  code: String!
+}
+
+"""
+A :class:`~Node` can be entered and exited via
+multiple paths, where each of these exits and
+entrances is called a *door*.
+
+A connection between nodes can only be made via their
+doors.
+There are two types of doors:
+
+.. list-table:: Door types
+    :header-rows: 1
+
+    * - Kind
+      - Description
+    * - **INPUT**
+      - Allows to enter a node.
+        Currently each Node only has one entry point
+        but for future development and a nicer
+        database operations it is also represented.
+    * - **OUTPUT**
+      - Allows to exit a node.
+        After all script cells of a node has been
+        executed, the condition of each door will
+        be evaluated (like in a switch case).
+        Once a condition has been met, the door
+        will be stepped through.
+        This allows to have a visual representation
+        of logic branches.
+
+It is only possible to connect an **OUTPUT** to an
+**INPUT** door via an :class:`~Edge`.
+"""
+input NodeDoorInputCreate {
+  doorType: DoorType
+  name: String!
+  order: Int
+  code: String
+}
+
+input NodeDoorInputUpdate {
+  uuid: UUID!
+  doorType: DoorType! = OUTPUT
+  name: String = null
+  order: Int = null
+  code: String = null
+}
+
+union NodeDoorResponse = NodeDoor | InvalidPythonCode
 
 input NodeUpdate {
   uuid: UUID!
@@ -433,7 +645,23 @@ input OffsetPaginationInput {
   limit: Int! = -1
 }
 
-"""An enumeration."""
+"""
+Different kinds of playback.
+
+.. list-table:: Playback types
+    :header-rows: 1
+
+    * - Name
+      - Description
+    * - ``SYNC``
+      - Plays back an audio file and waits for the
+        playback to finish before continuing the
+        execution of the script cells.
+    * - ``ASYNC``
+      - Plays back an audio file and immediately
+        continues the execution of script cells.
+        This is fitting for e.g. background music.
+"""
 enum PlaybackChoices {
   SYNC_PLAYBACK
   ASYNC_PLAYBACK

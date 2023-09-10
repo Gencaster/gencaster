@@ -1,91 +1,206 @@
 <!-- eslint-disable vue/no-v-model-argument -->
 <script lang="ts" setup>
-import type {
-  EventHandlers as GraphEventHandlers,
-  Edge as GraphEdge,
-  Edges as GraphEdges,
-  Node as GraphNode,
-  Nodes as GraphNodes,
-} from "v-network-graph";
-
-import { ref, type Ref, watch, nextTick } from "vue";
+import { ElMessage } from "element-plus";
+import NodeDefault from "@/components/FlowNodeDefault.vue";
+import { ref, type Ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
 import type { GraphSubscription, Scalars } from "@/graphql";
-import { useUpdateNodeMutation } from "@/graphql";
+import { useUpdateNodeMutation, useCreateEdgeMutation } from "@/graphql";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
-import * as vNG from "v-network-graph";
-import { VNetworkGraph } from "v-network-graph";
-import variables from "@/assets/scss/variables.module.scss";
 import DialogExitNode from "@/components/DialogExitNode.vue";
+import type {
+  Node as GraphNode,
+  Edge as GraphEdge,
+  NodeDragEvent,
+  Connection,
+} from "@vue-flow/core";
+import { VueFlow, useVueFlow } from "@vue-flow/core";
 
-const props = defineProps<{
-  graph: GraphSubscription["graph"];
-}>();
+// mutations
+const updateNodeMutation = useUpdateNodeMutation();
+const createEdgeMutation = useCreateEdgeMutation();
 
-const interfaceStore = useInterfaceStore();
-const {
-  showNodeEditor,
-  vNetworkGraph,
-  selectedNodeUUIDs,
-  selectedEdgeUUIDs,
-  newScriptCellUpdates,
-  selectedNodeForEditorUuid,
-} = storeToRefs(interfaceStore);
-
-watch(showNodeEditor, (visible) => {
-  if (visible) {
-    graphPan(graphPanType.NodeEditor, lastNodeClick.value);
-  } else {
-    graphPan(graphPanType.Center, lastNodeClick.value);
-  }
-});
-
-const lastNodeClick = ref<MouseEvent>();
-const lastPanMove = ref({ x: 0, y: 0 });
+// types
 enum graphPanType {
   NodeEditor = "NODE_EDITOR",
   Center = "CENTER",
 }
 
-const graphPan = (location: graphPanType, event?: MouseEvent) => {
-  if (!vNetworkGraph.value) return;
+// store
+const interfaceStore = useInterfaceStore();
+const {
+  showNodeEditor,
+  selectedNodeUUIDs,
+  selectedEdgeUUIDs,
+  unsavedNodeChanges,
+  selectedNodeForEditorUuid,
+  vueFlowRef,
+} = storeToRefs(interfaceStore);
+const { getSelectedEdges, getSelectedNodes } = useVueFlow({});
 
-  // get click position
-  const clickPos = {
-    x: event?.offsetX || 0,
-    y: event?.offsetY || 0,
-  };
+// props
+const props = defineProps<{
+  graph: GraphSubscription["graph"];
+}>();
+
+// watchers
+watch(getSelectedNodes, (nodes) => onSelectionChangeNodes(nodes));
+watch(getSelectedEdges, (edges) => onSelectionChangeEdges(edges));
+watch(showNodeEditor, (visible) => {
+  if (!visible) {
+    flowPan(graphPanType.Center);
+  }
+});
+
+// vars
+const lastPosition = ref<{ x: number; y: number }>({ x: 0, y: 0 });
+const lastPanMove = ref({ x: 0, y: 0 });
+const lastNodeDoubleClicked = ref<Scalars["UUID"]>("");
+const nextNodeDoubleClicked = ref<Scalars["UUID"]>("");
+const showSwitchNodeDialog: Ref<boolean> = ref(false);
+
+// styling
+const connectionLineStyle = { stroke: "#000" };
+
+//functions
+function nodes(): GraphNode[] {
+  const n: GraphNode[] = [];
+
+  props.graph.nodes.forEach((node) => {
+    const graphNode: GraphNode = {
+      label: node.name,
+      type: "custom",
+      data: {
+        name: node.name,
+        uuid: node.uuid,
+        inNodeDoors: node.inNodeDoors,
+        outNodeDoors: node.outNodeDoors,
+      },
+      id: node.uuid,
+      position: {
+        x: node.positionX,
+        y: node.positionY,
+      },
+    };
+    n.push(graphNode);
+  });
+  return n;
+}
+
+function edges(): GraphEdge[] {
+  const e: GraphEdge[] = [];
+  props.graph.edges.forEach((edge) => {
+    // @todo make inNodeDoor non-nullable
+    if (edge.inNodeDoor && edge.outNodeDoor) {
+      const graphEdge: GraphEdge = {
+        id: edge.uuid,
+        source: edge.outNodeDoor.node.uuid,
+        sourceHandle: edge.outNodeDoor.uuid,
+        target: edge.inNodeDoor.node.uuid,
+        targetHandle: edge.inNodeDoor.uuid,
+        animated: true,
+      };
+      e.push(graphEdge);
+    }
+  });
+  return e;
+}
+
+const onNodeDragStop = (nodeDragEvent: NodeDragEvent) => {
+  const draggedNode = props.graph.nodes.find(
+    (x) => x.uuid === nodeDragEvent.node.id,
+  );
+
+  if (draggedNode === undefined) {
+    console.log(`Dragged unknown node ${nodeDragEvent.node.label}`);
+    return;
+  }
+
+  updateNodeMutation.executeMutation({
+    nodeUuid: draggedNode.uuid,
+    positionX: nodeDragEvent.node.computedPosition.x,
+    positionY: nodeDragEvent.node.computedPosition.y,
+  });
+};
+
+const onNodeDoubleClick = (uuid: string) => {
+  nextNodeDoubleClicked.value = uuid;
+
+  if (showNodeEditor.value && unsavedNodeChanges.value) {
+    showSwitchNodeDialog.value = true;
+    return;
+  }
+
+  lastNodeDoubleClicked.value = uuid;
+  selectedNodeUUIDs.value = [uuid];
+
+  selectedNodeForEditorUuid.value = uuid;
+  showNodeEditor.value = true;
+
+  flowPan(graphPanType.NodeEditor);
+};
+
+const onSelectionChangeNodes = (nodes: Array<GraphNode>) => {
+  console.log("nodes selection change");
+  selectedNodeUUIDs.value = [];
+  nodes.forEach((node) => {
+    selectedNodeUUIDs.value.push(node.id);
+  });
+};
+
+const onSelectionChangeEdges = (edges: Array<GraphEdge>) => {
+  console.log("edges selection change");
+  selectedEdgeUUIDs.value = [];
+  edges.forEach((edge) => {
+    selectedEdgeUUIDs.value.push(edge.id);
+  });
+};
+
+const flowPan = (location: graphPanType) => {
+  if (!vueFlowRef.value) return;
+
+  const currentTransform = vueFlowRef.value.getTransform();
+  lastPosition.value.x = currentTransform.x;
+  lastPosition.value.y = currentTransform.y;
 
   // get canvas size
-  const { height: gHeight, width: gWidth } = vNetworkGraph.value.getSizes();
+  const { height: gHeight, width: gWidth } = vueFlowRef.value.dimensions;
 
   // screen aim
   let aimPos: { x: number; y: number };
   let moveBy: { x: number; y: number };
 
+  // get node
+  const node = vueFlowRef.value.findNode(selectedNodeForEditorUuid.value);
+  const nodePosition = node?.position || { x: 0, y: 0 };
+  const nodeDimensions = node?.dimensions || { width: 0, height: 0 };
+
   switch (location) {
     case graphPanType.NodeEditor:
-      // const editorWidth = document.getElementsByClassName('node-editor')[0]?.clientWidth || 0;
       const editorWidth = 800; // this needs to be hard coded for transition purposes
+
       aimPos = {
         x: (gWidth - editorWidth) / 2,
         y: (gHeight / 2) * 0.9, // 0.9 to visually center vertical
       };
 
       moveBy = {
-        x: aimPos.x - clickPos.x,
-        y: aimPos.y - clickPos.y,
+        x:
+          aimPos.x -
+          nodePosition.x -
+          nodeDimensions.width / 2 -
+          currentTransform.x,
+        y:
+          aimPos.y -
+          nodePosition.y -
+          nodeDimensions.height / 2 -
+          currentTransform.y,
       };
 
       lastPanMove.value = moveBy;
       break;
     case graphPanType.Center:
-      aimPos = {
-        x: gWidth / 2,
-        y: (gHeight / 2) * 0.9, // 0.9 to visually center vertical
-      };
-
       moveBy = {
         x: -lastPanMove.value.x,
         y: -lastPanMove.value.y,
@@ -106,7 +221,7 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
       y: moveBy.y * delta,
     };
 
-    vNetworkGraph.value?.panBy(shift);
+    vueFlowRef.value?.panBy(shift);
     prevProgress = progress.absolute;
   };
 
@@ -121,248 +236,48 @@ const graphPan = (location: graphPanType, event?: MouseEvent) => {
   });
 };
 
-const panToFirstNode = async () => {
-  const nodes = props.graph.nodes;
-  const firstNode = nodes.find((x) => x.name == "Start") || nodes[0];
-  const viewBox = vNetworkGraph.value?.getViewBox() || {
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-  };
+// this runs if mouse is released on connection
+const onConnect = async (connection: Connection) => {
+  const nodeDoorOutUuid = connection.sourceHandle;
+  const nodeDoorInUuid = connection.targetHandle;
 
-  await nextTick();
-  vNetworkGraph.value?.panTo({
-    x: -firstNode.positionX + Math.abs(viewBox.left - viewBox.right) / 2,
-    y:
-      -firstNode.positionY + (Math.abs(viewBox.top - viewBox.bottom) / 2) * 0.9,
+  const { error } = await createEdgeMutation.executeMutation({
+    nodeDoorInUuid,
+    nodeDoorOutUuid,
   });
-};
-
-const updateNodeMutation = useUpdateNodeMutation();
-
-const eventHandlers: GraphEventHandlers = {
-  // see https://dash14.github.io/v-network-graph/reference/events.html#events-with-event-handlers
-  "view:load": () => {
-    panToFirstNode();
-  },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  "node:dblclick": async ({ node, event }) => {
-    nextNodeDoubleClicked.value = node;
-
-    if (showNodeEditor.value && newScriptCellUpdates.value.size > 0) {
-      showSwitchNodeDialog.value = true;
-      return;
-    }
-
-    lastNodeDoubleClicked.value = node;
-    selectedNodeUUIDs.value = [node];
-
-    showNodeEditor.value = true;
-    selectedNodeForEditorUuid.value = node;
-    lastNodeClick.value = event;
-  },
-  "node:dragend": (dragEvent: { [id: string]: { x: number; y: number } }) => {
-    for (const p in dragEvent) {
-      const draggedNode = props.graph.nodes.find((x) => x.uuid === p);
-      if (draggedNode === undefined) {
-        console.log(`Dragged unknown node ${p}`);
-        continue;
-      }
-
-      updateNodeMutation.executeMutation({
-        nodeUuid: draggedNode.uuid,
-        positionX: dragEvent[p].x,
-        positionY: dragEvent[p].y,
-      });
-    }
-  },
-};
-
-/*
-  transforms the edges, nodes and layout from our StoryGraph model to
-  v-network-graph model. Maybe this can be done in a nicer,
-  two way support via urql as some kind of type transformation?
-*/
-function nodes(): GraphNodes {
-  const n: GraphNodes = {};
-  props.graph.nodes.forEach((node) => {
-    const graphNode: GraphNode = {
-      name: node.name,
-      color: node.color,
-      scriptCells: node.scriptCells,
-    };
-    n[node.uuid] = graphNode;
-  });
-  return n;
-}
-
-function edges(): GraphEdges {
-  const e: GraphEdges = {};
-  props.graph.edges.forEach((edge) => {
-    const graphEdge: GraphEdge = {
-      source: edge.inNode.uuid,
-      target: edge.outNode.uuid,
-    };
-    e[edge.uuid] = graphEdge;
-  });
-  return e;
-}
-
-function layouts(): GraphNodes {
-  const n: GraphNodes = {};
-  props.graph.nodes.forEach((node) => {
-    const graphNode: GraphNode = {
-      x: node.positionX,
-      y: node.positionY,
-    };
-    n[node.uuid] = graphNode;
-  });
-  const layout = {
-    nodes: n,
-  };
-  return layout;
-}
-
-// Dialogs
-const lastNodeDoubleClicked = ref<Scalars["UUID"]>("");
-const nextNodeDoubleClicked = ref<Scalars["UUID"]>("");
-const showSwitchNodeDialog: Ref<boolean> = ref(false);
-
-const graphSettings = {
-  standard: vNG.defineConfigs({
-    node: {
-      selectable: true,
-      normal: {
-        type: "circle",
-        radius: 16,
-        strokeWidth: 0,
-        color: variables.grey,
-      },
-      hover: {
-        type: "circle",
-        radius: 16,
-        strokeWidth: 0,
-        color: variables.greenLight,
-      },
-      selected: {
-        type: "circle",
-        radius: 16,
-        strokeWidth: 0,
-        color: variables.greenLight,
-      },
-      label: {
-        fontSize: 15,
-        fontFamily: "arial",
-        color: variables.black,
-        margin: 5,
-        background: {
-          visible: true,
-          color: variables.white08,
-          padding: {
-            vertical: 1,
-            horizontal: 4,
-          },
-          borderRadius: 2,
-        },
-      },
-      focusring: { visible: false },
-      zOrder: {
-        enabled: true, // whether the z-order control is enable or not. default: false
-        bringToFrontOnHover: true, // whether to bring to front on hover.    default: true
-        bringToFrontOnSelected: true, // whether to bring to front on selected. default: true
-      },
-    },
-    edge: {
-      selectable: true,
-      normal: {
-        width: 3,
-        color: "black",
-        dasharray: 0,
-        animationSpeed: 5,
-        linecap: "square",
-        animate: false,
-      },
-      hover: {
-        width: 4,
-        color: variables.greenLight,
-        dasharray: "0",
-        linecap: "square",
-        animate: false,
-      },
-      selected: {
-        width: 3,
-        color: variables.greenLight,
-        dasharray: "0",
-        linecap: "square",
-        animate: false,
-      },
-      gap: 5,
-      // type: "straight",
-      type: "curve",
-      // gap: 40,
-      margin: 8, // margin between the edge and the node
-      marker: {
-        source: {
-          type: "none",
-          width: 4,
-          height: 4,
-          margin: -1,
-          units: "strokeWidth",
-          color: null,
-        },
-        target: {
-          type: "arrow",
-          width: 4,
-          height: 6,
-          margin: -1,
-          units: "strokeWidth",
-          color: null,
-        },
-      },
-      zOrder: {
-        enabled: true, // whether the z-order control is enable or not. default: false
-        bringToFrontOnHover: true, // whether to bring to front on hover.    default: true
-        bringToFrontOnSelected: true, // whether to bring to front on selected. default: true
-      },
-    },
-    view: {
-      zoomEnabled: false,
-      grid: {
-        visible: false,
-        interval: 30,
-        thickIncrements: 0,
-        line: {
-          color: "#F5F5F5",
-          width: 1,
-          dasharray: 0,
-        },
-        thick: {
-          color: "#F5F5F5",
-          width: 1,
-          dasharray: 0,
-        },
-      },
-      // layoutHandler: new vNG.GridLayout({ grid: 30 })
-    },
-  }),
+  if (error) {
+    ElMessage.error(`Could not create edge: ${error.message}`);
+  }
+  ElMessage.success(`Created new edge`);
 };
 </script>
 
 <template>
   <div>
-    <VNetworkGraph
-      ref="vNetworkGraph"
-      v-model:selected-nodes="selectedNodeUUIDs"
-      v-model:selected-edges="selectedEdgeUUIDs"
-      class="graph"
-      :nodes="nodes()"
-      :edges="edges()"
-      :configs="graphSettings.standard"
-      :layouts="layouts()"
-      :event-handlers="eventHandlers"
-    />
-
+    <div class="flow-graph">
+      <VueFlow
+        ref="vueFlowRef"
+        :default-zoom="1"
+        :max-zoom="1"
+        :min-zoom="1"
+        :nodes="nodes()"
+        :edges="edges()"
+        :connection-line-style="connectionLineStyle"
+        fit-view-on-init
+        :nodes-connectable="true"
+        @node-drag-stop="onNodeDragStop"
+        @connect="onConnect"
+      >
+        <template #node-custom="{ data }">
+          <NodeDefault
+            :data="data"
+            :connectable="true"
+            :selected="selectedNodeUUIDs.includes(data.uuid)"
+            @dblclick="() => onNodeDoubleClick(data.uuid)"
+          />
+        </template>
+      </VueFlow>
+    </div>
     <div
       v-if="!showNodeEditor"
       class="stats"
@@ -381,14 +296,14 @@ const graphSettings = {
       "
       @save="
         async () => {
-          await interfaceStore.executeScriptCellUpdates();
+          await interfaceStore.executeUpdates();
           selectedNodeForEditorUuid = nextNodeDoubleClicked;
           showSwitchNodeDialog = false;
         }
       "
       @no-save="
         () => {
-          interfaceStore.resetScriptCellUpdates();
+          interfaceStore.resetUpdates();
           selectedNodeForEditorUuid = nextNodeDoubleClicked;
           showSwitchNodeDialog = false;
         }
@@ -400,10 +315,16 @@ const graphSettings = {
 <style lang="scss" scoped>
 @import "@/assets/scss/variables.module.scss";
 
-.graph {
+.flow-graph {
+  --vf-node-bg: white;
+  --vf-node-text: $black;
+  --vf-connection-path: $black;
+  --vf-handle: $grey-dark;
+
   position: relative;
   width: 100%;
   height: calc(100vh - 64px);
+  background-color: light-grey;
 }
 
 .stats {
