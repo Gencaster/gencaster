@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-v-model-argument -->
 <script lang="ts" setup>
 import { ElMessage } from "element-plus";
-import DefaultNode from "@/components/FlowNodeDefault.vue";
+import NodeDefault from "@/components/FlowNodeDefault.vue";
 import { ref, type Ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { gsap } from "gsap";
@@ -16,7 +16,6 @@ import type {
   Connection,
 } from "@vue-flow/core";
 import { VueFlow, useVueFlow } from "@vue-flow/core";
-import GencasterNode from "@/components/GencasterNode.vue";
 
 // mutations
 const updateNodeMutation = useUpdateNodeMutation();
@@ -270,7 +269,7 @@ const onConnect = async (connection: Connection) => {
         @connect="onConnect"
       >
         <template #node-custom="{ data }">
-          <GencasterNode
+          <NodeDefault
             :data="data"
             :connectable="true"
             @dblclick="() => onNodeDoubleClick(data.uuid)"

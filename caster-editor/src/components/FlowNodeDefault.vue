@@ -1,99 +1,122 @@
-<script lang="ts" setup>
-import type { NodeSubscription } from "@/graphql";
+<script setup lang="ts">
 import { Handle, Position } from "@vue-flow/core";
-import { computed } from "vue";
+import { onMounted } from "vue";
+import type { Node } from "@/graphql";
+import { useVueFlow } from "@vue-flow/core";
 
-interface DataInput {
-  data: {
-    name: {
-      type: String;
-      required: true;
-    };
-    uuid: {
-      type: String;
-      required: true;
-    };
-    scriptCells: {
-      type: NodeSubscription["node"]["scriptCells"];
-      required: true;
-    };
-  };
-}
+const props = defineProps<{
+  data: Pick<Node, "name" | "uuid" | "inNodeDoors" | "outNodeDoors">;
+}>();
 
-const props = defineProps<DataInput>();
+const { updateNodeInternals } = useVueFlow();
 
-const emit = defineEmits(["dblclick"]);
-
-const onDblClick = () => {
-  emit("dblclick", props.data.uuid);
-};
-
-const sourceHandleStyleA = computed(() => ({
-  backgroundColor: "red",
-  width: "10px",
-  height: "10px",
-}));
-
-const sourceHandleStyleB = computed(() => ({
-  backgroundColor: "blue",
-  width: "10px",
-  height: "10px",
-}));
-
-const isValidConnection = () => {
-  return true;
-};
-// vallidator for later
-// const isValidConnection = (connection: Connection) => {
-//   // console.log(connection.targetHandle === "a");
-//   // return connection.targetHandle === "a";
-//   return true;
-// };
+onMounted(() => {
+  updateNodeInternals();
+});
 </script>
 
 <template>
-  <div
-    class="node default-node"
-    @dblclick="onDblClick"
-  >
-    <p>{{ data.name }}</p>
+  <div class="gencaster-default-node">
+    <div class="title">
+      <p>
+        {{ data.name }}
+      </p>
+    </div>
 
-    <Handle
-      id="a"
-      type="target"
-      :position="Position.Left"
-      :style="sourceHandleStyleA"
-    />
+    <div class="nodes">
+      <div class="in-nodes">
+        <div
+          v-for="(inDoor, index) in data.inNodeDoors"
+          :key="inDoor.uuid"
+          class="in-node"
+        >
+          <Handle
+            :id="inDoor.uuid"
+            class="handle"
+            :position="Position.Left"
+            :style="'top: ' + (index * 24 + 42) + 'px' + '; left: -6px'"
+            type="target"
+          >
+            <!-- <slot>
+              <span style="pointer-events: none"> {{ inDoor.name }} </span>
+            </slot> -->
+          </Handle>
+        </div>
+      </div>
 
-    <Handle
-      id="b"
-      type="source"
-      :position="Position.Right"
-      :style="sourceHandleStyleB"
-      :is-valid-connection="isValidConnection"
-    />
+      <div
+        class="out-nodes"
+        :style="'height: ' + data.outNodeDoors.length * 24 + 'px'"
+      >
+        <div
+          v-for="(outDoor, index) in data.outNodeDoors"
+          :key="outDoor.uuid"
+          class="out-node"
+        >
+          <Handle
+            :id="outDoor.uuid"
+            class="handle"
+            :position="Position.Right"
+            :style="'top: ' + (index * 24 + 42) + 'px' + '; right: -6px'"
+            type="source"
+          >
+            <slot>
+              <span style="pointer-events: none"> {{ outDoor.name }} </span>
+            </slot>
+          </Handle>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variables.module.scss";
-
-.node {
-  padding: 10px;
-  border-radius: 4px;
+.gencaster-default-node {
+  background-color: $white;
+  min-height: 55px;
   height: auto;
   width: $nodeDefaultWidth;
-  // border: 1px solid black;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  min-height: 50px;
+  flex-direction: column;
+  border: 1px solid $mainBlack;
 
-  p {
-    text-align: center;
-    height: 100%;
+  .title {
+    background-color: $grey-light;
+    height: 24px;
+    padding: 2px 8px 0 8px;
     margin: 0;
+  }
+}
+
+.handle {
+  width: 12px;
+  height: 12px;
+  border-radius: 12px;
+  border: 1px solid $mainBlack;
+  background-color: $grey-light;
+}
+
+.out-nodes {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 100px;
+  margin-bottom: 12px;
+
+  .out-node {
+    span {
+      position: absolute;
+      text-align: right;
+      pointer-events: none;
+      right: 0;
+      height: 20px;
+      width: calc($nodeDefaultWidth - 24px);
+      transform: translateX(-16px) translateY(-5px);
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
 }
 </style>
