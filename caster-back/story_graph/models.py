@@ -10,7 +10,7 @@ import uuid
 from asgiref.sync import async_to_sync, sync_to_async
 from channels.layers import get_channel_layer
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Q, signals
 from django.dispatch import receiver
 from django.utils.translation import gettext as _
@@ -407,9 +407,23 @@ def update_node_door_ws(sender, instance: NodeDoor, **kwargs) -> None:
             "Failed to obtain a handle on the channel layer to distribute node_door updates"
         )
         return
-    async_to_sync(GenCasterChannel.send_node_update)(channel_layer, instance.node.uuid)
-    async_to_sync(GenCasterChannel.send_graph_update)(
-        channel_layer, instance.node.graph.uuid
+    # sorry for this atrocity - there seems to be race conditions with signals
+    # which makes updates out-dated, see
+    # https://docs.djangoproject.com/en/dev/topics/db/transactions/#performing-actions-after-commit
+    # it is possible that the instance is not available anymore after the commit, so
+    # so we store it here in memory
+    node_uuid = instance.node.uuid
+    graph_uuid = instance.node.graph.uuid
+    transaction.on_commit(
+        lambda: async_to_sync(GenCasterChannel.send_node_update)(
+            channel_layer, node_uuid
+        )
+    )
+    transaction.on_commit(
+        lambda: async_to_sync(GenCasterChannel.send_graph_update)(
+            channel_layer,
+            graph_uuid,
+        )
     )
 
 
