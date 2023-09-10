@@ -120,7 +120,7 @@ const closeScriptCellEditor = async () => {
 };
 
 const addScriptCell = async (cellType: CellType) => {
-  if (unsavedNodeChanges) {
+  if (unsavedNodeChanges.value) {
     ElMessage.warning(
       "Please save your changes before adding a new script cell",
     );
