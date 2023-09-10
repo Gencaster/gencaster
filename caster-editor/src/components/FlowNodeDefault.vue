@@ -4,7 +4,7 @@ import { onMounted } from "vue";
 import type { Node } from "@/graphql";
 import { useVueFlow } from "@vue-flow/core";
 
-const props = defineProps<{
+defineProps<{
   data: Pick<Node, "name" | "uuid" | "inNodeDoors" | "outNodeDoors">;
 }>();
 

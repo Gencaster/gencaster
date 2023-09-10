@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDeleteNodeDoorMutation, type NodeDoor } from "@/graphql";
-import { ElRow, ElCol, ElInput, ElIcon, ElMessage } from "element-plus";
+import { ElRow, ElCol, ElInput, ElMessage } from "element-plus";
 import { Delete } from "@element-plus/icons-vue";
 import { computed, ref, type Ref } from "vue";
 import { storeToRefs } from "pinia";
@@ -73,8 +73,11 @@ const nodeDoorCode = computed<string>({
 </script>
 
 <template>
-  <div class="node-door radius">
-    <ElRow :gutter="10">
+  <div class="node-door">
+    <ElRow
+      :gutter="10"
+      class="input"
+    >
       <ElCol :span="6">
         <span
           class="node-door-name"
@@ -88,29 +91,77 @@ const nodeDoorCode = computed<string>({
           />
         </span>
       </ElCol>
-      <ElCol :span="16">
-        <ElInput v-model="nodeDoorCode" />
-      </ElCol>
-      <ElCol :span="2">
-        <ElButton
-          type="danger"
-          :disabled="nodeDoor.isDefault"
-          @click="deleteNodeDoor()"
-        >
-          <ElIcon><Delete /></ElIcon>
-        </ElButton>
+      <ElCol :span="18">
+        <ElInput
+          v-if="nodeDoor.isDefault"
+          v-model="nodeDoorCode"
+          autosize
+          type="textarea"
+          placeholder="Default"
+          disabled
+        />
+        <ElInput
+          v-else
+          v-model="nodeDoorCode"
+          autosize
+          type="textarea"
+          placeholder="Please input"
+        />
       </ElCol>
     </ElRow>
+    <button
+      class="unstyled"
+      :disabled="nodeDoor.isDefault"
+      @click="deleteNodeDoor()"
+    >
+      <div class="icon">
+        <Delete />
+      </div>
+    </button>
   </div>
 </template>
 
-<style scoped>
-.node-door {
-  border-radius: 4px;
-  border: 1px solid var(--el-border-color);
-}
+<style lang="scss" scoped>
+@import "@/assets/scss/variables.module.scss";
 
-.default-door {
-  background-color: aquamarine;
+.node-door {
+  margin-bottom: 12px;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+
+  .input {
+    width: calc(100% - 25px);
+  }
+
+  button {
+    border: none;
+    background-color: transparent;
+    width: 31px;
+    height: 31px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: $borderRadius;
+    transform: translateX(5px);
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+    }
+
+    &:disabled:hover {
+      background-color: transparent;
+    }
+
+    &:hover:not([disabled]) {
+      background-color: $grey-light;
+    }
+  }
 }
 </style>
