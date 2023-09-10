@@ -272,6 +272,7 @@ const onConnect = async (connection: Connection) => {
           <NodeDefault
             :data="data"
             :connectable="true"
+            :selected="selectedNodeUUIDs.includes(data.uuid)"
             @dblclick="() => onNodeDoubleClick(data.uuid)"
           />
         </template>

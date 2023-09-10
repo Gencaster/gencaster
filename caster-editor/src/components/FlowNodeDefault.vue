@@ -6,6 +6,7 @@ import { useVueFlow } from "@vue-flow/core";
 
 defineProps<{
   data: Pick<Node, "name" | "uuid" | "inNodeDoors" | "outNodeDoors">;
+  selected: boolean;
 }>();
 
 const { updateNodeInternals } = useVueFlow();
@@ -16,7 +17,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="gencaster-default-node">
+  <div
+    class="gencaster-default-node"
+    :class="{ selected: selected }"
+  >
     <div class="title">
       <p>
         {{ data.name }}
@@ -73,13 +77,11 @@ onMounted(() => {
 <style lang="scss" scoped>
 @import "@/assets/scss/variables.module.scss";
 .gencaster-default-node {
-  background-color: $white;
   min-height: 55px;
   height: auto;
   width: $nodeDefaultWidth;
   display: flex;
   flex-direction: column;
-  border: 1px solid $mainBlack;
 
   .title {
     background-color: $grey-light;

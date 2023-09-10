@@ -31,8 +31,6 @@ const createNode = async () => {
     const { height, width } = vueFlowRef.value.dimensions;
     const currentTransform = vueFlowRef.value.getTransform();
 
-    console.log(height, width, currentTransform);
-
     positionX =
       width / 2 - currentTransform.x - parseInt(variables.nodeDefaultWidth) / 2;
     positionY = (height / 2 - currentTransform.y) * 0.9;
