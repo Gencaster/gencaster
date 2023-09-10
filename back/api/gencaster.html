@@ -438,10 +438,10 @@ is handled via channels and has an abstraction layer
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_edge</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gencaster/schema.html#Mutation.add_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.add_edge" title="Permalink to this definition">#</a></dt>
 <dd><p>Creates a <a class="reference internal" href="story_graph.html#story_graph.models.Edge" title="story_graph.models.Edge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Edge</span></code></a> for a given
 <a class="reference internal" href="story_graph.html#story_graph.models.Graph" title="story_graph.models.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a>.
-It does not return the created edge.</p>
+It returns the created edge.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Edge</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -488,6 +488,18 @@ Although it creates a new node with UUID we don’t hand it back yet.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Mutation.delete_node_door">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_node_door</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_door_uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/gencaster/schema.html#Mutation.delete_node_door"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.delete_node_door" title="Permalink to this definition">#</a></dt>
+<dd><p>Allows to delete a non-default NodeDoor.
+If a node door was deleted it will return <code class="docutils literal notranslate"><span class="pre">True</span></code>, otherwise <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>

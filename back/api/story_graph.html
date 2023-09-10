@@ -371,25 +371,25 @@ These cells allow to control what happens on the script and to which Node we jum
 Therefore a story is represented by a graph.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
-<li><p><a class="reference internal" href="#graph" id="id9">Graph</a></p>
+<li><p><a class="reference internal" href="#graph" id="id11">Graph</a></p>
 <ul>
-<li><p><a class="reference internal" href="#engine" id="id10">Engine</a></p></li>
-<li><p><a class="reference internal" href="#markdown-parser" id="id11">Markdown parser</a></p></li>
-<li><p><a class="reference internal" href="#models" id="id12">Models</a></p></li>
+<li><p><a class="reference internal" href="#engine" id="id12">Engine</a></p></li>
+<li><p><a class="reference internal" href="#markdown-parser" id="id13">Markdown parser</a></p></li>
+<li><p><a class="reference internal" href="#models" id="id14">Models</a></p></li>
 </ul>
 </li>
 </ul>
 </div>
 <section id="graph">
-<h2><a class="toc-backref" href="#id9">Graph</a><a class="headerlink" href="#graph" title="Permalink to this headline">#</a></h2>
-<figure class="align-default" id="id7">
+<h2><a class="toc-backref" href="#id11">Graph</a><a class="headerlink" href="#graph" title="Permalink to this headline">#</a></h2>
+<figure class="align-default" id="id6">
 <img alt="../../_images/story_graph.png" src="../../_images/story_graph.png" />
 <figcaption>
-<p><span class="caption-text">Model graph for the story graph app.</span><a class="headerlink" href="#id7" title="Permalink to this image">#</a></p>
+<p><span class="caption-text">Model graph for the story graph app.</span><a class="headerlink" href="#id6" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <span class="target" id="module-story_graph.engine"></span><section id="engine">
-<h3><a class="toc-backref" href="#id10">Engine</a><a class="headerlink" href="#engine" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id12">Engine</a><a class="headerlink" href="#engine" title="Permalink to this headline">#</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="story_graph.engine.Engine">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.engine.</span></span><span class="sig-name descname"><span class="pre">Engine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine" title="Permalink to this definition">#</a></dt>
@@ -487,8 +487,8 @@ This acts as a security measurement.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>runtime_values</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]) – <p>Allows to add additional objects to the module namespace at runtime.
 These are injected within <a class="reference internal" href="#story_graph.engine.Engine.execute_python_cell" title="story_graph.engine.Engine.execute_python_cell"><code class="xref py py-func docutils literal notranslate"><span class="pre">execute_python_cell()</span></code></a> and consist of</p>
-<table class="table" id="id8">
-<caption><span class="caption-text">Runtime vars</span><a class="headerlink" href="#id8" title="Permalink to this table">#</a></caption>
+<table class="table" id="id7">
+<caption><span class="caption-text">Runtime vars</span><a class="headerlink" href="#id7" title="Permalink to this table">#</a></caption>
 <colgroup>
 <col style="width: 33%" />
 <col style="width: 33%" />
@@ -528,6 +528,26 @@ additional async code</p></td>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="story_graph.engine.Engine.get_next_node">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_next_node</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/engine.html#Engine.get_next_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.Engine.get_next_node" title="Permalink to this definition">#</a></dt>
+<dd><p>Iterates over each exit <code class="xref py py-class docutils literal notranslate"><span class="pre">NodeDoor</span></code>
+of the current node and evaluates its boolean value
+and decides.</p>
+<p>If the node door code consists of invalid code it will be skipped.
+If all boolean evaluations result in <code class="docutils literal notranslate"><span class="pre">False</span></code> or invalid code,
+the default exit will be used.</p>
+<p>If multiple out-going edges are connected to an active door,
+a random edge will be picked to follow for the next node.</p>
+<p>If the node does not have any out-going edges a <a class="reference internal" href="#story_graph.engine.GraphDeadEnd" title="story_graph.engine.GraphDeadEnd"><code class="xref py py-class docutils literal notranslate"><span class="pre">GraphDeadEnd</span></code></a>
+exception will be raised.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -587,13 +607,23 @@ If the variable was not found/set within the time period of
 </dd></dl>
 
 <dl class="py exception">
+<dt class="sig sig-object py" id="story_graph.engine.GraphDeadEnd">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.engine.</span></span><span class="sig-name descname"><span class="pre">GraphDeadEnd</span></span><a class="reference internal" href="../../_modules/story_graph/engine.html#GraphDeadEnd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.GraphDeadEnd" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="story_graph.engine.InvalidPythonCode">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.engine.</span></span><span class="sig-name descname"><span class="pre">InvalidPythonCode</span></span><a class="reference internal" href="../../_modules/story_graph/engine.html#InvalidPythonCode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.InvalidPythonCode" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
 <dt class="sig sig-object py" id="story_graph.engine.ScriptCellTimeout">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.engine.</span></span><span class="sig-name descname"><span class="pre">ScriptCellTimeout</span></span><a class="reference internal" href="../../_modules/story_graph/engine.html#ScriptCellTimeout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.engine.ScriptCellTimeout" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
 <span class="target" id="module-story_graph.markdown_parser"></span><section id="markdown-parser">
-<h3><a class="toc-backref" href="#id11">Markdown parser</a><a class="headerlink" href="#markdown-parser" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id13">Markdown parser</a><a class="headerlink" href="#markdown-parser" title="Permalink to this headline">#</a></h3>
 <p>A <a class="reference internal" href="#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a> can hold markdown content in our own markdown
 dialect to control breaks, change of speakers and emphasis but also allows us to access
 variables which are defined within a <a class="reference internal" href="stream.html#stream.models.Stream" title="stream.models.Stream"><code class="xref py py-class docutils literal notranslate"><span class="pre">stream.models.Stream</span></code></a>.
@@ -810,11 +840,12 @@ empty string <cite>“”</cite>, but we can provide a fallback value via <code 
 
 </section>
 <span class="target" id="module-story_graph.models"></span><section id="models">
-<h3><a class="toc-backref" href="#id12">Models</a><a class="headerlink" href="#models" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id14">Models</a><a class="headerlink" href="#models" title="Permalink to this headline">#</a></h3>
 <dl class="py class">
 <dt class="sig sig-object py" id="story_graph.models.AudioCell">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.models.</span></span><span class="sig-name descname"><span class="pre">AudioCell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">playback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">audio_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#AudioCell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.AudioCell" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.models.</span></span><span class="sig-name descname"><span class="pre">AudioCell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#AudioCell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.AudioCell" title="Permalink to this definition">#</a></dt>
+<dd><p>Stores information for playback of static audio files.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>uuid</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.UUIDField" title="(in Django v4.2)"><em>UUIDField</em></a>) – Primary key: Uuid</p></li>
@@ -835,20 +866,34 @@ empty string <cite>“”</cite>, but we can provide a fallback value via <code 
 <dd class="field-odd"><p><strong>script_cell</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.OneToOneField" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">OneToOneField</span></code></a> from <a class="reference internal" href="#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a>) – The script cell of this audio cell (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">audio_cell</span></code>)</p>
 </dd>
 </dl>
-<dl class="py exception">
-<dt class="sig sig-object py" id="story_graph.models.AudioCell.DoesNotExist">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#story_graph.models.AudioCell.DoesNotExist" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="story_graph.models.AudioCell.MultipleObjectsReturned">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#story_graph.models.AudioCell.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="story_graph.models.AudioCell.PlaybackChoices">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PlaybackChoices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#AudioCell.PlaybackChoices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.AudioCell.PlaybackChoices" title="Permalink to this definition">#</a></dt>
-<dd><p>An enumeration.</p>
+<dd><p>Different kinds of playback.</p>
+<table class="table" id="id8">
+<caption><span class="caption-text">Playback types</span><a class="headerlink" href="#id8" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SYNC</span></code></p></td>
+<td><p>Plays back an audio file and waits for the
+playback to finish before continuing the
+execution of the script cells.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ASYNC</span></code></p></td>
+<td><p>Plays back an audio file and immediately
+continues the execution of script cells.
+This is fitting for e.g. background music.</p></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -856,20 +901,150 @@ empty string <cite>“”</cite>, but we can provide a fallback value via <code 
 <dl class="py class">
 <dt class="sig sig-object py" id="story_graph.models.CellType">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.models.</span></span><span class="sig-name descname"><span class="pre">CellType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#CellType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.CellType" title="Permalink to this definition">#</a></dt>
-<dd><p>Choice of foobar</p>
+<dd><p>A <a class="reference internal" href="#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a> can contain
+different types of code, each with unique functionality.</p>
+<p>Both, the database and <a class="reference internal" href="#story_graph.engine.Engine" title="story_graph.engine.Engine"><code class="xref py py-class docutils literal notranslate"><span class="pre">Engine</span></code></a>,
+implement some specific details according to these types.</p>
+<table class="table" id="id9">
+<caption><span class="caption-text">Cell types</span><a class="headerlink" href="#id9" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Database</p></th>
+<th class="head"><p>Engine</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Markdown</p></td>
+<td><p>Allows to write arbitrary text which will get
+rendered as an audio file via a text to speech service,
+see <a class="reference internal" href="stream.html#stream.models.TextToSpeech" title="stream.models.TextToSpeech"><code class="xref py py-class docutils literal notranslate"><span class="pre">TextToSpeech</span></code></a> for conversion
+and <a class="reference internal" href="#story_graph.markdown_parser.GencasterRenderer" title="story_graph.markdown_parser.GencasterRenderer"><code class="xref py py-class docutils literal notranslate"><span class="pre">GencasterRenderer</span></code></a>
+for the extended Markdown syntax.</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="stream.html#stream.models.TextToSpeech" title="stream.models.TextToSpeech"><code class="xref py py-class docutils literal notranslate"><span class="pre">TextToSpeech</span></code></a></p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="#story_graph.engine.Engine.execute_markdown_code" title="story_graph.engine.Engine.execute_markdown_code"><code class="xref py py-func docutils literal notranslate"><span class="pre">execute_markdown_code()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#story_graph.markdown_parser.GencasterRenderer" title="story_graph.markdown_parser.GencasterRenderer"><code class="xref py py-class docutils literal notranslate"><span class="pre">GencasterRenderer</span></code></a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Python</p></td>
+<td><p>Allows to execute python code via <a class="reference external" href="https://docs.python.org/3/library/functions.html#exec" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">exec()</span></code></a> which allows
+to trigger e.g. Dialogs in the frontend
+(see <a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>)
+or calculate or fetch any kind of data and store its value
+as a <a class="reference internal" href="stream.html#stream.models.StreamVariable" title="stream.models.StreamVariable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamVariable</span></code></a>.</p></td>
+<td></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="#story_graph.engine.Engine.execute_python_cell" title="story_graph.engine.Engine.execute_python_cell"><code class="xref py py-func docutils literal notranslate"><span class="pre">execute_python_cell()</span></code></a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>SuperCollider</p></td>
+<td><p>Executes <em>sclang</em> code on the associated server.
+This can be used to control the sonic content on the server.</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a></p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="#story_graph.engine.Engine.execute_sc_code" title="story_graph.engine.Engine.execute_sc_code"><code class="xref py py-func docutils literal notranslate"><span class="pre">execute_sc_code()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../osc_server.html#osc-server"><span class="std std-ref">OSC Server</span></a></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Comment</p></td>
+<td><p>Does not get executed, but allows to put comments into
+the graph.</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Audio</p></td>
+<td><p>Allows to playback static audio files.
+The instruction will be translated into <em>sclang</em> code and will
+be executed as such on the associated stream.</p></td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="#story_graph.models.AudioCell" title="story_graph.models.AudioCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioCell</span></code></a></p></li>
+<li><p><a class="reference internal" href="stream.html#stream.models.AudioFile" title="stream.models.AudioFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioFile</span></code></a></p></li>
+</ul>
+</td>
+<td><ul class="simple">
+<li><p><a class="reference internal" href="#story_graph.engine.Engine.execute_audio_cell" title="story_graph.engine.Engine.execute_audio_cell"><code class="xref py py-func docutils literal notranslate"><span class="pre">execute_audio_cell()</span></code></a></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="story_graph.models.Edge">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.models.</span></span><span class="sig-name descname"><span class="pre">Edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#Edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.Edge" title="Permalink to this definition">#</a></dt>
-<dd><p>Connects two <a class="reference internal" href="#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> with each other.</p>
-<div class="admonition-todo admonition" id="id6">
-<p class="admonition-title">Todo</p>
-<p>With a script we can also jump to any other node
-so it is not clear how to use this.
-Maybe take a look at visual programming languages
-such as MSP or Scratch how they handle this?</p>
+<dd><p>Connects two <a class="reference internal" href="#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> with each other by
+using their respective <a class="reference internal" href="#story_graph.models.NodeDoor" title="story_graph.models.NodeDoor"><code class="xref py py-class docutils literal notranslate"><span class="pre">NodeDoor</span></code></a>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>It is important to note that an edge flows from
+<code class="docutils literal notranslate"><span class="pre">out_node_door</span></code> to <code class="docutils literal notranslate"><span class="pre">in_node_door</span></code> as we follow
+the notion from the perspective of a
+<a class="reference internal" href="#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">story_graph.models.Node</span></code></a> rather than from the
+edge.</p>
 </div>
+<div class="graphviz"><img src="../../_images/graphviz-9c720e7c20487ab2861aad05437c0326cd9fb054.png" alt="digraph Connection {
+    rank = same;
+    subgraph cluster_node_a {
+        rank = same;
+        label = &quot;NODE_A&quot;;
+        NODE_A [shape=Msquare, label=&quot;NODE_A\n\nscript_cell_1\nscript_cell_2&quot;];
+        subgraph cluster_in_nodes_a {
+            label = &quot;IN_NODES&quot;;
+            in_node_door_a [label=&quot;in_node_door&quot;];
+        }
+        subgraph cluster_out_nodes_a {
+            label = &quot;OUT_NODES&quot;;
+            out_node_door_a_1 [label=&quot;out_node_door 1&quot;];
+            out_node_door_a_2 [label=&quot;out_node_door 2&quot;];
+        }
+        in_node_door_a -&gt; NODE_A [label=&quot;DB\nreference&quot;];
+        {out_node_door_a_1, out_node_door_a_2} -&gt; NODE_A;
+        in_node_door_a -&gt; NODE_A [style=dashed, color=red, fontcolor=red, label=&quot;Engine\nProgression&quot;];
+        NODE_A -&gt; out_node_door_a_1 [style=dashed, color=red];
+    }
+
+    edge_ [shape=Msquare, label=&quot;EDGE&quot;];
+    edge_ -&gt; out_node_door_a_1 [label=&quot;out_node_door&quot;];
+    edge_ -&gt; in_node_door_b [label=&quot;in_node_door&quot;];
+    out_node_door_a_1 -&gt; edge_ [style=dashed, color=red];
+    edge_ -&gt; in_node_door_b [style=dashed, color=red];
+
+    subgraph cluster_node_b {
+        rank = same;
+        label = &quot;NODE_B&quot;;
+        NODE_B [shape=Msquare];
+        subgraph cluster_in_nodes_b {
+            label = &quot;IN_NODES&quot;;
+            in_node_door_b [label=&quot;in_node_door&quot;];
+        }
+        subgraph cluster_out_nodes_b {
+            label = &quot;OUT_NODES&quot;;
+            out_node_door_b_1 [label=&quot;out_node_door 1&quot;];
+            out_node_door_b_2 [label=&quot;out_node_door 2&quot;];
+        }
+        in_node_door_b -&gt; NODE_B;
+        {out_node_door_b_1, out_node_door_b_2} -&gt; NODE_B;
+        in_node_door_b -&gt; NODE_B [style=dashed, color=red];
+        NODE_B -&gt; out_node_door_b_1 [style=dashed, color=red];
+    }
+}" class="graphviz" /></div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>uuid</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.UUIDField" title="(in Django v4.2)"><em>UUIDField</em></a>) – Primary key: Uuid</p>
@@ -879,20 +1054,18 @@ such as MSP or Scratch how they handle this?</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>in_node</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – In node (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">out_edges</span></code>)</p></li>
-<li><p><strong>out_node</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – Out node (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">in_edges</span></code>)</p></li>
+<li><p><strong>in_node_door</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#story_graph.models.NodeDoor" title="story_graph.models.NodeDoor"><code class="xref py py-class docutils literal notranslate"><span class="pre">NodeDoor</span></code></a>) – In node door (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">in_edges</span></code>)</p></li>
+<li><p><strong>out_node_door</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#story_graph.models.NodeDoor" title="story_graph.models.NodeDoor"><code class="xref py py-class docutils literal notranslate"><span class="pre">NodeDoor</span></code></a>) – Out node door (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">out_edges</span></code>)</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py exception">
-<dt class="sig sig-object py" id="story_graph.models.Edge.DoesNotExist">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#story_graph.models.Edge.DoesNotExist" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="story_graph.models.Edge.MultipleObjectsReturned">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#story_graph.models.Edge.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="story_graph.models.Edge.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#Edge.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.Edge.save" title="Permalink to this definition">#</a></dt>
+<dd><p>Checks if <code class="docutils literal notranslate"><span class="pre">in_node_door</span></code> and <code class="docutils literal notranslate"><span class="pre">out_node_door</span></code> have their
+respective types in order to avoid any <em>wrong</em> directions within
+our graph.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -933,21 +1106,11 @@ on the stream) or setting a background music.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py exception">
-<dt class="sig sig-object py" id="story_graph.models.Graph.DoesNotExist">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#story_graph.models.Graph.DoesNotExist" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="story_graph.models.Graph.GraphDetailTemplate">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">GraphDetailTemplate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#Graph.GraphDetailTemplate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.Graph.GraphDetailTemplate" title="Permalink to this definition">#</a></dt>
 <dd><p>An enumeration.</p>
 </dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="story_graph.models.Graph.MultipleObjectsReturned">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#story_graph.models.Graph.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="story_graph.models.Graph.StreamAssignmentPolicy">
@@ -1011,22 +1174,117 @@ we do not have a handle at all).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>out_edges</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#story_graph.models.Edge" title="story_graph.models.Edge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Edge</span></code></a>) – All out edges of this node (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">in_node</span></code>)</p></li>
-<li><p><strong>in_edges</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#story_graph.models.Edge" title="story_graph.models.Edge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Edge</span></code></a>) – All in edges of this node (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">out_node</span></code>)</p></li>
+<li><p><strong>node_doors</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#story_graph.models.NodeDoor" title="story_graph.models.NodeDoor"><code class="xref py py-class docutils literal notranslate"><span class="pre">NodeDoor</span></code></a>) – All node doors of this node (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">node</span></code>)</p></li>
 <li><p><strong>script_cells</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a>) – All script cells of this node (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">node</span></code>)</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py exception">
-<dt class="sig sig-object py" id="story_graph.models.Node.DoesNotExist">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#story_graph.models.Node.DoesNotExist" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="story_graph.models.Node.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#Node.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.Node.save" title="Permalink to this definition">#</a></dt>
+<dd><p>Save the current instance. Override this in a subclass if you want to
+control the saving process.</p>
+<p>The ‘force_insert’ and ‘force_update’ parameters can be used to insist
+that the “save” must be an SQL insert or update (or equivalent for
+non-SQL backends), respectively. Normally, they should not be set.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="story_graph.models.NodeDoor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.models.</span></span><span class="sig-name descname"><span class="pre">NodeDoor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#NodeDoor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.NodeDoor" title="Permalink to this definition">#</a></dt>
+<dd><p>A <a class="reference internal" href="#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> can be entered and exited via
+multiple paths, where each of these exits and
+entrances is called a <em>door</em>.</p>
+<p>A connection between nodes can only be made via their
+doors.
+There are two types of doors:</p>
+<table class="table" id="id10">
+<caption><span class="caption-text">Door types</span><a class="headerlink" href="#id10" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Kind</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>INPUT</strong></p></td>
+<td><p>Allows to enter a node.
+Currently each Node only has one entry point
+but for future development and a nicer
+database operations it is also represented.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>OUTPUT</strong></p></td>
+<td><p>Allows to exit a node.
+After all script cells of a node has been
+executed, the condition of each door will
+be evaluated (like in a switch case).
+Once a condition has been met, the door
+will be stepped through.
+This allows to have a visual representation
+of logic branches.</p></td>
+</tr>
+</tbody>
+</table>
+<p>It is only possible to connect an <strong>OUTPUT</strong> to an
+<strong>INPUT</strong> door via an <a class="reference internal" href="#story_graph.models.Edge" title="story_graph.models.Edge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Edge</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>uuid</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.UUIDField" title="(in Django v4.2)"><em>UUIDField</em></a>) – Primary key: Uuid</p></li>
+<li><p><strong>door_type</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.CharField" title="(in Django v4.2)"><em>CharField</em></a>) – Door type</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.CharField" title="(in Django v4.2)"><em>CharField</em></a>) – Name</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.IntegerField" title="(in Django v4.2)"><em>IntegerField</em></a>) – Order</p></li>
+<li><p><strong>is_default</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.BooleanField" title="(in Django v4.2)"><em>BooleanField</em></a>) – Is default</p></li>
+<li><p><strong>code</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.TextField" title="(in Django v4.2)"><em>TextField</em></a>) – Code</p></li>
+</ul>
+</dd>
+</dl>
+<p>Relationship fields:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>) – Node (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">node_doors</span></code>)</p>
+</dd>
+</dl>
+<p>Reverse relationships:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_edges</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#story_graph.models.Edge" title="story_graph.models.Edge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Edge</span></code></a>) – All in edges of this Node door (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">in_node_door</span></code>)</p></li>
+<li><p><strong>out_edges</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#story_graph.models.Edge" title="story_graph.models.Edge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Edge</span></code></a>) – All out edges of this Node door (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">out_node_door</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="story_graph.models.NodeDoor.DoorType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoorType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#NodeDoor.DoorType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.NodeDoor.DoorType" title="Permalink to this definition">#</a></dt>
+<dd><p>An enumeration.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="story_graph.models.NodeDoor.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/story_graph/models.html#NodeDoor.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.NodeDoor.save" title="Permalink to this definition">#</a></dt>
+<dd><p>Save the current instance. Override this in a subclass if you want to
+control the saving process.</p>
+<p>The ‘force_insert’ and ‘force_update’ parameters can be used to insist
+that the “save” must be an SQL insert or update (or equivalent for
+non-SQL backends), respectively. Normally, they should not be set.</p>
+</dd></dl>
+
+</dd></dl>
 
 <dl class="py exception">
-<dt class="sig sig-object py" id="story_graph.models.Node.MultipleObjectsReturned">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#story_graph.models.Node.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
+<dt class="sig sig-object py" id="story_graph.models.NodeDoorMissing">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">story_graph.models.</span></span><span class="sig-name descname"><span class="pre">NodeDoorMissing</span></span><a class="reference internal" href="../../_modules/story_graph/models.html#NodeDoorMissing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#story_graph.models.NodeDoorMissing" title="Permalink to this definition">#</a></dt>
+<dd><p>Exception that can be thrown if a node door is missing.
+Normally each node should have a default in- and out
+<a class="reference internal" href="#story_graph.models.NodeDoor" title="story_graph.models.NodeDoor"><code class="xref py py-class docutils literal notranslate"><span class="pre">NodeDoor</span></code></a> via a signal, but as this is not forced
+via the database it is necessary to check for it.
+In case this check fails, this exception can be raised.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -1054,16 +1312,6 @@ with our <a class="reference internal" href="#story_graph.engine.Engine" title="
 </ul>
 </dd>
 </dl>
-<dl class="py exception">
-<dt class="sig sig-object py" id="story_graph.models.ScriptCell.DoesNotExist">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#story_graph.models.ScriptCell.DoesNotExist" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="story_graph.models.ScriptCell.MultipleObjectsReturned">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#story_graph.models.ScriptCell.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </section>

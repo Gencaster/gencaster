@@ -352,23 +352,15 @@ document.write(`
 </li>
       <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.add_node">add_node() (gencaster.schema.Mutation method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/story_graph.html#story_graph.models.Graph.aget_entry_node">aget_entry_node() (story_graph.models.Graph method)</a>
 </li>
       <li><a href="back/api/story_graph.html#story_graph.models.AudioCell">AudioCell (class in story_graph.models)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.models.AudioCell.DoesNotExist">AudioCell.DoesNotExist</a>
-</li>
-      <li><a href="back/api/story_graph.html#story_graph.models.AudioCell.MultipleObjectsReturned">AudioCell.MultipleObjectsReturned</a>
-</li>
       <li><a href="back/api/story_graph.html#story_graph.models.AudioCell.PlaybackChoices">AudioCell.PlaybackChoices (class in story_graph.models)</a>
 </li>
       <li><a href="back/api/stream.html#stream.models.AudioFile">AudioFile (class in stream.models)</a>
-</li>
-      <li><a href="back/api/stream.html#stream.models.AudioFile.DoesNotExist">AudioFile.DoesNotExist</a>
-</li>
-      <li><a href="back/api/stream.html#stream.models.AudioFile.MultipleObjectsReturned">AudioFile.MultipleObjectsReturned</a>
 </li>
       <li><a href="back/api/gencaster.html#gencaster.schema.AuthStrawberryDjangoField">AuthStrawberryDjangoField (class in gencaster.schema)</a>
 </li>
@@ -420,6 +412,8 @@ document.write(`
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.delete_node_door">delete_node_door() (gencaster.schema.Mutation method)</a>
+</li>
       <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.delete_script_cell">delete_script_cell() (gencaster.schema.Mutation method)</a>
 </li>
       <li><a href="back/api/stream.html#stream.frontend_types.Dialog">Dialog (class in stream.frontend_types)</a>
@@ -432,18 +426,14 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/story_graph.html#story_graph.models.Edge">Edge (class in story_graph.models)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.Edge.DoesNotExist">Edge.DoesNotExist</a>
-</li>
-      <li><a href="back/api/story_graph.html#story_graph.models.Edge.MultipleObjectsReturned">Edge.MultipleObjectsReturned</a>
-</li>
       <li><a href="back/api/story_graph.html#story_graph.engine.Engine">Engine (class in story_graph.engine)</a>
 </li>
       <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.eval_python">eval_python() (story_graph.markdown_parser.GencasterRenderer method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.exec_python">exec_python() (story_graph.markdown_parser.GencasterRenderer method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/story_graph.html#story_graph.engine.Engine.execute_audio_cell">execute_audio_cell() (story_graph.engine.Engine method)</a>
 </li>
       <li><a href="back/api/story_graph.html#story_graph.engine.Engine.execute_markdown_code">execute_markdown_code() (story_graph.engine.Engine method)</a>
@@ -552,19 +542,19 @@ document.write(`
 </li>
       <li><a href="back/api/story_graph.html#story_graph.engine.Engine.get_engine_global_vars">get_engine_global_vars() (story_graph.engine.Engine static method)</a>
 </li>
+      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.get_next_node">get_next_node() (story_graph.engine.Engine method)</a>
+</li>
       <li><a href="back/api/story_graph.html#story_graph.engine.Engine.get_stream_variables">get_stream_variables() (story_graph.engine.Engine method)</a>
 </li>
       <li><a href="back/api/story_graph.html#story_graph.models.Graph">Graph (class in story_graph.models)</a>
 </li>
       <li><a href="back/api/gencaster.html#gencaster.schema.Subscription.graph">graph() (gencaster.schema.Subscription method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.Graph.DoesNotExist">Graph.DoesNotExist</a>
-</li>
       <li><a href="back/api/story_graph.html#story_graph.models.Graph.GraphDetailTemplate">Graph.GraphDetailTemplate (class in story_graph.models)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.Graph.MultipleObjectsReturned">Graph.MultipleObjectsReturned</a>
-</li>
       <li><a href="back/api/story_graph.html#story_graph.models.Graph.StreamAssignmentPolicy">Graph.StreamAssignmentPolicy (class in story_graph.models)</a>
+</li>
+      <li><a href="back/api/story_graph.html#story_graph.engine.GraphDeadEnd">GraphDeadEnd</a>
 </li>
       <li><a href="back/api/gencaster.html#gencaster.schema.graphql_check_authenticated">graphql_check_authenticated() (in module gencaster.schema)</a>
 </li>
@@ -580,9 +570,11 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/stream.html#stream.frontend_types.Input">Input (class in stream.frontend_types)</a>
 </li>
+      <li><a href="back/api/stream.html#stream.exceptions.InvalidAudioFileException">InvalidAudioFileException</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/stream.html#stream.exceptions.InvalidAudioFileException">InvalidAudioFileException</a>
+      <li><a href="back/api/story_graph.html#story_graph.engine.InvalidPythonCode">InvalidPythonCode</a>
 </li>
       <li><a href="back/api/gencaster.html#gencaster.schema.IsAuthenticated">IsAuthenticated (class in gencaster.schema)</a>
 </li>
@@ -673,11 +665,13 @@ document.write(`
 </li>
       <li><a href="back/api/gencaster.html#gencaster.schema.Subscription.node">node() (gencaster.schema.Subscription method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.Node.DoesNotExist">Node.DoesNotExist</a>
+      <li><a href="back/api/story_graph.html#story_graph.models.NodeDoor">NodeDoor (class in story_graph.models)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.models.Node.MultipleObjectsReturned">Node.MultipleObjectsReturned</a>
+      <li><a href="back/api/story_graph.html#story_graph.models.NodeDoor.DoorType">NodeDoor.DoorType (class in story_graph.models)</a>
+</li>
+      <li><a href="back/api/story_graph.html#story_graph.models.NodeDoorMissing">NodeDoorMissing</a>
 </li>
       <li><a href="back/api/gencaster.html#gencaster.distributor.NodeUpdateMessage">NodeUpdateMessage (class in gencaster.distributor)</a>
 </li>
@@ -753,11 +747,15 @@ document.write(`
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="back/api/story_graph.html#story_graph.models.Edge.save">save() (story_graph.models.Edge method)</a>
+
+      <ul>
+        <li><a href="back/api/story_graph.html#story_graph.models.Node.save">(story_graph.models.Node method)</a>
+</li>
+        <li><a href="back/api/story_graph.html#story_graph.models.NodeDoor.save">(story_graph.models.NodeDoor method)</a>
+</li>
+      </ul></li>
       <li><a href="back/api/story_graph.html#story_graph.models.ScriptCell">ScriptCell (class in story_graph.models)</a>
-</li>
-      <li><a href="back/api/story_graph.html#story_graph.models.ScriptCell.DoesNotExist">ScriptCell.DoesNotExist</a>
-</li>
-      <li><a href="back/api/story_graph.html#story_graph.models.ScriptCell.MultipleObjectsReturned">ScriptCell.MultipleObjectsReturned</a>
 </li>
       <li><a href="back/api/story_graph.html#story_graph.engine.ScriptCellTimeout">ScriptCellTimeout</a>
 </li>
@@ -804,9 +802,9 @@ document.write(`
         <li><a href="back/api/stream.html#module-stream">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/stream.html#stream.models.Stream">Stream (class in stream.models)</a>
-</li>
-      <li><a href="back/api/stream.html#stream.models.Stream.DoesNotExist">Stream.DoesNotExist</a>
 </li>
       <li>
     stream.exceptions
@@ -822,8 +820,6 @@ document.write(`
         <li><a href="back/api/stream.html#module-stream.frontend_types">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     stream.models
 
@@ -831,25 +827,15 @@ document.write(`
         <li><a href="back/api/stream.html#module-stream.models">module</a>
 </li>
       </ul></li>
-      <li><a href="back/api/stream.html#stream.models.Stream.MultipleObjectsReturned">Stream.MultipleObjectsReturned</a>
-</li>
       <li><a href="back/api/gencaster.html#gencaster.schema.Subscription.stream_info">stream_info() (gencaster.schema.Subscription method)</a>
 </li>
       <li><a href="back/api/stream.html#stream.models.StreamInstruction">StreamInstruction (class in stream.models)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamInstruction.DoesNotExist">StreamInstruction.DoesNotExist</a>
-</li>
       <li><a href="back/api/stream.html#stream.models.StreamInstruction.InstructionState">StreamInstruction.InstructionState (class in stream.models)</a>
-</li>
-      <li><a href="back/api/stream.html#stream.models.StreamInstruction.MultipleObjectsReturned">StreamInstruction.MultipleObjectsReturned</a>
 </li>
       <li><a href="back/api/stream.html#stream.models.StreamLog">StreamLog (class in stream.models)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamLog.DoesNotExist">StreamLog.DoesNotExist</a>
-</li>
       <li><a href="back/api/stream.html#stream.models.StreamLog.LogLevel">StreamLog.LogLevel (class in stream.models)</a>
-</li>
-      <li><a href="back/api/stream.html#stream.models.StreamLog.MultipleObjectsReturned">StreamLog.MultipleObjectsReturned</a>
 </li>
       <li><a href="back/api/stream.html#stream.models.StreamLog.Origin">StreamLog.Origin (class in stream.models)</a>
 </li>
@@ -857,17 +843,9 @@ document.write(`
 </li>
       <li><a href="back/api/stream.html#stream.models.StreamPoint">StreamPoint (class in stream.models)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamPoint.DoesNotExist">StreamPoint.DoesNotExist</a>
-</li>
-      <li><a href="back/api/stream.html#stream.models.StreamPoint.MultipleObjectsReturned">StreamPoint.MultipleObjectsReturned</a>
-</li>
       <li><a href="back/api/gencaster.html#gencaster.distributor.StreamsUpdateMessage">StreamsUpdateMessage (class in gencaster.distributor)</a>
 </li>
       <li><a href="back/api/stream.html#stream.models.StreamVariable">StreamVariable (class in stream.models)</a>
-</li>
-      <li><a href="back/api/stream.html#stream.models.StreamVariable.DoesNotExist">StreamVariable.DoesNotExist</a>
-</li>
-      <li><a href="back/api/stream.html#stream.models.StreamVariable.MultipleObjectsReturned">StreamVariable.MultipleObjectsReturned</a>
 </li>
       <li><a href="back/api/gencaster.html#gencaster.schema.Subscription">Subscription (class in gencaster.schema)</a>
 </li>
@@ -879,13 +857,9 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/api/stream.html#stream.frontend_types.Text">Text (class in stream.frontend_types)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.TextToSpeech">TextToSpeech (class in stream.models)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/stream.html#stream.models.TextToSpeech.DoesNotExist">TextToSpeech.DoesNotExist</a>
-</li>
-      <li><a href="back/api/stream.html#stream.models.TextToSpeech.MultipleObjectsReturned">TextToSpeech.MultipleObjectsReturned</a>
+      <li><a href="back/api/stream.html#stream.models.TextToSpeech">TextToSpeech (class in stream.models)</a>
 </li>
       <li><a href="back/api/stream.html#stream.models.TextToSpeech.VoiceNameChoices">TextToSpeech.VoiceNameChoices (class in stream.models)</a>
 </li>

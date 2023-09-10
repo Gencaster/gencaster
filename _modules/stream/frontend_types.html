@@ -381,7 +381,7 @@ document.write(`
         <span class="p">],</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor for a OK button which will&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor for a OK button which will set the StreamVariable ``button`` to ``OK``.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
             <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
@@ -402,8 +402,7 @@ document.write(`
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor for a cancel button which will simply close</span>
-<span class="sd">        the dialog and set the :class:`~story_graph.models.StreamVariable` ``CANCEL`` to ``&#39;true&#39;``</span>
-<span class="sd">        (but as a string!).</span>
+<span class="sd">        the dialog and set the :class:`~story_graph.models.StreamVariable` ``button`` to ``&#39;cancel&#39;``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>

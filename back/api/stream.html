@@ -420,16 +420,6 @@ are mounted within each service.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.AudioFile.DoesNotExist">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#stream.models.AudioFile.DoesNotExist" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.AudioFile.MultipleObjectsReturned">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#stream.models.AudioFile.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -467,16 +457,6 @@ It also allows us to trace past streams.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.Stream.DoesNotExist">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#stream.models.Stream.DoesNotExist" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.Stream.MultipleObjectsReturned">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#stream.models.Stream.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -502,11 +482,6 @@ created from a <a class="reference internal" href="story_graph.html#story_graph.
 <dd class="field-odd"><p><strong>stream_point</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>) – Stream point (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">instructions</span></code>)</p>
 </dd>
 </dl>
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.StreamInstruction.DoesNotExist">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#stream.models.StreamInstruction.DoesNotExist" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="stream.models.StreamInstruction.InstructionState">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">InstructionState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/stream/models.html#StreamInstruction.InstructionState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.StreamInstruction.InstructionState" title="Permalink to this definition">#</a></dt>
@@ -526,11 +501,6 @@ created from a <a class="reference internal" href="story_graph.html#story_graph.
 </dd></dl>
 
 </dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.StreamInstruction.MultipleObjectsReturned">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#stream.models.StreamInstruction.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -559,21 +529,11 @@ created from a <a class="reference internal" href="story_graph.html#story_graph.
 </ul>
 </dd>
 </dl>
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.StreamLog.DoesNotExist">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#stream.models.StreamLog.DoesNotExist" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="stream.models.StreamLog.LogLevel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LogLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/stream/models.html#StreamLog.LogLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.StreamLog.LogLevel" title="Permalink to this definition">#</a></dt>
 <dd><p>Taken from <code class="docutils literal notranslate"><span class="pre">logging</span></code> module but omitting <code class="docutils literal notranslate"><span class="pre">FATAL</span></code> and <code class="docutils literal notranslate"><span class="pre">WARN</span></code>.</p>
 </dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.StreamLog.MultipleObjectsReturned">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#stream.models.StreamLog.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="stream.models.StreamLog.Origin">
@@ -621,16 +581,6 @@ instances.</p>
 </ul>
 </dd>
 </dl>
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.StreamPoint.DoesNotExist">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#stream.models.StreamPoint.DoesNotExist" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.StreamPoint.MultipleObjectsReturned">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#stream.models.StreamPoint.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="stream.models.StreamPoint.send_stream_instruction">
 <span class="sig-name descname"><span class="pre">send_stream_instruction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instruction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">manual_finish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/stream/models.html#StreamPoint.send_stream_instruction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.StreamPoint.send_stream_instruction" title="Permalink to this definition">#</a></dt>
@@ -695,16 +645,6 @@ type conversion.</p>
 <dd class="field-odd"><p><strong>stream</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#stream.models.Stream" title="stream.models.Stream"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stream</span></code></a>) – Stream (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">variables</span></code>)</p>
 </dd>
 </dl>
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.StreamVariable.DoesNotExist">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#stream.models.StreamVariable.DoesNotExist" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.StreamVariable.MultipleObjectsReturned">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#stream.models.StreamVariable.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="stream.models.StreamVariable.send_to_sc">
 <span class="sig-name descname"><span class="pre">send_to_sc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/stream/models.html#StreamVariable.send_to_sc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.StreamVariable.send_to_sc" title="Permalink to this definition">#</a></dt>
@@ -753,16 +693,6 @@ by using external APIs.</p>
 <dd class="field-odd"><p><strong>audio_file</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v4.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#stream.models.AudioFile" title="stream.models.AudioFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioFile</span></code></a>) – Audio file (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">texttospeech</span></code>)</p>
 </dd>
 </dl>
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.TextToSpeech.DoesNotExist">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><a class="headerlink" href="#stream.models.TextToSpeech.DoesNotExist" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="stream.models.TextToSpeech.MultipleObjectsReturned">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MultipleObjectsReturned</span></span><a class="headerlink" href="#stream.models.TextToSpeech.MultipleObjectsReturned" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="stream.models.TextToSpeech.VoiceNameChoices">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">VoiceNameChoices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/stream/models.html#TextToSpeech.VoiceNameChoices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.TextToSpeech.VoiceNameChoices" title="Permalink to this definition">#</a></dt>
@@ -820,14 +750,13 @@ as they are also available within the <code class="xref py py-class docutils lit
 <dt class="sig sig-object py" id="stream.frontend_types.Button.cancel">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">text='Cancel',</span> <span class="pre">value='cancel',</span> <span class="pre">button_type=ButtonType.WARNING,</span> <span class="pre">callback_actions=[&lt;CallbackAction.SEND_VARIABLE:</span> <span class="pre">'send_variable'&gt;],</span> <span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/stream/frontend_types.html#Button.cancel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.frontend_types.Button.cancel" title="Permalink to this definition">#</a></dt>
 <dd><p>Constructor for a cancel button which will simply close
-the dialog and set the <code class="xref py py-class docutils literal notranslate"><span class="pre">StreamVariable</span></code> <code class="docutils literal notranslate"><span class="pre">CANCEL</span></code> to <code class="docutils literal notranslate"><span class="pre">'true'</span></code>
-(but as a string!).</p>
+the dialog and set the <code class="xref py py-class docutils literal notranslate"><span class="pre">StreamVariable</span></code> <code class="docutils literal notranslate"><span class="pre">button</span></code> to <code class="docutils literal notranslate"><span class="pre">'cancel'</span></code>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="stream.frontend_types.Button.ok">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ok</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">text='OK',</span> <span class="pre">value='ok',</span> <span class="pre">button_type=ButtonType.PRIMARY,</span> <span class="pre">callback_actions=[&lt;CallbackAction.SEND_VARIABLE:</span> <span class="pre">'send_variable'&gt;,</span> <span class="pre">&lt;CallbackAction.SEND_VARIABLES:</span> <span class="pre">'send_variables'&gt;],</span> <span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/stream/frontend_types.html#Button.ok"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.frontend_types.Button.ok" title="Permalink to this definition">#</a></dt>
-<dd><p>Constructor for a OK button which will</p>
+<dd><p>Constructor for a OK button which will set the StreamVariable <code class="docutils literal notranslate"><span class="pre">button</span></code> to <code class="docutils literal notranslate"><span class="pre">OK</span></code>.</p>
 </dd></dl>
 
 </dd></dl>
