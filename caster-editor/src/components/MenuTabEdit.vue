@@ -45,20 +45,34 @@ const deleteNodeMutation = useDeleteNodeMutation();
 const deleteEdgeMutation = useDeleteEdgeMutation();
 
 const removeSelection = async () => {
-  console.log("Removing selection");
+  await deleteSelectedEdgeUUIDs();
+  // TODO: only works with a timeout?
+  setTimeout(async () => {
+    await deleteSelectedNodeUUIDs();
+  }, 100);
+  // await deleteSelectedNodeUUIDs();
+  console.log("Deleted selected");
+};
 
-  // deleting edges first
-  selectedEdgeUUIDs.value.forEach(async (edgeUuid) => {
+// deleteselectedEdgeUUIDs with callback
+const deleteSelectedEdgeUUIDs = async () => {
+  const deletePromises = selectedEdgeUUIDs.value.map(async (edgeUuid) => {
     const { error } = await deleteEdgeMutation.executeMutation({
       edgeUuid,
     });
+    console.log("ran mutation");
     if (error) {
       ElMessage.error(`Could not delete edge ${edgeUuid}: ${error.message}`);
     }
     ElMessage.info(`Deleted edge ${edgeUuid}`);
   });
 
-  selectedNodeUUIDs.value.forEach(async (nodeUuid) => {
+  // Wait for all delete promises to complete before returning
+  await Promise.all(deletePromises);
+};
+
+const deleteSelectedNodeUUIDs = async () => {
+  const deletePromises = selectedNodeUUIDs.value.map(async (nodeUuid) => {
     const { error } = await deleteNodeMutation.executeMutation({
       nodeUuid,
     });
@@ -67,5 +81,8 @@ const removeSelection = async () => {
     }
     ElMessage.info(`Deleted node ${nodeUuid}`);
   });
+
+  // Wait for all delete promises to complete before returning
+  await Promise.all(deletePromises);
 };
 </script>
