@@ -22,7 +22,7 @@ onMounted(() => {
 <template>
   <div
     class="gencaster-default-node"
-    :class="{ selected: selected }"
+    :class="{ selected: selected, entry: data.isEntryNode }"
   >
     <div class="title">
       <p>
@@ -31,10 +31,7 @@ onMounted(() => {
     </div>
 
     <div class="nodes">
-      <div
-        v-if="!data.isEntryNode"
-        class="in-nodes"
-      >
+      <div class="in-nodes">
         <div
           v-for="(inDoor, index) in data.inNodeDoors"
           :key="inDoor.uuid"
@@ -88,6 +85,10 @@ onMounted(() => {
   width: $nodeDefaultWidth;
   display: flex;
   flex-direction: column;
+  background-color: $white;
+  border: 1px solid $mainBlack;
+  border-radius: 2px;
+  overflow: hidden;
 
   .title {
     background-color: $grey-light;
@@ -95,35 +96,48 @@ onMounted(() => {
     padding: 2px 8px 0 8px;
     margin: 0;
   }
-}
 
-.handle {
-  width: 12px;
-  height: 12px;
-  border-radius: 12px;
-  border: 1px solid $mainBlack;
-  background-color: $grey-light;
-}
+  &.selected {
+    box-shadow: 0px 0px 7px 0px $green-light;
+  }
 
-.out-nodes {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  width: 100px;
-  margin-bottom: 12px;
+  &.entry {
+    .title {
+      background-color: $green-light;
+      height: 24px;
+      padding: 2px 8px 0 8px;
+      margin: 0;
+    }
+  }
 
-  .out-node {
-    span {
-      position: absolute;
-      text-align: right;
-      pointer-events: none;
-      right: 0;
-      height: 20px;
-      width: calc($nodeDefaultWidth - 24px);
-      transform: translateX(-16px) translateY(-5px);
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
+  .handle {
+    width: 12px;
+    height: 12px;
+    border-radius: 12px;
+    border: 1px solid $mainBlack;
+    background-color: $grey-light;
+  }
+
+  .out-nodes {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 100px;
+    margin-bottom: 12px;
+
+    .out-node {
+      span {
+        position: absolute;
+        text-align: right;
+        pointer-events: none;
+        right: 0;
+        height: 20px;
+        width: calc($nodeDefaultWidth - 24px);
+        transform: translateX(-16px) translateY(-5px);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
     }
   }
 }
