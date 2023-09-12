@@ -5,7 +5,10 @@ import type { Node } from "@/graphql";
 import { useVueFlow } from "@vue-flow/core";
 
 defineProps<{
-  data: Pick<Node, "name" | "uuid" | "inNodeDoors" | "outNodeDoors">;
+  data: Pick<
+    Node,
+    "name" | "uuid" | "inNodeDoors" | "outNodeDoors" | "isEntryNode"
+  >;
   selected: boolean;
 }>();
 
@@ -28,7 +31,10 @@ onMounted(() => {
     </div>
 
     <div class="nodes">
-      <div class="in-nodes">
+      <div
+        v-if="!data.isEntryNode"
+        class="in-nodes"
+      >
         <div
           v-for="(inDoor, index) in data.inNodeDoors"
           :key="inDoor.uuid"
