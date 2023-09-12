@@ -150,6 +150,7 @@ subscription graph($uuid: UUID!) {
       positionX
       positionY
       color
+      isEntryNode
       inNodeDoors {
         ...NodeDoorBasic
       }
@@ -181,6 +182,7 @@ subscription node($uuid: UUID!) {
     name
     positionX
     positionY
+    isEntryNode
     scriptCells {
       cellCode
       cellOrder
