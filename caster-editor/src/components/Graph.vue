@@ -76,6 +76,8 @@ function nodes(): GraphNode[] {
         uuid: node.uuid,
         inNodeDoors: node.inNodeDoors,
         outNodeDoors: node.outNodeDoors,
+        isEntryNode: node.isEntryNode,
+        color: node.color,
       },
       id: node.uuid,
       position: {

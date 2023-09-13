@@ -1229,6 +1229,7 @@ export type GraphSubscription = {
       positionX: number;
       positionY: number;
       color: string;
+      isEntryNode: boolean;
       scriptCells: Array<{
         cellCode: string;
         cellOrder: number;
@@ -1272,6 +1273,7 @@ export type NodeSubscription = {
     name: string;
     positionX: number;
     positionY: number;
+    isEntryNode: boolean;
     uuid: any;
     inNodeDoors: Array<{
       uuid: any;
@@ -1901,6 +1903,7 @@ export const GraphDocument = gql`
         positionX
         positionY
         color
+        isEntryNode
         inNodeDoors {
           ...NodeDoorBasic
         }
@@ -1938,6 +1941,7 @@ export const NodeDocument = gql`
       name
       positionX
       positionY
+      isEntryNode
       scriptCells {
         cellCode
         cellOrder
