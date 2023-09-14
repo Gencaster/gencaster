@@ -3,12 +3,3 @@
 .vue-flow__pane.draggable {
   cursor: move !important;
 }
-
-.gencaster-default-node {
-  background-color: $white;
-  border: 1px solid $mainBlack;
-
-  &.selected {
-    box-shadow: 0px 0px 7px 0px $green-light;
-  }
-}
