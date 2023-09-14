@@ -3,13 +3,14 @@ import { storeToRefs } from "pinia";
 import { watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Graph from "@/components/Graph.vue";
+import Meta from "@/components/Meta.vue";
 import Menu from "@/components/Menu.vue";
 import NodeEditor from "@/components/NodeEditor.vue";
-import { useInterfaceStore } from "@/stores/InterfaceStore";
+import { useInterfaceStore, Tab } from "@/stores/InterfaceStore";
 import { useGraphSubscription } from "@/graphql";
 import { ElMessage } from "element-plus";
 
-const { showNodeEditor, selectedNodeForEditorUuid } = storeToRefs(
+const { showNodeEditor, selectedNodeForEditorUuid, tab } = storeToRefs(
   useInterfaceStore(),
 );
 
@@ -39,6 +40,11 @@ watch(graphSubscription.error, () => {
     <Menu :graph="graphSubscription.data.value.graph" />
 
     <Graph :graph="graphSubscription.data.value.graph" />
+
+    <Meta
+      v-if="tab === Tab.Meta"
+      :graph-uuid="graphSubscription.data.value.graph.uuid"
+    />
 
     <Transition name="slide">
       <NodeEditor

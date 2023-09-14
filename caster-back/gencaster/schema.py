@@ -54,6 +54,7 @@ from story_graph.types import (
     ScriptCell,
     ScriptCellInputCreate,
     ScriptCellInputUpdate,
+    UpdateGraphInput,
     create_python_highlight_string,
 )
 from stream.exceptions import NoStreamAvailableException
@@ -485,6 +486,23 @@ class Mutation:
         # need a refresh - in django 4.2 this will be available, see
         # https://docs.djangoproject.com/en/4.2/ref/models/instances/#django.db.models.Model.arefresh_from_db
         return await story_graph_models.Graph.objects.aget(uuid=graph.uuid)  # type: ignore
+
+    @strawberry.mutation
+    async def update_graph(
+        self, info, graph_input: UpdateGraphInput, graph_uuid: uuid.UUID
+    ) -> Graph:
+        await graphql_check_authenticated(info)
+
+        graph = await story_graph_models.Graph.objects.aget(uuid=graph_uuid)
+
+        for key, value in graph_input.__dict__.items():
+            if value == strawberry.UNSET:
+                continue
+            graph.__setattr__(key, value)
+
+        await graph.asave()
+
+        return graph  # type: ignore
 
     @strawberry.mutation
     async def add_audio_file(self, info, new_audio_file: AddAudioFile) -> AudioFileUploadResponse:  # type: ignore

@@ -208,6 +208,25 @@ subscription node($uuid: UUID!) {
   }
 }
 
+fragment GraphMetaData on Graph {
+  uuid
+  templateName
+  startText
+  slugName
+  name
+  endText
+  displayName
+  aboutText
+  streamAssignmentPolicy
+  publicVisible
+}
+
+query GetGraph($graphUuid:ID!) {
+	graph(pk: $graphUuid) {
+    ...GraphMetaData
+  }
+}
+
 mutation CreateGraph($graphInput: AddGraphInput!) {
   addGraph(graphInput: $graphInput) {
     name
@@ -217,6 +236,15 @@ mutation CreateGraph($graphInput: AddGraphInput!) {
       uuid
       isEntryNode
     }
+  }
+}
+
+mutation UpdateGraph($graphUuid:UUID!, $graphUpdate: UpdateGraphInput!) {
+  updateGraph(
+    graphInput: $graphUpdate
+    graphUuid: $graphUuid
+  ) {
+    uuid
   }
 }
 

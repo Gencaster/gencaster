@@ -22,6 +22,7 @@ CellType = strawberry.enum(models.CellType)  # type: ignore
 PlaybackType = strawberry.enum(models.AudioCell.PlaybackChoices)  # type: ignore
 TemplateType = strawberry.enum(models.Graph.GraphDetailTemplate)  # type: ignore
 NodeDoorType = strawberry.enum(models.NodeDoor.DoorType)  # type: ignore
+StreamAssignmentPolicy = strawberry.enum(models.Graph.StreamAssignmentPolicy)  # type: ignore
 
 
 def create_python_highlight_string(e: SyntaxError) -> str:
@@ -85,6 +86,8 @@ class Graph:
     display_name: auto
     slug_name: auto
     template_name: TemplateType
+    stream_assignment_policy: StreamAssignmentPolicy
+    public_visible: auto
     start_text: auto
     about_text: auto
     end_text: auto
@@ -93,6 +96,31 @@ class Graph:
     @strawberry.django.field
     def edges(self) -> List["Edge"]:
         return models.Edge.objects.filter(out_node_door__node__graph=self)  # type: ignore
+
+
+@strawberry.django.input(models.Graph)
+class AddGraphInput:
+    name: auto
+    display_name: auto
+    slug_name: auto
+    start_text: auto
+    about_text: auto
+    end_text: auto
+    public_visible: auto
+    stream_assignment_policy: StreamAssignmentPolicy
+    template_name: TemplateType
+
+
+@strawberry.django.input(model=models.Graph, partial=True)
+class UpdateGraphInput:
+    name: auto
+    display_name: auto
+    start_text: auto
+    about_text: auto
+    end_text: auto
+    public_visible: auto
+    stream_assignment_policy: StreamAssignmentPolicy
+    template_name: TemplateType
 
 
 @strawberry.django.type(models.Node)
@@ -210,16 +238,3 @@ class ScriptCellInputUpdate:
     cell_code: Optional[str]
     cell_order: Optional[int]
     audio_cell: Optional[AudioCellInput]
-
-
-@strawberry.django.input(models.Graph)
-class AddGraphInput:
-    name: auto
-    display_name: auto
-    slug_name: auto
-    start_text: auto
-    about_text: auto
-    end_text: auto
-    public_visible: auto
-    stream_assignment_policy: auto
-    template_name: TemplateType
