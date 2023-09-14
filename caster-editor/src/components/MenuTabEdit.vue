@@ -54,8 +54,9 @@ const removeSelection = async () => {
     });
     if (error) {
       ElMessage.error(`Could not delete edge ${edgeUuid}: ${error.message}`);
+    } else {
+      ElMessage.info(`Deleted edge ${edgeUuid}`);
     }
-    ElMessage.info(`Deleted edge ${edgeUuid}`);
   });
 
   selectedNodeUUIDs.value.forEach(async (nodeUuid) => {
@@ -64,8 +65,9 @@ const removeSelection = async () => {
     });
     if (error) {
       ElMessage.error(`Could not delete node ${nodeUuid}: ${error.message}`);
+    } else {
+      ElMessage.info(`Deleted node ${nodeUuid}`);
     }
-    ElMessage.info(`Deleted node ${nodeUuid}`);
   });
 };
 </script>
