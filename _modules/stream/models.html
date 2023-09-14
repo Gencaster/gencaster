@@ -273,7 +273,6 @@ document.write(`
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">asgiref.sync</span> <span class="kn">import</span> <span class="n">async_to_sync</span>
-<span class="kn">from</span> <span class="nn">channels.layers</span> <span class="kn">import</span> <span class="n">get_channel_layer</span>
 <span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
 <span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
 <span class="kn">from</span> <span class="nn">django.core.files</span> <span class="kn">import</span> <span class="n">File</span>
@@ -603,9 +602,7 @@ document.write(`
 
 <span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">Stream</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;update_streams_ws&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">update_streams_ws</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Stream</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="n">async_to_sync</span><span class="p">(</span><span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_streams_update</span><span class="p">)(</span>
-        <span class="n">get_channel_layer</span><span class="p">(),</span> <span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
-    <span class="p">)</span>
+    <span class="n">async_to_sync</span><span class="p">(</span><span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_streams_update</span><span class="p">)(</span><span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">uuid</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="StreamVariable"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamVariable">[docs]</a><span class="k">class</span> <span class="nc">StreamVariable</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>

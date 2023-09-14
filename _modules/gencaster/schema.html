@@ -489,7 +489,7 @@ document.write(`
             <span class="n">audio_file</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">update_audio_file</span><span class="o">.</span><span class="n">name</span>
         <span class="k">if</span> <span class="n">update_audio_file</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
             <span class="n">audio_file</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">update_audio_file</span><span class="o">.</span><span class="n">description</span>
-        <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="n">audio_file</span><span class="o">.</span><span class="n">save</span><span class="p">)()</span>
+        <span class="k">await</span> <span class="n">audio_file</span><span class="o">.</span><span class="n">asave</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">audio_file</span>  <span class="c1"># type: ignore</span></div>
 
 <div class="viewcode-block" id="Mutation.add_node"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.add_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
@@ -511,14 +511,7 @@ document.write(`
             <span class="k">if</span> <span class="n">new_value</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">new_node</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
 
-        <span class="c1"># asave not yet implemented in django 4.1</span>
-        <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">save</span><span class="p">)()</span>
-
-        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_graph_update</span><span class="p">(</span>
-            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
-            <span class="n">graph_uuid</span><span class="o">=</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
-        <span class="p">)</span>
-
+        <span class="k">await</span> <span class="n">node</span><span class="o">.</span><span class="n">asave</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Mutation.update_node"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.update_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
@@ -536,18 +529,7 @@ document.write(`
             <span class="k">if</span> <span class="n">new_value</span> <span class="o">:=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node_update</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
 
-        <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">save</span><span class="p">)()</span>
-
-        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_graph_update</span><span class="p">(</span>
-            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
-            <span class="n">graph_uuid</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_node_update</span><span class="p">(</span>
-            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
-            <span class="n">node_uuid</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
-        <span class="p">)</span>
-
+        <span class="k">await</span> <span class="n">node</span><span class="o">.</span><span class="n">asave</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Mutation.add_edge"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.add_edge">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
@@ -567,57 +549,19 @@ document.write(`
             <span class="n">in_node_door</span><span class="o">=</span><span class="n">in_node_door</span><span class="p">,</span>
             <span class="n">out_node_door</span><span class="o">=</span><span class="n">out_node_door</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_graph_update</span><span class="p">(</span>
-            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
-            <span class="n">graph_uuid</span><span class="o">=</span><span class="n">in_node_door</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
-        <span class="p">)</span>
         <span class="k">return</span> <span class="n">edge</span>  <span class="c1"># type: ignore</span></div>
 
 <div class="viewcode-block" id="Mutation.delete_edge"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.delete_edge">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">edge_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes a given :class:`~story_graph.models.Edge`.&quot;&quot;&quot;</span>
         <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">edge</span><span class="p">:</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Edge</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Edge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span>
-                    <span class="s2">&quot;in_node_door__node__graph&quot;</span>
-                <span class="p">)</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">edge_uuid</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Edge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">edge_uuid</span><span class="p">)</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not delete edge </span><span class="si">{</span><span class="n">edge_uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">edge</span><span class="o">.</span><span class="n">in_node_door</span><span class="p">:</span>
-            <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_graph_update</span><span class="p">(</span>
-                <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
-                <span class="n">graph_uuid</span><span class="o">=</span><span class="n">edge</span><span class="o">.</span><span class="n">in_node_door</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Edge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">edge_uuid</span><span class="p">)</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Mutation.delete_node"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.delete_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">node_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes a given :class:`~story_graph.models.Node`.&quot;&quot;&quot;</span>
         <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">node</span><span class="p">:</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;graph&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span>
-                    <span class="n">uuid</span><span class="o">=</span><span class="n">node_uuid</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-            <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">node_uuid</span><span class="p">)</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could delete node </span><span class="si">{</span><span class="n">node_uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_graph_update</span><span class="p">(</span>
-            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
-            <span class="n">graph_uuid</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_node_update</span><span class="p">(</span>
-            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
-            <span class="n">node_uuid</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">node_uuid</span><span class="p">)</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Mutation.create_script_cells"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.create_script_cells">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">create_script_cells</span><span class="p">(</span>
@@ -635,7 +579,6 @@ document.write(`
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">DoesNotExist</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Received update on unknown node </span><span class="si">{</span><span class="n">node_uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="c1"># @todo return error</span>
             <span class="k">raise</span> <span class="n">e</span>
 
         <span class="n">script_cells</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">story_graph_models</span><span class="o">.</span><span class="n">ScriptCell</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -666,9 +609,6 @@ document.write(`
             <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created script cell </span><span class="si">{</span><span class="n">script_cell</span><span class="o">.</span><span class="n">uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">script_cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">script_cell</span><span class="p">)</span>
 
-        <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_node_update</span><span class="p">(</span>
-            <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span> <span class="n">node_uuid</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span>
-        <span class="p">)</span>
         <span class="k">return</span> <span class="n">script_cells</span>  <span class="c1"># type: ignore</span></div>
 
     <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
@@ -707,13 +647,6 @@ document.write(`
             <span class="p">)</span><span class="o">.</span><span class="n">aupdate</span><span class="p">(</span><span class="o">**</span><span class="n">updates</span><span class="p">)</span>
             <span class="n">script_cells</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">script_cell</span><span class="p">)</span>
 
-        <span class="c1"># send update to subscription if something was updated</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">script_cells</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_node_update</span><span class="p">(</span>
-                <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
-                <span class="n">node_uuid</span><span class="o">=</span><span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">script_cells</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span><span class="p">)(),</span>
-            <span class="p">)</span>
-
         <span class="k">return</span> <span class="n">script_cells</span>  <span class="c1"># type: ignore</span>
 
 <div class="viewcode-block" id="Mutation.delete_script_cell"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.delete_script_cell">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
@@ -721,20 +654,9 @@ document.write(`
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes a given :class:`~story_graph.models.ScriptCell`.&quot;&quot;&quot;</span>
         <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
 
-        <span class="c1"># first get the node before the cell is deleted</span>
-        <span class="n">node</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
-            <span class="n">script_cells__uuid</span><span class="o">=</span><span class="n">script_cell_uuid</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">afirst</span><span class="p">()</span>
-
         <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">ScriptCell</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
             <span class="n">uuid</span><span class="o">=</span><span class="n">script_cell_uuid</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">node</span><span class="p">:</span>
-            <span class="k">await</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_node_update</span><span class="p">(</span>
-                <span class="n">layer</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">channel_layer</span><span class="p">,</span>
-                <span class="n">node_uuid</span><span class="o">=</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
-            <span class="p">)</span></div>
+        <span class="p">)</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span></div>
 
     <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">add_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">graph_input</span><span class="p">:</span> <span class="n">AddGraphInput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Graph</span><span class="p">:</span>
@@ -842,7 +764,7 @@ document.write(`
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">info</span><span class="p">,</span>
         <span class="n">node_door_input</span><span class="p">:</span> <span class="n">NodeDoorInputUpdate</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NodeDoorResponse</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NodeDoorResponse</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
         <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
         <span class="n">node_door</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">NodeDoor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span>
             <span class="n">uuid</span><span class="o">=</span><span class="n">node_door_input</span><span class="o">.</span><span class="n">uuid</span>

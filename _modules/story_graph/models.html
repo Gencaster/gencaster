@@ -276,7 +276,6 @@ document.write(`
 <span class="kn">import</span> <span class="nn">uuid</span>
 
 <span class="kn">from</span> <span class="nn">asgiref.sync</span> <span class="kn">import</span> <span class="n">async_to_sync</span><span class="p">,</span> <span class="n">sync_to_async</span>
-<span class="kn">from</span> <span class="nn">channels.layers</span> <span class="kn">import</span> <span class="n">get_channel_layer</span>
 <span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 <span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">transaction</span>
 <span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">Q</span><span class="p">,</span> <span class="n">signals</span>
@@ -428,6 +427,20 @@ document.write(`
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
 
 
+<span class="k">def</span> <span class="nf">update_graph_db_to_ws</span><span class="p">(</span><span class="n">graph_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">):</span>
+    <span class="c1"># sorry for this atrocity - there seems to be race conditions with signals</span>
+    <span class="c1"># which makes updates out-dated, see</span>
+    <span class="c1"># https://docs.djangoproject.com/en/dev/topics/db/transactions/#performing-actions-after-commit</span>
+    <span class="n">transaction</span><span class="o">.</span><span class="n">on_commit</span><span class="p">(</span>
+        <span class="k">lambda</span><span class="p">:</span> <span class="n">async_to_sync</span><span class="p">(</span><span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_graph_update</span><span class="p">)(</span><span class="n">graph_uuid</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">Graph</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;update_graph_ws&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">update_graph_ws</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Graph</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">update_graph_db_to_ws</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="Node"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.Node">[docs]</a><span class="k">class</span> <span class="nc">Node</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A node.</span>
@@ -539,6 +552,22 @@ document.write(`
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+
+
+<span class="k">def</span> <span class="nf">update_node_db_to_ws</span><span class="p">(</span><span class="n">node_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">):</span>
+    <span class="c1"># sorry for this atrocity - there seems to be race conditions with signals</span>
+    <span class="c1"># which makes updates out-dated, see</span>
+    <span class="c1"># https://docs.djangoproject.com/en/dev/topics/db/transactions/#performing-actions-after-commit</span>
+    <span class="n">transaction</span><span class="o">.</span><span class="n">on_commit</span><span class="p">(</span>
+        <span class="k">lambda</span><span class="p">:</span> <span class="n">async_to_sync</span><span class="p">(</span><span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_node_update</span><span class="p">)(</span><span class="n">node_uuid</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_delete</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">Node</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;delete_node_ws&quot;</span><span class="p">)</span>
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">Node</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;update_node_ws&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">update_node_ws</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Node</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">update_node_db_to_ws</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
+    <span class="n">update_graph_db_to_ws</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="NodeDoorMissing"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.NodeDoorMissing">[docs]</a><span class="k">class</span> <span class="nc">NodeDoorMissing</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
@@ -669,30 +698,8 @@ document.write(`
 
 <span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">NodeDoor</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;update_node_door_ws&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">update_node_door_ws</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">NodeDoor</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">channel_layer</span> <span class="o">=</span> <span class="n">get_channel_layer</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">channel_layer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-            <span class="s2">&quot;Failed to obtain a handle on the channel layer to distribute node_door updates&quot;</span>
-        <span class="p">)</span>
-        <span class="k">return</span>
-    <span class="c1"># sorry for this atrocity - there seems to be race conditions with signals</span>
-    <span class="c1"># which makes updates out-dated, see</span>
-    <span class="c1"># https://docs.djangoproject.com/en/dev/topics/db/transactions/#performing-actions-after-commit</span>
-    <span class="c1"># it is possible that the instance is not available anymore after the commit, so</span>
-    <span class="c1"># so we store it here in memory</span>
-    <span class="n">node_uuid</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span>
-    <span class="n">graph_uuid</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span>
-    <span class="n">transaction</span><span class="o">.</span><span class="n">on_commit</span><span class="p">(</span>
-        <span class="k">lambda</span><span class="p">:</span> <span class="n">async_to_sync</span><span class="p">(</span><span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_node_update</span><span class="p">)(</span>
-            <span class="n">channel_layer</span><span class="p">,</span> <span class="n">node_uuid</span>
-        <span class="p">)</span>
-    <span class="p">)</span>
-    <span class="n">transaction</span><span class="o">.</span><span class="n">on_commit</span><span class="p">(</span>
-        <span class="k">lambda</span><span class="p">:</span> <span class="n">async_to_sync</span><span class="p">(</span><span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_graph_update</span><span class="p">)(</span>
-            <span class="n">channel_layer</span><span class="p">,</span>
-            <span class="n">graph_uuid</span><span class="p">,</span>
-        <span class="p">)</span>
-    <span class="p">)</span>
+    <span class="n">update_graph_db_to_ws</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
+    <span class="n">update_node_db_to_ws</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
 
 
 <span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_delete</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">NodeDoor</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;delete_node_door_ws&quot;</span><span class="p">)</span>
@@ -812,6 +819,16 @@ document.write(`
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">in_node_door</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">out_node_door</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">pre_delete</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">Edge</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;delete_edge_ws&quot;</span><span class="p">)</span>
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">Edge</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;update_edge_ws&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">update_edge_ws</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">Edge</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="n">out_node_door</span><span class="p">:</span>
+        <span class="n">update_graph_db_to_ws</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">out_node_door</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
+        <span class="n">update_node_db_to_ws</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">out_node_door</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="n">in_node_door</span><span class="p">:</span>
+        <span class="n">update_node_db_to_ws</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">in_node_door</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="AudioCell"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.AudioCell">[docs]</a><span class="k">class</span> <span class="nc">AudioCell</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
@@ -986,6 +1003,12 @@ document.write(`
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">node</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cell_order</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cell_type</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_delete</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">ScriptCell</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;delete_script_cell&quot;</span><span class="p">)</span>
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">signals</span><span class="o">.</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">ScriptCell</span><span class="p">,</span> <span class="n">dispatch_uid</span><span class="o">=</span><span class="s2">&quot;update_script_cell_ws&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">update_script_cell_ws</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="n">ScriptCell</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">update_node_db_to_ws</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
 </pre></div>
 
                 </article>
