@@ -322,6 +322,7 @@ document.write(`
     <span class="n">ScriptCell</span><span class="p">,</span>
     <span class="n">ScriptCellInputCreate</span><span class="p">,</span>
     <span class="n">ScriptCellInputUpdate</span><span class="p">,</span>
+    <span class="n">UpdateGraphInput</span><span class="p">,</span>
     <span class="n">create_python_highlight_string</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">stream.exceptions</span> <span class="kn">import</span> <span class="n">NoStreamAvailableException</span>
@@ -753,6 +754,23 @@ document.write(`
         <span class="c1"># need a refresh - in django 4.2 this will be available, see</span>
         <span class="c1"># https://docs.djangoproject.com/en/4.2/ref/models/instances/#django.db.models.Model.arefresh_from_db</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">update_graph</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">graph_input</span><span class="p">:</span> <span class="n">UpdateGraphInput</span><span class="p">,</span> <span class="n">graph_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Graph</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
+
+        <span class="n">graph</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">graph_uuid</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">graph_input</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="n">strawberry</span><span class="o">.</span><span class="n">UNSET</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">graph</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="k">await</span> <span class="n">graph</span><span class="o">.</span><span class="n">asave</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">graph</span>  <span class="c1"># type: ignore</span>
 
     <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">add_audio_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">new_audio_file</span><span class="p">:</span> <span class="n">AddAudioFile</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AudioFileUploadResponse</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
