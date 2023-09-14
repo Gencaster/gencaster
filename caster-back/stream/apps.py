@@ -6,7 +6,6 @@ from queue import Queue
 from threading import Thread
 
 from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from django.apps import AppConfig
 
 
@@ -32,7 +31,6 @@ def setup_logging():
             self._thread = Thread(target=self._loop)
             self._thread.daemon = True
             self._thread.start()
-            self._channel = get_channel_layer()
             self._event_loop = asyncio.get_event_loop()
             super().__init__(level)
 
@@ -61,7 +59,6 @@ def setup_logging():
                     )
 
                     async_to_sync(GenCasterChannel.send_log_update)(
-                        self._channel,
                         StreamLogUpdateMessage(
                             uuid=str(stream_log.uuid),
                             stream_point_uuid=str(stream_point.uuid)

@@ -221,7 +221,7 @@ class Mutation:
             audio_file.name = update_audio_file.name
         if update_audio_file.description:
             audio_file.description = update_audio_file.description
-        await sync_to_async(audio_file.save)()
+        await audio_file.asave()
         return audio_file  # type: ignore
 
     @strawberry.mutation
@@ -243,14 +243,7 @@ class Mutation:
             if new_value := getattr(new_node, field):
                 setattr(node, field, new_value)
 
-        # asave not yet implemented in django 4.1
-        await sync_to_async(node.save)()
-
-        await GenCasterChannel.send_graph_update(
-            layer=info.context.channel_layer,
-            graph_uuid=graph.uuid,
-        )
-
+        await node.asave()
         return None
 
     @strawberry.mutation
@@ -268,18 +261,7 @@ class Mutation:
             if new_value := getattr(node_update, field):
                 setattr(node, field, new_value)
 
-        await sync_to_async(node.save)()
-
-        await GenCasterChannel.send_graph_update(
-            layer=info.context.channel_layer,
-            graph_uuid=node.graph.uuid,
-        )
-
-        await GenCasterChannel.send_node_update(
-            layer=info.context.channel_layer,
-            node_uuid=node.uuid,
-        )
-
+        await node.asave()
         return None
 
     @strawberry.mutation
@@ -299,57 +281,19 @@ class Mutation:
             in_node_door=in_node_door,
             out_node_door=out_node_door,
         )
-        await GenCasterChannel.send_graph_update(
-            layer=info.context.channel_layer,
-            graph_uuid=in_node_door.node.graph.uuid,
-        )
         return edge  # type: ignore
 
     @strawberry.mutation
     async def delete_edge(self, info, edge_uuid: uuid.UUID) -> None:
         """Deletes a given :class:`~story_graph.models.Edge`."""
         await graphql_check_authenticated(info)
-        try:
-            edge: story_graph_models.Edge = (
-                await story_graph_models.Edge.objects.select_related(
-                    "in_node_door__node__graph"
-                ).aget(uuid=edge_uuid)
-            )
-            await story_graph_models.Edge.objects.filter(uuid=edge_uuid).adelete()
-        except Exception:
-            raise Exception(f"Could not delete edge {edge_uuid}")
-        if edge.in_node_door:
-            await GenCasterChannel.send_graph_update(
-                layer=info.context.channel_layer,
-                graph_uuid=edge.in_node_door.node.graph.uuid,
-            )
-        return None
+        await story_graph_models.Edge.objects.filter(uuid=edge_uuid).adelete()
 
     @strawberry.mutation
     async def delete_node(self, info, node_uuid: uuid.UUID) -> None:
         """Deletes a given :class:`~story_graph.models.Node`."""
         await graphql_check_authenticated(info)
-        try:
-            node: story_graph_models.Node = (
-                await story_graph_models.Node.objects.select_related("graph").aget(
-                    uuid=node_uuid
-                )
-            )
-            await story_graph_models.Node.objects.filter(uuid=node_uuid).adelete()
-        except Exception:
-            raise Exception(f"Could delete node {node_uuid}")
-
-        await GenCasterChannel.send_graph_update(
-            layer=info.context.channel_layer,
-            graph_uuid=node.graph.uuid,
-        )
-
-        await GenCasterChannel.send_node_update(
-            layer=info.context.channel_layer,
-            node_uuid=node.uuid,
-        )
-
-        return None
+        await story_graph_models.Node.objects.filter(uuid=node_uuid).adelete()
 
     @strawberry.mutation
     async def create_script_cells(
@@ -367,7 +311,6 @@ class Mutation:
             )
         except story_graph_models.Node.DoesNotExist as e:
             log.error(f"Received update on unknown node {node_uuid}")
-            # @todo return error
             raise e
 
         script_cells: List[story_graph_models.ScriptCell] = []
@@ -398,9 +341,6 @@ class Mutation:
             log.debug(f"Created script cell {script_cell.uuid}")
             script_cells.append(script_cell)
 
-        await GenCasterChannel.send_node_update(
-            layer=info.context.channel_layer, node_uuid=node.uuid
-        )
         return script_cells  # type: ignore
 
     @strawberry.mutation
@@ -439,13 +379,6 @@ class Mutation:
             ).aupdate(**updates)
             script_cells.append(script_cell)
 
-        # send update to subscription if something was updated
-        if len(script_cells) > 0:
-            await GenCasterChannel.send_node_update(
-                layer=info.context.channel_layer,
-                node_uuid=await sync_to_async(lambda: script_cells[0].node.uuid)(),
-            )
-
         return script_cells  # type: ignore
 
     @strawberry.mutation
@@ -453,20 +386,9 @@ class Mutation:
         """Deletes a given :class:`~story_graph.models.ScriptCell`."""
         await graphql_check_authenticated(info)
 
-        # first get the node before the cell is deleted
-        node = await story_graph_models.Node.objects.filter(
-            script_cells__uuid=script_cell_uuid
-        ).afirst()
-
         await story_graph_models.ScriptCell.objects.filter(
             uuid=script_cell_uuid
         ).adelete()
-
-        if node:
-            await GenCasterChannel.send_node_update(
-                layer=info.context.channel_layer,
-                node_uuid=node.uuid,
-            )
 
     @strawberry.mutation
     async def add_graph(self, info, graph_input: AddGraphInput) -> Graph:
@@ -574,7 +496,7 @@ class Mutation:
         self,
         info,
         node_door_input: NodeDoorInputUpdate,
-    ) -> NodeDoorResponse:
+    ) -> NodeDoorResponse:  # type: ignore
         await graphql_check_authenticated(info)
         node_door = await story_graph_models.NodeDoor.objects.aget(
             uuid=node_door_input.uuid

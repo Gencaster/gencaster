@@ -5,7 +5,6 @@ from datetime import timedelta
 from typing import Optional
 
 from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib import admin
 from django.core.files import File
@@ -335,9 +334,7 @@ class Stream(models.Model):
 
 @receiver(signals.post_save, sender=Stream, dispatch_uid="update_streams_ws")
 def update_streams_ws(sender, instance: Stream, **kwargs):
-    async_to_sync(GenCasterChannel.send_streams_update)(
-        get_channel_layer(), str(instance.uuid)
-    )
+    async_to_sync(GenCasterChannel.send_streams_update)(str(instance.uuid))
 
 
 class StreamVariable(models.Model):
