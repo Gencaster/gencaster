@@ -76,7 +76,8 @@ const populateData = () => {
   metaForm.value.projectName = props.graph.name;
   metaForm.value.displayName = props.graph.displayName;
   metaForm.value.slug = props.graph.slugName;
-  metaForm.value.streamAssignment = "one_graph_one_stream";
+  //TODO: streamAssignment
+  metaForm.value.streamAssignment = "missing graph ql";
   metaForm.value.startText = props.graph.startText;
   metaForm.value.aboutText = props.graph.aboutText;
   metaForm.value.endText = props.graph.endText;
@@ -85,7 +86,7 @@ const populateData = () => {
   metaFormOriginal.value.projectName = props.graph.name;
   metaFormOriginal.value.displayName = props.graph.displayName;
   metaFormOriginal.value.slug = props.graph.slugName;
-  metaFormOriginal.value.streamAssignment = "one_graph_one_stream";
+  metaFormOriginal.value.streamAssignment = "missing graph ql";
   metaFormOriginal.value.startText = props.graph.startText;
   metaFormOriginal.value.aboutText = props.graph.aboutText;
   metaFormOriginal.value.endText = props.graph.endText;
