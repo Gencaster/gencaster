@@ -1251,6 +1251,11 @@ export type GraphSubscription = {
         node: { uuid: any };
       }>;
     }>;
+    aboutText: string;
+    displayName: string;
+    endText: string;
+    startText: string;
+    templateName: GraphDetailTemplate;
   };
 };
 
@@ -1882,6 +1887,11 @@ export const GraphDocument = gql`
       name
       slugName
       uuid
+      aboutText
+      displayName
+      endText
+      startText
+      templateName
       edges {
         uuid
         inNodeDoor {

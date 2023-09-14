@@ -14,6 +14,7 @@ import { ElMessage } from "element-plus";
 export enum Tab {
   Edit = "Edit",
   Play = "Play",
+  Meta = "Meta",
 }
 
 // some hack to avoid
