@@ -1273,8 +1273,8 @@ export type NodeSubscription = {
     name: string;
     positionX: number;
     positionY: number;
-    uuid: any;
     isEntryNode: boolean;
+    uuid: any;
     inNodeDoors: Array<{
       uuid: any;
       name: string;
