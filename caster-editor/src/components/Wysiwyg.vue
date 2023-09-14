@@ -35,15 +35,17 @@ onMounted(() => {
     autofocus: false,
   };
 
-  console.log(props.text);
-
   editor.value = new Editor(options);
 
   // add events
-  // editor.value.on("change", () => {
-  //   scriptCellText.value = editor.value?.getMarkdown() || "";
-  // });
+  editor.value.on("change", () => {
+    emit("updateText", editor.value?.getMarkdown() || "sampletext");
+  });
 });
+
+const emit = defineEmits<{
+  (e: "updateText", text: string): void;
+}>();
 
 onDeactivated(() => {
   if (editor.value) {

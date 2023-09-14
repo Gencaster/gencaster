@@ -9,18 +9,10 @@ import {
   ElFormItem,
   ElCol,
 } from "element-plus";
-import {
-  reactive,
-  ref,
-  onMounted,
-  onDeactivated,
-  type Ref,
-  computed,
-} from "vue";
-import type { GraphSubscription, Graph } from "@/graphql";
+import { ref, computed } from "vue";
+import type { GraphSubscription } from "@/graphql";
 import "@toast-ui/editor/dist/toastui-editor.css"; // Editor's Style
-import type { EditorOptions, Editor as EditorType } from "@toast-ui/editor";
-import Editor from "@toast-ui/editor";
+
 import Wysiwyg from "@/components/Wysiwyg.vue";
 import { useInterfaceStore, Tab } from "@/stores/InterfaceStore";
 
@@ -28,13 +20,8 @@ import { storeToRefs } from "pinia";
 const { tab } = storeToRefs(useInterfaceStore());
 
 // props
-// const props = defineProps<{
-//   graph: GraphSubscription["graph"];
-// }>();
-
 const props = defineProps<{
-  graph: Graph;
-  showDebug?: boolean;
+  graph: GraphSubscription["graph"];
 }>();
 
 // TODO: Import from graphql
@@ -53,63 +40,78 @@ const streamAssignmentOptions = [
   },
 ];
 
-const metaForm = reactive({
+const metaForm = ref({
   projectName: "",
   displayName: "",
   slug: "",
   streamAssignment: "",
-  introText: "",
+  startText: "",
   aboutText: "",
   endText: "",
 });
 
 // cloning needs plugin, so just being redundant for now
-const metaFormOriginal = reactive({
+const metaFormOriginal = ref({
   projectName: "",
   displayName: "",
   slug: "",
   streamAssignment: "",
-  introText: "",
+  startText: "",
   aboutText: "",
   endText: "",
 });
 
 const saveButtonActive = computed(() => {
-  if (JSON.stringify(metaForm) !== JSON.stringify(metaFormOriginal)) {
+  if (
+    JSON.stringify(metaForm.value) !== JSON.stringify(metaFormOriginal.value)
+  ) {
     return true;
   } else {
     return false;
   }
 });
 
+const populateData = () => {
+  // form
+  metaForm.value.projectName = props.graph.name;
+  metaForm.value.displayName = props.graph.displayName;
+  metaForm.value.slug = props.graph.slugName;
+  metaForm.value.streamAssignment = "one_graph_one_stream";
+  metaForm.value.startText = props.graph.startText;
+  metaForm.value.aboutText = props.graph.aboutText;
+  metaForm.value.endText = props.graph.endText;
+
+  // original data
+  metaFormOriginal.value.projectName = props.graph.name;
+  metaFormOriginal.value.displayName = props.graph.displayName;
+  metaFormOriginal.value.slug = props.graph.slugName;
+  metaFormOriginal.value.streamAssignment = "one_graph_one_stream";
+  metaFormOriginal.value.startText = props.graph.startText;
+  metaFormOriginal.value.aboutText = props.graph.aboutText;
+  metaFormOriginal.value.endText = props.graph.endText;
+};
+
+// TODO: remove redundancy by abstracting
+// somehow I couldn't figure out how to pass the reference to the function
+// const updatedMarkdown = (text: string, reference: Ref) => {
+// };
+
+const updateAbout = (text: string) => {
+  metaForm.value.aboutText = text;
+};
+
+const updateEnd = (text: string) => {
+  metaForm.value.endText = text;
+};
+
+// TODO: Submit Data
 const onSubmit = () => {
   console.log("Submitted");
   console.log(metaForm);
 };
 
 const onCancel = () => {
-  // tab.value = Tab.Edit;
-  console.log(JSON.stringify(metaForm));
-};
-
-const populateData = () => {
-  // form
-  metaForm.projectName = props.graph.name;
-  metaForm.displayName = props.graph.displayName;
-  metaForm.slug = props.graph.slugName;
-  metaForm.streamAssignment = "one_graph_one_stream";
-  metaForm.introText = props.graph.startText;
-  metaForm.aboutText = props.graph.aboutText;
-  metaForm.endText = props.graph.endText;
-
-  // original data
-  metaFormOriginal.projectName = props.graph.name;
-  metaFormOriginal.displayName = props.graph.displayName;
-  metaFormOriginal.slug = props.graph.slugName;
-  metaFormOriginal.streamAssignment = "one_graph_one_stream";
-  metaFormOriginal.introText = props.graph.startText;
-  metaFormOriginal.aboutText = props.graph.aboutText;
-  metaFormOriginal.endText = props.graph.endText;
+  tab.value = Tab.Edit;
 };
 
 populateData();
@@ -169,18 +171,30 @@ populateData();
 
       <ElCol :span="24">
         <ElFormItem label="Intro Text">
-          <Wysiwyg :text="metaForm.introText" />
+          <ElInput
+            v-model="metaForm.startText"
+            placeholder="Start Text"
+            show-word-limit
+            type="text"
+            maxlength="60"
+          />
         </ElFormItem>
       </ElCol>
 
       <ElCol :span="24">
         <ElFormItem label="About Text">
-          <Wysiwyg :text="metaForm.aboutText" />
+          <Wysiwyg
+            :text="metaForm.aboutText"
+            @update-text="updateAbout($event)"
+          />
         </ElFormItem>
       </ElCol>
       <ElCol :span="24">
         <ElFormItem label="End Text">
-          <Wysiwyg :text="metaForm.endText" />
+          <Wysiwyg
+            :text="metaForm.endText"
+            @update-text="updateEnd($event)"
+          />
         </ElFormItem>
       </ElCol>
 
@@ -193,7 +207,7 @@ populateData();
           Save
         </ElButton>
         <ElButton @click="onCancel">
-          Cancel
+          Discard
         </ElButton>
       </ElFormItem>
     </ElForm>
@@ -213,7 +227,6 @@ populateData();
   overflow-y: scroll;
   padding: $spacingM;
   padding-top: $spacingM;
-  // background-color: red;
 
   .el-form {
     max-width: 740px;
