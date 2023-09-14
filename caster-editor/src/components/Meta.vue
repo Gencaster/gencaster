@@ -11,7 +11,7 @@ import {
   ElSwitch,
   ElMessage,
 } from "element-plus";
-import { ref, type Ref, watch } from "vue";
+import { ref, type Ref, watch, computed } from "vue";
 import "@toast-ui/editor/dist/toastui-editor.css"; // Editor's Style
 import Wysiwyg from "@/components/Wysiwyg.vue";
 import {
@@ -39,6 +39,17 @@ watch(error, (errorMsg) => {
 
 watch(data, (newData) => {
   formData.value = newData?.graph ?? {};
+  saveOriginalData();
+});
+
+const originalData: Ref<UpdateGraphInput> = ref({});
+
+const saveOriginalData = () => {
+  originalData.value = { ...formData.value };
+};
+
+const compareData = computed(() => {
+  return JSON.stringify(formData.value) === JSON.stringify(originalData.value);
 });
 
 const formData: Ref<UpdateGraphInput> = ref({});
@@ -77,6 +88,7 @@ const onSubmit = async () => {
   });
   if (error) {
     ElMessage.error(`Failed to update the meta-data: ${error.message}`);
+  } else {
   }
   mutationRuns.value = false;
   executeQuery();
@@ -146,19 +158,7 @@ const onSubmit = async () => {
         </ElFormItem>
       </ElCol>
 
-      <ElCol :span="24">
-        <ElFormItem
-          label="Listed publicly"
-          prop="publicVisible"
-        >
-          <ElSwitch
-            v-if="formData.publicVisible != undefined"
-            v-model="formData.publicVisible"
-          />
-        </ElFormItem>
-      </ElCol>
-
-      <ElCol :span="24">
+      <ElCol :span="12">
         <ElFormItem label="Intro Text">
           <ElInput
             v-model="formData.startText"
@@ -166,6 +166,18 @@ const onSubmit = async () => {
             show-word-limit
             type="text"
             maxlength="60"
+          />
+        </ElFormItem>
+      </ElCol>
+
+      <ElCol :span="12">
+        <ElFormItem
+          label="Listed publicly"
+          prop="publicVisible"
+        >
+          <ElSwitch
+            v-if="formData.publicVisible != undefined"
+            v-model="formData.publicVisible"
           />
         </ElFormItem>
       </ElCol>
@@ -196,11 +208,13 @@ const onSubmit = async () => {
       <ElFormItem class="save-buttons">
         <ElButton
           type="primary"
+          :disabled="compareData"
           @click="onSubmit"
         >
           Save
         </ElButton>
         <ElButton
+          :disabled="compareData"
           @click="
             () => {
               executeQuery();
