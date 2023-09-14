@@ -11,6 +11,7 @@ import uuid
 from dataclasses import asdict, dataclass, field
 from typing import AsyncGenerator, Awaitable, Callable, List, Optional, Union
 
+from channels.layers import get_channel_layer
 from channels_redis.core import RedisChannelLayer
 from strawberry.channels import GraphQLWSConsumer
 
@@ -70,30 +71,36 @@ class GenCasterChannel:
         pass
 
     @staticmethod
-    async def send_graph_update(layer: RedisChannelLayer, graph_uuid: uuid.UUID):
+    def _get_layer() -> RedisChannelLayer:
+        if layer := get_channel_layer():
+            return layer
+        raise Exception("Could not obtain redis channel layer")
+
+    @staticmethod
+    async def send_graph_update(graph_uuid: uuid.UUID):
         return await GenCasterChannel.send_message(
-            layer=layer,
+            layer=GenCasterChannel._get_layer(),
             message=GraphUpdateMessage(uuid=str(graph_uuid)),
         )
 
     @staticmethod
-    async def send_node_update(layer: RedisChannelLayer, node_uuid: uuid.UUID):
+    async def send_node_update(node_uuid: uuid.UUID):
         return await GenCasterChannel.send_message(
-            layer=layer, message=NodeUpdateMessage(uuid=str(node_uuid))
+            layer=GenCasterChannel._get_layer(),
+            message=NodeUpdateMessage(uuid=str(node_uuid)),
         )
 
     @staticmethod
-    async def send_log_update(
-        layer: RedisChannelLayer, stream_log_message: "StreamLogUpdateMessage"
-    ):
+    async def send_log_update(stream_log_message: "StreamLogUpdateMessage"):
         return await GenCasterChannel.send_message(
-            layer=layer, message=stream_log_message
+            layer=GenCasterChannel._get_layer(), message=stream_log_message
         )
 
     @staticmethod
-    async def send_streams_update(layer: RedisChannelLayer, stream_uuid: str):
+    async def send_streams_update(stream_uuid: str):
         return await GenCasterChannel.send_message(
-            layer=layer, message=StreamsUpdateMessage(uuid=str(stream_uuid))
+            layer=GenCasterChannel._get_layer(),
+            message=StreamsUpdateMessage(uuid=str(stream_uuid)),
         )
 
     @staticmethod

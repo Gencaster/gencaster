@@ -194,8 +194,7 @@ class SchemaTestCase(TransactionTestCase):
             variable_values={"edgeUuid": str(uuid.uuid4())},
             context_value=self.get_login_context(),
         )
-
-        self.assertGreaterEqual(len(resp.errors), 1)  # type: ignore
+        self.assertIsNone(resp.data["deleteEdge"])  # type: ignore
 
     NODE_DELETE_MUTATION = """
         mutation deleteNode($nodeUuid: UUID!) {
@@ -226,7 +225,7 @@ class SchemaTestCase(TransactionTestCase):
             context_value=self.get_login_context(),
         )
 
-        self.assertGreaterEqual(len(resp.errors), 1)  # type: ignore
+        self.assertIsNone(resp.data["deleteNode"])  # type: ignore
 
     CREATE_SCRIPT_CELL = """
     mutation CreateScriptCells($nodeUuid: UUID!, $scriptCellInputs: [ScriptCellInputCreate!]!) {

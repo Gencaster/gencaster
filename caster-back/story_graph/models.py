@@ -8,7 +8,6 @@ import logging
 import uuid
 
 from asgiref.sync import async_to_sync, sync_to_async
-from channels.layers import get_channel_layer
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.db.models import Q, signals
@@ -160,6 +159,20 @@ class Graph(models.Model):
         return self.name
 
 
+def update_graph_db_to_ws(graph_uuid: uuid.UUID):
+    # sorry for this atrocity - there seems to be race conditions with signals
+    # which makes updates out-dated, see
+    # https://docs.djangoproject.com/en/dev/topics/db/transactions/#performing-actions-after-commit
+    transaction.on_commit(
+        lambda: async_to_sync(GenCasterChannel.send_graph_update)(graph_uuid)
+    )
+
+
+@receiver(signals.post_save, sender=Graph, dispatch_uid="update_graph_ws")
+def update_graph_ws(sender, instance: Graph, **kwargs) -> None:
+    update_graph_db_to_ws(instance.uuid)
+
+
 class Node(models.Model):
     """
     A node.
@@ -271,6 +284,22 @@ class Node(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+
+def update_node_db_to_ws(node_uuid: uuid.UUID):
+    # sorry for this atrocity - there seems to be race conditions with signals
+    # which makes updates out-dated, see
+    # https://docs.djangoproject.com/en/dev/topics/db/transactions/#performing-actions-after-commit
+    transaction.on_commit(
+        lambda: async_to_sync(GenCasterChannel.send_node_update)(node_uuid)
+    )
+
+
+@receiver(signals.post_delete, sender=Node, dispatch_uid="delete_node_ws")
+@receiver(signals.post_save, sender=Node, dispatch_uid="update_node_ws")
+def update_node_ws(sender, instance: Node, **kwargs) -> None:
+    update_node_db_to_ws(instance.uuid)
+    update_graph_db_to_ws(instance.graph.uuid)
 
 
 class NodeDoorMissing(Exception):
@@ -401,30 +430,8 @@ class NodeDoor(models.Model):
 
 @receiver(signals.post_save, sender=NodeDoor, dispatch_uid="update_node_door_ws")
 def update_node_door_ws(sender, instance: NodeDoor, **kwargs) -> None:
-    channel_layer = get_channel_layer()
-    if channel_layer is None:
-        log.error(
-            "Failed to obtain a handle on the channel layer to distribute node_door updates"
-        )
-        return
-    # sorry for this atrocity - there seems to be race conditions with signals
-    # which makes updates out-dated, see
-    # https://docs.djangoproject.com/en/dev/topics/db/transactions/#performing-actions-after-commit
-    # it is possible that the instance is not available anymore after the commit, so
-    # so we store it here in memory
-    node_uuid = instance.node.uuid
-    graph_uuid = instance.node.graph.uuid
-    transaction.on_commit(
-        lambda: async_to_sync(GenCasterChannel.send_node_update)(
-            channel_layer, node_uuid
-        )
-    )
-    transaction.on_commit(
-        lambda: async_to_sync(GenCasterChannel.send_graph_update)(
-            channel_layer,
-            graph_uuid,
-        )
-    )
+    update_graph_db_to_ws(instance.node.graph.uuid)
+    update_node_db_to_ws(instance.node.uuid)
 
 
 @receiver(signals.post_delete, sender=NodeDoor, dispatch_uid="delete_node_door_ws")
@@ -544,6 +551,16 @@ class Edge(models.Model):
 
     def __str__(self) -> str:
         return f"{self.in_node_door} -> {self.out_node_door}"
+
+
+@receiver(signals.pre_delete, sender=Edge, dispatch_uid="delete_edge_ws")
+@receiver(signals.post_save, sender=Edge, dispatch_uid="update_edge_ws")
+def update_edge_ws(sender, instance: Edge, **kwargs) -> None:
+    if instance.out_node_door:
+        update_graph_db_to_ws(instance.out_node_door.node.graph.uuid)
+        update_node_db_to_ws(instance.out_node_door.node.uuid)
+    if instance.in_node_door:
+        update_node_db_to_ws(instance.in_node_door.node.uuid)
 
 
 class AudioCell(models.Model):
@@ -718,3 +735,9 @@ class ScriptCell(models.Model):
 
     def __str__(self) -> str:
         return f"{self.node}-{self.cell_order} ({self.cell_type})"
+
+
+@receiver(signals.post_delete, sender=ScriptCell, dispatch_uid="delete_script_cell")
+@receiver(signals.post_save, sender=ScriptCell, dispatch_uid="update_script_cell_ws")
+def update_script_cell_ws(sender, instance: ScriptCell, **kwargs) -> None:
+    update_node_db_to_ws(instance.node.uuid)
