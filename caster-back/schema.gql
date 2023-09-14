@@ -47,7 +47,7 @@ input AddGraphInput {
   publicVisible: Boolean
 
   """Manages the stream assignment for this graph"""
-  streamAssignmentPolicy: String
+  streamAssignmentPolicy: StreamAssignmentPolicy
 
   """
   Allows to switch to a different template in the frontend with different connection flows or UI
@@ -360,6 +360,14 @@ type Graph {
   """
   templateName: GraphDetailTemplate!
 
+  """Manages the stream assignment for this graph"""
+  streamAssignmentPolicy: StreamAssignmentPolicy!
+
+  """
+  If the graph is not public it will not be listed in the frontend, yet it is still accessible via URL
+  """
+  publicVisible: Boolean!
+
   """
   Text about the graph which will be displayed at the start of a stream - only if this is set
   """
@@ -492,6 +500,7 @@ type Mutation {
   """Deletes a given :class:`~story_graph.models.ScriptCell`."""
   deleteScriptCell(scriptCellUuid: UUID!): Void
   addGraph(graphInput: AddGraphInput!): Graph!
+  updateGraph(graphInput: UpdateGraphInput!, graphUuid: UUID!): Graph!
   addAudioFile(newAudioFile: AddAudioFile!): AudioFileUploadResponse!
   createUpdateStreamVariable(streamVariables: [StreamVariableInput!]!): [StreamVariable!]!
   createNodeDoor(nodeDoorInput: NodeDoorInputCreate!, nodeUuid: UUID!): NodeDoor!
@@ -758,6 +767,13 @@ type Stream {
   streamPoint: StreamPoint!
 }
 
+"""An enumeration."""
+enum StreamAssignmentPolicy {
+  ONE_GRAPH_ONE_STREAM
+  ONE_USER_ONE_STREAM
+  DEACTIVATE
+}
+
 type StreamInfo {
   stream: Stream!
   streamInstruction: StreamInstruction
@@ -928,6 +944,53 @@ input UUIDFilterLookup {
 input UpdateAudioFile {
   description: String
   name: String
+}
+
+"""
+A collection of :class:`~Node` and :class:`~Edge`.
+This can be considered a score as well as a program as it
+has an entry point as a :class:`~Node` and can jump to any
+other :class:`~Node`, also allowing for recursive loops/cycles.
+
+Each node can be considered a little program on its own which can consist
+of multiple :class:`~ScriptCell` which can be coded in a variety of
+languages which can control the frontend and the audio (by e.g. speaking
+on the stream) or setting a background music.
+
+The story graph is a core concept and can be edited with a native editor.
+"""
+input UpdateGraphInput {
+  """Name of the graph"""
+  name: String
+
+  """Will be used as a display name in the frontend"""
+  displayName: String
+
+  """
+  Text about the graph which will be displayed at the start of a stream - only if this is set
+  """
+  startText: String
+
+  """
+  Text about the graph which can be accessed during a stream - only if this is set
+  """
+  aboutText: String
+
+  """Text which will be displayed at the end of a stream"""
+  endText: String
+
+  """
+  If the graph is not public it will not be listed in the frontend, yet it is still accessible via URL
+  """
+  publicVisible: Boolean
+
+  """Manages the stream assignment for this graph"""
+  streamAssignmentPolicy: StreamAssignmentPolicy
+
+  """
+  Allows to switch to a different template in the frontend with different connection flows or UI
+  """
+  templateName: GraphDetailTemplate
 }
 
 scalar Upload

@@ -63,7 +63,7 @@ export type AddGraphInput = {
   /** Text about the graph which will be displayed at the start of a stream - only if this is set */
   startText?: InputMaybe<Scalars["String"]>;
   /** Manages the stream assignment for this graph */
-  streamAssignmentPolicy?: InputMaybe<Scalars["String"]>;
+  streamAssignmentPolicy?: InputMaybe<StreamAssignmentPolicy>;
   /** Allows to switch to a different template in the frontend with different connection flows or UI */
   templateName?: InputMaybe<GraphDetailTemplate>;
 };
@@ -362,10 +362,14 @@ export type Graph = {
   /** Name of the graph */
   name: Scalars["String"];
   nodes: Array<Node>;
+  /** If the graph is not public it will not be listed in the frontend, yet it is still accessible via URL */
+  publicVisible: Scalars["Boolean"];
   /** Will be used as a URL */
   slugName: Scalars["String"];
   /** Text about the graph which will be displayed at the start of a stream - only if this is set */
   startText: Scalars["String"];
+  /** Manages the stream assignment for this graph */
+  streamAssignmentPolicy: StreamAssignmentPolicy;
   /** Allows to switch to a different template in the frontend with different connection flows or UI */
   templateName: GraphDetailTemplate;
   uuid: Scalars["UUID"];
@@ -478,6 +482,7 @@ export type Mutation = {
   deleteScriptCell?: Maybe<Scalars["Void"]>;
   /** Update metadata of an :class:`~stream.models.AudioFile` via a UUID */
   updateAudioFile: AudioFile;
+  updateGraph: Graph;
   /**
    * Updates a given :class:`~story_graph.models.Node` which can be used
    * for renaming or moving it across the canvas.
@@ -554,6 +559,12 @@ export type MutationDeleteScriptCellArgs = {
 export type MutationUpdateAudioFileArgs = {
   updateAudioFile: UpdateAudioFile;
   uuid: Scalars["UUID"];
+};
+
+/** Mutations for Gencaster via GraphQL. */
+export type MutationUpdateGraphArgs = {
+  graphInput: UpdateGraphInput;
+  graphUuid: Scalars["UUID"];
 };
 
 /** Mutations for Gencaster via GraphQL. */
@@ -858,6 +869,13 @@ export type Stream = {
   uuid: Scalars["UUID"];
 };
 
+/** An enumeration. */
+export enum StreamAssignmentPolicy {
+  Deactivate = "DEACTIVATE",
+  OneGraphOneStream = "ONE_GRAPH_ONE_STREAM",
+  OneUserOneStream = "ONE_USER_ONE_STREAM",
+}
+
 export type StreamInfo = {
   stream: Stream;
   streamInstruction?: Maybe<StreamInstruction>;
@@ -1035,6 +1053,38 @@ export type UuidFilterLookup = {
 export type UpdateAudioFile = {
   description?: InputMaybe<Scalars["String"]>;
   name?: InputMaybe<Scalars["String"]>;
+};
+
+/**
+ * A collection of :class:`~Node` and :class:`~Edge`.
+ * This can be considered a score as well as a program as it
+ * has an entry point as a :class:`~Node` and can jump to any
+ * other :class:`~Node`, also allowing for recursive loops/cycles.
+ *
+ * Each node can be considered a little program on its own which can consist
+ * of multiple :class:`~ScriptCell` which can be coded in a variety of
+ * languages which can control the frontend and the audio (by e.g. speaking
+ * on the stream) or setting a background music.
+ *
+ * The story graph is a core concept and can be edited with a native editor.
+ */
+export type UpdateGraphInput = {
+  /** Text about the graph which can be accessed during a stream - only if this is set */
+  aboutText?: InputMaybe<Scalars["String"]>;
+  /** Will be used as a display name in the frontend */
+  displayName?: InputMaybe<Scalars["String"]>;
+  /** Text which will be displayed at the end of a stream */
+  endText?: InputMaybe<Scalars["String"]>;
+  /** Name of the graph */
+  name?: InputMaybe<Scalars["String"]>;
+  /** If the graph is not public it will not be listed in the frontend, yet it is still accessible via URL */
+  publicVisible?: InputMaybe<Scalars["Boolean"]>;
+  /** Text about the graph which will be displayed at the start of a stream - only if this is set */
+  startText?: InputMaybe<Scalars["String"]>;
+  /** Manages the stream assignment for this graph */
+  streamAssignmentPolicy?: InputMaybe<StreamAssignmentPolicy>;
+  /** Allows to switch to a different template in the frontend with different connection flows or UI */
+  templateName?: InputMaybe<GraphDetailTemplate>;
 };
 
 /**
@@ -1251,11 +1301,6 @@ export type GraphSubscription = {
         node: { uuid: any };
       }>;
     }>;
-    aboutText: string;
-    displayName: string;
-    endText: string;
-    startText: string;
-    templateName: GraphDetailTemplate;
   };
 };
 
@@ -1317,6 +1362,38 @@ export type NodeSubscription = {
   };
 };
 
+export type GraphMetaDataFragment = {
+  uuid: any;
+  templateName: GraphDetailTemplate;
+  startText: string;
+  slugName: string;
+  name: string;
+  endText: string;
+  displayName: string;
+  aboutText: string;
+  streamAssignmentPolicy: StreamAssignmentPolicy;
+  publicVisible: boolean;
+};
+
+export type GetGraphQueryVariables = Exact<{
+  graphUuid: Scalars["ID"];
+}>;
+
+export type GetGraphQuery = {
+  graph: {
+    uuid: any;
+    templateName: GraphDetailTemplate;
+    startText: string;
+    slugName: string;
+    name: string;
+    endText: string;
+    displayName: string;
+    aboutText: string;
+    streamAssignmentPolicy: StreamAssignmentPolicy;
+    publicVisible: boolean;
+  };
+};
+
 export type CreateGraphMutationVariables = Exact<{
   graphInput: AddGraphInput;
 }>;
@@ -1328,6 +1405,13 @@ export type CreateGraphMutation = {
     nodes: Array<{ name: string; uuid: any; isEntryNode: boolean }>;
   };
 };
+
+export type UpdateGraphMutationVariables = Exact<{
+  graphUuid: Scalars["UUID"];
+  graphUpdate: UpdateGraphInput;
+}>;
+
+export type UpdateGraphMutation = { updateGraph: { uuid: any } };
 
 export type StreamSubscriptionVariables = Exact<{
   graphUuid: Scalars["UUID"];
@@ -1679,6 +1763,20 @@ export const NodeDoorDetailFragmentDoc = gql`
     doorType
   }
 `;
+export const GraphMetaDataFragmentDoc = gql`
+  fragment GraphMetaData on Graph {
+    uuid
+    templateName
+    startText
+    slugName
+    name
+    endText
+    displayName
+    aboutText
+    streamAssignmentPolicy
+    publicVisible
+  }
+`;
 export const StreamInfoFragmentFragmentDoc = gql`
   fragment StreamInfoFragment on Stream {
     uuid
@@ -1887,11 +1985,6 @@ export const GraphDocument = gql`
       name
       slugName
       uuid
-      aboutText
-      displayName
-      endText
-      startText
-      templateName
       edges {
         uuid
         inNodeDoor {
@@ -1991,6 +2084,20 @@ export function useNodeSubscription<R = NodeSubscription>(
     handler,
   );
 }
+export const GetGraphDocument = gql`
+  query GetGraph($graphUuid: ID!) {
+    graph(pk: $graphUuid) {
+      ...GraphMetaData
+    }
+  }
+  ${GraphMetaDataFragmentDoc}
+`;
+
+export function useGetGraphQuery(
+  options: Omit<Urql.UseQueryArgs<never, GetGraphQueryVariables>, "query"> = {},
+) {
+  return Urql.useQuery<GetGraphQuery>({ query: GetGraphDocument, ...options });
+}
 export const CreateGraphDocument = gql`
   mutation CreateGraph($graphInput: AddGraphInput!) {
     addGraph(graphInput: $graphInput) {
@@ -2008,6 +2115,19 @@ export const CreateGraphDocument = gql`
 export function useCreateGraphMutation() {
   return Urql.useMutation<CreateGraphMutation, CreateGraphMutationVariables>(
     CreateGraphDocument,
+  );
+}
+export const UpdateGraphDocument = gql`
+  mutation UpdateGraph($graphUuid: UUID!, $graphUpdate: UpdateGraphInput!) {
+    updateGraph(graphInput: $graphUpdate, graphUuid: $graphUuid) {
+      uuid
+    }
+  }
+`;
+
+export function useUpdateGraphMutation() {
+  return Urql.useMutation<UpdateGraphMutation, UpdateGraphMutationVariables>(
+    UpdateGraphDocument,
   );
 }
 export const StreamDocument = gql`
