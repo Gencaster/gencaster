@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { type Ref, ref, computed } from "vue";
+import { type Ref, ref, computed, watch } from "vue";
 import {
   type NodeSubscription,
   type ScriptCellInputUpdate,
@@ -31,6 +31,12 @@ export const useInterfaceStore = defineStore("interface", () => {
   const vueFlowRef: Ref<CustomGraph | undefined> = ref(undefined);
 
   const tab: Ref<Tab> = ref(Tab.Edit);
+
+  watch(tab, (newValue, oldValue) => {
+    if (oldValue == Tab.Edit && newValue == Tab.Meta) {
+      showNodeEditor.value = false;
+    }
+  });
 
   // this acts as a clutch between our local changes and the
   // updates from the server.
