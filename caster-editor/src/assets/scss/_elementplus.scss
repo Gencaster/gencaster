@@ -142,6 +142,19 @@
   border: none;
 }
 
+.el-loading-mask {
+  // background-color: $white-transparent;
+  color: #{$black};
+}
+
+.el-loading-spinner .el-loading-text {
+  color: #{$black};
+}
+
+.el-loading-spinner .path {
+  stroke: #{$black};
+}
+
 /* OLD */
 
 .messages-editor {
