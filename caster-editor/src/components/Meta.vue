@@ -8,120 +8,88 @@ import {
   ElForm,
   ElFormItem,
   ElCol,
+  ElSwitch,
+  ElMessage,
 } from "element-plus";
-import { ref, computed } from "vue";
-import type { GraphSubscription } from "@/graphql";
+import { ref, type Ref, watch } from "vue";
 import "@toast-ui/editor/dist/toastui-editor.css"; // Editor's Style
-
 import Wysiwyg from "@/components/Wysiwyg.vue";
-import { useInterfaceStore, Tab } from "@/stores/InterfaceStore";
+import {
+  useGetGraphQuery,
+  useUpdateGraphMutation,
+  StreamAssignmentPolicy,
+  type UpdateGraphInput,
+} from "@/graphql";
 
-import { storeToRefs } from "pinia";
-const { tab } = storeToRefs(useInterfaceStore());
-
-// props
 const props = defineProps<{
-  graph: GraphSubscription["graph"];
+  graphUuid: string;
 }>();
 
-// TODO: Import from graphql
-const streamAssignmentOptions = [
-  {
-    value: "one_graph_one_stream",
-    label: "Each graph has only one stream",
-  },
-  {
-    value: "one_user_one_stream",
-    label: "Each user gets its own stream",
-  },
-  {
-    value: "deactivate",
-    label: "No stream assignment",
-  },
-];
+const { executeQuery } = useGetGraphQuery({
+  variables: { graphUuid: props.graphUuid },
+});
+const updateGraphMutation = useUpdateGraphMutation();
+const { data, error, fetching } = executeQuery();
 
-const metaForm = ref({
-  projectName: "",
-  displayName: "",
-  slug: "",
-  streamAssignment: "",
-  startText: "",
-  aboutText: "",
-  endText: "",
+watch(error, (errorMsg) => {
+  ElMessage.error(
+    `Could not obtain meta data of graph ${props.graphUuid}: ${errorMsg?.message}`,
+  );
 });
 
-// cloning needs plugin, so just being redundant for now
-const metaFormOriginal = ref({
-  projectName: "",
-  displayName: "",
-  slug: "",
-  streamAssignment: "",
-  startText: "",
-  aboutText: "",
-  endText: "",
+watch(data, (newData) => {
+  formData.value = newData?.graph ?? {};
 });
 
-const saveButtonActive = computed(() => {
-  if (
-    JSON.stringify(metaForm.value) !== JSON.stringify(metaFormOriginal.value)
-  ) {
-    return true;
-  } else {
-    return false;
+const formData: Ref<UpdateGraphInput> = ref({});
+
+const mutationRuns: Ref<boolean> = ref<boolean>(false);
+
+const onSubmit = async () => {
+  mutationRuns.value = true;
+  // formData also contains data that does not belong to the input such as UUID or slugName
+  // while ts/js does not have a problem with that, graphql has and throws an error, therefore we need
+  // to provide/copy an explicit mapping here
+  // see https://stackoverflow.com/questions/75299141/how-to-type-safely-remove-a-property-from-a-typescript-type
+  // and https://stackoverflow.com/questions/43909566/get-keys-of-a-typescript-interface-as-array-of-strings
+  const {
+    name,
+    displayName,
+    startText,
+    aboutText,
+    endText,
+    publicVisible,
+    streamAssignmentPolicy,
+    templateName,
+  } = formData.value;
+  const { error } = await updateGraphMutation.executeMutation({
+    graphUuid: props.graphUuid,
+    graphUpdate: {
+      name,
+      displayName,
+      startText,
+      aboutText,
+      endText,
+      publicVisible,
+      streamAssignmentPolicy,
+      templateName,
+    },
+  });
+  if (error) {
+    ElMessage.error(`Failed to update the meta-data: ${error.message}`);
   }
-});
-
-const populateData = () => {
-  // form
-  metaForm.value.projectName = props.graph.name;
-  metaForm.value.displayName = props.graph.displayName;
-  metaForm.value.slug = props.graph.slugName;
-  //TODO: streamAssignment
-  metaForm.value.streamAssignment = "missing graph ql";
-  metaForm.value.startText = props.graph.startText;
-  metaForm.value.aboutText = props.graph.aboutText;
-  metaForm.value.endText = props.graph.endText;
-
-  // original data
-  metaFormOriginal.value.projectName = props.graph.name;
-  metaFormOriginal.value.displayName = props.graph.displayName;
-  metaFormOriginal.value.slug = props.graph.slugName;
-  metaFormOriginal.value.streamAssignment = "missing graph ql";
-  metaFormOriginal.value.startText = props.graph.startText;
-  metaFormOriginal.value.aboutText = props.graph.aboutText;
-  metaFormOriginal.value.endText = props.graph.endText;
+  mutationRuns.value = false;
+  executeQuery();
 };
-
-// TODO: remove redundancy by abstracting
-// somehow I couldn't figure out how to pass the reference to the function
-// const updatedMarkdown = (text: string, reference: Ref) => {
-// };
-
-const updateAbout = (text: string) => {
-  metaForm.value.aboutText = text;
-};
-
-const updateEnd = (text: string) => {
-  metaForm.value.endText = text;
-};
-
-// TODO: Submit Data
-const onSubmit = () => {
-  console.log("Submitted");
-  console.log(metaForm);
-};
-
-const onCancel = () => {
-  tab.value = Tab.Edit;
-};
-
-populateData();
 </script>
 
 <template>
-  <div class="meta-wrapper">
+  <div
+    v-loading="fetching || mutationRuns"
+    class="meta-wrapper"
+  >
     <ElForm
-      :model="metaForm"
+      :model="formData"
       label-width="150px"
       label-position="top"
       inline
@@ -129,7 +97,7 @@ populateData();
       <ElCol :span="12">
         <ElFormItem label="Project name">
           <ElInput
-            v-model="metaForm.projectName"
+            v-model="formData.name"
             placeholder="Project Name"
           />
         </ElFormItem>
@@ -138,7 +106,7 @@ populateData();
       <ElCol :span="12">
         <ElFormItem label="Display name">
           <ElInput
-            v-model="metaForm.displayName"
+            v-model="formData.displayName"
             placeholder="Display Name"
           />
         </ElFormItem>
@@ -147,9 +115,16 @@ populateData();
       <ElCol :span="12">
         <ElFormItem label="Slug">
           <ElInput
-            v-model="metaForm.slug"
+            :model-value="data?.graph.slugName"
             placeholder="Slug"
-            disabled
+            readonly
+            @focus="
+              () => {
+                ElMessage.info(
+                  'Please use backend admin interface to edit the slug value'
+                );
+              }
+            "
           />
         </ElFormItem>
       </ElCol>
@@ -157,23 +132,36 @@ populateData();
       <ElCol :span="12">
         <ElFormItem label="Stream assignment">
           <ElSelect
-            v-model="metaForm.streamAssignment"
-            placeholder="Select"
+            v-if="formData.streamAssignmentPolicy != undefined"
+            v-model="formData.streamAssignmentPolicy"
+            :placeholder="StreamAssignmentPolicy.OneUserOneStream"
           >
             <ElOption
-              v-for="item in streamAssignmentOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="(policyValue, policyName) in StreamAssignmentPolicy"
+              :key="policyValue"
+              :label="policyName"
+              :value="policyValue"
             />
           </ElSelect>
         </ElFormItem>
       </ElCol>
 
       <ElCol :span="24">
+        <ElFormItem
+          label="Listed publicly"
+          prop="publicVisible"
+        >
+          <ElSwitch
+            v-if="formData.publicVisible != undefined"
+            v-model="formData.publicVisible"
+          />
+        </ElFormItem>
+      </ElCol>
+
+      <ElCol :span="24">
         <ElFormItem label="Intro Text">
           <ElInput
-            v-model="metaForm.startText"
+            v-model="formData.startText"
             placeholder="Start Text"
             show-word-limit
             type="text"
@@ -185,16 +173,22 @@ populateData();
       <ElCol :span="24">
         <ElFormItem label="About Text">
           <Wysiwyg
-            :text="metaForm.aboutText"
-            @update-text="updateAbout($event)"
+            v-if="formData.aboutText != undefined"
+            :text="formData.aboutText"
+            @update-text="
+              (text) => {
+                formData.aboutText = text;
+              }
+            "
           />
         </ElFormItem>
       </ElCol>
       <ElCol :span="24">
         <ElFormItem label="End Text">
           <Wysiwyg
-            :text="metaForm.endText"
-            @update-text="updateEnd($event)"
+            v-if="formData.endText != undefined"
+            :text="formData.endText"
+            @update-text="(text: any) => {formData.endText = text}"
           />
         </ElFormItem>
       </ElCol>
@@ -202,13 +196,18 @@ populateData();
       <ElFormItem class="save-buttons">
         <ElButton
           type="primary"
-          :disabled="!saveButtonActive"
           @click="onSubmit"
         >
           Save
         </ElButton>
-        <ElButton @click="onCancel">
-          Discard
+        <ElButton
+          @click="
+            () => {
+              executeQuery();
+            }
+          "
+        >
+          Discard changes
         </ElButton>
       </ElFormItem>
     </ElForm>

@@ -43,7 +43,7 @@ watch(graphSubscription.error, () => {
 
     <Meta
       v-if="tab === Tab.Meta"
-      :graph="graphSubscription.data.value.graph"
+      :graph-uuid="graphSubscription.data.value.graph.uuid"
     />
 
     <Transition name="slide">
