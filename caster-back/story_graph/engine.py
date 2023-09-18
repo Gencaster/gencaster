@@ -420,7 +420,7 @@ class Engine:
 
             # search for next node
             try:
-                await self.get_next_node()
+                self._current_node = await self.get_next_node()
             except GraphDeadEnd:
                 log.info(f"Ran into a dead end on {self.graph} on {self._current_node}")
                 return
