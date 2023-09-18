@@ -388,13 +388,22 @@ class Engine:
             ).afirst()
         # else return default out
 
-        if exit_door is None:
-            raise GraphDeadEnd()
-
-        try:
-            return (await exit_door.out_edges.order_by("?").select_related("in_node_door__node").afirst()).in_node_door.node  # type: ignore
-        except AttributeError:
-            raise GraphDeadEnd()
+        while True:
+            if exit_door is None:
+                raise GraphDeadEnd()
+            try:
+                return (await exit_door.out_edges.order_by("?").select_related("in_node_door__node").afirst()).in_node_door.node  # type: ignore
+            except AttributeError:
+                if exit_door.is_default:
+                    raise GraphDeadEnd()
+            log.info(
+                f"Ran into a dead end on non-default door {exit_door.name} on node {self._current_node.name} - fallback to default door"
+            )
+            exit_door = await NodeDoor.objects.filter(
+                node=self._current_node,
+                door_type=NodeDoor.DoorType.OUTPUT,
+                is_default=True,
+            ).afirst()
 
     async def start(
         self, max_steps: int = 1000
