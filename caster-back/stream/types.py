@@ -12,6 +12,8 @@ from strawberry_django.filters import FilterLookup
 
 from . import frontend_types, models
 
+LogLevelType = strawberry.enum(models.StreamLog.LogLevel)  # type: ignore
+
 
 @strawberry.django.filters.filter(models.StreamPoint, lookups=True)
 class StreamPointFilter:
@@ -152,6 +154,6 @@ class StreamLog:
     stream_point: StreamPoint
     stream: Stream
     origin: auto
-    level: auto
+    level: LogLevelType
     message: auto
     name: auto

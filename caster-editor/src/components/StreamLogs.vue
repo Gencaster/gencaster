@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import type { StreamLogsSubscription } from "@/graphql";
-import { useStreamLogsSubscription, type StreamLog } from "@/graphql";
-import { ElTable, ElTableColumn } from "element-plus";
+import { useStreamLogsSubscription, type StreamLog, LogLevel } from "@/graphql";
+import { Scope } from "@sentry/vue";
+import { ElTable, ElTableColumn, ElTag } from "element-plus";
 import { ref, toRef, type Ref } from "vue";
 
 const props = defineProps<{
@@ -24,6 +25,35 @@ const { fetching } = useStreamLogsSubscription(
     logs.value.push(newInfo.streamLogs);
   },
 );
+
+const convertLogLevelType = (
+  level: string,
+): "success" | "info" | "warning" | "danger" | "" => {
+  switch (level) {
+    case LogLevel.Critical: {
+      return "danger";
+    }
+    case LogLevel.Error: {
+      return "danger";
+    }
+    case LogLevel.Warning: {
+      return "warning";
+    }
+    case LogLevel.Info: {
+      return "success";
+    }
+    case LogLevel.Debug: {
+      return "info";
+    }
+    default: {
+      return "";
+    }
+  }
+};
+
+const formatDate = (date: string): string => {
+  return new Date(date).toLocaleString("sv-SE");
+};
 </script>
 
 <template>
@@ -38,13 +68,23 @@ const { fetching } = useStreamLogsSubscription(
       <ElTableColumn
         prop="createdDate"
         label="Time"
-        width="300"
-      />
+        width="170"
+      >
+        <template #default="scope">
+          {{ formatDate(scope.row.createdDate) }}
+        </template>
+      </ElTableColumn>
       <ElTableColumn
         prop="level"
         label="Level"
         width="75"
-      />
+      >
+        <template #default="scope">
+          <ElTag :type="convertLogLevelType(scope.row.level)">
+            {{ scope.row.level }}
+          </ElTag>
+        </template>
+      </ElTableColumn>
       <ElTableColumn
         prop="message"
         label="Message"
