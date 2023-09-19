@@ -144,7 +144,9 @@ RUN git clone --depth 1 --branch "v0.11.8" https://github.com/meetecho/janus-gat
     make configs && \
     rm -rf /root/janus-gateway
 
-RUN apk add parallel
+# moreutils contains sponge which is needed for this
+# https://stackoverflow.com/a/74551579/3475778
+RUN apk add parallel moreutils
 
 # ------------------  STATIC HTML FILES
 # are served via a python http server - only for debugging

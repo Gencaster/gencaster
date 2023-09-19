@@ -214,7 +214,7 @@ media: {
 	ipv6 = true
 	ipv6_linklocal = true
 	#min_nack_queue = 500
-	#rtp_port_range = "20000-40000"
+	rtp_port_range = "10000-10200"
 	#dtls_mtu = 1200
 	#no_media_timer = 1
 	#slowlink_threshold = 4
@@ -268,8 +268,8 @@ media: {
 # be used for gathering candidates, and enable or disable the
 # internal libnice debugging, if needed.
 nat: {
-	# stun_server = "stun.l.google.com"
-	# stun_port = 19302
+	stun_server = "stun.l.google.com"
+	stun_port = 19302
 	# nice_debug = false
 	full_trickle = false
 	#ice_nomination = "regular"
@@ -300,7 +300,7 @@ nat: {
 	# Multiple public IP addresses can be specified as a comma separated list
 	# if the Janus is deployed in a DMZ between two 1-1 NAT for internal and
 	# external users.
-	nat_1_1_mapping = "195.201.163.94"
+	nat_1_1_mapping = "$JANUS_PUBLIC_IP"
 	#keep_private_host = true
 
 	# You can configure a TURN server in two different ways: specifying a
