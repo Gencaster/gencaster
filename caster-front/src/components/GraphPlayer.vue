@@ -265,31 +265,33 @@ const processAction = async (button: Button | Checkbox) => {
   }
 };
 
-enum ElButtonType {
-  Danger = "danger",
-  Default = "default",
-  Info = "info",
-  Primary = "primary",
-  Success = "success",
-  Warning = "warning",
-}
 // helper function which maps graphql ButtonType enum to ElButtonType enum
-const convertButtonType = (b: ButtonType): ElButtonType => {
+const convertButtonType = (
+  b: ButtonType,
+):
+  | ""
+  | "default"
+  | "danger"
+  | "info"
+  | "primary"
+  | "success"
+  | "warning"
+  | "text" => {
   switch (b) {
     case ButtonType.Danger:
-      return ElButtonType.Danger;
+      return "danger";
     case ButtonType.Default:
-      return ElButtonType.Default;
+      return "default";
     case ButtonType.Info:
-      return ElButtonType.Info;
+      return "info";
     case ButtonType.Primary:
-      return ElButtonType.Primary;
+      return "primary";
     case ButtonType.Success:
-      return ElButtonType.Success;
+      return "success";
     case ButtonType.Warning:
-      return ElButtonType.Warning;
+      return "warning";
     default:
-      return ElButtonType.Default;
+      return "default";
   }
 };
 
