@@ -1,21 +1,11 @@
 Deployment
 ==========
 
-The only supported way to deploy Gencaster is by using Docker.
-This allows for easier development but also introduces some challenges regarding WebRTC communication and CPU realtime priority.
-
 Docker
 ------
 
-As WebRTC relies on a peer-to-peer connection it is necessary to run the streaming container :ref:`caster-sound` in ``host`` mode as otherwise the connection can not be initiated because of a lack of proper IP propagation because otherwise the Docker network acts as a NAT.
-For more information regarding this topic refer to the `Mozilla Documentation <https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Protocols>`_.
-
-.. important::
-
-    ``host`` mode uses ports on the host machine directly rather than forwarding them from the Docker NAT.
-    The result is: **it is only possible to run ONE instance of Gencaster on a server**.
-    Also all necessary ports need to be free on the host.
-
+As the setup of the streaming stack is delicate the only supported way of deployment is via `docker compose` which automates most of the setup procedure.
+Yet it is still necessary to provide some config files which are described here.
 
 ``.secrets.env``
 ^^^^^^^^^^^^^^^^
