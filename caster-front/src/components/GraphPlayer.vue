@@ -168,7 +168,7 @@ watch(gpsError, () => {
       `Error at obtaining GPS handle: ${gpsError.value}`,
       gpsError.value,
     );
-    if (gpsError.value.PERMISSION_DENIED) ElMessage.error("Plesae allow GPS.");
+    if (gpsError.value.PERMISSION_DENIED) ElMessage.error("Please allow GPS.");
     else if (
       gpsError.value.POSITION_UNAVAILABLE ||
       gpsError.value.PERMISSION_DENIED
