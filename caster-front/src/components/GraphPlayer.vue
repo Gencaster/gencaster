@@ -129,6 +129,8 @@ const { error, stale } = useStreamSubscription(
       streamInfo.value = newInfo.streamInfo;
     } else if (newInfo.streamInfo.__typename === "NoStreamAvailable") {
       streamError.value = newInfo.streamInfo;
+    } else if (newInfo.streamInfo.__typename === "GraphDeadEnd") {
+      playerState.value = PlayerState.End;
     }
     return newInfo;
   },

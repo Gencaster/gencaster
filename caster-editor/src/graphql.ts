@@ -375,6 +375,11 @@ export type Graph = {
   uuid: Scalars["UUID"];
 };
 
+/** Matches :class:`gencaster.story_graph.engine.GraphDeadEnd`. */
+export type GraphDeadEnd = {
+  error: Scalars["String"];
+};
+
 /** An enumeration. */
 export enum GraphDetailTemplate {
   Default = "DEFAULT",
@@ -881,7 +886,11 @@ export type StreamInfo = {
   streamInstruction?: Maybe<StreamInstruction>;
 };
 
-export type StreamInfoResponse = Dialog | NoStreamAvailable | StreamInfo;
+export type StreamInfoResponse =
+  | Dialog
+  | GraphDeadEnd
+  | NoStreamAvailable
+  | StreamInfo;
 
 /**
  * Instruction for a :class:`StreamPoint`, most likely to be
@@ -1447,6 +1456,7 @@ export type StreamSubscription = {
           value: string;
         }>;
       }
+    | { __typename: "GraphDeadEnd"; error: string }
     | { __typename: "NoStreamAvailable"; error: string }
     | {
         __typename: "StreamInfo";
@@ -2181,6 +2191,10 @@ export const StreamDocument = gql`
           value
         }
         title
+      }
+      ... on GraphDeadEnd {
+        __typename
+        error
       }
     }
   }

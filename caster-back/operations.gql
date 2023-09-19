@@ -299,6 +299,10 @@ subscription stream($graphUuid: UUID!) {
       }
       title
     }
+    ... on GraphDeadEnd {
+      __typename
+      error
+    }
   }
 }
 

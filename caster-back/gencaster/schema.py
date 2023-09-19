@@ -63,6 +63,7 @@ from stream.types import (
     AddAudioFile,
     AudioFile,
     AudioFileUploadResponse,
+    GraphDeadEnd,
     InvalidAudioFile,
     NoStreamAvailable,
     Stream,
@@ -627,6 +628,7 @@ class Subscription:
                         stream=stream,  # type: ignore
                         stream_instruction=instruction,  # type: ignore
                     )
+            yield GraphDeadEnd()
 
     @strawberry.subscription
     async def stream_logs(self, info: Info, stream_uuid: Optional[uuid.UUID] = None, stream_point_uuid: Optional[uuid.UUID] = None) -> AsyncGenerator[StreamLog, None]:  # type: ignore

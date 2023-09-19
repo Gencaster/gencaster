@@ -384,6 +384,11 @@ type Graph {
   edges: [Edge!]!
 }
 
+"""Matches :class:`gencaster.story_graph.engine.GraphDeadEnd`."""
+type GraphDeadEnd {
+  error: String!
+}
+
 """An enumeration."""
 enum GraphDetailTemplate {
   DEFAULT
@@ -779,7 +784,7 @@ type StreamInfo {
   streamInstruction: StreamInstruction
 }
 
-union StreamInfoResponse = StreamInfo | Dialog | NoStreamAvailable
+union StreamInfoResponse = StreamInfo | Dialog | NoStreamAvailable | GraphDeadEnd
 
 """
 Instruction for a :class:`StreamPoint`, most likely to be
