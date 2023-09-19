@@ -127,6 +127,8 @@ const { error, stale } = useStreamSubscription(
       });
     } else if (newInfo.streamInfo.__typename === "StreamInfo") {
       streamInfo.value = newInfo.streamInfo;
+    } else if (newInfo.streamInfo.__typename === "NoStreamAvailable") {
+      streamError.value = newInfo.streamInfo;
     }
     return newInfo;
   },
