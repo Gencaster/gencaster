@@ -311,6 +311,10 @@ type Graph {
   edges: [Edge!]!
 }
 
+type GraphDeadEnd {
+  error: String!
+}
+
 enum GraphDetailTemplate {
   DEFAULT
 }

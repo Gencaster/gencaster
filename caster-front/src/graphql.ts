@@ -297,6 +297,10 @@ export type Graph = {
   uuid: Scalars["UUID"];
 };
 
+export type GraphDeadEnd = {
+  error: Scalars["String"];
+};
+
 export enum GraphDetailTemplate {
   Default = "DEFAULT",
 }
