@@ -311,16 +311,36 @@ document.write(`
 <span class="sd">    The engine runs in an async manner so it is possible to do awaits without</span>
 <span class="sd">    blocking the server, which means execution is halted until a specific</span>
 <span class="sd">    condition is met.</span>
+
+<span class="sd">    :param graph: The graph to execute</span>
+<span class="sd">    :param stream: The stream where the graph should be executed on</span>
+<span class="sd">    :param raise_exceptions: Decides if an exception within e.g. a Python script cell</span>
+<span class="sd">        can bring down the execution or if it ignores it but logs it.</span>
+<span class="sd">        Defaults to False so an invalid Python script cell does not stop the whole graph.</span>
+<span class="sd">    :param run_cleanup_procedure: If ``True`` it executes ``CmdPeriod.run`` on the SuperCollider</span>
+<span class="sd">        server in order to clear all running sounds, patterns and any left running tasks,</span>
+<span class="sd">        creating a clean environment.</span>
+<span class="sd">        The default is ``None`` which will derive the necessary action based</span>
+<span class="sd">        if there are already users on the stream (in which case no reset will be executed).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Engine.__init__"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.engine.Engine.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">stream</span><span class="p">:</span> <span class="n">Stream</span><span class="p">,</span> <span class="n">raise_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span><span class="p">,</span>
+        <span class="n">stream</span><span class="p">:</span> <span class="n">Stream</span><span class="p">,</span>
+        <span class="n">raise_exceptions</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">run_cleanup_procedure</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span> <span class="o">=</span> <span class="n">graph</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span><span class="p">:</span> <span class="n">Node</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">blocking_time</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">3</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">raise_exceptions</span> <span class="o">=</span> <span class="n">raise_exceptions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_cleanup_procedure</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="k">if</span> <span class="n">run_cleanup_procedure</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_cleanup_procedure</span> <span class="o">=</span> <span class="n">run_cleanup_procedure</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_cleanup_procedure</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">num_listeners</span> <span class="o">==</span> <span class="mi">0</span>
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Started engine for graph </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Engine.get_stream_variables"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.engine.Engine.get_stream_variables">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">get_stream_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
@@ -664,6 +684,18 @@ document.write(`
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">GraphDeadEnd</span><span class="p">()</span></div>
 
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">cleanup_sc_procedure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StreamInstruction</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Run cleanup procedure on graph&quot;</span><span class="p">)</span>
+        <span class="c1"># do not wait for the execution because the OSC receiver callback</span>
+        <span class="c1"># may b down because of CmdPeriod and it takes time to recover</span>
+        <span class="c1"># from CmdPeriod</span>
+        <span class="n">instruction</span> <span class="o">=</span> <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">stream_point</span><span class="o">.</span><span class="n">send_raw_instruction</span>
+        <span class="p">)(</span><span class="s2">&quot;0.01.wait;CmdPeriod.run;0.01.wait;&quot;</span><span class="p">)</span>
+        <span class="c1"># wait for the CmdPeriod to re-init the OSC receiver callback</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instruction</span>
+
 <div class="viewcode-block" id="Engine.start"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.engine.Engine.start">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">start</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">StreamInstruction</span><span class="p">,</span> <span class="n">Dialog</span><span class="p">,</span> <span class="n">GraphDeadEnd</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
@@ -678,6 +710,9 @@ document.write(`
 <span class="sd">            of 0.1 seconds is added between jumping nodes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">aget_entry_node</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_cleanup_procedure</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleanup_sc_procedure</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_steps</span><span class="p">):</span>
             <span class="k">async</span> <span class="k">for</span> <span class="n">instruction</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_node</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span><span class="p">):</span>

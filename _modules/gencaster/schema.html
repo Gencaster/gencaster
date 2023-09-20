@@ -815,7 +815,7 @@ document.write(`
         <span class="k">yield</span> <span class="n">graph</span>  <span class="c1"># type: ignore</span>
 
         <span class="k">async</span> <span class="k">for</span> <span class="n">graph_update</span> <span class="ow">in</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">receive_graph_updates</span><span class="p">(</span>
-            <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">ws</span><span class="p">,</span> <span class="n">graph_uuid</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;ws&quot;</span><span class="p">],</span> <span class="n">graph_uuid</span>
         <span class="p">):</span>
             <span class="k">yield</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">graph_update</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
 
@@ -832,7 +832,7 @@ document.write(`
         <span class="k">yield</span> <span class="n">node</span>  <span class="c1"># type: ignore</span>
 
         <span class="k">async</span> <span class="k">for</span> <span class="n">node_update</span> <span class="ow">in</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">receive_node_updates</span><span class="p">(</span>
-            <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">ws</span><span class="p">,</span> <span class="n">node_uuid</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;ws&quot;</span><span class="p">],</span> <span class="n">node_uuid</span>
         <span class="p">):</span>
             <span class="k">yield</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">node_update</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
 
@@ -851,15 +851,15 @@ document.write(`
 <span class="sd">        if a given stream is free or used.</span>
 <span class="sd">        Upon connection stop this will be decremented again.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">consumer</span><span class="p">:</span> <span class="n">GraphQLWSConsumerInjector</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">ws</span>
+        <span class="n">consumer</span><span class="p">:</span> <span class="n">GraphQLWSConsumerInjector</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;ws&quot;</span><span class="p">]</span>
 
-        <span class="n">graph</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">graph_uuid</span><span class="p">)</span><span class="o">.</span><span class="n">afirst</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;could not find graph!&quot;</span><span class="p">)</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">graph_uuid</span><span class="p">)</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">stream</span> <span class="o">=</span> <span class="k">await</span> <span class="n">stream_models</span><span class="o">.</span><span class="n">Stream</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget_free_stream</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attached to stream </span><span class="si">{</span><span class="n">stream</span><span class="o">.</span><span class="n">uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">NoStreamAvailableException</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No stream is available for graph </span><span class="si">{</span><span class="n">graph</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">NoStreamAvailable</span><span class="p">()</span>
             <span class="k">return</span>
 
@@ -878,15 +878,22 @@ document.write(`
                     <span class="k">await</span> <span class="n">cleanup</span><span class="p">()</span>
 
         <span class="k">with</span> <span class="n">db_logging</span><span class="o">.</span><span class="n">LogContext</span><span class="p">(</span><span class="n">db_logging</span><span class="o">.</span><span class="n">LogKeyEnum</span><span class="o">.</span><span class="n">STREAM</span><span class="p">,</span> <span class="n">stream</span><span class="p">):</span>
-            <span class="k">await</span> <span class="n">stream</span><span class="o">.</span><span class="n">increment_num_listeners</span><span class="p">()</span>
-
             <span class="n">engine</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">(</span>
                 <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
                 <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">,</span>
             <span class="p">)</span>
 
+            <span class="k">await</span> <span class="n">stream</span><span class="o">.</span><span class="n">increment_num_listeners</span><span class="p">()</span>
+
             <span class="n">consumer</span><span class="o">.</span><span class="n">disconnect_callback</span> <span class="o">=</span> <span class="n">cleanup</span>
             <span class="n">consumer</span><span class="o">.</span><span class="n">receive_callback</span> <span class="o">=</span> <span class="n">cleanup_on_stop</span>
+
+            <span class="c1"># send a first stream info response so the front-end has</span>
+            <span class="c1"># received information that streaming has/can be started,</span>
+            <span class="c1"># see https://github.com/Gencaster/gencaster/issues/483</span>
+            <span class="c1"># otherwise this can result in a dead end if we await</span>
+            <span class="c1"># a stream variable which is set from the frontend</span>
+            <span class="k">yield</span> <span class="n">StreamInfo</span><span class="p">(</span><span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">,</span> <span class="n">stream_instruction</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
 
             <span class="k">async</span> <span class="k">for</span> <span class="n">instruction</span> <span class="ow">in</span> <span class="n">engine</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">max_steps</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">10e4</span><span class="p">)):</span>
                 <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">instruction</span><span class="p">)</span> <span class="o">==</span> <span class="n">Dialog</span><span class="p">:</span>
@@ -909,7 +916,7 @@ document.write(`
             <span class="k">yield</span> <span class="n">stream_log</span>  <span class="c1"># type: ignore</span>
 
         <span class="k">async</span> <span class="k">for</span> <span class="n">log_update</span> <span class="ow">in</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">receive_stream_log_updates</span><span class="p">(</span>
-            <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">ws</span><span class="p">,</span>
+            <span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;ws&quot;</span><span class="p">],</span>
         <span class="p">):</span>
             <span class="k">if</span> <span class="n">stream_uuid</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">log_update</span><span class="o">.</span><span class="n">stream_uuid</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">stream_uuid</span><span class="p">):</span>
@@ -933,7 +940,7 @@ document.write(`
 
         <span class="k">yield</span> <span class="k">await</span> <span class="n">get_streams</span><span class="p">()</span>
 
-        <span class="k">async</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">receive_streams_updates</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">ws</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">receive_streams_updates</span><span class="p">(</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="s2">&quot;ws&quot;</span><span class="p">]):</span>
             <span class="k">yield</span> <span class="k">await</span> <span class="n">get_streams</span><span class="p">()</span></div>
 
 

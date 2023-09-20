@@ -450,6 +450,7 @@ document.write(`
     <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BACKEND_OSC_PORT&quot;</span><span class="p">,</span> <span class="mi">7000</span><span class="p">))</span>
 
     <span class="n">logging_level</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;BACKEND_OSC_LOG_LEVEL&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging_level</span><span class="p">)</span>
 
     <span class="n">server</span> <span class="o">=</span> <span class="n">OSCServer</span><span class="p">()</span>
     <span class="n">server</span><span class="o">.</span><span class="n">serve_blocking</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
