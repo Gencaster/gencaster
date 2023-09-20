@@ -266,7 +266,7 @@ class Stream(models.Model):
     It also allows us to trace past streams.
     """
 
-    objects = StreamManager()
+    objects: StreamManager = StreamManager()
 
     uuid = models.UUIDField(
         primary_key=True,
