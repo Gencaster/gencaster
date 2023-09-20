@@ -368,17 +368,24 @@ GenCasterServer {
 		environment[\oscBackendClient] = oscBackendClient;
 		environment[\this] = this;
 		this.loadSynthDefs;
-		beacon = Task({
-			inf.do({
+		beacon = SkipJack(
+			updateFunc: {
 				this.sendAck(
 					status: GenCasterStatus.beacon,
 					uuid: 0,
 					message: this.serverInfo,
 					address: "/beacon",
 				);
-				5.wait;
-			});
-		});
+			},
+			dt: 5.0,
+			name: "gencasterBeacon",
+			autostart: false,
+		);
+		// using SkipJack for the recover of our responder
+		// is too slow or a too heavy load, therefore we
+		// add a callback to the CmdPeriod request which
+		// resurrects the instruction receiver
+		CmdPeriod.add({this.instructionReceiver.value}.defer(0.01));
 	}
 
 	loadSynthDefs {
@@ -487,7 +494,8 @@ GenCasterServer {
 	}
 
 	instructionReceiver {
-		^OSCdef(\instructionReceiver, {|msg, time, addr, recvPort|
+		"Starting instruction receiver".postln;
+		^OSCFunc({|msg, time, addr, recvPort|
 			var uuid = msg[1];
 			var function = (msg[2] ? "{}").asString;
 			var manualFinish = msg[3] ? false;

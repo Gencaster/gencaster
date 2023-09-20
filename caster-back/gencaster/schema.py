@@ -610,12 +610,12 @@ class Subscription:
                     await cleanup()
 
         with db_logging.LogContext(db_logging.LogKeyEnum.STREAM, stream):
-            await stream.increment_num_listeners()
-
             engine = Engine(
                 graph=graph,
                 stream=stream,
             )
+
+            await stream.increment_num_listeners()
 
             consumer.disconnect_callback = cleanup
             consumer.receive_callback = cleanup_on_stop
