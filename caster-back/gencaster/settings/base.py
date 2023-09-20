@@ -36,8 +36,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "story_graph",
     "stream",
-    "strawberry.django",
-    "strawberry_django_plus",
+    "strawberry_django",
     "channels",
     "corsheaders",
 ]

@@ -38,25 +38,30 @@ watch(error, (errorMsg) => {
 });
 
 watch(data, (newData) => {
-  formData.value = newData?.graph ?? {};
+  formData.value = newData?.graph ?? undefined;
   saveOriginalData();
 });
 
-const originalData: Ref<UpdateGraphInput> = ref({});
+const originalData: Ref<UpdateGraphInput | undefined> = ref(undefined);
 
 const saveOriginalData = () => {
-  originalData.value = { ...formData.value };
+  if (formData.value) {
+    originalData.value = { ...formData.value };
+  }
 };
 
 const compareData = computed(() => {
   return JSON.stringify(formData.value) === JSON.stringify(originalData.value);
 });
 
-const formData: Ref<UpdateGraphInput> = ref({});
+const formData: Ref<UpdateGraphInput | undefined> = ref(undefined);
 
 const mutationRuns: Ref<boolean> = ref<boolean>(false);
 
 const onSubmit = async () => {
+  if (!formData.value) {
+    return;
+  }
   mutationRuns.value = true;
   // formData also contains data that does not belong to the input such as UUID or slugName
   // while ts/js does not have a problem with that, graphql has and throws an error, therefore we need
@@ -101,6 +106,7 @@ const onSubmit = async () => {
     class="meta-wrapper"
   >
     <ElForm
+      v-if="formData"
       :model="formData"
       label-width="150px"
       label-position="top"
@@ -189,7 +195,9 @@ const onSubmit = async () => {
             :text="formData.aboutText"
             @update-text="
               (text) => {
-                formData.aboutText = text;
+                if (formData) {
+                  formData.aboutText = text;
+                }
               }
             "
           />
@@ -200,7 +208,7 @@ const onSubmit = async () => {
           <Wysiwyg
             v-if="formData.endText != undefined"
             :text="formData.endText"
-            @update-text="(text: any) => {formData.endText = text}"
+            @update-text="(text: any) => {if(formData) {formData.endText = text}}"
           />
         </ElFormItem>
       </ElCol>
