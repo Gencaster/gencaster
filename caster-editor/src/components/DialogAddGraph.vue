@@ -29,7 +29,11 @@
 
 <script setup lang="ts">
 import { ref, type Ref } from "vue";
-import { useCreateGraphMutation } from "@/graphql";
+import {
+  useCreateGraphMutation,
+  StreamAssignmentPolicy,
+  GraphDetailTemplate,
+} from "@/graphql";
 
 const emit = defineEmits<{
   (e: "aborted"): void;
@@ -58,6 +62,8 @@ const createGraph = async () => {
         displayName: newGraphDialogName.value,
         slugName: slugify(newGraphDialogName.value),
         publicVisible: true,
+        streamAssignmentPolicy: StreamAssignmentPolicy.OneUserOneStream,
+        templateName: GraphDetailTemplate.Default,
       },
     },
   );
