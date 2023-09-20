@@ -331,6 +331,7 @@ document.write(`
     <span class="n">AddAudioFile</span><span class="p">,</span>
     <span class="n">AudioFile</span><span class="p">,</span>
     <span class="n">AudioFileUploadResponse</span><span class="p">,</span>
+    <span class="n">GraphDeadEnd</span><span class="p">,</span>
     <span class="n">InvalidAudioFile</span><span class="p">,</span>
     <span class="n">NoStreamAvailable</span><span class="p">,</span>
     <span class="n">Stream</span><span class="p">,</span>
@@ -894,7 +895,8 @@ document.write(`
                     <span class="k">yield</span> <span class="n">StreamInfo</span><span class="p">(</span>
                         <span class="n">stream</span><span class="o">=</span><span class="n">stream</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
                         <span class="n">stream_instruction</span><span class="o">=</span><span class="n">instruction</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-                    <span class="p">)</span></div>
+                    <span class="p">)</span>
+            <span class="k">yield</span> <span class="n">GraphDeadEnd</span><span class="p">()</span></div>
 
     <span class="nd">@strawberry</span><span class="o">.</span><span class="n">subscription</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">stream_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="n">stream_uuid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stream_point_uuid</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">StreamLog</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>  <span class="c1"># type: ignore</span>

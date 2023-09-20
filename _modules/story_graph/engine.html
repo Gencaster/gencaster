@@ -666,7 +666,7 @@ document.write(`
 
 <div class="viewcode-block" id="Engine.start"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.engine.Engine.start">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">start</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">max_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">StreamInstruction</span><span class="p">,</span> <span class="n">Dialog</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncGenerator</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">StreamInstruction</span><span class="p">,</span> <span class="n">Dialog</span><span class="p">,</span> <span class="n">GraphDeadEnd</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts the execution of the engine.</span>
 <span class="sd">        This method is an async generator which eithor yields a</span>
 <span class="sd">        :class:`~stream.models.StreamInstruction`</span>
