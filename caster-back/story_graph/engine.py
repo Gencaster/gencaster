@@ -43,16 +43,36 @@ class Engine:
     The engine runs in an async manner so it is possible to do awaits without
     blocking the server, which means execution is halted until a specific
     condition is met.
+
+    :param graph: The graph to execute
+    :param stream: The stream where the graph should be executed on
+    :param raise_exceptions: Decides if an exception within e.g. a Python script cell
+        can bring down the execution or if it ignores it but logs it.
+        Defaults to False so an invalid Python script cell does not stop the whole graph.
+    :param run_cleanup_procedure: If ``True`` it executes ``CmdPeriod.run`` on the SuperCollider
+        server in order to clear all running sounds, patterns and any left running tasks,
+        creating a clean environment.
+        The default is ``None`` which will derive the necessary action based
+        if there are already users on the stream (in which case no reset will be executed).
     """
 
     def __init__(
-        self, graph: Graph, stream: Stream, raise_exceptions: bool = False
+        self,
+        graph: Graph,
+        stream: Stream,
+        raise_exceptions: bool = False,
+        run_cleanup_procedure: Optional[bool] = None,
     ) -> None:
         self.graph: Graph = graph
         self.stream = stream
         self._current_node: Node
         self.blocking_time: int = 60 * 60 * 3
         self.raise_exceptions = raise_exceptions
+        self.run_cleanup_procedure: bool
+        if run_cleanup_procedure is not None:
+            self.run_cleanup_procedure = run_cleanup_procedure
+        else:
+            self.run_cleanup_procedure = self.stream.num_listeners == 0
         log.debug(f"Started engine for graph {self.graph.uuid}")
 
     async def get_stream_variables(self) -> Dict[str, str]:
@@ -396,6 +416,18 @@ class Engine:
         except AttributeError:
             raise GraphDeadEnd()
 
+    async def cleanup_sc_procedure(self) -> StreamInstruction:
+        log.debug("Run cleanup procedure on graph")
+        # do not wait for the execution because the OSC receiver callback
+        # may b down because of CmdPeriod and it takes time to recover
+        # from CmdPeriod
+        instruction = await sync_to_async(
+            self.stream.stream_point.send_raw_instruction
+        )("0.01.wait;CmdPeriod.run;0.01.wait;")
+        # wait for the CmdPeriod to re-init the OSC receiver callback
+        await asyncio.sleep(0.2)
+        return instruction
+
     async def start(
         self, max_steps: int = 1000
     ) -> AsyncGenerator[Union[StreamInstruction, Dialog, GraphDeadEnd], None]:
@@ -410,6 +442,9 @@ class Engine:
             of 0.1 seconds is added between jumping nodes.
         """
         self._current_node = await self.graph.aget_entry_node()
+
+        if self.run_cleanup_procedure:
+            await self.cleanup_sc_procedure()
 
         for _ in range(max_steps):
             async for instruction in self.execute_node(self._current_node):

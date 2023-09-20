@@ -554,7 +554,9 @@ vars['foo'] = 42"""
             "yield Dialog(title='Hello', content=[Text(text='Hello World')], buttons=[Button.ok()])"
         )
 
-        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine = Engine(
+            self.graph, self.stream, raise_exceptions=True, run_cleanup_procedure=False
+        )
         x = engine.start().__aiter__()
         dialog: Dialog = await asyncio.wait_for(x.__anext__(), 0.2)  # type: ignore
         with self.assertRaises(StopAsyncIteration):
@@ -573,7 +575,9 @@ vars['foo'] = 42"""
             None,
             cell_type=CellType.MARKDOWN,
         )
-        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine = Engine(
+            self.graph, self.stream, raise_exceptions=True, run_cleanup_procedure=False
+        )
         with mock.patch.object(engine, "wait_for_finished_instruction") as patch:
             x = engine.start().__aiter__()
             with self.assertRaises(StopAsyncIteration):
@@ -593,7 +597,9 @@ vars['foo'] = 42"""
             None,
             cell_type=CellType.SUPERCOLLIDER,
         )
-        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine = Engine(
+            self.graph, self.stream, raise_exceptions=True, run_cleanup_procedure=False
+        )
         with mock.patch.object(engine, "wait_for_finished_instruction") as patch:
             x = engine.start().__aiter__()
             with self.assertRaises(StopAsyncIteration):
@@ -612,7 +618,9 @@ vars['foo'] = 42"""
             cell_type=CellType.AUDIO,
             cell_kwargs={"audio_cell": audio_cell},
         )
-        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine = Engine(
+            self.graph, self.stream, raise_exceptions=True, run_cleanup_procedure=False
+        )
         with mock.patch.object(engine, "wait_for_finished_instruction") as patch:
             x = engine.start().__aiter__()
             with self.assertRaises(StopAsyncIteration):
@@ -630,7 +638,9 @@ vars['foo'] = 42"""
             cell_code="2+2",
             cell_type=CellType.SUPERCOLLIDER,
         )
-        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine = Engine(
+            self.graph, self.stream, raise_exceptions=True, run_cleanup_procedure=False
+        )
         instruction = StreamInstruction(
             stream_point=self.stream.stream_point,
             state=StreamInstruction.InstructionState.SENT,
@@ -659,7 +669,9 @@ vars['foo'] = 42"""
             cell_code="2+2",
             cell_type=CellType.SUPERCOLLIDER,
         )
-        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine = Engine(
+            self.graph, self.stream, raise_exceptions=True, run_cleanup_procedure=False
+        )
         instruction = StreamInstruction(
             stream_point=self.stream.stream_point,
             state=StreamInstruction.InstructionState.SENT,
@@ -684,7 +696,9 @@ vars['foo'] = 42"""
             cell_code="2+2",
             cell_type=CellType.SUPERCOLLIDER,
         )
-        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine = Engine(
+            self.graph, self.stream, raise_exceptions=True, run_cleanup_procedure=False
+        )
 
         with self.assertRaises(InvalidPythonCode):
             await engine._evaluate_python_code("2+")
@@ -701,7 +715,9 @@ vars['foo'] = 42"""
             None,
             cell_type=CellType.PYTHON,
         )
-        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine = Engine(
+            self.graph, self.stream, raise_exceptions=True, run_cleanup_procedure=False
+        )
         # start node
         node_a: Node = await Node.objects.afirst()  # type: ignore
         node_b = await Node.objects.acreate(
@@ -724,7 +740,9 @@ vars['foo'] = 42"""
             None,
             cell_type=CellType.PYTHON,
         )
-        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine = Engine(
+            self.graph, self.stream, raise_exceptions=True, run_cleanup_procedure=False
+        )
         # start node
         node_a: Node = await Node.objects.afirst()  # type: ignore
         node_b = await Node.objects.acreate(
@@ -763,7 +781,9 @@ vars['foo'] = 42"""
             None,
             cell_type=CellType.PYTHON,
         )
-        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine = Engine(
+            self.graph, self.stream, raise_exceptions=True, run_cleanup_procedure=False
+        )
         # start node
         node_a: Node = await Node.objects.afirst()  # type: ignore
         node_b = await Node.objects.acreate(
@@ -802,7 +822,9 @@ vars['foo'] = 42"""
             None,
             cell_type=CellType.PYTHON,
         )
-        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine = Engine(
+            self.graph, self.stream, raise_exceptions=True, run_cleanup_procedure=False
+        )
         # start node
         node_a: Node = await Node.objects.afirst()  # type: ignore
         node_b = await Node.objects.acreate(
@@ -847,7 +869,9 @@ vars['foo'] = 42"""
             cell_type=CellType.PYTHON,
         )
         start_node = await Node.objects.afirst()
-        engine = Engine(self.graph, self.stream, raise_exceptions=True)
+        engine = Engine(
+            self.graph, self.stream, raise_exceptions=True, run_cleanup_procedure=False
+        )
         engine._current_node = start_node  # type: ignore
 
         with self.assertRaises(GraphDeadEnd):

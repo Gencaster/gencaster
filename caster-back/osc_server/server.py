@@ -182,6 +182,7 @@ if __name__ == "__main__":  # pragma: no cover
     port = int(os.environ.get("BACKEND_OSC_PORT", 7000))
 
     logging_level = os.environ.get("BACKEND_OSC_LOG_LEVEL", "INFO")
+    log.setLevel(logging_level)
 
     server = OSCServer()
     server.serve_blocking(port=port)
