@@ -547,7 +547,7 @@ class Subscription:
         yield graph  # type: ignore
 
         async for graph_update in GenCasterChannel.receive_graph_updates(
-            info.context.ws, graph_uuid
+            info.context["ws"], graph_uuid
         ):
             yield await story_graph_models.Graph.objects.aget(uuid=graph_update.uuid)  # type: ignore
 
@@ -564,7 +564,7 @@ class Subscription:
         yield node  # type: ignore
 
         async for node_update in GenCasterChannel.receive_node_updates(
-            info.context.ws, node_uuid
+            info.context["ws"], node_uuid
         ):
             yield await story_graph_models.Node.objects.aget(uuid=node_update.uuid)  # type: ignore
 
@@ -583,15 +583,15 @@ class Subscription:
         if a given stream is free or used.
         Upon connection stop this will be decremented again.
         """
-        consumer: GraphQLWSConsumerInjector = info.context.ws
+        consumer: GraphQLWSConsumerInjector = info.context["ws"]
 
-        graph = await story_graph_models.Graph.objects.filter(uuid=graph_uuid).afirst()
-        if not graph:
-            raise Exception("could not find graph!")
+        graph = await story_graph_models.Graph.objects.aget(uuid=graph_uuid)
+
         try:
             stream = await stream_models.Stream.objects.aget_free_stream(graph)
             log.info(f"Attached to stream {stream.uuid}")
         except NoStreamAvailableException:
+            log.error(f"No stream is available for graph {graph.name}")
             yield NoStreamAvailable()
             return
 
@@ -641,7 +641,7 @@ class Subscription:
             yield stream_log  # type: ignore
 
         async for log_update in GenCasterChannel.receive_stream_log_updates(
-            info.context.ws,
+            info.context["ws"],
         ):
             if stream_uuid:
                 if str(log_update.stream_uuid) != str(stream_uuid):
@@ -665,7 +665,7 @@ class Subscription:
 
         yield await get_streams()
 
-        async for _ in GenCasterChannel.receive_streams_updates(info.context.ws):
+        async for _ in GenCasterChannel.receive_streams_updates(info.context["ws"]):
             yield await get_streams()
 
 
