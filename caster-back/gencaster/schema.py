@@ -620,6 +620,13 @@ class Subscription:
             consumer.disconnect_callback = cleanup
             consumer.receive_callback = cleanup_on_stop
 
+            # send a first stream info response so the front-end has
+            # received information that streaming has/can be started,
+            # see https://github.com/Gencaster/gencaster/issues/483
+            # otherwise this can result in a dead end if we await
+            # a stream variable which is set from the frontend
+            yield StreamInfo(stream=stream, stream_instruction=None)  # type: ignore
+
             async for instruction in engine.start(max_steps=int(10e4)):
                 if type(instruction) == Dialog:
                     yield instruction
