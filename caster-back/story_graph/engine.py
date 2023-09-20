@@ -398,7 +398,7 @@ class Engine:
 
     async def start(
         self, max_steps: int = 1000
-    ) -> AsyncGenerator[Union[StreamInstruction, Dialog], None]:
+    ) -> AsyncGenerator[Union[StreamInstruction, Dialog, GraphDeadEnd], None]:
         """Starts the execution of the engine.
         This method is an async generator which eithor yields a
         :class:`~stream.models.StreamInstruction`

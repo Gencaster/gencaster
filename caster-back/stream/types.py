@@ -99,6 +99,16 @@ class StreamInfo:
     stream_instruction: Optional[StreamInstruction]
 
 
+# part of story_graph.types but here due to circular import issue
+@strawberry.type
+class GraphDeadEnd:
+    """
+    Matches :class:`gencaster.story_graph.engine.GraphDeadEnd`.
+    """
+
+    error: str = "Graph ran into a dead end - finished"
+
+
 @strawberry.type
 class NoStreamAvailable:
     """
@@ -120,7 +130,8 @@ class InvalidAudioFile:
 # combined types - can't be declared as type annotation
 
 StreamInfoResponse = strawberry.union(
-    "StreamInfoResponse", [StreamInfo, frontend_types.Dialog, NoStreamAvailable]
+    "StreamInfoResponse",
+    [StreamInfo, frontend_types.Dialog, NoStreamAvailable, GraphDeadEnd],
 )
 
 AudioFileUploadResponse = strawberry.union(

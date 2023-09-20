@@ -297,6 +297,10 @@ export type Graph = {
   uuid: Scalars["UUID"];
 };
 
+export type GraphDeadEnd = {
+  error: Scalars["String"];
+};
+
 export enum GraphDetailTemplate {
   Default = "DEFAULT",
 }
@@ -763,7 +767,11 @@ export type StreamInfo = {
   streamInstruction?: Maybe<StreamInstruction>;
 };
 
-export type StreamInfoResponse = Dialog | NoStreamAvailable | StreamInfo;
+export type StreamInfoResponse =
+  | Dialog
+  | GraphDeadEnd
+  | NoStreamAvailable
+  | StreamInfo;
 
 /**
  * Instruction for a :class:`StreamPoint`, most likely to be
@@ -1329,6 +1337,7 @@ export type StreamSubscription = {
           value: string;
         }>;
       }
+    | { __typename: "GraphDeadEnd"; error: string }
     | { __typename: "NoStreamAvailable"; error: string }
     | {
         __typename: "StreamInfo";
@@ -2063,6 +2072,10 @@ export const StreamDocument = gql`
           value
         }
         title
+      }
+      ... on GraphDeadEnd {
+        __typename
+        error
       }
     }
   }
