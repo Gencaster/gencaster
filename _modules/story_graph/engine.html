@@ -676,13 +676,22 @@ document.write(`
             <span class="p">)</span><span class="o">.</span><span class="n">afirst</span><span class="p">()</span>
         <span class="c1"># else return default out</span>
 
-        <span class="k">if</span> <span class="n">exit_door</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">GraphDeadEnd</span><span class="p">()</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="k">await</span> <span class="n">exit_door</span><span class="o">.</span><span class="n">out_edges</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;in_node_door__node&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">afirst</span><span class="p">())</span><span class="o">.</span><span class="n">in_node_door</span><span class="o">.</span><span class="n">node</span>  <span class="c1"># type: ignore</span>
-        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">GraphDeadEnd</span><span class="p">()</span></div>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">exit_door</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">GraphDeadEnd</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="k">await</span> <span class="n">exit_door</span><span class="o">.</span><span class="n">out_edges</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">select_related</span><span class="p">(</span><span class="s2">&quot;in_node_door__node&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">afirst</span><span class="p">())</span><span class="o">.</span><span class="n">in_node_door</span><span class="o">.</span><span class="n">node</span>  <span class="c1"># type: ignore</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">exit_door</span><span class="o">.</span><span class="n">is_default</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">GraphDeadEnd</span><span class="p">()</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Ran into a dead end on non-default door </span><span class="si">{</span><span class="n">exit_door</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> on node </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> - fallback to default door&quot;</span>
+            <span class="p">)</span>
+            <span class="n">exit_door</span> <span class="o">=</span> <span class="k">await</span> <span class="n">NodeDoor</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                <span class="n">node</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span><span class="p">,</span>
+                <span class="n">door_type</span><span class="o">=</span><span class="n">NodeDoor</span><span class="o">.</span><span class="n">DoorType</span><span class="o">.</span><span class="n">OUTPUT</span><span class="p">,</span>
+                <span class="n">is_default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">afirst</span><span class="p">()</span></div>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">cleanup_sc_procedure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StreamInstruction</span><span class="p">:</span>
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Run cleanup procedure on graph&quot;</span><span class="p">)</span>
@@ -723,7 +732,7 @@ document.write(`
 
             <span class="c1"># search for next node</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_node</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_next_node</span><span class="p">()</span>
             <span class="k">except</span> <span class="n">GraphDeadEnd</span><span class="p">:</span>
                 <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ran into a dead end on </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="si">}</span><span class="s2"> on </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_node</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
