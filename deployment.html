@@ -365,18 +365,10 @@ document.write(`
                   
   <section id="deployment">
 <h1>Deployment<a class="headerlink" href="#deployment" title="Permalink to this headline">#</a></h1>
-<p>The only supported way to deploy Gencaster is by using Docker.
-This allows for easier development but also introduces some challenges regarding WebRTC communication and CPU realtime priority.</p>
 <section id="docker">
 <h2>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">#</a></h2>
-<p>As WebRTC relies on a peer-to-peer connection it is necessary to run the streaming container <a class="reference internal" href="sound.html#caster-sound"><span class="std std-ref">Caster Sound</span></a> in <code class="docutils literal notranslate"><span class="pre">host</span></code> mode as otherwise the connection can not be initiated because of a lack of proper IP propagation because otherwise the Docker network acts as a NAT.
-For more information regarding this topic refer to the <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Protocols">Mozilla Documentation</a>.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p><code class="docutils literal notranslate"><span class="pre">host</span></code> mode uses ports on the host machine directly rather than forwarding them from the Docker NAT.
-The result is: <strong>it is only possible to run ONE instance of Gencaster on a server</strong>.
-Also all necessary ports need to be free on the host.</p>
-</div>
+<p>As the setup of the streaming stack is delicate the only supported way of deployment is via <cite>docker compose</cite> which automates most of the setup procedure.
+Yet it is still necessary to provide some config files which are described here.</p>
 <section id="secrets-env">
 <h3><code class="docutils literal notranslate"><span class="pre">.secrets.env</span></code><a class="headerlink" href="#secrets-env" title="Permalink to this headline">#</a></h3>
 <p>Sensitive information such as passwords are stored in <code class="docutils literal notranslate"><span class="pre">.secrets.env</span></code> which is not part of the repository and needs therefore be created in order to spin up the containers.</p>
