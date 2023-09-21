@@ -380,6 +380,16 @@ export type InvalidPythonCode = {
   errorType: Scalars["String"];
 };
 
+/** Taken from ``logging`` module but omitting ``FATAL`` and ``WARN``. */
+export enum LogLevel {
+  Critical = "CRITICAL",
+  Debug = "DEBUG",
+  Error = "ERROR",
+  Info = "INFO",
+  Notset = "NOTSET",
+  Warning = "WARNING",
+}
+
 export type LoginError = {
   errorMessage?: Maybe<Scalars["String"]>;
 };
@@ -790,7 +800,7 @@ export type StreamInstruction = {
 /** StreamLog(uuid, created_date, modified_date, stream_point, stream, origin, level, message, name) */
 export type StreamLog = {
   createdDate: Scalars["DateTime"];
-  level: Scalars["Int"];
+  level: LogLevel;
   message: Scalars["String"];
   name?: Maybe<Scalars["String"]>;
   origin?: Maybe<Scalars["String"]>;
@@ -1540,7 +1550,7 @@ export type StreamLogsSubscriptionVariables = Exact<{
 export type StreamLogsSubscription = {
   streamLogs: {
     createdDate: any;
-    level: number;
+    level: LogLevel;
     message: string;
     name?: string | null;
     uuid: any;

@@ -395,6 +395,16 @@ type InvalidPythonCode {
   errorCode: String!
 }
 
+"""Taken from ``logging`` module but omitting ``FATAL`` and ``WARN``."""
+enum LogLevel {
+  CRITICAL
+  ERROR
+  WARNING
+  INFO
+  DEBUG
+  NOTSET
+}
+
 type LoginError {
   errorMessage: String
 }
@@ -710,7 +720,7 @@ type StreamLog {
   streamPoint: StreamPoint!
   stream: Stream!
   origin: String
-  level: Int!
+  level: LogLevel!
   message: String!
   name: String
 }
