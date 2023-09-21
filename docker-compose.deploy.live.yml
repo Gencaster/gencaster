@@ -6,18 +6,20 @@ services:
   database:
     env_file:
       - vars.env
-      - vars.deploy.dev.env
+      - vars.deploy.live.env
       - .secrets.env
 
   backend:
     env_file:
       - vars.env
-      - vars.deploy.dev.env
+      - vars.deploy.live.env
       - .secrets.env
     volumes:
       - static:/home/gencaster/static:rw
       - ./data:/data
       - ./data:/home/gencaster/media
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   osc_backend:
     volumes:
@@ -25,7 +27,7 @@ services:
       - ./data:/home/gencaster/media
     env_file:
       - vars.env
-      - vars.deploy.dev.env
+      - vars.deploy.live.env
       - .secrets.env
     ports:
       - 7000:7000/udp
@@ -33,7 +35,7 @@ services:
   sound:
     env_file:
       - vars.env
-      - vars.deploy.dev.env
+      - vars.deploy.live.env
     ports:
       - 8090:8090 # debug frontend
       - 8088:8088 # janus server
@@ -59,14 +61,14 @@ services:
       context: caster-editor
       dockerfile: Dockerfile.deploy
       args:
-        - BACKEND_URL=https://backend.dev.gencaster.org
+        - BACKEND_URL=https://backend.live.gencaster.org
         - SENTRY_DSN_CASTER_EDITOR=https://4f4b994233384dc3a79ec1a4fea3cd80@o4504548423565312.ingest.sentry.io/4505476421386240
     ports:
       - 3001:80
     environment:
       - HOST=0.0.0.0
       - PORT=3001
-      - BACKEND_URL="https://backend.dev.gencaster.org"
+      - BACKEND_URL="https://backend.live.gencaster.org"
     depends_on:
       - backend
 
@@ -76,8 +78,8 @@ services:
       context: caster-front
       dockerfile: Dockerfile.deploy
       args:
-        - BACKEND_URL=https://backend.dev.gencaster.org
-        - JANUS_URL=https://sound.dev.gencaster.org/janus
+        - BACKEND_URL=https://backend.live.gencaster.org
+        - JANUS_URL=https://sound.live.gencaster.org/janus
         - SENTRY_DSN_CASTER_FRONT=https://cf06c7d74e1644cab833acf57ae598b3@o4504548423565312.ingest.sentry.io/4505476517396480
     ports:
       - 3000:80
