@@ -294,7 +294,15 @@ class Mutation:
     async def delete_node(self, info, node_uuid: uuid.UUID) -> None:
         """Deletes a given :class:`~story_graph.models.Node`."""
         await graphql_check_authenticated(info)
-        await story_graph_models.Node.objects.filter(uuid=node_uuid).adelete()
+        node = await story_graph_models.Node.objects.aget(uuid=node_uuid)
+        if node is None:
+            raise Exception(f"Could not find node {node_uuid}")
+        if node.is_entry_node:
+            raise Exception(
+                f"Node {node_uuid} is an entry node which can not be deleted"
+            )
+        await node.adelete()
+        return None
 
     @strawberry.mutation
     async def create_script_cells(
