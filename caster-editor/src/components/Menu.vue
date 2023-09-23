@@ -50,7 +50,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import type { Graph } from "@/graphql";
+import type { Graph, Node } from "@/graphql";
 import { ref, type Ref } from "vue";
 import { Tab, useInterfaceStore } from "@/stores/InterfaceStore";
 import MenuTab from "./MenuTabHeader.vue";
@@ -58,7 +58,9 @@ import MenuTabEdit from "./MenuTabEdit.vue";
 import MenuTabPlay from "./MenuTabPlay.vue";
 import DialogExitGraph from "./DialogExitGraph.vue";
 
-export type GraphMenu = Pick<Graph, "name" | "uuid" | "slugName" | "nodes">;
+export type GraphMenu = Pick<Graph, "name" | "uuid" | "slugName"> & {
+  nodes: Array<any>;
+};
 
 // Props
 defineProps<{
