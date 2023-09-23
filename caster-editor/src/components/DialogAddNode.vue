@@ -71,7 +71,7 @@ const createNode = async () => {
       <template #footer>
         <span class="dialog-footer">
           <ElButton
-            type="danger"
+            type="info"
             @click="() => emit('closed')"
           >Cancel</ElButton>
           <ElButton
