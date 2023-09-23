@@ -50,7 +50,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from "pinia";
-import type { Graph, Node } from "@/graphql";
+import type { Graph } from "@/graphql";
 import { ref, type Ref } from "vue";
 import { Tab, useInterfaceStore } from "@/stores/InterfaceStore";
 import MenuTab from "./MenuTabHeader.vue";
