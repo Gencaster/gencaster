@@ -28,7 +28,6 @@ import { ElMessage } from "element-plus";
 import { storeToRefs } from "pinia";
 import { ref, type Ref } from "vue";
 import DialogAddNode from "./DialogAddNode.vue";
-import { el } from "element-plus/es/locale";
 
 export type GraphEdit = Pick<Graph, "uuid" | "nodes">;
 

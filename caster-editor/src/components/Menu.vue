@@ -58,7 +58,7 @@ import MenuTabEdit from "./MenuTabEdit.vue";
 import MenuTabPlay from "./MenuTabPlay.vue";
 import DialogExitGraph from "./DialogExitGraph.vue";
 
-export type GraphMenu = Pick<Graph, "name" | "uuid" | "slugName">;
+export type GraphMenu = Pick<Graph, "name" | "uuid" | "slugName" | "nodes">;
 
 // Props
 defineProps<{
