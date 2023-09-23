@@ -28,10 +28,11 @@ import { ElMessage } from "element-plus";
 import { storeToRefs } from "pinia";
 import { ref, type Ref } from "vue";
 import DialogAddNode from "./DialogAddNode.vue";
+import { el } from "element-plus/es/locale";
 
-export type GraphEdit = Pick<Graph, "uuid">;
+export type GraphEdit = Pick<Graph, "uuid" | "nodes">;
 
-defineProps<{
+const props = defineProps<{
   graph: GraphEdit;
 }>();
 
@@ -43,6 +44,19 @@ const showAddNodeDialog: Ref<boolean> = ref(false);
 
 const deleteNodeMutation = useDeleteNodeMutation();
 const deleteEdgeMutation = useDeleteEdgeMutation();
+
+const checkIfNodeEntry = (nodeUuid: string) => {
+  for (let i = 0; i < props.graph.nodes.length; i++) {
+    if (
+      props.graph.nodes[i].uuid === nodeUuid &&
+      props.graph.nodes[i].isEntryNode
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+};
 
 const removeSelection = async () => {
   console.log("Removing selection");
@@ -60,6 +74,12 @@ const removeSelection = async () => {
   });
 
   selectedNodeUUIDs.value.forEach(async (nodeUuid) => {
+    // compare if to props.graph.nodes and find isEntryNode
+    if (checkIfNodeEntry(nodeUuid)) {
+      ElMessage.error(`Cannot delete entry node.`);
+      return;
+    }
+
     const { error } = await deleteNodeMutation.executeMutation({
       nodeUuid,
     });
