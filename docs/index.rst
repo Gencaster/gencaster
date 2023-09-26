@@ -16,7 +16,7 @@ The audio streams have a low latency (about 150ms) and can be listened to in any
 
 * :ref:`caster-front` is a web frontend that allows users to listen to the streams of caster-sound, written in Vue
 
-* :ref:`caster-editor` is a web-editor in which the actions of a stream, called a :ref:`story-graph`, can be created, edited and tweaked using Python or SuperCollider, and is also written in Vue
+* :ref:`caster-editor` is a web-editor in which the actions of a stream, called a :ref:`Story Graph`, can be created, edited and tweaked using Python or SuperCollider, and is also written in Vue
 
 .. toctree::
    :maxdepth: 2

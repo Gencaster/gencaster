@@ -1,7 +1,11 @@
-.. _story-graph:
+.. _Story Graph:
 
 Story Graph
 ===========
+
+.. contents:: :local:
+    :depth: 2
+
 
 .. seealso::
 
@@ -20,10 +24,10 @@ A story graph allows to construct such possibilities which cover
 and much more.
 
 Node
-^^^^
+----
 
 A *Node* represents a group of statements which will be executed for the listener upon visiting said node.
-Each node contains one or multiple *script cells*, which are described further at :ref:`caster-editor-script-cells`.
+Each node contains one or multiple *script cells*, which are described further at :ref:`editor script cells`.
 
 Each session of a listener starts on the *Start node*.
 
@@ -36,7 +40,7 @@ Each session of a listener starts on the *Start node*.
 
 
 Edge
-^^^^
+----
 
 In order to jump from one node to another one it is necessary to connect these two with an *edge*.
 This *edge* is directed, which means that the edge works only in one direction, from an outgoing *start node*
@@ -75,3 +79,27 @@ It is possible to create loops within the story graph.
         "Play music" -> "Play podcast";
         "Play podcast" -> "Start";
     }
+
+.. _Node Door:
+
+Node Door
+---------
+
+For a more technical description of a Node Door see :class:`story_graph.models.NodeDoor`.
+
+.. _Stream Variable:
+
+Stream Variable
+---------------
+
+For a more technical description of a Stream Variable see :class:`stream.models.StreamVariable`.
+
+.. _Graph Meta:
+
+Graph Metadata
+--------------
+
+Stream assignment policy
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+There are...
