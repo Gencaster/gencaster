@@ -16,7 +16,7 @@
           :disabled="!unsavedNodeChanges"
           @click="interfaceStore.executeUpdates()"
         >
-          Save Scene
+          Save Node
         </button>
         <button
           class="unstyled"

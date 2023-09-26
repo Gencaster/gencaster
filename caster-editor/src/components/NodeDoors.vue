@@ -26,7 +26,7 @@ const showAddNodeDoorDialog: Ref<boolean> = ref(false);
         v-if="inNodeDoors.length > 0"
         class="node-doors-headline"
       >
-        Scene Entry Doors
+        Node Entry Doors
       </h3>
       <div
         v-if="inNodeDoors.length > 0"
@@ -39,7 +39,7 @@ const showAddNodeDoorDialog: Ref<boolean> = ref(false);
         />
       </div>
       <h3 class="node-doors-headline">
-        Scene Exit Doors
+        Node Exit Doors
       </h3>
       <ElRow
         :gutter="10"

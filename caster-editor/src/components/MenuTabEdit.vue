@@ -4,7 +4,7 @@
       class="unstyled"
       @click="showAddNodeDialog = true"
     >
-      Add Scene
+      Add Node
     </button>
     <button
       class="unstyled"
