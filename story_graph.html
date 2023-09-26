@@ -348,6 +348,12 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#node">Node</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edge">Edge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#node-door">Node Door</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-variable">Stream Variable</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graph-metadata">Graph Metadata</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-assignment-policy">Stream assignment policy</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -361,6 +367,19 @@ document.write(`
                   
   <section id="story-graph">
 <span id="id1"></span><h1>Story Graph<a class="headerlink" href="#story-graph" title="Permalink to this headline">#</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#node" id="id9">Node</a></p></li>
+<li><p><a class="reference internal" href="#edge" id="id10">Edge</a></p></li>
+<li><p><a class="reference internal" href="#node-door" id="id11">Node Door</a></p></li>
+<li><p><a class="reference internal" href="#stream-variable" id="id12">Stream Variable</a></p></li>
+<li><p><a class="reference internal" href="#graph-metadata" id="id13">Graph Metadata</a></p>
+<ul>
+<li><p><a class="reference internal" href="#stream-assignment-policy" id="id14">Stream assignment policy</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p>This documents covers the concept behind a story graph.
@@ -376,31 +395,31 @@ A story graph allows to construct such possibilities which cover</p>
 </ul>
 <p>and much more.</p>
 <section id="node">
-<h2>Node<a class="headerlink" href="#node" title="Permalink to this headline">#</a></h2>
+<h2><a class="toc-backref" href="#id9">Node</a><a class="headerlink" href="#node" title="Permalink to this headline">#</a></h2>
 <p>A <em>Node</em> represents a group of statements which will be executed for the listener upon visiting said node.
-Each node contains one or multiple <em>script cells</em>, which are described further at <a class="reference internal" href="editor.html#caster-editor-script-cells"><span class="std std-ref">Script cells</span></a>.</p>
+Each node contains one or multiple <em>script cells</em>, which are described further at <a class="reference internal" href="editor.html#editor-script-cells"><span class="std std-ref">Script cells</span></a>.</p>
 <p>Each session of a listener starts on the <em>Start node</em>.</p>
-<figure class="align-default" id="id3">
+<figure class="align-default" id="id5">
 <div class="graphviz"><img src="_images/graphviz-65832ecac7d90c8e687e508d5509985f11019f36.png" alt="digraph StoryGraph {
     &quot;Start&quot;;
 }" class="graphviz" /></div>
 <figcaption>
-<p><span class="caption-text">A story graph at least consists of a start node</span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
+<p><span class="caption-text">A story graph at least consists of a start node</span><a class="headerlink" href="#id5" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
 <section id="edge">
-<h2>Edge<a class="headerlink" href="#edge" title="Permalink to this headline">#</a></h2>
+<h2><a class="toc-backref" href="#id10">Edge</a><a class="headerlink" href="#edge" title="Permalink to this headline">#</a></h2>
 <p>In order to jump from one node to another one it is necessary to connect these two with an <em>edge</em>.
 This <em>edge</em> is directed, which means that the edge works only in one direction, from an outgoing <em>start node</em>
 to an incoming <em>end node</em>.</p>
-<figure class="align-default" id="id4">
+<figure class="align-default" id="id6">
 <div class="graphviz"><img src="_images/graphviz-3bed645006c2bb4eb4bf0a5f783b0e978b46e91a.png" alt="digraph StoryGraph {
     &quot;Start&quot; -&gt; &quot;Play music&quot;;
 }" class="graphviz" /></div>
 <figcaption>
 <p><span class="caption-text">A connection between two nodes can be established via an edge.
-This connects the <em>Start</em> node to the <em>Play music</em> node.</span><a class="headerlink" href="#id4" title="Permalink to this image">#</a></p>
+This connects the <em>Start</em> node to the <em>Play music</em> node.</span><a class="headerlink" href="#id6" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 <div class="admonition-todo admonition" id="id2">
@@ -408,28 +427,43 @@ This connects the <em>Start</em> node to the <em>Play music</em> node.</span><a 
 <p>If multiple <em>outgoing</em> edges are present it is currently determined by chance which node
 will be taken.
 This is about to change and is WIP.</p>
-<figure class="align-default" id="id5">
+<figure class="align-default" id="id7">
 <div class="graphviz"><img src="_images/graphviz-d4f919377a3e22f125f43245086f9de2748bda4a.png" alt="digraph StoryGraph {
         &quot;Start&quot; -&gt; &quot;Play music&quot;;
         &quot;Start&quot; -&gt; &quot;Play podcast&quot;;
     }" class="graphviz" /></div>
 <figcaption>
 <p><span class="caption-text">Multiple outgoing connections from the <em>Start node</em>.
-There is a 50/50 chance which following node will be selected.</span><a class="headerlink" href="#id5" title="Permalink to this image">#</a></p>
+There is a 50/50 chance which following node will be selected.</span><a class="headerlink" href="#id7" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
 </div>
 <p>It is possible to create loops within the story graph.</p>
-<figure class="align-default" id="id6">
+<figure class="align-default" id="id8">
 <div class="graphviz"><img src="_images/graphviz-14f19fef63083fb80eaf4ed1429af2c4d3be97d2.png" alt="digraph StoryGraph {
     &quot;Start&quot; -&gt; &quot;Play music&quot;;
     &quot;Play music&quot; -&gt; &quot;Play podcast&quot;;
     &quot;Play podcast&quot; -&gt; &quot;Start&quot;;
 }" class="graphviz" /></div>
 <figcaption>
-<p><span class="caption-text">A graph which loops indefinitely.</span><a class="headerlink" href="#id6" title="Permalink to this image">#</a></p>
+<p><span class="caption-text">A graph which loops indefinitely.</span><a class="headerlink" href="#id8" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
+</section>
+<section id="node-door">
+<span id="id3"></span><h2><a class="toc-backref" href="#id11">Node Door</a><a class="headerlink" href="#node-door" title="Permalink to this headline">#</a></h2>
+<p>For a more technical description of a Node Door see <a class="reference internal" href="back/api/story_graph.html#story_graph.models.NodeDoor" title="story_graph.models.NodeDoor"><code class="xref py py-class docutils literal notranslate"><span class="pre">story_graph.models.NodeDoor</span></code></a>.</p>
+</section>
+<section id="stream-variable">
+<span id="id4"></span><h2><a class="toc-backref" href="#id12">Stream Variable</a><a class="headerlink" href="#stream-variable" title="Permalink to this headline">#</a></h2>
+<p>For a more technical description of a Stream Variable see <a class="reference internal" href="back/api/stream.html#stream.models.StreamVariable" title="stream.models.StreamVariable"><code class="xref py py-class docutils literal notranslate"><span class="pre">stream.models.StreamVariable</span></code></a>.</p>
+</section>
+<section id="graph-metadata">
+<span id="graph-meta"></span><h2><a class="toc-backref" href="#id13">Graph Metadata</a><a class="headerlink" href="#graph-metadata" title="Permalink to this headline">#</a></h2>
+<section id="stream-assignment-policy">
+<h3><a class="toc-backref" href="#id14">Stream assignment policy</a><a class="headerlink" href="#stream-assignment-policy" title="Permalink to this headline">#</a></h3>
+<p>There are…</p>
+</section>
 </section>
 </section>
 
@@ -483,6 +517,12 @@ There is a 50/50 chance which following node will be selected.</span><a class="h
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#node">Node</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edge">Edge</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#node-door">Node Door</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-variable">Stream Variable</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#graph-metadata">Graph Metadata</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-assignment-policy">Stream assignment policy</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

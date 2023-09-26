@@ -347,13 +347,22 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#script-cells">Script cells</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markdown">Markdown</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markdown">Markdown</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#audio">Audio</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python">Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python">Python</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Examples</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#supercollider">SuperCollider</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comment">Comment</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#node-doors">Node doors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meta">Meta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debug-streams">Debug Streams</a></li>
 </ul>
             </nav>
         </div>
@@ -367,53 +376,154 @@ document.write(`
                   
   <section id="caster-editor">
 <span id="id1"></span><h1>Caster Editor<a class="headerlink" href="#caster-editor" title="Permalink to this headline">#</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#script-cells" id="id7">Script cells</a></p>
+<ul>
+<li><p><a class="reference internal" href="#markdown" id="id8">Markdown</a></p></li>
+<li><p><a class="reference internal" href="#audio" id="id9">Audio</a></p></li>
+<li><p><a class="reference internal" href="#python" id="id10">Python</a></p></li>
+<li><p><a class="reference internal" href="#supercollider" id="id11">SuperCollider</a></p></li>
+<li><p><a class="reference internal" href="#comment" id="id12">Comment</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#node-doors" id="id13">Node doors</a></p></li>
+<li><p><a class="reference internal" href="#meta" id="id14">Meta</a></p></li>
+<li><p><a class="reference internal" href="#debug-streams" id="id15">Debug Streams</a></p></li>
+</ul>
+</div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p>This documents covers the editing of a <em>story graph</em>.
 For the concepts of such a graph see <a class="reference internal" href="story_graph.html#story-graph"><span class="std std-ref">Story Graph</span></a>.</p>
 </div>
+<p>The editor is a website which allows to create and modify a <a class="reference internal" href="story_graph.html#story-graph"><span class="std std-ref">Story Graph</span></a>.
+It is possible that many users at once can collaboratively edit this story graph, and also the modifications will be applied in real time to an already running stream, which allows for live coding setups.</p>
+<figure class="align-default" id="id4">
+<img alt="A screenshot of the editor" src="_images/editor.png" />
+<figcaption>
+<p><span class="caption-text">A screenshot of the editor which shows all the <em>nodes</em> of a story graph as well as their connections, called <em>edges</em>.
+If a node is double clicked, the node editor will be opened (right side) which shows the <a class="reference internal" href="#editor-script-cells"><span class="std std-ref">Script cells</span></a> and <a class="reference internal" href="#editor-node-doors"><span class="std std-ref">Node doors</span></a> of the node,
+whose content can be edited here.</span><a class="headerlink" href="#id4" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 <section id="script-cells">
-<span id="caster-editor-script-cells"></span><h2>Script cells<a class="headerlink" href="#script-cells" title="Permalink to this headline">#</a></h2>
+<span id="editor-script-cells"></span><h2><a class="toc-backref" href="#id7">Script cells</a><a class="headerlink" href="#script-cells" title="Permalink to this headline">#</a></h2>
+<p>Script cells contain different kind of instructions which control what happens on the stream or the story graph.
+There are multiple types of script cells for different contexts.</p>
+<table class="colwidths-given table" id="id5">
+<caption><span class="caption-text">Script cells</span><a class="headerlink" href="#id5" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Script cell type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Markdown</p></td>
+<td><p>Write text which will be transferred to a spoken text via a Text to Speech engine.
+The text can also be variable by using the value of a <a class="reference internal" href="story_graph.html#stream-variable"><span class="std std-ref">Stream Variable</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Audio</p></td>
+<td><p>Provides an interface to upload prepared audio files so that they can be played back on the stream.</p></td>
+</tr>
+<tr class="row-even"><td><p>SuperCollider</p></td>
+<td><p>SuperColider is a framework for audio engine and Gencaster uses it to generate the audio stream.=
+It also contains the scripting language <em>sclang</em> which allows to adjust the auditory content on the stream.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Python</p></td>
+<td><p>Python is a scripting language which allows to modify and interact with the story graph and also trigger
+e.g. PopUps on the <a class="reference internal" href="front.html#caster-front"><span class="std std-ref">Caster Front</span></a>.
+Anything that should be decided dynamically (e.g. day vs night) should be coded within Python.</p></td>
+</tr>
+</tbody>
+</table>
 <section id="markdown">
-<h3>Markdown<a class="headerlink" href="#markdown" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id8">Markdown</a><a class="headerlink" href="#markdown" title="Permalink to this headline">#</a></h3>
 <p>Markdown is a way to write formatted text in an easy but extensible manner.
 The written text will be converted to audio via <a class="reference internal" href="back/api/stream.html#stream.models.TextToSpeech" title="stream.models.TextToSpeech"><code class="xref py py-class docutils literal notranslate"><span class="pre">TextToSpeech</span></code></a>.</p>
-<p>It is possible to make this text dynamic by using the value of a <a class="reference internal" href="back/api/stream.html#stream.models.StreamVariable" title="stream.models.StreamVariable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamVariable</span></code></a> within the text.</p>
-<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>Hello ${var}`name`.
-I hope you are doing fine.
+<p>It is possible to make this text dynamic by using the value of a <a class="reference internal" href="story_graph.html#stream-variable"><span class="std std-ref">Stream Variable</span></a> within the text.</p>
+<p>All custom Gencaster markdown macros are documented in <a class="reference internal" href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer" title="story_graph.markdown_parser.GencasterRenderer"><code class="xref py py-class docutils literal notranslate"><span class="pre">GencasterRenderer</span></code></a>.</p>
+<section id="examples">
+<h4>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">#</a></h4>
+<p><strong>Speak a text on the stream</strong></p>
+<p>By creating a markdown script cell and enter the text</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>Ich wünsch einen schönen Tag.
 </pre></div>
 </div>
-<p>All possible macros are documented in <a class="reference internal" href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer" title="story_graph.markdown_parser.GencasterRenderer"><code class="xref py py-class docutils literal notranslate"><span class="pre">GencasterRenderer</span></code></a>.</p>
+<p>the text <em>Ich wünsche einen schönen Tag</em> will be spoken on the stream.</p>
+<p><strong>Add a break between words</strong></p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>Hallo {break}`300ms` dort.
+</pre></div>
+</div>
+<p><strong>Switch between voices</strong></p>
+<p>There is a variety of voces to choose from, which are documented in <a class="reference internal" href="back/api/stream.html#stream.models.TextToSpeech.VoiceNameChoices" title="stream.models.TextToSpeech.VoiceNameChoices"><code class="xref py py-class docutils literal notranslate"><span class="pre">stream.models.TextToSpeech.VoiceNameChoices</span></code></a>.</p>
+<p>The default voice is <code class="docutils literal notranslate"><span class="pre">DE_NEURAL2_C__FEMALE</span></code>, but if we want to switch temporary to e.g. a male voice it is possible via</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>This is me and {male}`this is also another me`.
+</pre></div>
+</div>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>Switch between multiple speakers by their name.</p>
+</div>
+<p><strong>Use the name of the user</strong></p>
+<p>First it is necessary to trigger a popup in the frontend so that the user can enter their name.
+This is handled via a Python script cell, see <a class="reference internal" href="#python-ask-name"><span class="std std-ref">trigger a popup via a python script cell</span></a> which stores the name under the <a class="reference internal" href="story_graph.html#stream-variable"><span class="std std-ref">Stream Variable</span></a> <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<p>To use this <code class="docutils literal notranslate"><span class="pre">name</span></code> within a Markdown cell can be archived via</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>Hello ${var}`name`. I hope you are doing fine.
+</pre></div>
+</div>
+<p>where the <em>${var}`name</em> will be replaced with the name provided through the popup, so for example <em>Hello Alice. I hope you are doing fine</em>.</p>
+</section>
 </section>
 <section id="audio">
-<h3>Audio<a class="headerlink" href="#audio" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id9">Audio</a><a class="headerlink" href="#audio" title="Permalink to this headline">#</a></h3>
 <p>An audio cell allows to playback a <a class="reference internal" href="back/api/stream.html#stream.models.AudioFile" title="stream.models.AudioFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioFile</span></code></a> on the stream in two ways</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">async</span></code> will playback in the background and the story graph will continue with the execution</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">sync</span></code> will pause the execution of the story graph until the file has been played back fully.</p></li>
 </ul>
+<p>The <em>volume</em> slider controls the volume of the audio on the stream.</p>
+<p>The <em>edit</em> button allows to change the associated audio file by uploading a new file or search through existing files.</p>
 </section>
 <section id="python">
-<h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id10">Python</a><a class="headerlink" href="#python" title="Permalink to this headline">#</a></h3>
 <p>Python is an universal scripting language and allows to</p>
 <ul class="simple">
 <li><p>interact with the graph (e.g. set next node)</p></li>
-<li><p>create or read out <a class="reference internal" href="back/api/stream.html#stream.models.StreamVariable" title="stream.models.StreamVariable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamVariable</span></code></a></p></li>
+<li><p>assign or access a <a class="reference internal" href="story_graph.html#stream-variable"><span class="std std-ref">Stream Variable</span></a></p></li>
 <li><p>trigger dialogs on the frontend</p></li>
 </ul>
-<p>The execution is async which allows to wait for something to happen, e.g. for a stream variable through an user interaction with the help of <a class="reference internal" href="back/api/story_graph.html#story_graph.engine.Engine.wait_for_stream_variable" title="story_graph.engine.Engine.wait_for_stream_variable"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wait_for_stream_variable()</span></code></a>.</p>
+<section id="id3">
+<h4>Examples<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h4>
+<p><strong>Wait until user clicks on “Start” button</strong></p>
+<p>When a user visits the story graph via the <a class="reference internal" href="front.html#caster-front"><span class="std std-ref">Frontend</span></a> a first popup will be displayed which asks if the user wants to start streaming audio.
+This is necessary due to <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/Media/Autoplay_guide">Autoplay restrictions in browsers</a> which require a user interaction to playback any audio.</p>
+<p>So in order to wait until the user hears audio (which will happen after the user clicks on start) the following snippet can be used.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">await</span> <span class="n">wait_for_stream_variable</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>A stream variable can be accessed through a dictionary</p>
+<p>The execution is async which allows to wait for something to happen, for example waiting for a <a class="reference internal" href="story_graph.html#stream-variable"><span class="std std-ref">Stream Variable</span></a> like in this case.
+For more technical details see <a class="reference internal" href="back/api/story_graph.html#story_graph.engine.Engine.wait_for_stream_variable" title="story_graph.engine.Engine.wait_for_stream_variable"><code class="xref py py-meth docutils literal notranslate"><span class="pre">wait_for_stream_variable()</span></code></a>.</p>
+<p><strong>Access a stream variable</strong></p>
+<p>A <a class="reference internal" href="story_graph.html#stream-variable"><span class="std std-ref">Stream Variable</span></a> can be accessed through the <code class="docutils literal notranslate"><span class="pre">vars</span></code> dictionary.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># will return None if not set</span>
 <span class="n">name</span> <span class="o">=</span> <span class="nb">vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>In order to set a stream variable, simply set the value in the <code class="docutils literal notranslate"><span class="pre">vars</span></code> dictionary</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="mi">20</span>
+<p><strong>Set a stream variable</strong></p>
+<p>Assigning a <a class="reference internal" href="story_graph.html#stream-variable"><span class="std std-ref">Stream Variable</span></a> to a value is possible by using the <code class="docutils literal notranslate"><span class="pre">vars</span></code> dictionary</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">vars</span><span class="p">[</span><span class="s1">&#39;is_day&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span> <span class="o">&lt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span> <span class="o">&lt;</span> <span class="mi">20</span>
 </pre></div>
 </div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Although this statements results in a boolean value, a stream variable can only represent a string as it gets shared with many languages.</p>
+</div>
+<p id="python-ask-name"><strong>Create popup which asks for the name</strong></p>
 <p>To trigger a dialog in the frontend use the <code class="docutils literal notranslate"><span class="pre">yield</span></code> command with a <a class="reference internal" href="back/api/stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a> instance.
 The exact arguments are documented in <a class="reference internal" href="back/api/stream.html#frontend-types"><span class="std std-ref">Frontend Types</span></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">yield</span> <span class="n">Dialog</span><span class="p">(</span>
@@ -429,28 +539,43 @@ The exact arguments are documented in <a class="reference internal" href="back/a
 </pre></div>
 </div>
 <p>This will save the value that was inserted by the user into tho variable <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<figure class="align-default" id="id6">
+<a class="reference internal image-reference" href="_images/front-popup.png"><img alt="Popup in the front end which asks for the name of the user." src="_images/front-popup.png" style="width: 500.0px; height: 292.0px;" /></a>
+<figcaption>
+<p><span class="caption-text">The code above generates a pop up where the user is asked for his name.
+The reply from the user is stored in the stream variable <code class="docutils literal notranslate"><span class="pre">name</span></code>.</span><a class="headerlink" href="#id6" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
 </section>
 <section id="supercollider">
-<h3>SuperCollider<a class="headerlink" href="#supercollider" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id11">SuperCollider</a><a class="headerlink" href="#supercollider" title="Permalink to this headline">#</a></h3>
 <p>A SuperCollider cell allows to directly control what happens in the audio domain of the stream.
-The language used for this is <em>sclang</em> and the dialect of choice is the <em>JITlib</em> dialect.</p>
-<p>The code can be async and will be handled in blocking manner which allows to wait on the stream, e.g. for a fade-in to finish.</p>
+The language used for this is <em>sclang</em> and the dialect of choice is the <a class="reference external" href="https://doc.sccode.org/Overviews/JITLib.html">*JITlib* dialect</a>, although any other style is also possible, but may require more management.</p>
+<p>Although <em>sclang</em> is a non-blocking language, it is possible to <code class="docutils literal notranslate"><span class="pre">wait</span></code> within a Script Cell and it is the easiest way to wait some time.</p>
+<p><strong>Wait 10 seconds</strong></p>
+<p>The following snippet will fade in over 10 seconds and after this will fade out within 1 second.</p>
 <div class="highlight-supercollider notranslate"><div class="highlight"><pre><span></span><span class="nx">Ndef</span><span class="p">(</span><span class="ss">\drone</span><span class="p">,</span> <span class="p">{</span>
     <span class="nx">SinOsc</span><span class="p">.</span><span class="nx">ar</span><span class="p">(</span><span class="nx">LFDNoise1</span><span class="p">.</span><span class="nx">kr</span><span class="p">(</span><span class="mf">0.1</span><span class="o">!</span><span class="mi">2</span><span class="p">).</span><span class="nx">exprange</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">400</span><span class="p">))</span> <span class="o">*</span> <span class="ss">\amp</span><span class="p">.</span><span class="nx">kr</span><span class="p">(</span><span class="mf">0.2</span><span class="p">);</span>
 <span class="p">}).</span><span class="nx">fadeTime_</span><span class="p">(</span><span class="mf">10.0</span><span class="p">).</span><span class="nx">play</span><span class="p">;</span>
 <span class="mf">10.0</span><span class="p">.</span><span class="nx">wait</span><span class="p">;</span>
+<span class="nx">Ndef</span><span class="p">(</span><span class="ss">\drone</span><span class="p">).</span><span class="nx">stop</span><span class="p">(</span><span class="nx">fadeTime</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">);</span>
 </pre></div>
-</div>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>Do not execute <code class="docutils literal notranslate"><span class="pre">Tdef.clear</span></code> as this will remove the beacon of the server and
-the stream will be considered offline from there on.</p>
 </div>
 </section>
 <section id="comment">
-<h3>Comment<a class="headerlink" href="#comment" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id12">Comment</a><a class="headerlink" href="#comment" title="Permalink to this headline">#</a></h3>
 <p>A comment will be ignored for execution, but allows to add commentary on a node.</p>
 </section>
+</section>
+<section id="node-doors">
+<span id="editor-node-doors"></span><h2><a class="toc-backref" href="#id13">Node doors</a><a class="headerlink" href="#node-doors" title="Permalink to this headline">#</a></h2>
+</section>
+<section id="meta">
+<h2><a class="toc-backref" href="#id14">Meta</a><a class="headerlink" href="#meta" title="Permalink to this headline">#</a></h2>
+</section>
+<section id="debug-streams">
+<h2><a class="toc-backref" href="#id15">Debug Streams</a><a class="headerlink" href="#debug-streams" title="Permalink to this headline">#</a></h2>
 </section>
 </section>
 
@@ -503,13 +628,22 @@ the stream will be considered offline from there on.</p>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#script-cells">Script cells</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markdown">Markdown</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#markdown">Markdown</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#audio">Audio</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python">Python</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python">Python</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Examples</a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#supercollider">SuperCollider</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#comment">Comment</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#node-doors">Node doors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#meta">Meta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debug-streams">Debug Streams</a></li>
 </ul>
   </nav></div>
 
