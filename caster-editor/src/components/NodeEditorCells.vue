@@ -143,7 +143,6 @@ const moveableScriptCells = computed<NodeSubscription["node"]["scriptCells"]>({
         display: flex;
         justify-content: center;
         align-items: center;
-        pointer-events: none;
 
         p {
           margin: 0;

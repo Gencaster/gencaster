@@ -33,7 +33,10 @@
       />
     </div>
     <div class="scriptcell-tools">
-      <div class="celltype">
+      <div
+        class="celltype"
+        @click="openHelp(scriptCell.cellType)"
+      >
         <p>{{ scriptCell.cellType }}</p>
       </div>
       <div class="divider" />
@@ -131,5 +134,32 @@ const deleteScriptCell = async (uuid: Scalars["UUID"]) => {
 
 const playScriptCell = () => {
   ElMessage.error("Script cell playback not yet implemented");
+};
+
+const openHelp = (cellType: CellType) => {
+  let helpUrl = "https://docs.gencaster.org";
+  switch (cellType) {
+    case CellType.Audio: {
+      helpUrl = `${helpUrl}/editor.html#audio`;
+      break;
+    }
+    case CellType.Comment: {
+      helpUrl = `${helpUrl}/editor.html#comment`;
+      break;
+    }
+    case CellType.Markdown: {
+      helpUrl = `${helpUrl}/editor.html#markdown`;
+      break;
+    }
+    case CellType.Python: {
+      helpUrl = `${helpUrl}/editor.html#python`;
+      break;
+    }
+    case CellType.Supercollider: {
+      helpUrl = `${helpUrl}/editor.html#supercollider`;
+      break;
+    }
+  }
+  window.open(helpUrl, "_blank");
 };
 </script>
