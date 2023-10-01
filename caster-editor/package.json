@@ -33,7 +33,7 @@
     "element-plus": "^2.3.5",
     "graphql": "^16.6.0",
     "gsap": "^3.11.4",
-    "pinia": "^2.0.33",
+    "pinia": "^2.1.6",
     "subscriptions-transport-ws": "^0.11.0",
     "vue": "^3.2.45",
     "vue-codemirror": "^6.1.1",
