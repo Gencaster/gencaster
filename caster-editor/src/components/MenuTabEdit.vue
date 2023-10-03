@@ -44,17 +44,10 @@ const showAddNodeDialog: Ref<boolean> = ref(false);
 const deleteNodeMutation = useDeleteNodeMutation();
 const deleteEdgeMutation = useDeleteEdgeMutation();
 
-const checkIfNodeEntry = (nodeUuid: string) => {
-  for (let i = 0; i < props.graph.nodes.length; i++) {
-    if (
-      props.graph.nodes[i].uuid === nodeUuid &&
-      props.graph.nodes[i].isEntryNode
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+const checkIfNodeEntry = (nodeUuid: string): boolean => {
+  return (
+    props.graph.nodes.find((x) => x.uuid === nodeUuid)?.isEntryNode ?? false
+  );
 };
 
 const removeSelection = async () => {
