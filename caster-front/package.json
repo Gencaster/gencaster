@@ -18,6 +18,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
     "@sentry/vue": "^7.57.0",
+    "@unhead/vue": "^1.7.4",
     "@urql/vue": "^1.0.4",
     "element-plus": "^2.3.5",
     "graphql": "^16.6.0",

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { type Ref, ref, computed, watch, reactive } from "vue";
+import { useHead } from "@unhead/vue";
+import { metaHead } from "@/composables/metaHead";
 import {
   ElButton,
   ElCheckbox,
@@ -325,6 +327,10 @@ const startStream = async () => {
   playerState.value = PlayerState.Playing;
   startingTimestamp.value = new Date().getTime();
 };
+
+// meta stuff
+const meta = metaHead(props.graph.displayName, props.graph.startText);
+useHead(meta);
 </script>
 
 <template>

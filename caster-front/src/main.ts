@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import { createHead } from "@unhead/vue";
 import { createPinia } from "pinia";
 import urql, { fetchExchange, subscriptionExchange } from "@urql/vue";
 import { SubscriptionClient } from "subscriptions-transport-ws";
@@ -12,6 +13,9 @@ import router from "./router";
 import "./assets/main.scss";
 
 const app = createApp(App);
+
+const head = createHead();
+app.use(head);
 
 if (
   import.meta.env.VITE_BACKEND_URL &&
