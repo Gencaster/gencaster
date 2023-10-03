@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-v-model-argument -->
 <script lang="ts" setup>
-import { reactive, ref, onMounted, onDeactivated, type Ref } from "vue";
+import { ref, onMounted, onDeactivated, type Ref } from "vue";
 
 import "@toast-ui/editor/dist/toastui-editor.css"; // Editor's Style
 import type { EditorOptions, Editor as EditorType } from "@toast-ui/editor";

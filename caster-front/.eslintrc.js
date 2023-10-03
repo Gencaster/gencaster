@@ -11,7 +11,7 @@ module.exports = {
     "no-alert": "off",
     "semi": ['error', 'always'],
     "vue/component-tags-order": ["error", {
-      "order": [ [ "script", "template" ], "style" ],
+      "order": [ "script", "template", "style" ],
     }],
     "vue/multi-word-component-names": "off",
     "vue/no-v-model-argument": "off",

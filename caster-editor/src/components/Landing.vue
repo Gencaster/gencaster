@@ -1,45 +1,4 @@
-<template>
-  <div>
-    <p>Hello World! Welcome to the Gencaster Editor.</p>
-    <p>Log in to see your graphs:</p>
-    <div class="login-wrapper">
-      <ElForm
-        ref="form"
-        class="login-form"
-        :model="model"
-        :rules="rules"
-        @submit.prevent
-      >
-        <ElFormItem prop="username">
-          <ElInput
-            v-model="model.username"
-            placeholder="Username"
-          />
-        </ElFormItem>
-        <ElFormItem prop="password">
-          <ElInput
-            v-model="model.password"
-            placeholder="Password"
-            type="password"
-          />
-        </ElFormItem>
-        <ElFormItem>
-          <ElButton
-            type="primary"
-            class="login-button"
-            native-type="submit"
-            @click="onSubmit"
-          >
-            Login
-          </ElButton>
-        </ElFormItem>
-      </ElForm>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
-import variables from "@/assets/scss/variables.module.scss";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import type { Ref } from "vue";
@@ -85,6 +44,46 @@ const onSubmit = () => {
   console.log("submit");
 };
 </script>
+
+<template>
+  <div>
+    <p>Hello World! Welcome to the Gencaster Editor.</p>
+    <p>Log in to see your graphs:</p>
+    <div class="login-wrapper">
+      <ElForm
+        ref="form"
+        class="login-form"
+        :model="model"
+        :rules="rules"
+        @submit.prevent
+      >
+        <ElFormItem prop="username">
+          <ElInput
+            v-model="model.username"
+            placeholder="Username"
+          />
+        </ElFormItem>
+        <ElFormItem prop="password">
+          <ElInput
+            v-model="model.password"
+            placeholder="Password"
+            type="password"
+          />
+        </ElFormItem>
+        <ElFormItem>
+          <ElButton
+            type="primary"
+            class="login-button"
+            native-type="submit"
+            @click="onSubmit"
+          >
+            Login
+          </ElButton>
+        </ElFormItem>
+      </ElForm>
+    </div>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variables.module.scss";

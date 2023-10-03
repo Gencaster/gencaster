@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { StreamLogsSubscription } from "@/graphql";
 import { useStreamLogsSubscription, type StreamLog, LogLevel } from "@/graphql";
-import { Scope } from "@sentry/vue";
 import { ElTable, ElTableColumn, ElTag } from "element-plus";
 import { ref, toRef, type Ref } from "vue";
 

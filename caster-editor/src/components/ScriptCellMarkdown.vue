@@ -1,16 +1,3 @@
-<template>
-  <div class="block block-markdown">
-    <div
-      :class="{
-        'editor-comment': cellType === CellType.Comment,
-        'editor-markdown': cellType === CellType.Markdown,
-      }"
-    >
-      <div ref="editorDom" />
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
 // Docs : https://github.com/nhn/tui.editor/tree/master/docs/en
 // Custom Markdown Commands: https://github.com/nhn/tui.editor/blob/master/docs/en/plugin.md
@@ -83,6 +70,19 @@ onDeactivated(() => {
   }
 });
 </script>
+
+<template>
+  <div class="block block-markdown">
+    <div
+      :class="{
+        'editor-comment': cellType === CellType.Comment,
+        'editor-markdown': cellType === CellType.Markdown,
+      }"
+    >
+      <div ref="editorDom" />
+    </div>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variables.module.scss";

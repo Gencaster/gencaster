@@ -1,84 +1,3 @@
-<template>
-  <div class="editor-header">
-    <div class="title">
-      <div class="left">
-        <p>{{ node.name }}</p>
-        <button
-          class="unstyled"
-          @click="showRenameNodeDialog = true"
-        >
-          edit
-        </button>
-      </div>
-      <div class="right">
-        <button
-          class="unstyled"
-          :disabled="!unsavedNodeChanges"
-          @click="interfaceStore.executeUpdates()"
-        >
-          Save Node
-        </button>
-        <button
-          class="unstyled"
-          @click="closeScriptCellEditor()"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-    <div class="node-menu-bar">
-      <button @click="addScriptCell(CellType.Markdown)">
-        + Markdown
-      </button>
-      <button @click="addScriptCell(CellType.Audio)">
-        + Audio
-      </button>
-      <button @click="addScriptCell(CellType.Python)">
-        + Python
-      </button>
-      <button @click="addScriptCell(CellType.Supercollider)">
-        + Supercollider
-      </button>
-      <button @click="addScriptCell(CellType.Comment)">
-        + Comment
-      </button>
-    </div>
-    <DialogRenameNode
-      v-if="showRenameNodeDialog"
-      :node="node"
-      @cancel="showRenameNodeDialog = false"
-      @renamed="showRenameNodeDialog = false"
-    />
-    <DialogExitNode
-      v-if="showNodeExitDialog"
-      @save="
-        () => {
-          interfaceStore.executeUpdates();
-          showNodeEditor = false;
-          cachedNodeData = undefined;
-        }
-      "
-      @no-save="
-        () => {
-          interfaceStore.resetUpdates();
-          showNodeEditor = false;
-          cachedNodeData = undefined;
-        }
-      "
-      @cancel="
-        () => {
-          showNodeExitDialog = false;
-        }
-      "
-    />
-    <AudioFileBrowser
-      v-if="showAudioFileBrowser"
-      @cancel="showAudioFileBrowser = false"
-      @selected-audio-file="(audioFile) => createAudioCell(audioFile)"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { PlaybackChoices, type Node, type AudioFile } from "@/graphql";
 import { CellType, useCreateScriptCellsMutation } from "@/graphql";
@@ -166,6 +85,87 @@ const createAudioCell = async (audioFile: Pick<AudioFile, "uuid">) => {
   showAudioFileBrowser.value = false;
 };
 </script>
+
+<template>
+  <div class="editor-header">
+    <div class="title">
+      <div class="left">
+        <p>{{ node.name }}</p>
+        <button
+          class="unstyled"
+          @click="showRenameNodeDialog = true"
+        >
+          edit
+        </button>
+      </div>
+      <div class="right">
+        <button
+          class="unstyled"
+          :disabled="!unsavedNodeChanges"
+          @click="interfaceStore.executeUpdates()"
+        >
+          Save Node
+        </button>
+        <button
+          class="unstyled"
+          @click="closeScriptCellEditor()"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+    <div class="node-menu-bar">
+      <button @click="addScriptCell(CellType.Markdown)">
+        + Markdown
+      </button>
+      <button @click="addScriptCell(CellType.Audio)">
+        + Audio
+      </button>
+      <button @click="addScriptCell(CellType.Python)">
+        + Python
+      </button>
+      <button @click="addScriptCell(CellType.Supercollider)">
+        + Supercollider
+      </button>
+      <button @click="addScriptCell(CellType.Comment)">
+        + Comment
+      </button>
+    </div>
+    <DialogRenameNode
+      v-if="showRenameNodeDialog"
+      :node="node"
+      @cancel="showRenameNodeDialog = false"
+      @renamed="showRenameNodeDialog = false"
+    />
+    <DialogExitNode
+      v-if="showNodeExitDialog"
+      @save="
+        () => {
+          interfaceStore.executeUpdates();
+          showNodeEditor = false;
+          cachedNodeData = undefined;
+        }
+      "
+      @no-save="
+        () => {
+          interfaceStore.resetUpdates();
+          showNodeEditor = false;
+          cachedNodeData = undefined;
+        }
+      "
+      @cancel="
+        () => {
+          showNodeExitDialog = false;
+        }
+      "
+    />
+    <AudioFileBrowser
+      v-if="showAudioFileBrowser"
+      @cancel="showAudioFileBrowser = false"
+      @selected-audio-file="(audioFile) => createAudioCell(audioFile)"
+    />
+  </div>
+</template>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variables.module.scss";

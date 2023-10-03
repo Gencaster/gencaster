@@ -11,7 +11,6 @@ import { python, pythonLanguage } from "@codemirror/lang-python";
 
 // autocomplete
 import completePython from "@/assets/js/completePython";
-import completeSC from "@/assets/js/completeSC";
 
 const props = defineProps<{
   text: string;
@@ -45,11 +44,6 @@ const scriptText = computed<string>({
 // autocomplete
 const pythonDocCompletions = pythonLanguage.data.of({
   autocomplete: completePython,
-});
-
-// TODO: add scDocCompletions. Not working like this
-const scDocCompletions = pythonLanguage.data.of({
-  autocomplete: completeSC,
 });
 
 // extensions

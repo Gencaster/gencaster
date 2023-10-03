@@ -1,3 +1,16 @@
+<script setup lang="ts">
+import { ref, type Ref } from "vue";
+import { ElDialog } from "element-plus";
+
+const emit = defineEmits<{
+  (e: "noSave"): void;
+  (e: "save"): void;
+  (e: "cancel"): void;
+}>();
+
+const showDialog: Ref<boolean> = ref(true);
+</script>
+
 <template>
   <div>
     <ElDialog
@@ -35,16 +48,3 @@
     </ElDialog>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, type Ref } from "vue";
-import { ElDialog } from "element-plus";
-
-const emit = defineEmits<{
-  (e: "noSave"): void;
-  (e: "save"): void;
-  (e: "cancel"): void;
-}>();
-
-const showDialog: Ref<boolean> = ref(true);
-</script>

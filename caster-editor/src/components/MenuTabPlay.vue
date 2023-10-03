@@ -1,20 +1,3 @@
-<template>
-  <div>
-    <button
-      class="unstyled"
-      @click="directLink()"
-    >
-      Public
-    </button>
-    <button
-      class="unstyled"
-      @click="debug()"
-    >
-      Debug
-    </button>
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { Graph } from "@/graphql";
 import { ElMessage } from "element-plus";
@@ -52,3 +35,20 @@ const debug = () => {
   }
 };
 </script>
+
+<template>
+  <div>
+    <button
+      class="unstyled"
+      @click="directLink()"
+    >
+      Public
+    </button>
+    <button
+      class="unstyled"
+      @click="debug()"
+    >
+      Debug
+    </button>
+  </div>
+</template>
