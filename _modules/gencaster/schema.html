@@ -562,7 +562,15 @@ document.write(`
     <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">node_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes a given :class:`~story_graph.models.Node`.&quot;&quot;&quot;</span>
         <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
-        <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">node_uuid</span><span class="p">)</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span></div>
+        <span class="n">node</span> <span class="o">=</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">node_uuid</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find node </span><span class="si">{</span><span class="n">node_uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_entry_node</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Node </span><span class="si">{</span><span class="n">node_uuid</span><span class="si">}</span><span class="s2"> is an entry node which can not be deleted&quot;</span>
+            <span class="p">)</span>
+        <span class="k">await</span> <span class="n">node</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="Mutation.create_script_cells"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.create_script_cells">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">create_script_cells</span><span class="p">(</span>
