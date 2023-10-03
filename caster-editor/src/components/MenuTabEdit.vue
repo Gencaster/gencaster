@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Graph } from "@/graphql";
+import type { Graph, Node } from "@/graphql";
 import { useDeleteEdgeMutation, useDeleteNodeMutation } from "@/graphql";
 import { useInterfaceStore } from "@/stores/InterfaceStore";
 import { ElMessage } from "element-plus";
@@ -29,7 +29,9 @@ import { storeToRefs } from "pinia";
 import { ref, type Ref } from "vue";
 import DialogAddNode from "./DialogAddNode.vue";
 
-export type GraphEdit = Pick<Graph, "uuid" | "nodes">;
+export type GraphEdit = Pick<Graph, "uuid"> & {
+  nodes: Pick<Node, "uuid" | "isEntryNode">[];
+};
 
 const props = defineProps<{
   graph: GraphEdit;
