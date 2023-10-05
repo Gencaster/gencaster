@@ -405,10 +405,10 @@ condition is met.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>graph</strong> (<a class="reference internal" href="#story_graph.models.Graph" title="story_graph.models.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a>) – The graph to execute</p></li>
 <li><p><strong>stream</strong> (<a class="reference internal" href="stream.html#stream.models.Stream" title="stream.models.Stream"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stream</span></code></a>) – The stream where the graph should be executed on</p></li>
-<li><p><strong>raise_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Decides if an exception within e.g. a Python script cell
+<li><p><strong>raise_exceptions</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – Decides if an exception within e.g. a Python script cell
 can bring down the execution or if it ignores it but logs it.
 Defaults to False so an invalid Python script cell does not stop the whole graph.</p></li>
-<li><p><strong>run_cleanup_procedure</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>]) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> it executes <code class="docutils literal notranslate"><span class="pre">CmdPeriod.run</span></code> on the SuperCollider
+<li><p><strong>run_cleanup_procedure</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>]) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> it executes <code class="docutils literal notranslate"><span class="pre">CmdPeriod.run</span></code> on the SuperCollider
 server in order to clear all running sounds, patterns and any left running tasks,
 creating a clean environment.
 The default is <code class="docutils literal notranslate"><span class="pre">None</span></code> which will derive the necessary action based
@@ -431,7 +431,7 @@ if there are already users on the stream (in which case no reset will be execute
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -450,7 +450,7 @@ if there are already users on the stream (in which case no reset will be execute
 a given <a class="reference internal" href="#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>, <a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>, <a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -469,7 +469,7 @@ cell everything that is a available for execution needs to be stated
 explicitly here.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -480,7 +480,7 @@ explicitly here.</p>
 <dd><p>Executes a SuperCollider code cell</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -501,7 +501,7 @@ This acts as a security measurement.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>runtime_values</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]) – <p>Allows to add additional objects to the module namespace at runtime.
+<dd class="field-odd"><p><strong>runtime_values</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]) – <p>Allows to add additional objects to the module namespace at runtime.
 These are injected within <a class="reference internal" href="#story_graph.engine.Engine.execute_python_cell" title="story_graph.engine.Engine.execute_python_cell"><code class="xref py py-func docutils literal notranslate"><span class="pre">execute_python_cell()</span></code></a> and consist of</p>
 <table class="table" id="id7">
 <caption><span class="caption-text">Runtime vars</span><a class="headerlink" href="#id7" title="Permalink to this table">#</a></caption>
@@ -543,7 +543,7 @@ additional async code</p></td>
 </p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -580,7 +580,7 @@ so we use explicit async via a getter method.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -599,7 +599,7 @@ of 0.1 seconds is added between jumping nodes.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>, <a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>, <a class="reference internal" href="#story_graph.engine.GraphDeadEnd" title="story_graph.engine.GraphDeadEnd"><code class="xref py py-class docutils literal notranslate"><span class="pre">GraphDeadEnd</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code></a>[<a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>, <a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>, <a class="reference internal" href="#story_graph.engine.GraphDeadEnd" title="story_graph.engine.GraphDeadEnd"><code class="xref py py-class docutils literal notranslate"><span class="pre">GraphDeadEnd</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -669,7 +669,7 @@ by humans and treats written text as first class citizen.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -685,7 +685,7 @@ in GC docs.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -705,7 +705,7 @@ in GC docs.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -725,7 +725,7 @@ A is now {eval_python}`a`.
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -739,7 +739,7 @@ A is now {eval_python}`a`.
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -753,7 +753,7 @@ A is now {eval_python}`a`.
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -769,7 +769,7 @@ in GC docs.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -784,7 +784,7 @@ in GC docs.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -799,7 +799,7 @@ in GC docs.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -822,7 +822,7 @@ empty string <cite>“”</cite>, but we can provide a fallback value via <code 
 <p>becomes <cite>Hello foobar</cite> if the streaming variable <code class="docutils literal notranslate"><span class="pre">something_unknown</span></code> does not exist.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -846,10 +846,10 @@ empty string <cite>“”</cite>, but we can provide a fallback value via <code 
 <a class="reference external" href="https://en.wikipedia.org/wiki/Speech_Synthesis_Markup_Language">SSML</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – Markdown text</p>
+<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – Markdown text</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -954,7 +954,7 @@ for the extended Markdown syntax.</p></td>
 </td>
 </tr>
 <tr class="row-odd"><td><p>Python</p></td>
-<td><p>Allows to execute python code via <a class="reference external" href="https://docs.python.org/3/library/functions.html#exec" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">exec()</span></code></a> which allows
+<td><p>Allows to execute python code via <a class="reference external" href="https://docs.python.org/3/library/functions.html#exec" title="(in Python v3.12)"><code class="xref py py-func docutils literal notranslate"><span class="pre">exec()</span></code></a> which allows
 to trigger e.g. Dialogs in the frontend
 (see <a class="reference internal" href="stream.html#stream.frontend_types.Dialog" title="stream.frontend_types.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a>)
 or calculate or fetch any kind of data and store its value
