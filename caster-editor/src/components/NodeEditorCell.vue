@@ -1,71 +1,4 @@
 <!-- eslint-disable vue/no-mutating-props -->
-<template>
-  <div class="cell">
-    <ScriptCellMarkdown
-      v-if="
-        scriptCell.cellType === CellType.Markdown ||
-          scriptCell.cellType === CellType.Comment
-      "
-      v-model:text="scriptCellText"
-      :cell-type="scriptCell.cellType"
-      :uuid="scriptCell.uuid"
-    />
-    <ScriptCellCodemirror
-      v-if="
-        scriptCell.cellType === CellType.Python ||
-          scriptCell.cellType === CellType.Supercollider
-      "
-      v-model:text="scriptCellText"
-      :cell-type="scriptCell.cellType"
-      :uuid="scriptCell.uuid"
-    />
-    <div v-if="scriptCell.audioCell !== undefined">
-      <ScriptCellAudio
-        v-if="
-          scriptCell.audioCell !== undefined &&
-            scriptCell.audioCell !== null &&
-            scriptCell.audioCell?.audioFile.file !== undefined &&
-            scriptCell.cellType === CellType.Audio
-        "
-        v-model:text="scriptCellText"
-        v-model:audio-cell="scriptCell.audioCell"
-        :uuid="scriptCell.uuid"
-      />
-    </div>
-    <div class="scriptcell-tools">
-      <div
-        class="celltype"
-        @click="openHelp(scriptCell.cellType)"
-      >
-        <p>{{ scriptCell.cellType }}</p>
-      </div>
-      <div class="divider" />
-      <div class="icon">
-        <img
-          src="@/assets/icons/icon-trash.svg"
-          alt="trash icon"
-          @click="deleteScriptCell(scriptCell.uuid)"
-        >
-      </div>
-      <div class="divider" />
-      <div class="icon">
-        <img
-          src="@/assets/icons/icon-play.svg"
-          alt="play icon"
-          @click="playScriptCell()"
-        >
-      </div>
-      <div class="divider" />
-      <div class="icon handle">
-        <img
-          src="@/assets/icons/icon-drag.svg"
-          alt="drag icon"
-        >
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import {
   type ScriptCell,
@@ -163,3 +96,70 @@ const openHelp = (cellType: CellType) => {
   window.open(helpUrl, "_blank");
 };
 </script>
+
+<template>
+  <div class="cell">
+    <ScriptCellMarkdown
+      v-if="
+        scriptCell.cellType === CellType.Markdown ||
+          scriptCell.cellType === CellType.Comment
+      "
+      v-model:text="scriptCellText"
+      :cell-type="scriptCell.cellType"
+      :uuid="scriptCell.uuid"
+    />
+    <ScriptCellCodemirror
+      v-if="
+        scriptCell.cellType === CellType.Python ||
+          scriptCell.cellType === CellType.Supercollider
+      "
+      v-model:text="scriptCellText"
+      :cell-type="scriptCell.cellType"
+      :uuid="scriptCell.uuid"
+    />
+    <div v-if="scriptCell.audioCell !== undefined">
+      <ScriptCellAudio
+        v-if="
+          scriptCell.audioCell !== undefined &&
+            scriptCell.audioCell !== null &&
+            scriptCell.audioCell?.audioFile.file !== undefined &&
+            scriptCell.cellType === CellType.Audio
+        "
+        v-model:text="scriptCellText"
+        v-model:audio-cell="scriptCell.audioCell"
+        :uuid="scriptCell.uuid"
+      />
+    </div>
+    <div class="scriptcell-tools">
+      <div
+        class="celltype"
+        @click="openHelp(scriptCell.cellType)"
+      >
+        <p>{{ scriptCell.cellType }}</p>
+      </div>
+      <div class="divider" />
+      <div class="icon">
+        <img
+          src="@/assets/icons/icon-trash.svg"
+          alt="trash icon"
+          @click="deleteScriptCell(scriptCell.uuid)"
+        >
+      </div>
+      <div class="divider" />
+      <div class="icon">
+        <img
+          src="@/assets/icons/icon-play.svg"
+          alt="play icon"
+          @click="playScriptCell()"
+        >
+      </div>
+      <div class="divider" />
+      <div class="icon handle">
+        <img
+          src="@/assets/icons/icon-drag.svg"
+          alt="drag icon"
+        >
+      </div>
+    </div>
+  </div>
+</template>

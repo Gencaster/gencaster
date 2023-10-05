@@ -1,3 +1,31 @@
+<script lang="ts" setup>
+import { storeToRefs } from "pinia";
+import type { Graph } from "@/graphql";
+import { ref, type Ref } from "vue";
+import { Tab, useInterfaceStore } from "@/stores/InterfaceStore";
+import MenuTab from "./MenuTabHeader.vue";
+import MenuTabEdit from "./MenuTabEdit.vue";
+import MenuTabPlay from "./MenuTabPlay.vue";
+import DialogExitGraph from "./DialogExitGraph.vue";
+import type { GraphEdit } from "./MenuTabEdit.vue";
+
+export type GraphMenu = Pick<Graph, "name" | "uuid" | "slugName"> & GraphEdit;
+
+// Props
+defineProps<{
+  graph: GraphMenu;
+}>();
+
+// Store
+const { tab } = storeToRefs(useInterfaceStore());
+
+const showExitGraphDialog: Ref<boolean> = ref(false);
+
+const goToDocs = () => {
+  window.open("https://docs.gencaster.org/editor", "_blank");
+};
+</script>
+
 <template>
   <div id="menu">
     <div class="menu menu-edit">
@@ -47,34 +75,6 @@
     />
   </div>
 </template>
-
-<script lang="ts" setup>
-import { storeToRefs } from "pinia";
-import type { Graph } from "@/graphql";
-import { ref, type Ref } from "vue";
-import { Tab, useInterfaceStore } from "@/stores/InterfaceStore";
-import MenuTab from "./MenuTabHeader.vue";
-import MenuTabEdit from "./MenuTabEdit.vue";
-import MenuTabPlay from "./MenuTabPlay.vue";
-import DialogExitGraph from "./DialogExitGraph.vue";
-import type { GraphEdit } from "./MenuTabEdit.vue";
-
-export type GraphMenu = Pick<Graph, "name" | "uuid" | "slugName"> & GraphEdit;
-
-// Props
-defineProps<{
-  graph: GraphMenu;
-}>();
-
-// Store
-const { tab } = storeToRefs(useInterfaceStore());
-
-const showExitGraphDialog: Ref<boolean> = ref(false);
-
-const goToDocs = () => {
-  window.open("https://docs.gencaster.org/editor", "_blank");
-};
-</script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variables.module.scss";

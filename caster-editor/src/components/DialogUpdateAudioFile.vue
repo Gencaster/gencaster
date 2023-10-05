@@ -1,3 +1,41 @@
+<script setup lang="ts">
+import { type AudioFile, useUpdateAudioFileMutation } from "@/graphql";
+import { ElMessage, ElForm, ElFormItem } from "element-plus";
+import { ref, type Ref } from "vue";
+
+export type AudioFileRename = Pick<AudioFile, "uuid" | "name" | "description">;
+
+const emit = defineEmits<{
+  (e: "updated"): void;
+  (e: "cancel"): void;
+}>();
+
+const props = defineProps<{
+  audioFile: AudioFileRename;
+}>();
+
+const showDialog: Ref<boolean> = ref(true);
+const newName: Ref<string> = ref(props.audioFile.name);
+const newDescription: Ref<string> = ref(props.audioFile.description);
+
+const updateAudioFileMutation = useUpdateAudioFileMutation();
+
+const update = async () => {
+  const { error } = await updateAudioFileMutation.executeMutation({
+    uuid: props.audioFile.uuid,
+    updateAudioFile: {
+      description: newDescription.value,
+      name: newName.value,
+    },
+  });
+  if (error) {
+    ElMessage.error(`Could not rename audio file: ${error.message}`);
+    return;
+  }
+  emit("updated");
+};
+</script>
+
 <template>
   <div class="update-audio-file-dialog">
     <ElDialog
@@ -37,41 +75,3 @@
     </ElDialog>
   </div>
 </template>
-
-<script setup lang="ts">
-import { type AudioFile, useUpdateAudioFileMutation } from "@/graphql";
-import { ElMessage, ElForm, ElFormItem } from "element-plus";
-import { ref, type Ref } from "vue";
-
-export type AudioFileRename = Pick<AudioFile, "uuid" | "name" | "description">;
-
-const emit = defineEmits<{
-  (e: "updated"): void;
-  (e: "cancel"): void;
-}>();
-
-const props = defineProps<{
-  audioFile: AudioFileRename;
-}>();
-
-const showDialog: Ref<boolean> = ref(true);
-const newName: Ref<string> = ref(props.audioFile.name);
-const newDescription: Ref<string> = ref(props.audioFile.description);
-
-const updateAudioFileMutation = useUpdateAudioFileMutation();
-
-const update = async () => {
-  const { error } = await updateAudioFileMutation.executeMutation({
-    uuid: props.audioFile.uuid,
-    updateAudioFile: {
-      description: newDescription.value,
-      name: newName.value,
-    },
-  });
-  if (error) {
-    ElMessage.error(`Could not rename audio file: ${error.message}`);
-    return;
-  }
-  emit("updated");
-};
-</script>

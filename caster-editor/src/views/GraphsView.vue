@@ -1,3 +1,11 @@
+<script setup lang="ts">
+import GraphsList from "@/components/GraphsList.vue";
+import { useGetGraphsQuery } from "@/graphql";
+import Loading from "@/components/Loading.vue";
+
+const { data, error, fetching } = useGetGraphsQuery();
+</script>
+
 <template>
   <div v-if="error">
     <h3>Please login</h3>
@@ -18,14 +26,6 @@
     />
   </div>
 </template>
-
-<script setup lang="ts">
-import GraphsList from "@/components/GraphsList.vue";
-import { useGetGraphsQuery } from "@/graphql";
-import Loading from "@/components/Loading.vue";
-
-const { data, error, fetching } = useGetGraphsQuery();
-</script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variables.module.scss";

@@ -1,25 +1,3 @@
-<template>
-  <div>
-    <button
-      class="unstyled"
-      @click="showAddNodeDialog = true"
-    >
-      Add Node
-    </button>
-    <button
-      class="unstyled"
-      @click="removeSelection()"
-    >
-      Remove Selected
-    </button>
-    <DialogAddNode
-      v-if="showAddNodeDialog"
-      :graph-uuid="graph.uuid"
-      @closed="showAddNodeDialog = false"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { Graph, Node } from "@/graphql";
 import { useDeleteEdgeMutation, useDeleteNodeMutation } from "@/graphql";
@@ -85,3 +63,25 @@ const removeSelection = async () => {
   });
 };
 </script>
+
+<template>
+  <div>
+    <button
+      class="unstyled"
+      @click="showAddNodeDialog = true"
+    >
+      Add Node
+    </button>
+    <button
+      class="unstyled"
+      @click="removeSelection()"
+    >
+      Remove Selected
+    </button>
+    <DialogAddNode
+      v-if="showAddNodeDialog"
+      :graph-uuid="graph.uuid"
+      @closed="showAddNodeDialog = false"
+    />
+  </div>
+</template>

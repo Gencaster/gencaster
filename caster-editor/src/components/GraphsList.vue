@@ -1,3 +1,17 @@
+<script lang="ts" setup>
+import type { Graph } from "@/graphql";
+import AddGraph from "@/components/DialogAddGraph.vue";
+import { ref, type Ref } from "vue";
+
+export type GraphListType = Pick<Graph, "name" | "uuid">;
+
+defineProps<{
+  graphs: GraphListType[];
+}>();
+
+const createGraphDialogVisible: Ref<boolean> = ref(false);
+</script>
+
 <template>
   <div>
     <h1>Select one of your Graphs</h1>
@@ -41,20 +55,6 @@
     />
   </div>
 </template>
-
-<script lang="ts" setup>
-import type { Graph } from "@/graphql";
-import AddGraph from "@/components/DialogAddGraph.vue";
-import { ref, type Ref } from "vue";
-
-export type GraphListType = Pick<Graph, "name" | "uuid">;
-
-defineProps<{
-  graphs: GraphListType[];
-}>();
-
-const createGraphDialogVisible: Ref<boolean> = ref(false);
-</script>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variables.module.scss";

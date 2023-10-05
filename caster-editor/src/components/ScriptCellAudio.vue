@@ -1,96 +1,3 @@
-<template>
-  <div class="block block-audio">
-    <div class="audio-file slot half">
-      <div class="header">
-        <p class="title">
-          {{ audioCell.audioFile.name }}
-        </p>
-        <p
-          class="edit-button"
-          @click="showBrowser = true"
-        >
-          edit
-        </p>
-      </div>
-      <div class="content">
-        <AudioPlayer
-          :audio-file="audioCellData.audioFile"
-          :type="'minimal'"
-          :volume="audioCellData.volume"
-        />
-      </div>
-    </div>
-    <div class="playback slot quarter">
-      <div class="header">
-        <p class="title lighter">
-          Playback
-        </p>
-      </div>
-      <div class="content">
-        <ElSelect
-          v-model="audioCellData.playback"
-          placeholder="Select"
-        >
-          <ElOption
-            v-for="[key, value] in Object.entries(PlaybackChoices)"
-            :key="key"
-            :label="key"
-            :value="value"
-          />
-        </ElSelect>
-      </div>
-    </div>
-    <div class="volume slot quarter">
-      <div class="header">
-        <p class="title lighter">
-          Volume
-        </p>
-      </div>
-
-      <div class="content">
-        <ElSlider
-          v-model="audioCellData.volume"
-          :min="0.0"
-          :max="1.0"
-          :step="0.01"
-        />
-      </div>
-    </div>
-    <div class="comment slot half">
-      <div class="header">
-        <p class="title lighter">
-          Comment
-        </p>
-      </div>
-
-      <div class="content">
-        <!-- The markdown component takes care of any necessary text updates -->
-        <ScriptCellMarkdown
-          v-model:text="textData"
-          :cell-type="CellType.Comment"
-          :uuid="uuid"
-        />
-      </div>
-    </div>
-
-    <Browser
-      v-if="showBrowser"
-      @cancel="showBrowser = false"
-      @selected-audio-file="
-        (audioFile) => {
-          audioCellData.audioFile.name = audioFile.name;
-          audioCellData.audioFile.uuid = audioFile.uuid;
-          if (audioCellData.audioFile.file?.url && audioFile.file) {
-            audioCellData.audioFile.file.url = audioFile.file.url;
-          }
-
-          showBrowser = false;
-        }
-      "
-    />
-  </div>
-</template>
-
 <script lang="ts" setup>
 import { reactive, ref, watch, type Ref, computed } from "vue";
 import Browser from "@/components/AudioFileBrowser.vue";
@@ -193,6 +100,99 @@ const textData = ref<string>(props.text);
 // State
 const showBrowser: Ref<boolean> = ref(false);
 </script>
+
+<template>
+  <div class="block block-audio">
+    <div class="audio-file slot half">
+      <div class="header">
+        <p class="title">
+          {{ audioCell.audioFile.name }}
+        </p>
+        <p
+          class="edit-button"
+          @click="showBrowser = true"
+        >
+          edit
+        </p>
+      </div>
+      <div class="content">
+        <AudioPlayer
+          :audio-file="audioCellData.audioFile"
+          :type="'minimal'"
+          :volume="audioCellData.volume"
+        />
+      </div>
+    </div>
+    <div class="playback slot quarter">
+      <div class="header">
+        <p class="title lighter">
+          Playback
+        </p>
+      </div>
+      <div class="content">
+        <ElSelect
+          v-model="audioCellData.playback"
+          placeholder="Select"
+        >
+          <ElOption
+            v-for="[key, value] in Object.entries(PlaybackChoices)"
+            :key="key"
+            :label="key"
+            :value="value"
+          />
+        </ElSelect>
+      </div>
+    </div>
+    <div class="volume slot quarter">
+      <div class="header">
+        <p class="title lighter">
+          Volume
+        </p>
+      </div>
+
+      <div class="content">
+        <ElSlider
+          v-model="audioCellData.volume"
+          :min="0.0"
+          :max="1.0"
+          :step="0.01"
+        />
+      </div>
+    </div>
+    <div class="comment slot half">
+      <div class="header">
+        <p class="title lighter">
+          Comment
+        </p>
+      </div>
+
+      <div class="content">
+        <!-- The markdown component takes care of any necessary text updates -->
+        <ScriptCellMarkdown
+          v-model:text="textData"
+          :cell-type="CellType.Comment"
+          :uuid="uuid"
+        />
+      </div>
+    </div>
+
+    <Browser
+      v-if="showBrowser"
+      @cancel="showBrowser = false"
+      @selected-audio-file="
+        (audioFile) => {
+          audioCellData.audioFile.name = audioFile.name;
+          audioCellData.audioFile.uuid = audioFile.uuid;
+          if (audioCellData.audioFile.file?.url && audioFile.file) {
+            audioCellData.audioFile.file.url = audioFile.file.url;
+          }
+
+          showBrowser = false;
+        }
+      "
+    />
+  </div>
+</template>
 
 <style lang="scss" scoped>
 @import "@/assets/scss/variables.module.scss";

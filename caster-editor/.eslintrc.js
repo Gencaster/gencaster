@@ -10,17 +10,18 @@ module.exports = {
     "no-console": "off",
     "no-alert": "off",
     "semi": ['error', 'always'],
-    "vue/component-tags-order": ["error", {
-      "order": [ [ "script", "template" ], "style" ],
-    }],
     "vue/multi-word-component-names": "off",
     "vue/no-v-model-argument": "off",
+    "vue/no-mutating-props": "off",
     "comma-dangle": ["error", {
       "arrays": "always-multiline",
       "objects": "always-multiline",
       "imports": "always-multiline",
       "exports": "always-multiline",
       "functions": "always-multiline",
+  }],
+  "vue/component-tags-order": ["error", {
+    "order": [ "script", "template", "style" ],
   }],
   },
 };

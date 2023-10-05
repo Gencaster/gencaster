@@ -1,30 +1,3 @@
-<template>
-  <div>
-    <ElDialog
-      v-model="showDialog"
-      title="Careful"
-      center
-      lock-scroll
-      :show-close="false"
-      align-center
-    >
-      <span> Are you sure to delete Node "{{ node.name }}"? </span>
-      <template #footer>
-        <span class="dialog-footer">
-          <ElButton
-            type="info"
-            @click="emit('cancel')"
-          >Cancel</ElButton>
-          <ElButton
-            type="danger"
-            @click="deleteNode()"
-          > Delete Node </ElButton>
-        </span>
-      </template>
-    </ElDialog>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, type Ref } from "vue";
 import { type Node, useDeleteNodeMutation } from "@/graphql";
@@ -55,3 +28,30 @@ const deleteNode = async () => {
   }
 };
 </script>
+
+<template>
+  <div>
+    <ElDialog
+      v-model="showDialog"
+      title="Careful"
+      center
+      lock-scroll
+      :show-close="false"
+      align-center
+    >
+      <span> Are you sure to delete Node "{{ node.name }}"? </span>
+      <template #footer>
+        <span class="dialog-footer">
+          <ElButton
+            type="info"
+            @click="emit('cancel')"
+          >Cancel</ElButton>
+          <ElButton
+            type="danger"
+            @click="deleteNode()"
+          > Delete Node </ElButton>
+        </span>
+      </template>
+    </ElDialog>
+  </div>
+</template>
