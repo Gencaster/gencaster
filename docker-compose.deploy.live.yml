@@ -33,6 +33,7 @@ services:
       - 7000:7000/udp
 
   sound:
+    network_mode: "host"
     env_file:
       - vars.env
       - vars.deploy.live.env

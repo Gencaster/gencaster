@@ -635,7 +635,7 @@ class Subscription:
             # a stream variable which is set from the frontend
             yield StreamInfo(stream=stream, stream_instruction=None)  # type: ignore
 
-            async for instruction in engine.start(max_steps=int(10e4)):
+            async for instruction in engine.start(max_steps=int(10e10)):
                 if type(instruction) == Dialog:
                     yield instruction
                 else:

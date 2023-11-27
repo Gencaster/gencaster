@@ -6,11 +6,13 @@ Engine
 
 import asyncio
 import logging
+import random
 import time
 from copy import deepcopy
 from datetime import datetime, timedelta
 from typing import Any, AsyncGenerator, Dict, Optional, Union
 
+import requests
 from asgiref.sync import sync_to_async
 
 from stream.frontend_types import Button, Checkbox, Dialog, Input, Text
@@ -219,6 +221,8 @@ class Engine:
                 "Button": Button,
                 "Checkbox": Checkbox,
                 "Input": Input,
+                "list": list,
+                "random": random,
                 **runtime_values,
             }
         }
@@ -260,6 +264,7 @@ class Engine:
                         "self": self,
                         "get_stream_variables": self.get_stream_variables,
                         "wait_for_stream_variable": self.wait_for_stream_variable,
+                        "requests": requests,
                     }
                 ),
                 # locals which mirror the current namespace and allow for modification
@@ -390,9 +395,9 @@ class Engine:
             # a broad exception because many things can go wrong here while evaluating
             # python code (e.g. even raising a custom exception), therefore we catch all
             # possible exceptions here
-            except Exception:
+            except Exception as e:
                 log.debug(
-                    f"Exception raised on evaluating code of node door {node_door}"
+                    f"Exception raised on evaluating code of node door {node_door}: {e}"
                 )
                 continue
             if active_exit:
