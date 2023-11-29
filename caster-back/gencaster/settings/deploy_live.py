@@ -28,6 +28,10 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
+if public_ip := os.environ.get("BACKEND_PUBLIC_IP"):
+    ALLOWED_HOSTS += [public_ip]
+
+
 CORS_ALLOWED_ORIGINS = [
     "https://editor.live.gencaster.org",
     "https://live.gencaster.org",

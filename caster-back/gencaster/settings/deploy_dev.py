@@ -4,6 +4,7 @@ Deploy Dev
 
 Settings for deploying "*production*" dev environment on the server via Docker.
 """
+import os
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
@@ -27,6 +28,9 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
 ]
+
+if public_ip := os.environ.get("BACKEND_PUBLIC_IP"):
+    ALLOWED_HOSTS += [public_ip]
 
 CORS_ALLOWED_ORIGINS = [
     "https://editor.dev.gencaster.org",
