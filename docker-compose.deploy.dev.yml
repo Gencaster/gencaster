@@ -18,6 +18,8 @@ services:
       - static:/home/gencaster/static:rw
       - ./data:/data
       - ./data:/home/gencaster/media
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   osc_backend:
     volumes:
@@ -31,6 +33,7 @@ services:
       - 7000:7000/udp
 
   sound:
+    network_mode: "host"
     env_file:
       - vars.env
       - vars.deploy.dev.env
