@@ -130,26 +130,30 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../story_graph.html">Story Graph</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../back/osc_server.html">OSC Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../back/graphql.html">GraphQL</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../back/api/story_graph.html">Story Graph</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../back/api/gencaster.html">GenCaster Base</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorial.html">Tutorial</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/05-speaking.html">Speaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/06-interaction.html">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/08-debugging.html">Debugging</a></li>
 </ul>
 </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../back/osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/stream.html">Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../editor.html">Caster Editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../front.html">Caster Front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
 </ul>
 
     </div>
@@ -267,6 +271,8 @@ document.write(`
                   
   <h1>Source code for gencaster.schema</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. _schema:</span>
+
 <span class="sd">Schema</span>
 <span class="sd">======</span>
 
@@ -350,7 +356,7 @@ document.write(`
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="IsAuthenticated"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.IsAuthenticated">[docs]</a><span class="k">class</span> <span class="nc">IsAuthenticated</span><span class="p">(</span><span class="n">strawberry</span><span class="o">.</span><span class="n">BasePermission</span><span class="p">):</span>
+<div class="viewcode-block" id="IsAuthenticated"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.IsAuthenticated">[docs]</a><span class="k">class</span> <span class="nc">IsAuthenticated</span><span class="p">(</span><span class="n">strawberry</span><span class="o">.</span><span class="n">BasePermission</span><span class="p">):</span>
     <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;User is not authenticated&quot;</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">has_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -361,7 +367,7 @@ document.write(`
         <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="AuthStrawberryDjangoField"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.AuthStrawberryDjangoField">[docs]</a><span class="k">class</span> <span class="nc">AuthStrawberryDjangoField</span><span class="p">(</span><span class="n">StrawberryDjangoField</span><span class="p">):</span>
+<div class="viewcode-block" id="AuthStrawberryDjangoField"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.AuthStrawberryDjangoField">[docs]</a><span class="k">class</span> <span class="nc">AuthStrawberryDjangoField</span><span class="p">(</span><span class="n">StrawberryDjangoField</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Allows us to restrict certain actions to logged in users.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">resolver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -371,7 +377,7 @@ document.write(`
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">resolver</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="graphql_check_authenticated"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.graphql_check_authenticated">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">):</span>
+<div class="viewcode-block" id="graphql_check_authenticated"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.graphql_check_authenticated">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to determine if we are loggin in an async manner.</span>
 
 <span class="sd">    This would be better a decorator but strawberry is not nice in these regards, see</span>
@@ -382,7 +388,7 @@ document.write(`
         <span class="k">raise</span> <span class="n">PermissionDenied</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="update_or_create_audio_cell"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.update_or_create_audio_cell">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">update_or_create_audio_cell</span><span class="p">(</span>
+<div class="viewcode-block" id="update_or_create_audio_cell"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.update_or_create_audio_cell">[docs]</a><span class="k">async</span> <span class="k">def</span> <span class="nf">update_or_create_audio_cell</span><span class="p">(</span>
     <span class="n">audio_cell_input</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AudioCellInput</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">story_graph_models</span><span class="o">.</span><span class="n">AudioCell</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Async function to update audio cells&quot;&quot;&quot;</span>
@@ -407,7 +413,7 @@ document.write(`
     <span class="k">return</span> <span class="n">audio_cell</span></div>
 
 
-<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.User">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">django</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">UserModel</span><span class="p">)</span>
+<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.User">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">django</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">UserModel</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
     <span class="n">username</span><span class="p">:</span> <span class="n">auto</span>
     <span class="n">is_staff</span><span class="p">:</span> <span class="n">auto</span>
@@ -417,7 +423,7 @@ document.write(`
     <span class="n">email</span><span class="p">:</span> <span class="n">auto</span></div>
 
 
-<div class="viewcode-block" id="Query"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Query">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
+<div class="viewcode-block" id="Query"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Query">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
 <span class="k">class</span> <span class="nc">Query</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Queries for Gencaster.&quot;&quot;&quot;</span>
 
@@ -439,7 +445,7 @@ document.write(`
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="LoginError"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.LoginError">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
+<div class="viewcode-block" id="LoginError"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.LoginError">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
 <span class="k">class</span> <span class="nc">LoginError</span><span class="p">:</span>
     <span class="n">error_message</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
 
@@ -447,7 +453,7 @@ document.write(`
 <span class="n">LoginRequest</span> <span class="o">=</span> <span class="n">strawberry</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="s2">&quot;LoginRequestResponse&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">LoginError</span><span class="p">,</span> <span class="n">User</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="Mutation"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
+<div class="viewcode-block" id="Mutation"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Mutation">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
 <span class="k">class</span> <span class="nc">Mutation</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Mutations for Gencaster via GraphQL.&quot;&quot;&quot;</span>
 
@@ -478,7 +484,7 @@ document.write(`
         <span class="k">await</span> <span class="n">sync_to_async</span><span class="p">(</span><span class="n">logout</span><span class="p">)(</span><span class="n">info</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">request</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="Mutation.update_audio_file"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.update_audio_file">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<div class="viewcode-block" id="Mutation.update_audio_file"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Mutation.update_audio_file">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">update_audio_file</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">,</span> <span class="n">update_audio_file</span><span class="p">:</span> <span class="n">UpdateAudioFile</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AudioFile</span><span class="p">:</span>
@@ -493,7 +499,7 @@ document.write(`
         <span class="k">await</span> <span class="n">audio_file</span><span class="o">.</span><span class="n">asave</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">audio_file</span>  <span class="c1"># type: ignore</span></div>
 
-<div class="viewcode-block" id="Mutation.add_node"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.add_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<div class="viewcode-block" id="Mutation.add_node"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Mutation.add_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="n">new_node</span><span class="p">:</span> <span class="n">NodeCreate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a new :class:`~story_graph.models.Node` in a given</span>
 <span class="sd">        ~class:`~story_graph.models.Graph`.</span>
@@ -515,7 +521,7 @@ document.write(`
         <span class="k">await</span> <span class="n">node</span><span class="o">.</span><span class="n">asave</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="Mutation.update_node"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.update_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<div class="viewcode-block" id="Mutation.update_node"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Mutation.update_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">update_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="n">node_update</span><span class="p">:</span> <span class="n">NodeUpdate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates a given :class:`~story_graph.models.Node` which can be used</span>
 <span class="sd">        for renaming or moving it across the canvas.</span>
@@ -533,7 +539,7 @@ document.write(`
         <span class="k">await</span> <span class="n">node</span><span class="o">.</span><span class="n">asave</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="Mutation.add_edge"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.add_edge">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<div class="viewcode-block" id="Mutation.add_edge"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Mutation.add_edge">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span> <span class="n">new_edge</span><span class="p">:</span> <span class="n">EdgeInput</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Edge</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a :class:`~story_graph.models.Edge` for a given</span>
 <span class="sd">        :class:`~story_graph.models.Graph`.</span>
@@ -552,13 +558,13 @@ document.write(`
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">edge</span>  <span class="c1"># type: ignore</span></div>
 
-<div class="viewcode-block" id="Mutation.delete_edge"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.delete_edge">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<div class="viewcode-block" id="Mutation.delete_edge"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Mutation.delete_edge">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">edge_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes a given :class:`~story_graph.models.Edge`.&quot;&quot;&quot;</span>
         <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
         <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Edge</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">edge_uuid</span><span class="p">)</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Mutation.delete_node"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.delete_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<div class="viewcode-block" id="Mutation.delete_node"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Mutation.delete_node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">node_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes a given :class:`~story_graph.models.Node`.&quot;&quot;&quot;</span>
         <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
@@ -572,7 +578,7 @@ document.write(`
         <span class="k">await</span> <span class="n">node</span><span class="o">.</span><span class="n">adelete</span><span class="p">()</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="Mutation.create_script_cells"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.create_script_cells">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<div class="viewcode-block" id="Mutation.create_script_cells"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Mutation.create_script_cells">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">create_script_cells</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">info</span><span class="p">,</span>
@@ -658,7 +664,7 @@ document.write(`
 
         <span class="k">return</span> <span class="n">script_cells</span>  <span class="c1"># type: ignore</span>
 
-<div class="viewcode-block" id="Mutation.delete_script_cell"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.delete_script_cell">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<div class="viewcode-block" id="Mutation.delete_script_cell"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Mutation.delete_script_cell">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_script_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">script_cell_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Deletes a given :class:`~story_graph.models.ScriptCell`.&quot;&quot;&quot;</span>
         <span class="k">await</span> <span class="n">graphql_check_authenticated</span><span class="p">(</span><span class="n">info</span><span class="p">)</span>
@@ -795,7 +801,7 @@ document.write(`
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">node_door</span>  <span class="c1"># type: ignore</span>
 
-<div class="viewcode-block" id="Mutation.delete_node_door"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Mutation.delete_node_door">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
+<div class="viewcode-block" id="Mutation.delete_node_door"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Mutation.delete_node_door">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">mutation</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">delete_node_door</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">node_door_uuid</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Allows to delete a non-default NodeDoor.</span>
 <span class="sd">        If a node door was deleted it will return ``True``, otherwise ``False``.</span>
@@ -808,9 +814,9 @@ document.write(`
         <span class="k">return</span> <span class="n">deleted_objects</span> <span class="o">&gt;=</span> <span class="mi">1</span></div></div>
 
 
-<div class="viewcode-block" id="Subscription"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Subscription">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
+<div class="viewcode-block" id="Subscription"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Subscription">[docs]</a><span class="nd">@strawberry</span><span class="o">.</span><span class="n">type</span>
 <span class="k">class</span> <span class="nc">Subscription</span><span class="p">:</span>
-<div class="viewcode-block" id="Subscription.graph"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Subscription.graph">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">subscription</span>
+<div class="viewcode-block" id="Subscription.graph"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Subscription.graph">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">subscription</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">graph</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span>
@@ -827,7 +833,7 @@ document.write(`
         <span class="p">):</span>
             <span class="k">yield</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Graph</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">graph_update</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
 
-<div class="viewcode-block" id="Subscription.node"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Subscription.node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">subscription</span>
+<div class="viewcode-block" id="Subscription.node"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Subscription.node">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">subscription</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">node</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span>
@@ -844,7 +850,7 @@ document.write(`
         <span class="p">):</span>
             <span class="k">yield</span> <span class="k">await</span> <span class="n">story_graph_models</span><span class="o">.</span><span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">uuid</span><span class="o">=</span><span class="n">node_update</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
 
-<div class="viewcode-block" id="Subscription.stream_info"><a class="viewcode-back" href="../../back/api/gencaster.html#gencaster.schema.Subscription.stream_info">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">subscription</span>
+<div class="viewcode-block" id="Subscription.stream_info"><a class="viewcode-back" href="../../back/gencaster.html#gencaster.schema.Subscription.stream_info">[docs]</a>    <span class="nd">@strawberry</span><span class="o">.</span><span class="n">subscription</span>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">stream_info</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">info</span><span class="p">:</span> <span class="n">Info</span><span class="p">,</span>

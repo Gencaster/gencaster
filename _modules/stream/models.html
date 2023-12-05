@@ -130,26 +130,30 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../story_graph.html">Story Graph</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../back/osc_server.html">OSC Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../back/graphql.html">GraphQL</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../back/api/story_graph.html">Story Graph</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../back/api/gencaster.html">GenCaster Base</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorial.html">Tutorial</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/05-speaking.html">Speaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/06-interaction.html">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/08-debugging.html">Debugging</a></li>
 </ul>
 </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../back/osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/stream.html">Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../editor.html">Caster Editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../front.html">Caster Front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
 </ul>
 
     </div>
@@ -303,7 +307,7 @@ document.write(`
         <span class="p">)</span>
 
 
-<div class="viewcode-block" id="StreamPoint"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamPoint">[docs]</a><span class="k">class</span> <span class="nc">StreamPoint</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="StreamPoint"><a class="viewcode-back" href="../../back/stream.html#stream.models.StreamPoint">[docs]</a><span class="k">class</span> <span class="nc">StreamPoint</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Stores metadata for each SuperCollider/Janus instance</span>
 <span class="sd">    and how we can interact with this instance.</span>
 
@@ -395,7 +399,7 @@ document.write(`
     <span class="k">def</span> <span class="nf">client</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimpleUDPClient</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">SimpleUDPClient</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
 
-<div class="viewcode-block" id="StreamPoint.speak_on_stream"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamPoint.speak_on_stream">[docs]</a>    <span class="k">def</span> <span class="nf">speak_on_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ssml_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StreamInstruction&quot;</span><span class="p">:</span>
+<div class="viewcode-block" id="StreamPoint.speak_on_stream"><a class="viewcode-back" href="../../back/stream.html#stream.models.StreamPoint.speak_on_stream">[docs]</a>    <span class="k">def</span> <span class="nf">speak_on_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ssml_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StreamInstruction&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Speaks on the stream</span>
 
 <span class="sd">        :param ssml_text: See https://cloud.google.com/text-to-speech/docs/ssml</span>
@@ -450,7 +454,7 @@ document.write(`
         <span class="bp">self</span><span class="o">.</span><span class="n">send_stream_instruction</span><span class="p">(</span><span class="n">instruction</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">instruction</span>
 
-<div class="viewcode-block" id="StreamPoint.send_stream_instruction"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamPoint.send_stream_instruction">[docs]</a>    <span class="k">def</span> <span class="nf">send_stream_instruction</span><span class="p">(</span>
+<div class="viewcode-block" id="StreamPoint.send_stream_instruction"><a class="viewcode-back" href="../../back/stream.html#stream.models.StreamPoint.send_stream_instruction">[docs]</a>    <span class="k">def</span> <span class="nf">send_stream_instruction</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">instruction</span><span class="p">:</span> <span class="s2">&quot;StreamInstruction&quot;</span><span class="p">,</span> <span class="n">manual_finish</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends an OSC message with an instruction to our SuperCollider server.</span>
@@ -527,7 +531,7 @@ document.write(`
             <span class="n">stream</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="Stream"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.Stream">[docs]</a><span class="k">class</span> <span class="nc">Stream</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="Stream"><a class="viewcode-back" href="../../back/stream.html#stream.models.Stream">[docs]</a><span class="k">class</span> <span class="nc">Stream</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Assigns a :class:`~StreamPoint` to a user/client.</span>
 <span class="sd">    This allows us to see which streams are currently in use</span>
 <span class="sd">    and also by which user.</span>
@@ -605,7 +609,7 @@ document.write(`
     <span class="n">async_to_sync</span><span class="p">(</span><span class="n">GenCasterChannel</span><span class="o">.</span><span class="n">send_streams_update</span><span class="p">)(</span><span class="nb">str</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">uuid</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="StreamVariable"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamVariable">[docs]</a><span class="k">class</span> <span class="nc">StreamVariable</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="StreamVariable"><a class="viewcode-back" href="../../back/stream.html#stream.models.StreamVariable">[docs]</a><span class="k">class</span> <span class="nc">StreamVariable</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Allows to store variables in a stream session as a key/value pair.</span>
 
 <span class="sd">    .. warning::</span>
@@ -646,7 +650,7 @@ document.write(`
         <span class="n">help_text</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;Stream values to SC as control rate Ndef&quot;</span><span class="p">),</span>
     <span class="p">)</span>
 
-<div class="viewcode-block" id="StreamVariable.send_to_sc"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamVariable.send_to_sc">[docs]</a>    <span class="k">def</span> <span class="nf">send_to_sc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StreamInstruction&quot;</span><span class="p">:</span>
+<div class="viewcode-block" id="StreamVariable.send_to_sc"><a class="viewcode-back" href="../../back/stream.html#stream.models.StreamVariable.send_to_sc">[docs]</a>    <span class="k">def</span> <span class="nf">send_to_sc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;StreamInstruction&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Makes the stream variable available on the scsynth server under the same name as an Ndef.</span>
 
 <span class="sd">        .. note::</span>
@@ -681,12 +685,12 @@ document.write(`
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="StreamInstruction"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamInstruction">[docs]</a><span class="k">class</span> <span class="nc">StreamInstruction</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="StreamInstruction"><a class="viewcode-back" href="../../back/stream.html#stream.models.StreamInstruction">[docs]</a><span class="k">class</span> <span class="nc">StreamInstruction</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Instruction for a :class:`StreamPoint`, most likely to be</span>
 <span class="sd">    created from a :class:`~story_graph.models.ScriptCell`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="StreamInstruction.InstructionState"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamInstruction.InstructionState">[docs]</a>    <span class="k">class</span> <span class="nc">InstructionState</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
+<div class="viewcode-block" id="StreamInstruction.InstructionState"><a class="viewcode-back" href="../../back/stream.html#stream.models.StreamInstruction.InstructionState">[docs]</a>    <span class="k">class</span> <span class="nc">InstructionState</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Possible states of our instruction.</span>
 
 <span class="sd">        .. seealso::</span>
@@ -703,7 +707,7 @@ document.write(`
         <span class="n">FINISHED</span> <span class="o">=</span> <span class="s2">&quot;FINISHED&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;FINISHED&quot;</span><span class="p">)</span>
         <span class="n">RECEIVED</span> <span class="o">=</span> <span class="s2">&quot;RECEIVED&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;RECEIVED&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="StreamInstruction.InstructionState.from_sc_string"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamInstruction.InstructionState.from_sc_string">[docs]</a>        <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="StreamInstruction.InstructionState.from_sc_string"><a class="viewcode-back" href="../../back/stream.html#stream.models.StreamInstruction.InstructionState.from_sc_string">[docs]</a>        <span class="nd">@classmethod</span>
         <span class="k">def</span> <span class="nf">from_sc_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">sc_string</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Converts a string from SuperCollider to our typed state choices.</span>
 
@@ -763,7 +767,7 @@ document.write(`
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 
 
-<div class="viewcode-block" id="AudioFile"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.AudioFile">[docs]</a><span class="k">class</span> <span class="nc">AudioFile</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="AudioFile"><a class="viewcode-back" href="../../back/stream.html#stream.models.AudioFile">[docs]</a><span class="k">class</span> <span class="nc">AudioFile</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a local audio file on the server.</span>
 <span class="sd">    As SuperCollider and Django are running on the same server we</span>
 <span class="sd">    can pass these files to the SuperCollider instances as they</span>
@@ -826,12 +830,12 @@ document.write(`
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="TextToSpeech"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.TextToSpeech">[docs]</a><span class="k">class</span> <span class="nc">TextToSpeech</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="TextToSpeech"><a class="viewcode-back" href="../../back/stream.html#stream.models.TextToSpeech">[docs]</a><span class="k">class</span> <span class="nc">TextToSpeech</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Handles the conversion of text to speech</span>
 <span class="sd">    by using external APIs.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="TextToSpeech.VoiceNameChoices"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.TextToSpeech.VoiceNameChoices">[docs]</a>    <span class="k">class</span> <span class="nc">VoiceNameChoices</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
+<div class="viewcode-block" id="TextToSpeech.VoiceNameChoices"><a class="viewcode-back" href="../../back/stream.html#stream.models.TextToSpeech.VoiceNameChoices">[docs]</a>    <span class="k">class</span> <span class="nc">VoiceNameChoices</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;See `here &lt;https://cloud.google.com/text-to-speech/docs/voices&gt;`_.</span>
 
 <span class="sd">        The first 5 characters need to be the language code</span>
@@ -889,7 +893,7 @@ document.write(`
         <span class="n">default</span><span class="o">=</span><span class="n">VoiceNameChoices</span><span class="o">.</span><span class="n">DE_NEURAL2_C__FEMALE</span><span class="p">,</span>
     <span class="p">)</span>
 
-<div class="viewcode-block" id="TextToSpeech.create_from_text"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.TextToSpeech.create_from_text">[docs]</a>    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="TextToSpeech.create_from_text"><a class="viewcode-back" href="../../back/stream.html#stream.models.TextToSpeech.create_from_text">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">create_from_text</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span>
         <span class="n">ssml_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -955,8 +959,8 @@ document.write(`
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
-<div class="viewcode-block" id="StreamLog"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamLog">[docs]</a><span class="k">class</span> <span class="nc">StreamLog</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
-<div class="viewcode-block" id="StreamLog.LogLevel"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamLog.LogLevel">[docs]</a>    <span class="k">class</span> <span class="nc">LogLevel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerChoices</span><span class="p">):</span>
+<div class="viewcode-block" id="StreamLog"><a class="viewcode-back" href="../../back/stream.html#stream.models.StreamLog">[docs]</a><span class="k">class</span> <span class="nc">StreamLog</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="StreamLog.LogLevel"><a class="viewcode-back" href="../../back/stream.html#stream.models.StreamLog.LogLevel">[docs]</a>    <span class="k">class</span> <span class="nc">LogLevel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">IntegerChoices</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Taken from ``logging`` module but omitting ``FATAL`` and ``WARN``.&quot;&quot;&quot;</span>
 
         <span class="n">CRITICAL</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Critical&quot;</span><span class="p">)</span>
@@ -966,7 +970,7 @@ document.write(`
         <span class="n">DEBUG</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Debug&quot;</span><span class="p">)</span>
         <span class="n">NOTSET</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Not set&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="StreamLog.Origin"><a class="viewcode-back" href="../../back/api/stream.html#stream.models.StreamLog.Origin">[docs]</a>    <span class="k">class</span> <span class="nc">Origin</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
+<div class="viewcode-block" id="StreamLog.Origin"><a class="viewcode-back" href="../../back/stream.html#stream.models.StreamLog.Origin">[docs]</a>    <span class="k">class</span> <span class="nc">Origin</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;States from which module the current logging occurs&quot;&quot;&quot;</span>
 
         <span class="n">GRAPH_ENGINE</span> <span class="o">=</span> <span class="s2">&quot;graph_engine&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Graph engine&quot;</span><span class="p">)</span>

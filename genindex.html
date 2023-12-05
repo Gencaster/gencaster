@@ -130,26 +130,30 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="story_graph.html">Story Graph</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="back/graphql.html">GraphQL</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="back/api/story_graph.html">Story Graph</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster Base</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorial.html">Tutorial</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/05-speaking.html">Speaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/06-interaction.html">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/08-debugging.html">Debugging</a></li>
 </ul>
 </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="back/story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="back/stream.html">Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="back/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="editor.html">Caster Editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front.html">Caster Front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
     </div>
@@ -278,10 +282,12 @@ document.write(`
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
  | <a href="#O"><strong>O</strong></a>
+ | <a href="#P"><strong>P</strong></a>
  | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
@@ -294,46 +300,46 @@ document.write(`
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/gencaster.html#gencaster.distributor.GenCasterChannel.__init__">__init__() (gencaster.distributor.GenCasterChannel method)</a>
+      <li><a href="back/gencaster.html#gencaster.distributor.GenCasterChannel.__init__">__init__() (gencaster.distributor.GenCasterChannel method)</a>
 
       <ul>
-        <li><a href="back/api/gencaster.html#gencaster.distributor.GraphQLWSConsumerInjector.__init__">(gencaster.distributor.GraphQLWSConsumerInjector method)</a>
+        <li><a href="back/gencaster.html#gencaster.distributor.GraphQLWSConsumerInjector.__init__">(gencaster.distributor.GraphQLWSConsumerInjector method)</a>
 </li>
-        <li><a href="back/api/gencaster.html#gencaster.distributor.GraphUpdateMessage.__init__">(gencaster.distributor.GraphUpdateMessage method)</a>
+        <li><a href="back/gencaster.html#gencaster.distributor.GraphUpdateMessage.__init__">(gencaster.distributor.GraphUpdateMessage method)</a>
 </li>
-        <li><a href="back/api/gencaster.html#gencaster.distributor.NodeUpdateMessage.__init__">(gencaster.distributor.NodeUpdateMessage method)</a>
+        <li><a href="back/gencaster.html#gencaster.distributor.NodeUpdateMessage.__init__">(gencaster.distributor.NodeUpdateMessage method)</a>
 </li>
-        <li><a href="back/api/gencaster.html#gencaster.distributor.StreamLogUpdateMessage.__init__">(gencaster.distributor.StreamLogUpdateMessage method)</a>
+        <li><a href="back/gencaster.html#gencaster.distributor.StreamLogUpdateMessage.__init__">(gencaster.distributor.StreamLogUpdateMessage method)</a>
 </li>
-        <li><a href="back/api/gencaster.html#gencaster.distributor.StreamsUpdateMessage.__init__">(gencaster.distributor.StreamsUpdateMessage method)</a>
+        <li><a href="back/gencaster.html#gencaster.distributor.StreamsUpdateMessage.__init__">(gencaster.distributor.StreamsUpdateMessage method)</a>
 </li>
-        <li><a href="back/api/gencaster.html#gencaster.schema.LoginError.__init__">(gencaster.schema.LoginError method)</a>
+        <li><a href="back/gencaster.html#gencaster.schema.LoginError.__init__">(gencaster.schema.LoginError method)</a>
 </li>
-        <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.__init__">(gencaster.schema.Mutation method)</a>
+        <li><a href="back/gencaster.html#gencaster.schema.Mutation.__init__">(gencaster.schema.Mutation method)</a>
 </li>
-        <li><a href="back/api/gencaster.html#gencaster.schema.Query.__init__">(gencaster.schema.Query method)</a>
+        <li><a href="back/gencaster.html#gencaster.schema.Query.__init__">(gencaster.schema.Query method)</a>
 </li>
-        <li><a href="back/api/gencaster.html#gencaster.schema.Subscription.__init__">(gencaster.schema.Subscription method)</a>
+        <li><a href="back/gencaster.html#gencaster.schema.Subscription.__init__">(gencaster.schema.Subscription method)</a>
 </li>
-        <li><a href="back/api/gencaster.html#gencaster.schema.User.__init__">(gencaster.schema.User method)</a>
+        <li><a href="back/gencaster.html#gencaster.schema.User.__init__">(gencaster.schema.User method)</a>
 </li>
         <li><a href="back/osc_server.html#osc_server.server.OSCServer.__init__">(osc_server.server.OSCServer method)</a>
 </li>
-        <li><a href="back/api/story_graph.html#story_graph.engine.Engine.__init__">(story_graph.engine.Engine method)</a>
+        <li><a href="back/story_graph.html#story_graph.engine.Engine.__init__">(story_graph.engine.Engine method)</a>
 </li>
-        <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.__init__">(story_graph.markdown_parser.GencasterRenderer method)</a>
+        <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.__init__">(story_graph.markdown_parser.GencasterRenderer method)</a>
 </li>
-        <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterToken.__init__">(story_graph.markdown_parser.GencasterToken method)</a>
+        <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterToken.__init__">(story_graph.markdown_parser.GencasterToken method)</a>
 </li>
-        <li><a href="back/api/stream.html#stream.frontend_types.Button.__init__">(stream.frontend_types.Button method)</a>
+        <li><a href="back/stream.html#stream.frontend_types.Button.__init__">(stream.frontend_types.Button method)</a>
 </li>
-        <li><a href="back/api/stream.html#stream.frontend_types.Checkbox.__init__">(stream.frontend_types.Checkbox method)</a>
+        <li><a href="back/stream.html#stream.frontend_types.Checkbox.__init__">(stream.frontend_types.Checkbox method)</a>
 </li>
-        <li><a href="back/api/stream.html#stream.frontend_types.Dialog.__init__">(stream.frontend_types.Dialog method)</a>
+        <li><a href="back/stream.html#stream.frontend_types.Dialog.__init__">(stream.frontend_types.Dialog method)</a>
 </li>
-        <li><a href="back/api/stream.html#stream.frontend_types.Input.__init__">(stream.frontend_types.Input method)</a>
+        <li><a href="back/stream.html#stream.frontend_types.Input.__init__">(stream.frontend_types.Input method)</a>
 </li>
-        <li><a href="back/api/stream.html#stream.frontend_types.Text.__init__">(stream.frontend_types.Text method)</a>
+        <li><a href="back/stream.html#stream.frontend_types.Text.__init__">(stream.frontend_types.Text method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -344,25 +350,25 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="back/osc_server.html#osc_server.server.OSCServer.acknowledge_handler">acknowledge_handler() (osc_server.server.OSCServer method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.Graph.acreate_entry_node">acreate_entry_node() (story_graph.models.Graph method)</a>
+      <li><a href="back/story_graph.html#story_graph.models.Graph.acreate_entry_node">acreate_entry_node() (story_graph.models.Graph method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.add_break">add_break() (story_graph.markdown_parser.GencasterRenderer method)</a>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.add_break">add_break() (story_graph.markdown_parser.GencasterRenderer method)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.add_edge">add_edge() (gencaster.schema.Mutation method)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.Mutation.add_edge">add_edge() (gencaster.schema.Mutation method)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.add_node">add_node() (gencaster.schema.Mutation method)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.Mutation.add_node">add_node() (gencaster.schema.Mutation method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.models.Graph.aget_entry_node">aget_entry_node() (story_graph.models.Graph method)</a>
+      <li><a href="back/story_graph.html#story_graph.models.Graph.aget_entry_node">aget_entry_node() (story_graph.models.Graph method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.AudioCell">AudioCell (class in story_graph.models)</a>
+      <li><a href="back/story_graph.html#story_graph.models.AudioCell">AudioCell (class in story_graph.models)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.AudioCell.PlaybackChoices">AudioCell.PlaybackChoices (class in story_graph.models)</a>
+      <li><a href="back/story_graph.html#story_graph.models.AudioCell.PlaybackChoices">AudioCell.PlaybackChoices (class in story_graph.models)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.AudioFile">AudioFile (class in stream.models)</a>
+      <li><a href="back/stream.html#stream.models.AudioFile">AudioFile (class in stream.models)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.AuthStrawberryDjangoField">AuthStrawberryDjangoField (class in gencaster.schema)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.AuthStrawberryDjangoField">AuthStrawberryDjangoField (class in gencaster.schema)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -370,13 +376,15 @@ document.write(`
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="glossary.html#term-Backend"><strong>Backend</strong></a>
+</li>
       <li><a href="back/osc_server.html#osc_server.server.OSCServer.beacon_handler">beacon_handler() (osc_server.server.OSCServer method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/stream.html#stream.frontend_types.Button">Button (class in stream.frontend_types)</a>
+      <li><a href="back/stream.html#stream.frontend_types.Button">Button (class in stream.frontend_types)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.frontend_types.ButtonType">ButtonType (class in stream.frontend_types)</a>
+      <li><a href="back/stream.html#stream.frontend_types.ButtonType">ButtonType (class in stream.frontend_types)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -384,21 +392,23 @@ document.write(`
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/stream.html#stream.frontend_types.CallbackAction">CallbackAction (class in stream.frontend_types)</a>
+      <li><a href="back/stream.html#stream.frontend_types.CallbackAction">CallbackAction (class in stream.frontend_types)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.frontend_types.Button.cancel">cancel() (stream.frontend_types.Button class method)</a>
+      <li><a href="back/stream.html#stream.frontend_types.Button.cancel">cancel() (stream.frontend_types.Button class method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.CellType">CellType (class in story_graph.models)</a>
+      <li><a href="back/story_graph.html#story_graph.models.CellType">CellType (class in story_graph.models)</a>
+</li>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.chars">chars() (story_graph.markdown_parser.GencasterRenderer method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.chars">chars() (story_graph.markdown_parser.GencasterRenderer method)</a>
+      <li><a href="back/stream.html#stream.frontend_types.Checkbox">Checkbox (class in stream.frontend_types)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.frontend_types.Checkbox">Checkbox (class in stream.frontend_types)</a>
+      <li><a href="glossary.html#term-Connection"><strong>Connection</strong></a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.TextToSpeech.create_from_text">create_from_text() (stream.models.TextToSpeech class method)</a>
+      <li><a href="back/stream.html#stream.models.TextToSpeech.create_from_text">create_from_text() (stream.models.TextToSpeech class method)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.create_script_cells">create_script_cells() (gencaster.schema.Mutation method)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.Mutation.create_script_cells">create_script_cells() (gencaster.schema.Mutation method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -406,17 +416,21 @@ document.write(`
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.delete_edge">delete_edge() (gencaster.schema.Mutation method)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.Mutation.delete_edge">delete_edge() (gencaster.schema.Mutation method)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.delete_node">delete_node() (gencaster.schema.Mutation method)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.Mutation.delete_node">delete_node() (gencaster.schema.Mutation method)</a>
+</li>
+      <li><a href="back/gencaster.html#gencaster.schema.Mutation.delete_node_door">delete_node_door() (gencaster.schema.Mutation method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.delete_node_door">delete_node_door() (gencaster.schema.Mutation method)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.Mutation.delete_script_cell">delete_script_cell() (gencaster.schema.Mutation method)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.delete_script_cell">delete_script_cell() (gencaster.schema.Mutation method)</a>
+      <li><a href="back/stream.html#stream.frontend_types.Dialog">Dialog (class in stream.frontend_types)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.frontend_types.Dialog">Dialog (class in stream.frontend_types)</a>
+      <li><a href="glossary.html#term-Django"><strong>Django</strong></a>
+</li>
+      <li><a href="glossary.html#term-Docker"><strong>Docker</strong></a>
 </li>
   </ul></td>
 </tr></table>
@@ -424,25 +438,35 @@ document.write(`
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.models.Edge">Edge (class in story_graph.models)</a>
+      <li><a href="glossary.html#term-Edge"><strong>Edge</strong></a>
+
+      <ul>
+        <li><a href="back/story_graph.html#story_graph.models.Edge">(class in story_graph.models)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.engine.Engine">Engine (class in story_graph.engine)</a>
+      </ul></li>
+      <li><a href="glossary.html#term-Editor"><strong>Editor</strong></a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.eval_python">eval_python() (story_graph.markdown_parser.GencasterRenderer method)</a>
+      <li><a href="glossary.html#term-Engine"><strong>Engine</strong></a>
+
+      <ul>
+        <li><a href="back/story_graph.html#story_graph.engine.Engine">(class in story_graph.engine)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.exec_python">exec_python() (story_graph.markdown_parser.GencasterRenderer method)</a>
+      </ul></li>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.eval_python">eval_python() (story_graph.markdown_parser.GencasterRenderer method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.execute_audio_cell">execute_audio_cell() (story_graph.engine.Engine method)</a>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.exec_python">exec_python() (story_graph.markdown_parser.GencasterRenderer method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.execute_markdown_code">execute_markdown_code() (story_graph.engine.Engine method)</a>
+      <li><a href="back/story_graph.html#story_graph.engine.Engine.execute_audio_cell">execute_audio_cell() (story_graph.engine.Engine method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.execute_node">execute_node() (story_graph.engine.Engine method)</a>
+      <li><a href="back/story_graph.html#story_graph.engine.Engine.execute_markdown_code">execute_markdown_code() (story_graph.engine.Engine method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.execute_python_cell">execute_python_cell() (story_graph.engine.Engine method)</a>
+      <li><a href="back/story_graph.html#story_graph.engine.Engine.execute_node">execute_node() (story_graph.engine.Engine method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.execute_sc_code">execute_sc_code() (story_graph.engine.Engine method)</a>
+      <li><a href="back/story_graph.html#story_graph.engine.Engine.execute_python_cell">execute_python_cell() (story_graph.engine.Engine method)</a>
+</li>
+      <li><a href="back/story_graph.html#story_graph.engine.Engine.execute_sc_code">execute_sc_code() (story_graph.engine.Engine method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -450,11 +474,13 @@ document.write(`
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.female">female() (story_graph.markdown_parser.GencasterRenderer method)</a>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.female">female() (story_graph.markdown_parser.GencasterRenderer method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/stream.html#stream.models.StreamInstruction.InstructionState.from_sc_string">from_sc_string() (stream.models.StreamInstruction.InstructionState class method)</a>
+      <li><a href="back/stream.html#stream.models.StreamInstruction.InstructionState.from_sc_string">from_sc_string() (stream.models.StreamInstruction.InstructionState class method)</a>
+</li>
+      <li><a href="glossary.html#term-Frontend"><strong>Frontend</strong></a>
 </li>
   </ul></td>
 </tr></table>
@@ -466,63 +492,63 @@ document.write(`
     gencaster
 
       <ul>
-        <li><a href="back/api/gencaster.html#module-gencaster">module</a>
+        <li><a href="back/gencaster.html#module-gencaster">module</a>
 </li>
       </ul></li>
       <li>
     gencaster.asgi
 
       <ul>
-        <li><a href="back/api/gencaster.html#module-gencaster.asgi">module</a>
+        <li><a href="back/gencaster.html#module-gencaster.asgi">module</a>
 </li>
       </ul></li>
       <li>
     gencaster.distributor
 
       <ul>
-        <li><a href="back/api/gencaster.html#module-gencaster.distributor">module</a>
+        <li><a href="back/gencaster.html#module-gencaster.distributor">module</a>
 </li>
       </ul></li>
       <li>
     gencaster.schema
 
       <ul>
-        <li><a href="back/api/gencaster.html#module-gencaster.schema">module</a>
+        <li><a href="back/gencaster.html#module-gencaster.schema">module</a>
 </li>
       </ul></li>
       <li>
     gencaster.settings
 
       <ul>
-        <li><a href="back/api/gencaster.html#module-gencaster.settings">module</a>
+        <li><a href="back/gencaster.html#module-gencaster.settings">module</a>
 </li>
       </ul></li>
       <li>
     gencaster.settings.base
 
       <ul>
-        <li><a href="back/api/gencaster.html#module-gencaster.settings.base">module</a>
+        <li><a href="back/gencaster.html#module-gencaster.settings.base">module</a>
 </li>
       </ul></li>
       <li>
     gencaster.settings.deploy_dev
 
       <ul>
-        <li><a href="back/api/gencaster.html#module-gencaster.settings.deploy_dev">module</a>
+        <li><a href="back/gencaster.html#module-gencaster.settings.deploy_dev">module</a>
 </li>
       </ul></li>
       <li>
     gencaster.settings.dev
 
       <ul>
-        <li><a href="back/api/gencaster.html#module-gencaster.settings.dev">module</a>
+        <li><a href="back/gencaster.html#module-gencaster.settings.dev">module</a>
 </li>
       </ul></li>
       <li>
     gencaster.settings.dev_local
 
       <ul>
-        <li><a href="back/api/gencaster.html#module-gencaster.settings.dev_local">module</a>
+        <li><a href="back/gencaster.html#module-gencaster.settings.dev_local">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -531,36 +557,42 @@ document.write(`
     gencaster.settings.test
 
       <ul>
-        <li><a href="back/api/gencaster.html#module-gencaster.settings.test">module</a>
+        <li><a href="back/gencaster.html#module-gencaster.settings.test">module</a>
 </li>
       </ul></li>
-      <li><a href="back/api/gencaster.html#gencaster.distributor.GenCasterChannel">GenCasterChannel (class in gencaster.distributor)</a>
+      <li><a href="back/gencaster.html#gencaster.distributor.GenCasterChannel">GenCasterChannel (class in gencaster.distributor)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer">GencasterRenderer (class in story_graph.markdown_parser)</a>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterRenderer">GencasterRenderer (class in story_graph.markdown_parser)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterToken">GencasterToken (class in story_graph.markdown_parser)</a>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterToken">GencasterToken (class in story_graph.markdown_parser)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.get_engine_global_vars">get_engine_global_vars() (story_graph.engine.Engine static method)</a>
+      <li><a href="back/story_graph.html#story_graph.engine.Engine.get_engine_global_vars">get_engine_global_vars() (story_graph.engine.Engine static method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.get_next_node">get_next_node() (story_graph.engine.Engine method)</a>
+      <li><a href="back/story_graph.html#story_graph.engine.Engine.get_next_node">get_next_node() (story_graph.engine.Engine method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.get_stream_variables">get_stream_variables() (story_graph.engine.Engine method)</a>
+      <li><a href="back/story_graph.html#story_graph.engine.Engine.get_stream_variables">get_stream_variables() (story_graph.engine.Engine method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.Graph">Graph (class in story_graph.models)</a>
+      <li><a href="glossary.html#term-Graph"><strong>Graph</strong></a>
+
+      <ul>
+        <li><a href="back/story_graph.html#story_graph.models.Graph">(class in story_graph.models)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Subscription.graph">graph() (gencaster.schema.Subscription method)</a>
+      </ul></li>
+      <li><a href="back/gencaster.html#gencaster.schema.Subscription.graph">graph() (gencaster.schema.Subscription method)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.Graph.GraphDetailTemplate">Graph.GraphDetailTemplate (class in story_graph.models)</a>
+      <li><a href="back/story_graph.html#story_graph.models.Graph.GraphDetailTemplate">Graph.GraphDetailTemplate (class in story_graph.models)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.Graph.StreamAssignmentPolicy">Graph.StreamAssignmentPolicy (class in story_graph.models)</a>
+      <li><a href="back/story_graph.html#story_graph.models.Graph.StreamAssignmentPolicy">Graph.StreamAssignmentPolicy (class in story_graph.models)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.engine.GraphDeadEnd">GraphDeadEnd</a>
+      <li><a href="back/story_graph.html#story_graph.engine.GraphDeadEnd">GraphDeadEnd</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.graphql_check_authenticated">graphql_check_authenticated() (in module gencaster.schema)</a>
+      <li><a href="glossary.html#term-GraphQL"><strong>GraphQL</strong></a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.distributor.GraphQLWSConsumerInjector">GraphQLWSConsumerInjector (class in gencaster.distributor)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.graphql_check_authenticated">graphql_check_authenticated() (in module gencaster.schema)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.distributor.GraphUpdateMessage">GraphUpdateMessage (class in gencaster.distributor)</a>
+      <li><a href="back/gencaster.html#gencaster.distributor.GraphQLWSConsumerInjector">GraphQLWSConsumerInjector (class in gencaster.distributor)</a>
+</li>
+      <li><a href="back/gencaster.html#gencaster.distributor.GraphUpdateMessage">GraphUpdateMessage (class in gencaster.distributor)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -568,15 +600,23 @@ document.write(`
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/stream.html#stream.frontend_types.Input">Input (class in stream.frontend_types)</a>
+      <li><a href="back/stream.html#stream.frontend_types.Input">Input (class in stream.frontend_types)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.exceptions.InvalidAudioFileException">InvalidAudioFileException</a>
+      <li><a href="back/stream.html#stream.exceptions.InvalidAudioFileException">InvalidAudioFileException</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.engine.InvalidPythonCode">InvalidPythonCode</a>
+      <li><a href="back/story_graph.html#story_graph.engine.InvalidPythonCode">InvalidPythonCode</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.IsAuthenticated">IsAuthenticated (class in gencaster.schema)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.IsAuthenticated">IsAuthenticated (class in gencaster.schema)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="glossary.html#term-Janus"><strong>Janus</strong></a>
 </li>
   </ul></td>
 </tr></table>
@@ -584,7 +624,7 @@ document.write(`
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/gencaster.html#gencaster.schema.LoginError">LoginError (class in gencaster.schema)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.LoginError">LoginError (class in gencaster.schema)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -592,39 +632,39 @@ document.write(`
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.male">male() (story_graph.markdown_parser.GencasterRenderer method)</a>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.male">male() (story_graph.markdown_parser.GencasterRenderer method)</a>
 </li>
       <li><a href="back/osc_server.html#osc_server.exceptions.MalformedOscMessage">MalformedOscMessage</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.md_to_ssml">md_to_ssml() (in module story_graph.markdown_parser)</a>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.md_to_ssml">md_to_ssml() (in module story_graph.markdown_parser)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.distributor.MissingChannelLayer">MissingChannelLayer</a>
+      <li><a href="back/gencaster.html#gencaster.distributor.MissingChannelLayer">MissingChannelLayer</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.moderate">moderate() (story_graph.markdown_parser.GencasterRenderer method)</a>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.moderate">moderate() (story_graph.markdown_parser.GencasterRenderer method)</a>
 </li>
       <li>
     module
 
       <ul>
-        <li><a href="back/api/gencaster.html#module-gencaster">gencaster</a>
+        <li><a href="back/gencaster.html#module-gencaster">gencaster</a>
 </li>
-        <li><a href="back/api/gencaster.html#module-gencaster.asgi">gencaster.asgi</a>
+        <li><a href="back/gencaster.html#module-gencaster.asgi">gencaster.asgi</a>
 </li>
-        <li><a href="back/api/gencaster.html#module-gencaster.distributor">gencaster.distributor</a>
+        <li><a href="back/gencaster.html#module-gencaster.distributor">gencaster.distributor</a>
 </li>
-        <li><a href="back/api/gencaster.html#module-gencaster.schema">gencaster.schema</a>
+        <li><a href="back/gencaster.html#module-gencaster.schema">gencaster.schema</a>
 </li>
-        <li><a href="back/api/gencaster.html#module-gencaster.settings">gencaster.settings</a>
+        <li><a href="back/gencaster.html#module-gencaster.settings">gencaster.settings</a>
 </li>
-        <li><a href="back/api/gencaster.html#module-gencaster.settings.base">gencaster.settings.base</a>
+        <li><a href="back/gencaster.html#module-gencaster.settings.base">gencaster.settings.base</a>
 </li>
-        <li><a href="back/api/gencaster.html#module-gencaster.settings.deploy_dev">gencaster.settings.deploy_dev</a>
+        <li><a href="back/gencaster.html#module-gencaster.settings.deploy_dev">gencaster.settings.deploy_dev</a>
 </li>
-        <li><a href="back/api/gencaster.html#module-gencaster.settings.dev">gencaster.settings.dev</a>
+        <li><a href="back/gencaster.html#module-gencaster.settings.dev">gencaster.settings.dev</a>
 </li>
-        <li><a href="back/api/gencaster.html#module-gencaster.settings.dev_local">gencaster.settings.dev_local</a>
+        <li><a href="back/gencaster.html#module-gencaster.settings.dev_local">gencaster.settings.dev_local</a>
 </li>
-        <li><a href="back/api/gencaster.html#module-gencaster.settings.test">gencaster.settings.test</a>
+        <li><a href="back/gencaster.html#module-gencaster.settings.test">gencaster.settings.test</a>
 </li>
         <li><a href="back/osc_server.html#module-osc_server">osc_server</a>
 </li>
@@ -634,26 +674,26 @@ document.write(`
 </li>
         <li><a href="back/osc_server.html#module-osc_server.server">osc_server.server</a>
 </li>
-        <li><a href="back/api/story_graph.html#module-story_graph">story_graph</a>
+        <li><a href="back/story_graph.html#module-story_graph">story_graph</a>
 </li>
-        <li><a href="back/api/story_graph.html#module-story_graph.engine">story_graph.engine</a>
+        <li><a href="back/story_graph.html#module-story_graph.engine">story_graph.engine</a>
 </li>
-        <li><a href="back/api/story_graph.html#module-story_graph.markdown_parser">story_graph.markdown_parser</a>
+        <li><a href="back/story_graph.html#module-story_graph.markdown_parser">story_graph.markdown_parser</a>
 </li>
-        <li><a href="back/api/story_graph.html#module-story_graph.models">story_graph.models</a>
+        <li><a href="back/story_graph.html#module-story_graph.models">story_graph.models</a>
 </li>
-        <li><a href="back/api/stream.html#module-stream">stream</a>
+        <li><a href="back/stream.html#module-stream">stream</a>
 </li>
-        <li><a href="back/api/stream.html#module-stream.exceptions">stream.exceptions</a>
+        <li><a href="back/stream.html#module-stream.exceptions">stream.exceptions</a>
 </li>
-        <li><a href="back/api/stream.html#module-stream.frontend_types">stream.frontend_types</a>
+        <li><a href="back/stream.html#module-stream.frontend_types">stream.frontend_types</a>
 </li>
-        <li><a href="back/api/stream.html#module-stream.models">stream.models</a>
+        <li><a href="back/stream.html#module-stream.models">stream.models</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Mutation">Mutation (class in gencaster.schema)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.Mutation">Mutation (class in gencaster.schema)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -661,21 +701,27 @@ document.write(`
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.models.Node">Node (class in story_graph.models)</a>
+      <li><a href="glossary.html#term-Node"><strong>Node</strong></a>
+
+      <ul>
+        <li><a href="back/story_graph.html#story_graph.models.Node">(class in story_graph.models)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Subscription.node">node() (gencaster.schema.Subscription method)</a>
+      </ul></li>
+      <li><a href="glossary.html#term-Node-door"><strong>Node door</strong></a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.NodeDoor">NodeDoor (class in story_graph.models)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.Subscription.node">node() (gencaster.schema.Subscription method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.models.NodeDoor.DoorType">NodeDoor.DoorType (class in story_graph.models)</a>
+      <li><a href="back/story_graph.html#story_graph.models.NodeDoor">NodeDoor (class in story_graph.models)</a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.models.NodeDoorMissing">NodeDoorMissing</a>
+      <li><a href="back/story_graph.html#story_graph.models.NodeDoor.DoorType">NodeDoor.DoorType (class in story_graph.models)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.distributor.NodeUpdateMessage">NodeUpdateMessage (class in gencaster.distributor)</a>
+      <li><a href="back/story_graph.html#story_graph.models.NodeDoorMissing">NodeDoorMissing</a>
 </li>
-      <li><a href="back/api/stream.html#stream.exceptions.NoStreamAvailableException">NoStreamAvailableException</a>
+      <li><a href="back/gencaster.html#gencaster.distributor.NodeUpdateMessage">NodeUpdateMessage (class in gencaster.distributor)</a>
+</li>
+      <li><a href="back/stream.html#stream.exceptions.NoStreamAvailableException">NoStreamAvailableException</a>
 </li>
   </ul></td>
 </tr></table>
@@ -683,7 +729,7 @@ document.write(`
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/stream.html#stream.frontend_types.Button.ok">ok() (stream.frontend_types.Button class method)</a>
+      <li><a href="back/stream.html#stream.frontend_types.Button.ok">ok() (stream.frontend_types.Button class method)</a>
 </li>
       <li>
     osc_server
@@ -722,10 +768,18 @@ document.write(`
   </ul></td>
 </tr></table>
 
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="glossary.html#term-Pipewire"><strong>Pipewire</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="Q">Q</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Query">Query (class in gencaster.schema)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.Query">Query (class in gencaster.schema)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -733,11 +787,11 @@ document.write(`
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.raw_ssml">raw_ssml() (story_graph.markdown_parser.GencasterRenderer method)</a>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.raw_ssml">raw_ssml() (story_graph.markdown_parser.GencasterRenderer method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/gencaster.html#gencaster.distributor.GraphQLWSConsumerInjector.receive">receive() (gencaster.distributor.GraphQLWSConsumerInjector method)</a>
+      <li><a href="back/gencaster.html#gencaster.distributor.GraphQLWSConsumerInjector.receive">receive() (gencaster.distributor.GraphQLWSConsumerInjector method)</a>
 </li>
       <li><a href="back/osc_server.html#osc_server.server.OSCServer.remote_action_handler">remote_action_handler() (osc_server.server.OSCServer method)</a>
 </li>
@@ -747,107 +801,129 @@ document.write(`
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.models.Edge.save">save() (story_graph.models.Edge method)</a>
+      <li><a href="back/story_graph.html#story_graph.models.Edge.save">save() (story_graph.models.Edge method)</a>
 
       <ul>
-        <li><a href="back/api/story_graph.html#story_graph.models.Node.save">(story_graph.models.Node method)</a>
+        <li><a href="back/story_graph.html#story_graph.models.Node.save">(story_graph.models.Node method)</a>
 </li>
-        <li><a href="back/api/story_graph.html#story_graph.models.NodeDoor.save">(story_graph.models.NodeDoor method)</a>
+        <li><a href="back/story_graph.html#story_graph.models.NodeDoor.save">(story_graph.models.NodeDoor method)</a>
 </li>
       </ul></li>
-      <li><a href="back/api/story_graph.html#story_graph.models.ScriptCell">ScriptCell (class in story_graph.models)</a>
+      <li><a href="glossary.html#term-sclang"><strong>sclang</strong></a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.engine.ScriptCellTimeout">ScriptCellTimeout</a>
+      <li><a href="glossary.html#term-Script-cell"><strong>Script cell</strong></a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamPoint.send_stream_instruction">send_stream_instruction() (stream.models.StreamPoint method)</a>
+      <li><a href="back/story_graph.html#story_graph.models.ScriptCell">ScriptCell (class in story_graph.models)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamVariable.send_to_sc">send_to_sc() (stream.models.StreamVariable method)</a>
+      <li><a href="back/story_graph.html#story_graph.engine.ScriptCellTimeout">ScriptCellTimeout</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamPoint.speak_on_stream">speak_on_stream() (stream.models.StreamPoint method)</a>
+      <li><a href="glossary.html#term-scsynth"><strong>scsynth</strong></a>
 </li>
-      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.start">start() (story_graph.engine.Engine method)</a>
+      <li><a href="back/stream.html#stream.models.StreamPoint.send_stream_instruction">send_stream_instruction() (stream.models.StreamPoint method)</a>
+</li>
+      <li><a href="back/stream.html#stream.models.StreamVariable.send_to_sc">send_to_sc() (stream.models.StreamVariable method)</a>
+</li>
+      <li><a href="glossary.html#term-Services"><strong>Services</strong></a>
+</li>
+      <li><a href="back/stream.html#stream.models.StreamPoint.speak_on_stream">speak_on_stream() (stream.models.StreamPoint method)</a>
+</li>
+      <li><a href="back/story_graph.html#story_graph.engine.Engine.start">start() (story_graph.engine.Engine method)</a>
+</li>
+      <li><a href="glossary.html#term-Story-Graph"><strong>Story Graph</strong></a>
 </li>
       <li>
     story_graph
 
       <ul>
-        <li><a href="back/api/story_graph.html#module-story_graph">module</a>
+        <li><a href="back/story_graph.html#module-story_graph">module</a>
 </li>
       </ul></li>
       <li>
     story_graph.engine
 
       <ul>
-        <li><a href="back/api/story_graph.html#module-story_graph.engine">module</a>
+        <li><a href="back/story_graph.html#module-story_graph.engine">module</a>
 </li>
       </ul></li>
       <li>
     story_graph.markdown_parser
 
       <ul>
-        <li><a href="back/api/story_graph.html#module-story_graph.markdown_parser">module</a>
+        <li><a href="back/story_graph.html#module-story_graph.markdown_parser">module</a>
 </li>
       </ul></li>
       <li>
     story_graph.models
 
       <ul>
-        <li><a href="back/api/story_graph.html#module-story_graph.models">module</a>
+        <li><a href="back/story_graph.html#module-story_graph.models">module</a>
 </li>
       </ul></li>
+      <li><a href="glossary.html#term-Stream"><strong>Stream</strong></a>
+</li>
       <li>
     stream
 
       <ul>
-        <li><a href="back/api/stream.html#module-stream">module</a>
+        <li><a href="back/stream.html#stream.models.Stream">(class in stream.models)</a>
+</li>
+        <li><a href="back/stream.html#module-stream">module</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/stream.html#stream.models.Stream">Stream (class in stream.models)</a>
+      <li><a href="glossary.html#term-Stream-Assignment-Policy"><strong>Stream Assignment Policy</strong></a>
+</li>
+      <li><a href="glossary.html#term-Stream-Point"><strong>Stream Point</strong></a>
+</li>
+      <li><a href="glossary.html#term-Stream-Variable"><strong>Stream Variable</strong></a>
 </li>
       <li>
     stream.exceptions
 
       <ul>
-        <li><a href="back/api/stream.html#module-stream.exceptions">module</a>
+        <li><a href="back/stream.html#module-stream.exceptions">module</a>
 </li>
       </ul></li>
       <li>
     stream.frontend_types
 
       <ul>
-        <li><a href="back/api/stream.html#module-stream.frontend_types">module</a>
+        <li><a href="back/stream.html#module-stream.frontend_types">module</a>
 </li>
       </ul></li>
       <li>
     stream.models
 
       <ul>
-        <li><a href="back/api/stream.html#module-stream.models">module</a>
+        <li><a href="back/stream.html#module-stream.models">module</a>
 </li>
       </ul></li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Subscription.stream_info">stream_info() (gencaster.schema.Subscription method)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.Subscription.stream_info">stream_info() (gencaster.schema.Subscription method)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamInstruction">StreamInstruction (class in stream.models)</a>
+      <li><a href="glossary.html#term-Streaming-Point"><strong>Streaming Point</strong></a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamInstruction.InstructionState">StreamInstruction.InstructionState (class in stream.models)</a>
+      <li><a href="back/stream.html#stream.models.StreamInstruction">StreamInstruction (class in stream.models)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamLog">StreamLog (class in stream.models)</a>
+      <li><a href="back/stream.html#stream.models.StreamInstruction.InstructionState">StreamInstruction.InstructionState (class in stream.models)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamLog.LogLevel">StreamLog.LogLevel (class in stream.models)</a>
+      <li><a href="back/stream.html#stream.models.StreamLog">StreamLog (class in stream.models)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamLog.Origin">StreamLog.Origin (class in stream.models)</a>
+      <li><a href="back/stream.html#stream.models.StreamLog.LogLevel">StreamLog.LogLevel (class in stream.models)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.distributor.StreamLogUpdateMessage">StreamLogUpdateMessage (class in gencaster.distributor)</a>
+      <li><a href="back/stream.html#stream.models.StreamLog.Origin">StreamLog.Origin (class in stream.models)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamPoint">StreamPoint (class in stream.models)</a>
+      <li><a href="back/gencaster.html#gencaster.distributor.StreamLogUpdateMessage">StreamLogUpdateMessage (class in gencaster.distributor)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.distributor.StreamsUpdateMessage">StreamsUpdateMessage (class in gencaster.distributor)</a>
+      <li><a href="back/stream.html#stream.models.StreamPoint">StreamPoint (class in stream.models)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.StreamVariable">StreamVariable (class in stream.models)</a>
+      <li><a href="back/gencaster.html#gencaster.distributor.StreamsUpdateMessage">StreamsUpdateMessage (class in gencaster.distributor)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Subscription">Subscription (class in gencaster.schema)</a>
+      <li><a href="back/stream.html#stream.models.StreamVariable">StreamVariable (class in stream.models)</a>
+</li>
+      <li><a href="back/gencaster.html#gencaster.schema.Subscription">Subscription (class in gencaster.schema)</a>
+</li>
+      <li><a href="glossary.html#term-SuperCollider"><strong>SuperCollider</strong></a>
 </li>
   </ul></td>
 </tr></table>
@@ -855,13 +931,13 @@ document.write(`
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/stream.html#stream.frontend_types.Text">Text (class in stream.frontend_types)</a>
+      <li><a href="back/stream.html#stream.frontend_types.Text">Text (class in stream.frontend_types)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/stream.html#stream.models.TextToSpeech">TextToSpeech (class in stream.models)</a>
+      <li><a href="back/stream.html#stream.models.TextToSpeech">TextToSpeech (class in stream.models)</a>
 </li>
-      <li><a href="back/api/stream.html#stream.models.TextToSpeech.VoiceNameChoices">TextToSpeech.VoiceNameChoices (class in stream.models)</a>
+      <li><a href="back/stream.html#stream.models.TextToSpeech.VoiceNameChoices">TextToSpeech.VoiceNameChoices (class in stream.models)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -869,17 +945,17 @@ document.write(`
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.update_audio_file">update_audio_file() (gencaster.schema.Mutation method)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.Mutation.update_audio_file">update_audio_file() (gencaster.schema.Mutation method)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.Mutation.update_node">update_node() (gencaster.schema.Mutation method)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.Mutation.update_node">update_node() (gencaster.schema.Mutation method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/gencaster.html#gencaster.schema.update_or_create_audio_cell">update_or_create_audio_cell() (in module gencaster.schema)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.update_or_create_audio_cell">update_or_create_audio_cell() (in module gencaster.schema)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.schema.User">User (class in gencaster.schema)</a>
+      <li><a href="back/gencaster.html#gencaster.schema.User">User (class in gencaster.schema)</a>
 </li>
-      <li><a href="back/api/gencaster.html#gencaster.distributor.uuid_to_group">uuid_to_group() (in module gencaster.distributor)</a>
+      <li><a href="back/gencaster.html#gencaster.distributor.uuid_to_group">uuid_to_group() (in module gencaster.distributor)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -887,11 +963,13 @@ document.write(`
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.validate_gencaster_tokens">validate_gencaster_tokens() (story_graph.markdown_parser.GencasterRenderer method)</a>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.validate_gencaster_tokens">validate_gencaster_tokens() (story_graph.markdown_parser.GencasterRenderer method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.var">var() (story_graph.markdown_parser.GencasterRenderer method)</a>
+      <li><a href="back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.var">var() (story_graph.markdown_parser.GencasterRenderer method)</a>
+</li>
+      <li><a href="glossary.html#term-Vue"><strong>Vue</strong></a>
 </li>
   </ul></td>
 </tr></table>
@@ -899,11 +977,13 @@ document.write(`
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/story_graph.html#story_graph.engine.Engine.wait_for_stream_variable">wait_for_stream_variable() (story_graph.engine.Engine method)</a>
+      <li><a href="back/story_graph.html#story_graph.engine.Engine.wait_for_stream_variable">wait_for_stream_variable() (story_graph.engine.Engine method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="back/api/gencaster.html#gencaster.distributor.GraphQLWSConsumerInjector.websocket_disconnect">websocket_disconnect() (gencaster.distributor.GraphQLWSConsumerInjector method)</a>
+      <li><a href="glossary.html#term-WebRTC"><strong>WebRTC</strong></a>
+</li>
+      <li><a href="back/gencaster.html#gencaster.distributor.GraphQLWSConsumerInjector.websocket_disconnect">websocket_disconnect() (gencaster.distributor.GraphQLWSConsumerInjector method)</a>
 </li>
   </ul></td>
 </tr></table>

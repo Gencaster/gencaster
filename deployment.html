@@ -47,7 +47,8 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Caster Sound" href="sound.html" />
+    <link rel="next" title="Glossary" href="glossary.html" />
+    <link rel="prev" title="Caster Editor" href="editor.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -132,26 +133,30 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="story_graph.html">Story Graph</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="back/graphql.html">GraphQL</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="back/api/story_graph.html">Story Graph</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster Base</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorial.html">Tutorial</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/05-speaking.html">Speaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/06-interaction.html">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/08-debugging.html">Debugging</a></li>
 </ul>
 </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="back/story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="back/stream.html">Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="back/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="editor.html">Caster Editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front.html">Caster Front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
     </div>
@@ -364,7 +369,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <section id="deployment">
-<h1>Deployment<a class="headerlink" href="#deployment" title="Permalink to this headline">#</a></h1>
+<span id="id1"></span><h1>Deployment<a class="headerlink" href="#deployment" title="Permalink to this headline">#</a></h1>
 <section id="docker">
 <h2>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">#</a></h2>
 <p>As the setup of the streaming stack is delicate the only supported way of deployment is via <cite>docker compose</cite> which automates most of the setup procedure.
@@ -395,7 +400,7 @@ SENTRY_DSN_CASTER_FRONT=&quot;https://changeMe.io&quot;
 </div>
 </section>
 <section id="services">
-<span id="id1"></span><h3>Services<a class="headerlink" href="#services" title="Permalink to this headline">#</a></h3>
+<span id="deployment-services"></span><h3>Services<a class="headerlink" href="#services" title="Permalink to this headline">#</a></h3>
 <table class="colwidths-given table" id="id3">
 <caption><span class="caption-text">Docker services</span><a class="headerlink" href="#id3" title="Permalink to this table">#</a></caption>
 <colgroup>
@@ -430,12 +435,12 @@ SENTRY_DSN_CASTER_FRONT=&quot;https://changeMe.io&quot;
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">frontend</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">3000</span></code></p></td>
 <td><p>frontend for user interaction</p></td>
-<td><p><a class="reference internal" href="front.html#caster-front"><span class="std std-ref">Caster Front</span></a></p></td>
+<td><p><a class="reference internal" href="services.html#caster-front"><span class="std std-ref">Services</span></a></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sound</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">57120,8088</span></code></p></td>
 <td><p>SuperCollider server which can be listened to via WebRTC</p></td>
-<td><p><a class="reference internal" href="sound.html#caster-sound"><span class="std std-ref">Caster Sound</span></a></p></td>
+<td><p><a class="reference internal" href="services.html#caster-sound"><span class="std std-ref">Services</span></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">database</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">5432</span></code></p></td>
@@ -661,13 +666,22 @@ server {
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="sound.html"
+       href="editor.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Caster Sound</p>
+        <p class="prev-next-title">Caster Editor</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="glossary.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Glossary</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div></div>
   

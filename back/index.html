@@ -133,26 +133,30 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../story_graph.html">Story Graph</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../services.html">Services</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">Caster Back</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="osc_server.html">OSC Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="graphql.html">GraphQL</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="api/story_graph.html">Story Graph</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/gencaster.html">GenCaster Base</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorial.html">Tutorial</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/05-speaking.html">Speaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/06-interaction.html">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/08-debugging.html">Debugging</a></li>
 </ul>
 </li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../services.html">Services</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">Caster Back</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stream.html">Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../editor.html">Caster Editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../front.html">Caster Front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
 
     </div>
@@ -347,7 +351,6 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#global-model-graph">Global model graph</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a></li>
 </ul>
             </nav>
         </div>
@@ -368,76 +371,11 @@ Through this we also gain the proper types, making use of the TypeScript functio
 <section id="global-model-graph">
 <h2>Global model graph<a class="headerlink" href="#global-model-graph" title="Permalink to this headline">#</a></h2>
 <figure class="align-default" id="id2">
-<img alt="../_images/global.png" src="../_images/global.png" />
-<figcaption>
+<img alt="../_images/global.svg" src="../_images/global.svg" /><figcaption>
 <p><span class="caption-text">Global model graph</span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-</section>
-<section id="api">
-<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">#</a></h2>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="osc_server.html">OSC Server</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="osc_server.html#module-osc_server">API</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="osc_server.html#server">Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="osc_server.html#models">Models</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="osc_server.html#oscauthmixin">OSCAuthMixin</a></li>
-<li class="toctree-l4"><a class="reference internal" href="osc_server.html#scacknowledgemessage">SCAcknowledgeMessage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="osc_server.html#scbeaconmessage">SCBeaconMessage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="osc_server.html#remoteactionmessage">RemoteActionMessage</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="graphql.html">GraphQL</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="graphql.html#add-queries">Add queries</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api/index.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/story_graph.html">Story Graph</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/story_graph.html#graph">Graph</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="api/story_graph.html#engine">Engine</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/story_graph.html#markdown-parser">Markdown parser</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/story_graph.html#models">Models</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/stream.html">Stream</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/stream.html#graph">Graph</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/stream.html#module-stream.models">Models</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/stream.html#module-stream.frontend_types">Frontend Types</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/stream.html#module-stream.exceptions">Exceptions</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="api/stream.html#id3">Exceptions</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="api/gencaster.html">GenCaster Base</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="api/gencaster.html#schema">Schema</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/gencaster.html#distributor">Distributor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api/gencaster.html#settings">Settings</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="api/gencaster.html#base-settings">Base settings</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/gencaster.html#test">Test</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/gencaster.html#module-gencaster.settings.dev">Development</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api/gencaster.html#id2">Development</a></li>
-<li class="toctree-l5"><a class="reference internal" href="api/gencaster.html#local-development">Local development</a></li>
-</ul>
-</li>
-<li class="toctree-l4"><a class="reference internal" href="api/gencaster.html#module-gencaster.settings.deploy_dev">Deployment</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="api/gencaster.html#deploy-dev">Deploy Dev</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
 </div>
 </section>
 </section>
@@ -491,7 +429,6 @@ Through this we also gain the proper types, making use of the TypeScript functio
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#global-model-graph">Global model graph</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#api">API</a></li>
 </ul>
   </nav></div>
 

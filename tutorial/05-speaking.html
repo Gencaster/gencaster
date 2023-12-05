@@ -1,0 +1,560 @@
+
+
+<!DOCTYPE html>
+
+
+<html >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Speaking &#8212; Gencaster  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/05-speaking';</script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Listener interaction" href="06-interaction.html" />
+    <link rel="prev" title="Live editing" href="04-live-editing.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="None"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/spiral.svg" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/spiral.svg" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../tutorial.html">Tutorial</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Speaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="06-interaction.html">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08-debugging.html">Debugging</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../back/osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../back/story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../back/stream.html">Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../back/gencaster.html">GenCaster Base</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../editor.html">Caster Editor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/gencaster/gencaster" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/gencaster/gencaster/blob/main/docs/tutorial/05-speaking.rst?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/tutorial/05-speaking.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Speaking</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#audio-files">Audio files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#speaking-text">Speaking text</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="speaking">
+<h1>Speaking<a class="headerlink" href="#speaking" title="Permalink to this headline">#</a></h1>
+<p>While radio is often used to distribute music, a common aspect of broadcasting is also the distribution of spoken content.
+Since Gencaster aims to be a two-way broadcasting platform, there are several ways to speak in a stream.</p>
+<section id="audio-files">
+<h2>Audio files<a class="headerlink" href="#audio-files" title="Permalink to this headline">#</a></h2>
+<p>One way to speak on the stream is to record yourself or others with a microphone and save the content to an audio file.
+Gencaster allows you to play audio files in different formats, but common formats like mp3, wav, opus, AAC or FLAC are supported and recommended.</p>
+<p>Gencaster supports two types of playback styles</p>
+<table class="colwidths-given table" id="id2">
+<caption><span class="caption-text">Script cell types</span><a class="headerlink" href="#id2" title="Permalink to this table">#</a></caption>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 67%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Playback type</p></th>
+<th class="head"><p>Comment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Sync playback</p></td>
+<td><p>The audio file is played in its entirety, and the progress of the graph execution is halted until the file is played in its entirety.
+This is useful for spoken or other sonic content that requires focus from the listener, as it provides a more exclusive space on the stream.
+Using an additional SuperCollider script cell or async audio playback it is possible to provide some background for this playback.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Async playback</p></td>
+<td><p>Once the playback of the file has been started, the execution of the graph will continue.
+This is useful for sonic content which is intended for a background.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Currently there is no way to terminate the audio after playback, so once it is running it will be played back until the end.
+At some point the async playback could be attached to a Node scope.</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-action admonition">
+<p class="admonition-title">Action</p>
+<ul class="simple">
+<li><p>Open the node editor of the <em>Stop music</em> node</p></li>
+<li><p>Attach an audio file to it - you can upload one or choose on of the existing files on the server.
+If you upload one, please provide meaningful name for it as you will need to identify the file through its name after the upload.</p></li>
+<li><p>Compare both kinds of playback styles.</p></li>
+</ul>
+</div>
+</section>
+<section id="speaking-text">
+<h2>Speaking text<a class="headerlink" href="#speaking-text" title="Permalink to this headline">#</a></h2>
+<p>Another way to add a voice to the story graph is to use the text-to-speech engine.
+Using an external service that Gencaster can communicate with natively, it is possible to convert a written text into an audible spoken text through a variety of voices and variations.
+This allows for more dynamic or generative approaches to text, as the content of the written text can be generated dynamically, as shown in the following chapters.
+Also, the conversion of text to speech is very fast, so it is possible to create fast interactions with the listener through text as well.</p>
+<p>Any spoken content will block the execution of the graph until the audio file containing the spoken text has been fully played, mimicking the synchronized playback style of an audio file.</p>
+<div class="admonition-action admonition">
+<p class="admonition-title">Action</p>
+<ul class="simple">
+<li><p>Open an arbitrary node of the graph and add a <em>Markdwon</em> script cell in it</p></li>
+<li><p>Write some text into it and save the node</p></li>
+<li><p>Listen to it</p></li>
+</ul>
+</div>
+<p>By building upon <a class="reference external" href="https://www.markdownguide.org/basic-syntax/">Markdown</a> it is possible to not just declare what needs to be spoken, but also how it needs to be spoken and by whom.</p>
+<p>The default voice of Gencaster is <code class="docutils literal notranslate"><span class="pre">DE_NEURAL2_C__FEMALE</span></code> - to change the speaker of a section we can wrap the text we want to be spoken by a male person with a special kind of syntax:</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>{male}`Wir` müssen auch etwas gemeinsam {male}`sprechen`
+</pre></div>
+</div>
+<p>It is also possible to change the pronunciation of a word</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>Aber bitte, {chars}`bitte`, etwas gelassener.
+</pre></div>
+</div>
+<p>For a list of all available control statements for text to speech take a look at <a class="reference internal" href="../editor.html#editor-markdown"><span class="std std-ref">Markdown script cell documentation of the editor</span></a> and at <a class="reference external" href="https://cloud.google.com/text-to-speech/docs/ssml">SSML</a>.</p>
+<div class="admonition-action admonition">
+<p class="admonition-title">Action</p>
+<ul class="simple">
+<li><p>Modify <em>how</em> your written text is spoken.</p></li>
+<li><p>Check the editor documentation and use <code class="docutils literal notranslate"><span class="pre">break</span></code></p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that an external service will be used to convert the written text to sound, so the text will have to be transferred to the service provider, who will also charge a fee.
+Creating hours of spoken text is not a problem, as the services are not too expensive, but the mechanisms described can also be used to dynamically generate hundreds of hours of spoken text.</p>
+<p>Since the same Markdown text will always result in the same audio file, we can <em>cache</em> the results by storing each result on the server’s disk.
+This makes running the graph much faster and cheaper.
+Nevertheless, choose the allocation of your and our resources wisely.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="04-live-editing.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Live editing</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="06-interaction.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Listener interaction</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#audio-files">Audio files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#speaking-text">Speaking text</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gencaster
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023 Vinzenz Aubry and Dennis Scheiba.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

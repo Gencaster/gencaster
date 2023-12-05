@@ -1,0 +1,896 @@
+
+
+<!DOCTYPE html>
+
+
+<html >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>GenCaster Base &#8212; Gencaster  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'back/gencaster';</script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Caster Editor" href="../editor.html" />
+    <link rel="prev" title="Stream" href="stream.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="None"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/spiral.svg" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/spiral.svg" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorial.html">Tutorial</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/05-speaking.html">Speaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/06-interaction.html">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/08-debugging.html">Debugging</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../services.html">Services</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Caster Back</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stream.html">Stream</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">GenCaster Base</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../editor.html">Caster Editor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/gencaster/gencaster" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/gencaster/gencaster/blob/main/docs/back/gencaster.rst?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/back/gencaster.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>GenCaster Base</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#schema">Schema</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributor">Distributor</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#settings">Settings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#base-settings">Base settings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test">Test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-gencaster.settings.dev">Development</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Development</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#local-development">Local development</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-gencaster.settings.deploy_dev">Deployment</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deploy-dev">Deploy Dev</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="module-gencaster">
+<span id="gencaster-base"></span><h1>GenCaster Base<a class="headerlink" href="#module-gencaster" title="Permalink to this headline">#</a></h1>
+<p>In this module we will find all things concerning connection and.</p>
+<p>As it is difficult to split GraphQL endpoints across apps we also define them here as reusability
+of the apps is probably not a concern for now and is more used to split different parts for testing
+purposes.</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#schema" id="id4">Schema</a></p></li>
+<li><p><a class="reference internal" href="#distributor" id="id5">Distributor</a></p></li>
+<li><p><a class="reference internal" href="#settings" id="id6">Settings</a></p>
+<ul>
+<li><p><a class="reference internal" href="#base-settings" id="id7">Base settings</a></p></li>
+<li><p><a class="reference internal" href="#test" id="id8">Test</a></p></li>
+<li><p><a class="reference internal" href="#module-gencaster.settings.dev" id="id9">Development</a></p></li>
+<li><p><a class="reference internal" href="#module-gencaster.settings.deploy_dev" id="id10">Deployment</a></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<span class="target" id="module-gencaster.schema"></span><section id="schema">
+<span id="id1"></span><h2><a class="toc-backref" href="#id4">Schema</a><a class="headerlink" href="#schema" title="Permalink to this headline">#</a></h2>
+<p>Here we define all the endpoints for GraphQL.</p>
+<p>For a specific details of the types consider the
+<a class="reference external" href="https://github.com/graphql/graphiql">GraphiQL</a>
+page available under the <cite>/graphql</cite> endpoint of
+the running backend.</p>
+<p>Any subscription updates are messaged via Redis and
+is handled via channels and has an abstraction layer
+<a class="reference internal" href="#gencaster.distributor.GenCasterChannel" title="gencaster.distributor.GenCasterChannel"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenCasterChannel</span></code></a>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.schema.AuthStrawberryDjangoField">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.schema.</span></span><span class="sig-name descname"><span class="pre">AuthStrawberryDjangoField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_related</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefetch_related</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_optimization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#AuthStrawberryDjangoField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.AuthStrawberryDjangoField" title="Permalink to this definition">#</a></dt>
+<dd><p>Allows us to restrict certain actions to logged in users.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.schema.IsAuthenticated">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.schema.</span></span><span class="sig-name descname"><span class="pre">IsAuthenticated</span></span><a class="reference internal" href="../_modules/gencaster/schema.html#IsAuthenticated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.IsAuthenticated" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.schema.LoginError">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.schema.</span></span><span class="sig-name descname"><span class="pre">LoginError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#LoginError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.LoginError" title="Permalink to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.LoginError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gencaster.schema.LoginError.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.schema.Mutation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.schema.</span></span><span class="sig-name descname"><span class="pre">Mutation</span></span><a class="reference internal" href="../_modules/gencaster/schema.html#Mutation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation" title="Permalink to this definition">#</a></dt>
+<dd><p>Mutations for Gencaster via GraphQL.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Mutation.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gencaster.schema.Mutation.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Mutation.add_edge">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_edge</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Mutation.add_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.add_edge" title="Permalink to this definition">#</a></dt>
+<dd><p>Creates a <a class="reference internal" href="story_graph.html#story_graph.models.Edge" title="story_graph.models.Edge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Edge</span></code></a> for a given
+<a class="reference internal" href="story_graph.html#story_graph.models.Graph" title="story_graph.models.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a>.
+It returns the created edge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Edge</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Mutation.add_node">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_node</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Mutation.add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.add_node" title="Permalink to this definition">#</a></dt>
+<dd><p>Creates a new <a class="reference internal" href="story_graph.html#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> in a given
+~class:<cite>~story_graph.models.Graph</cite>.
+Although it creates a new node with UUID we don’t hand it back yet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Mutation.create_script_cells">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_script_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">script_cell_inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Mutation.create_script_cells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.create_script_cells" title="Permalink to this definition">#</a></dt>
+<dd><p>Creates or updates a given <a class="reference internal" href="story_graph.html#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a> to change its content.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Mutation.delete_edge">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Mutation.delete_edge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.delete_edge" title="Permalink to this definition">#</a></dt>
+<dd><p>Deletes a given <a class="reference internal" href="story_graph.html#story_graph.models.Edge" title="story_graph.models.Edge"><code class="xref py py-class docutils literal notranslate"><span class="pre">Edge</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Mutation.delete_node">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Mutation.delete_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.delete_node" title="Permalink to this definition">#</a></dt>
+<dd><p>Deletes a given <a class="reference internal" href="story_graph.html#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Mutation.delete_node_door">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_node_door</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_door_uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Mutation.delete_node_door"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.delete_node_door" title="Permalink to this definition">#</a></dt>
+<dd><p>Allows to delete a non-default NodeDoor.
+If a node door was deleted it will return <code class="docutils literal notranslate"><span class="pre">True</span></code>, otherwise <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Mutation.delete_script_cell">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_script_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">script_cell_uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Mutation.delete_script_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.delete_script_cell" title="Permalink to this definition">#</a></dt>
+<dd><p>Deletes a given <a class="reference internal" href="story_graph.html#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Mutation.update_audio_file">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_audio_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_audio_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Mutation.update_audio_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.update_audio_file" title="Permalink to this definition">#</a></dt>
+<dd><p>Update metadata of an <a class="reference internal" href="stream.html#stream.models.AudioFile" title="stream.models.AudioFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioFile</span></code></a> via a UUID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioFile</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Mutation.update_node">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_update</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Mutation.update_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Mutation.update_node" title="Permalink to this definition">#</a></dt>
+<dd><p>Updates a given <a class="reference internal" href="story_graph.html#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a> which can be used
+for renaming or moving it across the canvas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.schema.Query">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.schema.</span></span><span class="sig-name descname"><span class="pre">Query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">audio_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">audio_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_variable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Query" title="Permalink to this definition">#</a></dt>
+<dd><p>Queries for Gencaster.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Query.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graphs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">audio_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">audio_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_variable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gencaster.schema.Query.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.schema.Subscription">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.schema.</span></span><span class="sig-name descname"><span class="pre">Subscription</span></span><a class="reference internal" href="../_modules/gencaster/schema.html#Subscription"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Subscription" title="Permalink to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Subscription.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gencaster.schema.Subscription.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Subscription.graph">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Subscription.graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Subscription.graph" title="Permalink to this definition">#</a></dt>
+<dd><p>Used within the editor to synchronize any updates of the graph such as movement
+of a <a class="reference internal" href="story_graph.html#story_graph.models.Node" title="story_graph.models.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Subscription.node">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Subscription.node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Subscription.node" title="Permalink to this definition">#</a></dt>
+<dd><p>Used within the editor to synchronize any updates on a node such as updates on a
+<a class="reference internal" href="story_graph.html#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.Subscription.stream_info">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stream_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">graph_uuid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#Subscription.stream_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.Subscription.stream_info" title="Permalink to this definition">#</a></dt>
+<dd><p>Used within the frontend to attach a user to a stream.
+<a class="reference internal" href="story_graph.html#story_graph.engine.Engine" title="story_graph.engine.Engine"><code class="xref py py-class docutils literal notranslate"><span class="pre">Engine</span></code></a> contains the specifics of how the iteration over a
+graph is handled.</p>
+<p>Upon visit the <code class="docutils literal notranslate"><span class="pre">num_of_listeners</span></code> of the associated
+:class:~stream.models.Stream` will be incremented which indicates
+if a given stream is free or used.
+Upon connection stop this will be decremented again.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.AsyncGenerator" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncGenerator</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">StrawberryUnion</span></code>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.schema.User">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.schema.</span></span><span class="sig-name descname"><span class="pre">User</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_staff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#User"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.User" title="Permalink to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="gencaster.schema.User.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_staff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_active</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gencaster.schema.User.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gencaster.schema.graphql_check_authenticated">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.schema.</span></span><span class="sig-name descname"><span class="pre">graphql_check_authenticated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#graphql_check_authenticated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.graphql_check_authenticated" title="Permalink to this definition">#</a></dt>
+<dd><p>Helper function to determine if we are loggin in an async manner.</p>
+<p>This would be better a decorator but strawberry is not nice in these regards, see
+<a class="reference external" href="https://stackoverflow.com/a/72796313/3475778">Stack Overflow</a>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gencaster.schema.update_or_create_audio_cell">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.schema.</span></span><span class="sig-name descname"><span class="pre">update_or_create_audio_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">audio_cell_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/schema.html#update_or_create_audio_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.schema.update_or_create_audio_cell" title="Permalink to this definition">#</a></dt>
+<dd><p>Async function to update audio cells</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference internal" href="story_graph.html#story_graph.models.AudioCell" title="story_graph.models.AudioCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioCell</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-gencaster.distributor"></span><section id="distributor">
+<h2><a class="toc-backref" href="#id5">Distributor</a><a class="headerlink" href="#distributor" title="Permalink to this headline">#</a></h2>
+<p>A collection of async messaging tools which is used by our GraphQL schema.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.distributor.GenCasterChannel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.distributor.</span></span><span class="sig-name descname"><span class="pre">GenCasterChannel</span></span><a class="reference internal" href="../_modules/gencaster/distributor.html#GenCasterChannel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.distributor.GenCasterChannel" title="Permalink to this definition">#</a></dt>
+<dd><p>Abstraction layer for channels.</p>
+<p>Publish and subscribe to specific updates or more general ones as well.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.distributor.GenCasterChannel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/distributor.html#GenCasterChannel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.distributor.GenCasterChannel.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.distributor.GraphQLWSConsumerInjector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.distributor.</span></span><span class="sig-name descname"><span class="pre">GraphQLWSConsumerInjector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/distributor.html#GraphQLWSConsumerInjector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.distributor.GraphQLWSConsumerInjector" title="Permalink to this definition">#</a></dt>
+<dd><p>Allows us to inject callbacks on e.g. a disconnect.</p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>This can be made obsolete via
+<a class="github reference external" href="https://github.com/strawberry-graphql/strawberry/pull/2430">strawberry-graphql/strawberry#2430</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.distributor.GraphQLWSConsumerInjector.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/distributor.html#GraphQLWSConsumerInjector.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.distributor.GraphQLWSConsumerInjector.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.distributor.GraphQLWSConsumerInjector.receive">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">receive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/distributor.html#GraphQLWSConsumerInjector.receive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.distributor.GraphQLWSConsumerInjector.receive" title="Permalink to this definition">#</a></dt>
+<dd><p>Called with a decoded WebSocket frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gencaster.distributor.GraphQLWSConsumerInjector.websocket_disconnect">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">websocket_disconnect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/distributor.html#GraphQLWSConsumerInjector.websocket_disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.distributor.GraphQLWSConsumerInjector.websocket_disconnect" title="Permalink to this definition">#</a></dt>
+<dd><p>Called when a WebSocket connection is closed. Base level so you don’t
+need to call super() all the time.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.distributor.GraphUpdateMessage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.distributor.</span></span><span class="sig-name descname"><span class="pre">GraphUpdateMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type='graph.update'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_channels=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/distributor.html#GraphUpdateMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.distributor.GraphUpdateMessage" title="Permalink to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="gencaster.distributor.GraphUpdateMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type='graph.update'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_channels=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gencaster.distributor.GraphUpdateMessage.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="gencaster.distributor.MissingChannelLayer">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.distributor.</span></span><span class="sig-name descname"><span class="pre">MissingChannelLayer</span></span><a class="reference internal" href="../_modules/gencaster/distributor.html#MissingChannelLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.distributor.MissingChannelLayer" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.distributor.NodeUpdateMessage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.distributor.</span></span><span class="sig-name descname"><span class="pre">NodeUpdateMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type='node.update'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_channels=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/distributor.html#NodeUpdateMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.distributor.NodeUpdateMessage" title="Permalink to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="gencaster.distributor.NodeUpdateMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type='node.update'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_channels=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gencaster.distributor.NodeUpdateMessage.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.distributor.StreamLogUpdateMessage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.distributor.</span></span><span class="sig-name descname"><span class="pre">StreamLogUpdateMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_point_uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type='stream_log.update'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_channels=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/distributor.html#StreamLogUpdateMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.distributor.StreamLogUpdateMessage" title="Permalink to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="gencaster.distributor.StreamLogUpdateMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_point_uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type='stream_log.update'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_channels=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gencaster.distributor.StreamLogUpdateMessage.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gencaster.distributor.StreamsUpdateMessage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gencaster.distributor.</span></span><span class="sig-name descname"><span class="pre">StreamsUpdateMessage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type='streams.update'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_channels=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/distributor.html#StreamsUpdateMessage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.distributor.StreamsUpdateMessage" title="Permalink to this definition">#</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="gencaster.distributor.StreamsUpdateMessage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type='streams.update'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_channels=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#gencaster.distributor.StreamsUpdateMessage.__init__" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gencaster.distributor.uuid_to_group">
+<span class="sig-prename descclassname"><span class="pre">gencaster.distributor.</span></span><span class="sig-name descname"><span class="pre">uuid_to_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gencaster/distributor.html#uuid_to_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gencaster.distributor.uuid_to_group" title="Permalink to this definition">#</a></dt>
+<dd><p>Channel group names are not allow
+to have <code class="docutils literal notranslate"><span class="pre">-</span></code>, so we replace them with <code class="docutils literal notranslate"><span class="pre">_</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<span class="target" id="module-gencaster.settings"></span><section id="settings">
+<h2><a class="toc-backref" href="#id6">Settings</a><a class="headerlink" href="#settings" title="Permalink to this headline">#</a></h2>
+<p>Configure environment for Gencaster backend.</p>
+<span class="target" id="module-gencaster.settings.base"></span><section id="base-settings">
+<h3><a class="toc-backref" href="#id7">Base settings</a><a class="headerlink" href="#base-settings" title="Permalink to this headline">#</a></h3>
+<p>Configures plugins, database, logging and media assets configuration.</p>
+</section>
+<span class="target" id="module-gencaster.settings.test"></span><section id="test">
+<h3><a class="toc-backref" href="#id8">Test</a><a class="headerlink" href="#test" title="Permalink to this headline">#</a></h3>
+<p>Settings to run tests in by using local sqlite database.</p>
+</section>
+<section id="module-gencaster.settings.dev">
+<span id="development"></span><h3><a class="toc-backref" href="#id9">Development</a><a class="headerlink" href="#module-gencaster.settings.dev" title="Permalink to this headline">#</a></h3>
+<section id="id3">
+<h4>Development<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h4>
+<p>Configures settings to allow access from local node environments.</p>
+</section>
+<span class="target" id="module-gencaster.settings.dev_local"></span><section id="local-development">
+<h4>Local development<a class="headerlink" href="#local-development" title="Permalink to this headline">#</a></h4>
+<p>Switch to local sqlite database.</p>
+</section>
+</section>
+<section id="module-gencaster.settings.deploy_dev">
+<span id="deployment"></span><h3><a class="toc-backref" href="#id10">Deployment</a><a class="headerlink" href="#module-gencaster.settings.deploy_dev" title="Permalink to this headline">#</a></h3>
+<section id="deploy-dev">
+<h4>Deploy Dev<a class="headerlink" href="#deploy-dev" title="Permalink to this headline">#</a></h4>
+<p>Settings for deploying “<em>production</em>” dev environment on the server via Docker.</p>
+</section>
+</section>
+</section>
+<span class="target" id="module-gencaster.asgi"></span><p>ASGI config for gencaster project.</p>
+</section>
+
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="stream.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Stream</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../editor.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Caster Editor</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#schema">Schema</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distributor">Distributor</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#settings">Settings</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#base-settings">Base settings</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test">Test</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-gencaster.settings.dev">Development</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Development</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#local-development">Local development</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#module-gencaster.settings.deploy_dev">Deployment</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#deploy-dev">Deploy Dev</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gencaster
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023 Vinzenz Aubry and Dennis Scheiba.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -9,10 +9,10 @@ Caster Editor
 
 .. seealso::
 
-    This documents covers the editing of a *story graph*.
-    For the concepts of such a graph see :ref:`Story Graph`.
+    This documents covers the editing of a :term:`Story Graph` through the editor.
+    For an introduction to the concepts of Gencaster, such as the editing and capabilities of the story graph, also take a look ot the :ref:`tutorial`.
 
-The editor is a website which allows to create and modify a :ref:`Story Graph`.
+The editor is a website which allows to create and modify a :term:`Story Graph`.
 It is possible that many users at once can collaboratively edit this story graph, and also the modifications will be applied in real time to an already running stream, which allows for live coding setups.
 
 .. figure:: ./assets/editor.png
@@ -48,6 +48,8 @@ There are multiple types of script cells for different contexts.
      - Python is a scripting language which allows to modify and interact with the story graph and also trigger
        e.g. PopUps on the :ref:`caster-front`.
        Anything that should be decided dynamically (e.g. day vs night) should be coded within Python.
+
+.. _editor_markdown:
 
 Markdown
 ^^^^^^^^
@@ -103,7 +105,7 @@ To use this ``name`` within a Markdown cell can be archived via
 
 .. code-block:: markdown
 
-    Hello ${var}`name`. I hope you are doing fine.
+    Hello {var}`name`. I hope you are doing fine.
 
 where the *${var}`name* will be replaced with the name provided through the popup, so for example *Hello Alice. I hope you are doing fine*.
 
@@ -119,6 +121,8 @@ An audio cell allows to playback a :class:`~stream.models.AudioFile` on the stre
 The *volume* slider controls the volume of the audio on the stream.
 
 The *edit* button allows to change the associated audio file by uploading a new file or search through existing files.
+
+.. _editor_python:
 
 Python
 ^^^^^^

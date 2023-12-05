@@ -130,26 +130,30 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../story_graph.html">Story Graph</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../back/osc_server.html">OSC Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../back/graphql.html">GraphQL</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../back/api/story_graph.html">Story Graph</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../back/api/gencaster.html">GenCaster Base</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorial.html">Tutorial</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/05-speaking.html">Speaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/06-interaction.html">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/08-debugging.html">Debugging</a></li>
 </ul>
 </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../back/osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/stream.html">Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../editor.html">Caster Editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../front.html">Caster Front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
 </ul>
 
     </div>
@@ -298,7 +302,7 @@ document.write(`
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="md_to_ssml"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.md_to_ssml">[docs]</a><span class="k">def</span> <span class="nf">md_to_ssml</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stream_variables</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="md_to_ssml"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.md_to_ssml">[docs]</a><span class="k">def</span> <span class="nf">md_to_ssml</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">stream_variables</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts a md text into</span>
 <span class="sd">    `SSML &lt;https://en.wikipedia.org/wiki/Speech_Synthesis_Markup_Language&gt;`_.</span>
 
@@ -310,21 +314,21 @@ document.write(`
     <span class="k">return</span> <span class="n">ssml_text</span>  <span class="c1"># type: ignore</span></div>
 
 
-<div class="viewcode-block" id="GencasterToken"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterToken">[docs]</a><span class="k">class</span> <span class="nc">GencasterToken</span><span class="p">(</span><span class="n">SpanToken</span><span class="p">):</span>
+<div class="viewcode-block" id="GencasterToken"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterToken">[docs]</a><span class="k">class</span> <span class="nc">GencasterToken</span><span class="p">(</span><span class="n">SpanToken</span><span class="p">):</span>
     <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;{(?P&lt;type&gt;\w*)}`(?P&lt;value&gt;[^`]*)`&quot;</span><span class="p">)</span>
     <span class="n">parse_inner</span> <span class="o">=</span> <span class="kc">False</span>
 
-<div class="viewcode-block" id="GencasterToken.__init__"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterToken.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">match_obj</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">Match</span><span class="p">):</span>
+<div class="viewcode-block" id="GencasterToken.__init__"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterToken.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">match_obj</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">Match</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">match_obj</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">match_obj</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="GencasterRenderer"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer">[docs]</a><span class="k">class</span> <span class="nc">GencasterRenderer</span><span class="p">(</span><span class="n">BaseRenderer</span><span class="p">):</span>
+<div class="viewcode-block" id="GencasterRenderer"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterRenderer">[docs]</a><span class="k">class</span> <span class="nc">GencasterRenderer</span><span class="p">(</span><span class="n">BaseRenderer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Acts as a python parser for the Gencaster markdown dialect.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="GencasterRenderer.__init__"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_variables</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="GencasterRenderer.__init__"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream_variables</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">GencasterToken</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="p">(</span>
@@ -347,7 +351,7 @@ document.write(`
             <span class="s2">&quot;raw_ssml&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_ssml</span><span class="p">,</span>
         <span class="p">}</span></div>
 
-<div class="viewcode-block" id="GencasterRenderer.validate_gencaster_tokens"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.validate_gencaster_tokens">[docs]</a>    <span class="k">def</span> <span class="nf">validate_gencaster_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="GencasterRenderer.validate_gencaster_tokens"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.validate_gencaster_tokens">[docs]</a>    <span class="k">def</span> <span class="nf">validate_gencaster_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates if the used tags are known to Gencaster</span>
 
 <span class="sd">        .. todo::</span>
@@ -356,7 +360,7 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="GencasterRenderer.chars"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.chars">[docs]</a>    <span class="k">def</span> <span class="nf">chars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="GencasterRenderer.chars"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.chars">[docs]</a>    <span class="k">def</span> <span class="nf">chars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Speaks surrounded words as characters, so &quot;can&quot; becomes &quot;C A N&quot;, see</span>
 <span class="sd">        `say as &lt;https://cloud.google.com/text-to-speech/docs/ssml#say%E2%80%91as&gt;`_</span>
@@ -369,7 +373,7 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;say-as interpret-as=&quot;characters&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/say-as&gt;&#39;</span></div>
 
-<div class="viewcode-block" id="GencasterRenderer.moderate"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.moderate">[docs]</a>    <span class="k">def</span> <span class="nf">moderate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="GencasterRenderer.moderate"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.moderate">[docs]</a>    <span class="k">def</span> <span class="nf">moderate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Speaks surrounded words in a moderate manner, see</span>
 <span class="sd">        `emphasis &lt;https://cloud.google.com/text-to-speech/docs/ssml#emphasis&gt;`_</span>
@@ -382,7 +386,7 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;emphasis level=&quot;moderate&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/emphasis&gt;&#39;</span></div>
 
-<div class="viewcode-block" id="GencasterRenderer.female"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.female">[docs]</a>    <span class="k">def</span> <span class="nf">female</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="GencasterRenderer.female"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.female">[docs]</a>    <span class="k">def</span> <span class="nf">female</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Speaks as ``DE_STANDARD_A__FEMALE`` from :class:`stream.models.TextToSpeech.VoiceNameChoices`.</span>
 
@@ -393,7 +397,7 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;voice name=&quot;</span><span class="si">{</span><span class="n">TextToSpeech</span><span class="o">.</span><span class="n">VoiceNameChoices</span><span class="o">.</span><span class="n">DE_NEURAL2_C__FEMALE</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/voice&gt;&#39;</span></div>
 
-<div class="viewcode-block" id="GencasterRenderer.male"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.male">[docs]</a>    <span class="k">def</span> <span class="nf">male</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="GencasterRenderer.male"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.male">[docs]</a>    <span class="k">def</span> <span class="nf">male</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Speaks as ``DE_STANDARD_B__MALE`` from :class:`stream.models.TextToSpeech.VoiceNameChoices`.</span>
 
@@ -405,7 +409,7 @@ document.write(`
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;voice name=&quot;</span><span class="si">{</span><span class="n">TextToSpeech</span><span class="o">.</span><span class="n">VoiceNameChoices</span><span class="o">.</span><span class="n">DE_NEURAL2_B__MALE</span><span class="si">}</span><span class="s1">&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/voice&gt;&#39;</span></div>
 
     <span class="c1"># break is native word in python</span>
-<div class="viewcode-block" id="GencasterRenderer.add_break"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.add_break">[docs]</a>    <span class="k">def</span> <span class="nf">add_break</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="GencasterRenderer.add_break"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.add_break">[docs]</a>    <span class="k">def</span> <span class="nf">add_break</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a break between words, see</span>
 <span class="sd">        `break &lt;https://cloud.google.com/text-to-speech/docs/ssml#break&gt;`_ in GC docs.</span>
@@ -418,7 +422,7 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;break time=&quot;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&quot;/&gt;&#39;</span></div>
 
-<div class="viewcode-block" id="GencasterRenderer.eval_python"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.eval_python">[docs]</a>    <span class="k">def</span> <span class="nf">eval_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="GencasterRenderer.eval_python"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.eval_python">[docs]</a>    <span class="k">def</span> <span class="nf">eval_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute a python inline script via eval, e.g.</span>
 
@@ -442,7 +446,7 @@ document.write(`
             <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not evaluate python code: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
-<div class="viewcode-block" id="GencasterRenderer.exec_python"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.exec_python">[docs]</a>    <span class="k">def</span> <span class="nf">exec_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="GencasterRenderer.exec_python"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.exec_python">[docs]</a>    <span class="k">def</span> <span class="nf">exec_python</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Executes a Python statement which allows to assign variables.</span>
 
@@ -464,7 +468,7 @@ document.write(`
             <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not execute python code: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 
-<div class="viewcode-block" id="GencasterRenderer.var"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.var">[docs]</a>    <span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="GencasterRenderer.var"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.var">[docs]</a>    <span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Refers to the value of a :class:`~stream.models.StreamVariable`.</span>
 
@@ -490,7 +494,7 @@ document.write(`
         <span class="n">fallback_value</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream_variables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fallback_value</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GencasterRenderer.raw_ssml"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.markdown_parser.GencasterRenderer.raw_ssml">[docs]</a>    <span class="k">def</span> <span class="nf">raw_ssml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="GencasterRenderer.raw_ssml"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.markdown_parser.GencasterRenderer.raw_ssml">[docs]</a>    <span class="k">def</span> <span class="nf">raw_ssml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Allows to use raw ssml statements to extend functionality that may not be covered by this parser.</span>
 

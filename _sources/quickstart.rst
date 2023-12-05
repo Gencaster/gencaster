@@ -1,6 +1,0 @@
-Quickstart
-==========
-
-.. todo::
-
-    todo

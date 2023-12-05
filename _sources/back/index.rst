@@ -14,16 +14,15 @@ The communication with *caster-sound*, the sound generating and streaming servic
 Global model graph
 ------------------
 
-.. figure:: ../graphs/global.png
+.. figure:: ../graphs/global.svg
 
     Global model graph
 
 
-API
----
-
 .. toctree::
+    :hidden:
 
     osc_server.rst
-    graphql.rst
-    api/index.rst
+    story_graph.rst
+    stream.rst
+    gencaster.rst

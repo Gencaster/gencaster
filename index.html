@@ -47,7 +47,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Quickstart" href="quickstart.html" />
+    <link rel="next" title="Tutorial" href="tutorial.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -132,26 +132,30 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="story_graph.html">Story Graph</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="back/graphql.html">GraphQL</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="back/api/story_graph.html">Story Graph</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster Base</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorial.html">Tutorial</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/05-speaking.html">Speaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/06-interaction.html">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/08-debugging.html">Debugging</a></li>
 </ul>
 </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="back/story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="back/stream.html">Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="back/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="editor.html">Caster Editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front.html">Caster Front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
     </div>
@@ -349,40 +353,18 @@ document.write(`
                   
   <section id="gencaster">
 <h1>Gencaster<a class="headerlink" href="#gencaster" title="Permalink to this headline">#</a></h1>
-<p>Gencaster is a non-linear audio streaming framework for real-time radiophonic experiences and live music and consists of multiple services.</p>
-<p>The audio streams have a low latency (about 150ms) and can be listened to in any modern browser, and can dynamically render audio content based on a given story graph that can react to user input such as name, time, GPS position, or even microphone streaming after permissions have been granted.</p>
+<p>Gencaster is a non-linear audio streaming framework for real-time radiophonic experiences and live music.</p>
+<p>The audio streams created through Gencaster have a low latency (about 150ms) and can be listened to in any modern browser, and can dynamically render audio content based on a given story graph that can react to user input such as name, time, GPS position, or even microphone streaming after permissions have been granted.</p>
+<p>Gencaster consists mainly ofthe following services.</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="sound.html#caster-sound"><span class="std std-ref">Caster Sound</span></a> is a service that handles all streaming and audio rendering functionality, using SuperCollider to generate audio and Janus to distribute audio to listeners via WebRTC</p></li>
-<li><p><a class="reference internal" href="back/index.html#caster-back"><span class="std std-ref">Caster Back</span></a> is a web backend to manage the streams of caster-sound, written in Django</p></li>
-<li><p><a class="reference internal" href="front.html#caster-front"><span class="std std-ref">Caster Front</span></a> is a web frontend that allows users to listen to the streams of caster-sound, written in Vue</p></li>
-<li><p><a class="reference internal" href="editor.html#caster-editor"><span class="std std-ref">Caster Editor</span></a> is a web-editor in which the actions of a stream, called a <a class="reference internal" href="story_graph.html#story-graph"><span class="std std-ref">Story Graph</span></a>, can be created, edited and tweaked using Python or SuperCollider, and is also written in Vue</p></li>
+<li><p><a class="reference internal" href="services.html#caster-sound"><span class="std std-ref">Caster sound</span></a> is a service that handles all streaming and audio rendering functionality, using SuperCollider to generate audio and Janus to distribute audio to listeners via WebRTC</p></li>
+<li><p><a class="reference internal" href="back/index.html#caster-back"><span class="std std-ref">The backend</span></a> manages the streams of caster-sound, written in Django.
+To communicate with <a class="reference internal" href="services.html#caster-sound"><span class="std std-ref">Caster sound</span></a>, it uses the <a class="reference internal" href="back/osc_server.html#osc-server"><span class="std std-ref">OSC Server</span></a> service.</p></li>
+<li><p><a class="reference internal" href="services.html#caster-front"><span class="std std-ref">The frontend</span></a> allows users to listen to the streams of <a class="reference internal" href="services.html#caster-sound"><span class="std std-ref">Caster sound</span></a> and acts as a player.
+It is written in Vue.</p></li>
+<li><p><a class="reference internal" href="editor.html#caster-editor"><span class="std std-ref">The editor</span></a> is a website in which the actions of a stream, called a <a class="reference internal" href="glossary.html#term-Story-Graph"><span class="xref std std-term">Story Graph</span></a>, can be created, edited and tweaked using Python or SuperCollider, and is also written in Vue.</p></li>
 </ul>
 <div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="story_graph.html">Story Graph</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="story_graph.html#node">Node</a></li>
-<li class="toctree-l2"><a class="reference internal" href="story_graph.html#edge">Edge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="story_graph.html#node-door">Node Door</a></li>
-<li class="toctree-l2"><a class="reference internal" href="story_graph.html#stream-variable">Stream Variable</a></li>
-<li class="toctree-l2"><a class="reference internal" href="story_graph.html#graph-metadata">Graph Metadata</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="services.html">Services</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="back/index.html">Caster Back</a></li>
-<li class="toctree-l2"><a class="reference internal" href="editor.html">Caster Editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front.html">Caster Front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster Sound</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="deployment.html#docker">Docker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="deployment.html#ufw">UFW</a></li>
-<li class="toctree-l2"><a class="reference internal" href="deployment.html#ngingx">Ngingx</a></li>
-</ul>
-</li>
-</ul>
 </div>
 </section>
 
@@ -399,11 +381,11 @@ document.write(`
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="right-next"
-       href="quickstart.html"
+       href="tutorial.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Quickstart</p>
+        <p class="prev-next-title">Tutorial</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

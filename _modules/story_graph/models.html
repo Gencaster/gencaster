@@ -130,26 +130,30 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../story_graph.html">Story Graph</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../back/osc_server.html">OSC Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../back/graphql.html">GraphQL</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../back/api/story_graph.html">Story Graph</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../back/api/gencaster.html">GenCaster Base</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorial.html">Tutorial</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/05-speaking.html">Speaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/06-interaction.html">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorial/08-debugging.html">Debugging</a></li>
 </ul>
 </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../back/osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/stream.html">Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../back/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../editor.html">Caster Editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../front.html">Caster Front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
 </ul>
 
     </div>
@@ -288,7 +292,7 @@ document.write(`
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Graph"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.Graph">[docs]</a><span class="k">class</span> <span class="nc">Graph</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="Graph"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.Graph">[docs]</a><span class="k">class</span> <span class="nc">Graph</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A collection of :class:`~Node` and :class:`~Edge`.</span>
 <span class="sd">    This can be considered a score as well as a program as it</span>
 <span class="sd">    has an entry point as a :class:`~Node` and can jump to any</span>
@@ -302,14 +306,39 @@ document.write(`
 <span class="sd">    The story graph is a core concept and can be edited with a native editor.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Graph.StreamAssignmentPolicy"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.Graph.StreamAssignmentPolicy">[docs]</a>    <span class="k">class</span> <span class="nc">StreamAssignmentPolicy</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
+<div class="viewcode-block" id="Graph.StreamAssignmentPolicy"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.Graph.StreamAssignmentPolicy">[docs]</a>    <span class="k">class</span> <span class="nc">StreamAssignmentPolicy</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Each graph can handle different &quot;connection&quot; mechanisms when a listener</span>
+<span class="sd">        accesses a graph.</span>
+
+<span class="sd">        The implementation of each policy is defined in :class:`~story_graph.engine.Engine`.</span>
+
+<span class="sd">        .. list-table::</span>
+<span class="sd">            :header-rows: 1</span>
+
+<span class="sd">            * - StreamAssignmentPolicy</span>
+<span class="sd">              - Comment</span>
+<span class="sd">            * - `ONE_GRAPH_ONE_STREAM`</span>
+<span class="sd">              - All users share the same stream.</span>
+<span class="sd">                When the first user visits a graph, a new stream will be set up.</span>
+<span class="sd">                Any following user visiting the same story graph stream will be</span>
+<span class="sd">                &quot;redirected&quot; to the same stream as long as there is still *any*</span>
+<span class="sd">                user listening to the graph.</span>
+<span class="sd">                All users still execute the story graph from the beginning.</span>
+<span class="sd">            * - `ONE_USER_ONE_STREAM`</span>
+<span class="sd">              - Upon connection, each user will obtain a new and exclusive stream</span>
+<span class="sd">                and the graph will be executed upon the stream.</span>
+<span class="sd">            * - `DEACTIVATE`</span>
+<span class="sd">              - Non functional, for administrative work.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">ONE_GRAPH_ONE_STREAM</span> <span class="o">=</span> <span class="s2">&quot;one_graph_one_stream&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span>
             <span class="s2">&quot;Each graph has only one stream&quot;</span>
         <span class="p">)</span>
         <span class="n">ONE_USER_ONE_STREAM</span> <span class="o">=</span> <span class="s2">&quot;one_user_one_stream&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Each user gets its own stream&quot;</span><span class="p">)</span>
         <span class="n">DEACTIVATE</span> <span class="o">=</span> <span class="s2">&quot;deactivate&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;No stream assignment&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Graph.GraphDetailTemplate"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.Graph.GraphDetailTemplate">[docs]</a>    <span class="k">class</span> <span class="nc">GraphDetailTemplate</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
+<div class="viewcode-block" id="Graph.GraphDetailTemplate"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.Graph.GraphDetailTemplate">[docs]</a>    <span class="k">class</span> <span class="nc">GraphDetailTemplate</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
         <span class="n">DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Default template&quot;</span><span class="p">)</span></div>
 
     <span class="n">uuid</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">UUIDField</span><span class="p">(</span>
@@ -396,13 +425,13 @@ document.write(`
         <span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span>
 
-<div class="viewcode-block" id="Graph.aget_entry_node"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.Graph.aget_entry_node">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">aget_entry_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Node&quot;</span><span class="p">:</span>
+<div class="viewcode-block" id="Graph.aget_entry_node"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.Graph.aget_entry_node">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">aget_entry_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Node&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        See :func:`Graph.create_entry_node`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="k">await</span> <span class="n">Node</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">aget</span><span class="p">(</span><span class="n">is_entry_node</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Graph.acreate_entry_node"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.Graph.acreate_entry_node">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">acreate_entry_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Node&quot;</span><span class="p">:</span>
+<div class="viewcode-block" id="Graph.acreate_entry_node"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.Graph.acreate_entry_node">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">acreate_entry_node</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Node&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Every graph needs a deterministic, unique entry node which is used</span>
 <span class="sd">        to start the iteration over the graph.</span>
@@ -441,7 +470,7 @@ document.write(`
     <span class="n">update_graph_db_to_ws</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Node"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.Node">[docs]</a><span class="k">class</span> <span class="nc">Node</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="Node"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.Node">[docs]</a><span class="k">class</span> <span class="nc">Node</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A node.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -527,7 +556,7 @@ document.write(`
             <span class="k">raise</span> <span class="n">NodeDoorMissing</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default in door for node </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s2"> is missing&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">default_in_door</span>
 
-<div class="viewcode-block" id="Node.save"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.Node.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Node.save"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.Node.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">create_default_doors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">adding</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">create_default_doors</span><span class="p">:</span>
@@ -570,7 +599,7 @@ document.write(`
     <span class="n">update_graph_db_to_ws</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="NodeDoorMissing"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.NodeDoorMissing">[docs]</a><span class="k">class</span> <span class="nc">NodeDoorMissing</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="NodeDoorMissing"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.NodeDoorMissing">[docs]</a><span class="k">class</span> <span class="nc">NodeDoorMissing</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception that can be thrown if a node door is missing.</span>
 <span class="sd">    Normally each node should have a default in- and out</span>
 <span class="sd">    :class:`~NodeDoor` via a signal, but as this is not forced</span>
@@ -579,7 +608,7 @@ document.write(`
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="NodeDoor"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.NodeDoor">[docs]</a><span class="k">class</span> <span class="nc">NodeDoor</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="NodeDoor"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.NodeDoor">[docs]</a><span class="k">class</span> <span class="nc">NodeDoor</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A :class:`~Node` can be entered and exited via</span>
 <span class="sd">    multiple paths, where each of these exits and</span>
 <span class="sd">    entrances is called a *door*.</span>
@@ -612,7 +641,7 @@ document.write(`
 <span class="sd">    **INPUT** door via an :class:`~Edge`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="NodeDoor.DoorType"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.NodeDoor.DoorType">[docs]</a>    <span class="k">class</span> <span class="nc">DoorType</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
+<div class="viewcode-block" id="NodeDoor.DoorType"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.NodeDoor.DoorType">[docs]</a>    <span class="k">class</span> <span class="nc">DoorType</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
         <span class="n">INPUT</span> <span class="o">=</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Input&quot;</span><span class="p">)</span>
         <span class="n">OUTPUT</span> <span class="o">=</span> <span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">)</span></div>
 
@@ -680,7 +709,7 @@ document.write(`
             <span class="p">),</span>
         <span class="p">]</span>
 
-<div class="viewcode-block" id="NodeDoor.save"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.NodeDoor.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="NodeDoor.save"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.NodeDoor.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">SyntaxError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -707,7 +736,7 @@ document.write(`
     <span class="k">return</span> <span class="n">update_node_door_ws</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="Edge"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.Edge">[docs]</a><span class="k">class</span> <span class="nc">Edge</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="Edge"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.Edge">[docs]</a><span class="k">class</span> <span class="nc">Edge</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Connects two :class:`~Node` with each other by</span>
 <span class="sd">    using their respective :class:`~NodeDoor`.</span>
 
@@ -796,7 +825,7 @@ document.write(`
         <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
 
-<div class="viewcode-block" id="Edge.save"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.Edge.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="Edge.save"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.Edge.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if ``in_node_door`` and ``out_node_door`` have their</span>
 <span class="sd">        respective types in order to avoid any *wrong* directions within</span>
 <span class="sd">        our graph.</span>
@@ -831,10 +860,10 @@ document.write(`
         <span class="n">update_node_db_to_ws</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">in_node_door</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">uuid</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="AudioCell"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.AudioCell">[docs]</a><span class="k">class</span> <span class="nc">AudioCell</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="AudioCell"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.AudioCell">[docs]</a><span class="k">class</span> <span class="nc">AudioCell</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Stores information for playback of static audio files.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AudioCell.PlaybackChoices"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.AudioCell.PlaybackChoices">[docs]</a>    <span class="k">class</span> <span class="nc">PlaybackChoices</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
+<div class="viewcode-block" id="AudioCell.PlaybackChoices"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.AudioCell.PlaybackChoices">[docs]</a>    <span class="k">class</span> <span class="nc">PlaybackChoices</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Different kinds of playback.</span>
 
 <span class="sd">        .. list-table:: Playback types</span>
@@ -886,7 +915,7 @@ document.write(`
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">audio_file</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">playback</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 
 
-<div class="viewcode-block" id="CellType"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.CellType">[docs]</a><span class="k">class</span> <span class="nc">CellType</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
+<div class="viewcode-block" id="CellType"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.CellType">[docs]</a><span class="k">class</span> <span class="nc">CellType</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">TextChoices</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A :class:`~story_graph.models.ScriptCell` can contain</span>
 <span class="sd">    different types of code, each with unique functionality.</span>
 
@@ -945,7 +974,7 @@ document.write(`
     <span class="n">AUDIO</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;audio&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Audio&quot;</span><span class="p">)]</span></div>
 
 
-<div class="viewcode-block" id="ScriptCell"><a class="viewcode-back" href="../../back/api/story_graph.html#story_graph.models.ScriptCell">[docs]</a><span class="k">class</span> <span class="nc">ScriptCell</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="ScriptCell"><a class="viewcode-back" href="../../back/story_graph.html#story_graph.models.ScriptCell">[docs]</a><span class="k">class</span> <span class="nc">ScriptCell</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Stores a script which can be executed</span>
 <span class="sd">    with our :class:`~story_graph.engine.Engine` on a</span>
 <span class="sd">    :class:`~stream.models.Stream`.</span>

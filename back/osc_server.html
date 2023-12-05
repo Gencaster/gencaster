@@ -47,7 +47,7 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="GraphQL" href="graphql.html" />
+    <link rel="next" title="Story Graph" href="story_graph.html" />
     <link rel="prev" title="Caster Back" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
@@ -133,26 +133,30 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../story_graph.html">Story Graph</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../services.html">Services</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Caster Back</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">OSC Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="graphql.html">GraphQL</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="api/story_graph.html">Story Graph</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/gencaster.html">GenCaster Base</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorial.html">Tutorial</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/05-speaking.html">Speaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/06-interaction.html">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tutorial/08-debugging.html">Debugging</a></li>
 </ul>
 </li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../services.html">Services</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="index.html">Caster Back</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stream.html">Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../editor.html">Caster Editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../front.html">Caster Front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
 
     </div>
@@ -379,7 +383,7 @@ As Django does not natively understand UDP messages and OSC is a rather restrict
 protocol we created this server which is able to receive this messages and makes it available
 to our Django app by using its ORM.</p>
 <p>Each SuperCollider instance sends a beacon in order to get discovered by the backend as a
-<a class="reference internal" href="api/stream.html#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>.</p>
+<a class="reference internal" href="stream.html#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>.</p>
 <p>This is <strong>not</strong> a Django app but an application on its own.</p>
 <div class="admonition-todo admonition" id="id2">
 <p class="admonition-title">Todo</p>
@@ -468,7 +472,7 @@ properly.</p>
 <dt class="sig sig-object py" id="osc_server.server.OSCServer.remote_action_handler">
 <span class="sig-name descname"><span class="pre">remote_action_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">osc_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/osc_server/server.html#OSCServer.remote_action_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osc_server.server.OSCServer.remote_action_handler" title="Permalink to this definition">#</a></dt>
 <dd><p>Remote actions are used to trigger actions on a SuperCollider instance
-and can be send in form of a <a class="reference internal" href="api/stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>
+and can be send in form of a <a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>
 or raw from a local running SuperCollider instance which
 can be used to live code the SuperCollider instances managed by Gencaster.</p>
 <dl class="field-list simple">
@@ -521,7 +525,7 @@ can be used to live code the SuperCollider instances managed by Gencaster.</p>
 <col style="width: 33%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="3"><p>See <a class="reference internal" href="api/stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>.</p></td>
+<tr class="row-odd"><td colspan="3"><p>See <a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>.</p></td>
 </tr>
 <tr class="row-even"><td><p>type</p></td>
 <td colspan="2"><p><em>object</em></p></td>
@@ -534,7 +538,7 @@ can be used to live code the SuperCollider instances managed by Gencaster.</p>
 </td>
 <td colspan="2"><p><em>Uuid</em></p></td>
 </tr>
-<tr class="row-odd"><td colspan="2"><p>UUID from <a class="reference internal" href="api/stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">stream.models.StreamInstruction</span></code></a></p></td>
+<tr class="row-odd"><td colspan="2"><p>UUID from <a class="reference internal" href="stream.html#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">stream.models.StreamInstruction</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p>type</p></td>
 <td><p><em>string</em></p></td>
@@ -584,7 +588,7 @@ can be used to live code the SuperCollider instances managed by Gencaster.</p>
 <col style="width: 33%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td colspan="3"><p>Will create a <a class="reference internal" href="api/stream.html#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>.</p></td>
+<tr class="row-odd"><td colspan="3"><p>Will create a <a class="reference internal" href="stream.html#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>.</p></td>
 </tr>
 <tr class="row-even"><td><p>type</p></td>
 <td colspan="2"><p><em>object</em></p></td>
@@ -810,11 +814,11 @@ can be used to live code the SuperCollider instances managed by Gencaster.</p>
       </div>
     </a>
     <a class="right-next"
-       href="graphql.html"
+       href="story_graph.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">GraphQL</p>
+        <p class="prev-next-title">Story Graph</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

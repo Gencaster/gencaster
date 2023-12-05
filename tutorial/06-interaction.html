@@ -1,0 +1,608 @@
+
+
+<!DOCTYPE html>
+
+
+<html >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Listener interaction &#8212; Gencaster  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tutorial/06-interaction';</script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Node doors" href="07-node_doors.html" />
+    <link rel="prev" title="Speaking" href="05-speaking.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="None"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/spiral.svg" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/spiral.svg" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../tutorial.html">Tutorial</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="05-speaking.html">Speaking</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="08-debugging.html">Debugging</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../services.html">Services</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../back/osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../back/story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../back/stream.html">Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../back/gencaster.html">GenCaster Base</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../editor.html">Caster Editor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/gencaster/gencaster" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/gencaster/gencaster/blob/main/docs/tutorial/06-interaction.rst?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/tutorial/06-interaction.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Listener interaction</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-variable">Stream variable</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#triggering-dialogs">Triggering dialogs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#storing-user-input-in-stream-variables">Storing user input in stream variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-dialogs">Conditional dialogs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-streaming-variables">Creating streaming variables</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="listener-interaction">
+<h1>Listener interaction<a class="headerlink" href="#listener-interaction" title="Permalink to this headline">#</a></h1>
+<p>After introducing the SuperCollider, Audio and Markdown cells, it is now time to take a look at what a Python script cell can offer.
+With Python script cells it is possible to</p>
+<ul class="simple">
+<li><p>Interact with the listener by requesting some input</p></li>
+<li><p>Generate or calculate some dynamic text</p></li>
+<li><p>Control what is displayed on the listener’s screen</p></li>
+<li><p>request information from a database or the Internet, or</p></li>
+<li><p>navigate the user through several possible paths</p></li>
+</ul>
+<p>This allows you to create more dynamic content within Gencaster, creating more of a dialog between the listener and the streamer.</p>
+<section id="stream-variable">
+<span id="id1"></span><h2>Stream variable<a class="headerlink" href="#stream-variable" title="Permalink to this headline">#</a></h2>
+<p>In order to respond to events or information from the user, it is necessary to have a way to pass information from the listener to the server that controls the sonic content of the stream.
+To attach information to a running stream, a stream variable is used.
+Each stream variable is stored as a string in the database under a <em>key</em>.
+It is possible to access and set this variable from different script cells throughout the graph.</p>
+<p>The native way of interacting and managing these streaming variables is through the Python script cells through the <code class="docutils literal notranslate"><span class="pre">vars</span></code> variable, which is a <a class="reference external" href="https://realpython.com/python-dicts/">dictionary</a> of all stream variables.
+There are several triggers and helper functions built into Gencaster, such as <a class="reference internal" href="../back/story_graph.html#story_graph.engine.Engine.wait_for_stream_variable" title="story_graph.engine.Engine.wait_for_stream_variable"><code class="xref py py-func docutils literal notranslate"><span class="pre">wait_for_stream_variable()</span></code></a>, which allows to wait for example a certain event which has been triggered by the user.</p>
+<p>In order to wait for the execution of the graph until a user presses the <em>Start</em> button in the frontend, it is possible to wait for the stream variable <code class="docutils literal notranslate"><span class="pre">start</span></code> which is set as soon as the listener presses the <em>Start</em> button.
+This is a common pattern within Gencaster as due browser restrictions it is not possible to playback any sound before any button is pressed.
+We can use a Python script cell to wait until this variable has been set by adding a Python script cell to a given node with the following code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">await</span> <span class="n">wait_for_stream_variable</span><span class="p">(</span><span class="s2">&quot;start&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition-action admonition">
+<p class="admonition-title">Action</p>
+<ul class="simple">
+<li><p>Also wait for the press of <em>Start</em> from the user before playing any sound.
+Note that it is possible to arrange the order of the script cells via drag and drop.</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The code of a Python script cell is executed within an <a class="reference external" href="https://realpython.com/async-io-python/">async runtime</a>.
+Also, for security reasons, the modules and functions which one can use within a Python script cell is limited and are stated explicitly.
+The documentation and source code of <a class="reference internal" href="../back/story_graph.html#story_graph.engine.Engine.get_engine_global_vars" title="story_graph.engine.Engine.get_engine_global_vars"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_engine_global_vars()</span></code></a> show all available functions and modules.</p>
+</div>
+</section>
+<section id="triggering-dialogs">
+<h2>Triggering dialogs<a class="headerlink" href="#triggering-dialogs" title="Permalink to this headline">#</a></h2>
+<p>Gencaster not only allows to communicate with the listener through the sonic stream but also through the display of the device.
+Via a Python cell it is possible to construct a Dialog (e.g. its title, content and its button) and <em>yield</em> it to the frontend of the user.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">yield</span> <span class="n">Dialog</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Hello World&quot;</span><span class="p">,</span>
+    <span class="n">content</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">Text</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;I was triggered from within a Python cell.&quot;</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">buttons</span><span class="o">=</span><span class="p">[</span><span class="n">Button</span><span class="o">.</span><span class="n">ok</span><span class="p">()],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition-action admonition">
+<p class="admonition-title">Action</p>
+<ul class="simple">
+<li><p>Create a Python script cell in a node and paste the code above in it</p></li>
+<li><p>Save the node and try it out in the frontend</p></li>
+<li><p>Modify the text which should be displayed.</p></li>
+<li><p>Note that during each call of the code a dialog will be put on the stack of dialogs which needs to be displayed on the frontend.</p></li>
+</ul>
+</div>
+</section>
+<section id="storing-user-input-in-stream-variables">
+<h2>Storing user input in stream variables<a class="headerlink" href="#storing-user-input-in-stream-variables" title="Permalink to this headline">#</a></h2>
+<p>While triggering a dialog on the listener’s screen allows for more interaction with the listener and waiting for user-triggered events, it is also possible to use dialogs to retrieve text-based information from the listener and store that information in a stream variable.</p>
+<p>The following code creates a dialog that displays a text box where the listener can enter a name.
+The result is transferred and stored in a new stream variable called <code class="docutils literal notranslate"><span class="pre">name</span></code> and is available within Python.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">yield</span> <span class="n">Dialog</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">,</span>
+    <span class="n">content</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">Text</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Can we ask for your name?&quot;</span><span class="p">),</span>
+        <span class="c1"># key will be used as the key for the stream variable name</span>
+        <span class="n">Input</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">buttons</span><span class="o">=</span><span class="p">[</span><span class="n">Button</span><span class="o">.</span><span class="n">cancel</span><span class="p">(),</span> <span class="n">Button</span><span class="o">.</span><span class="n">ok</span><span class="p">()],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>In order to use this variable within a Markdown/text-to-speech context, it is possible to access the stream variables via the <code class="docutils literal notranslate"><span class="pre">var</span></code> statement within a Markdown script cell.</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>Hello {var}`name`.
+</pre></div>
+</div>
+<p>If the listener stated <em>Italo</em> as a name, the listener will hear <em>Hello Italo</em> on the stream.
+There are also built in dialogs such as requesting the GPS address of the user, which are documented in <a class="reference internal" href="../editor.html#editor-python"><span class="std std-ref">the python script cell documentation of the editor</span></a>.</p>
+<div class="admonition-action admonition">
+<p class="admonition-title">Action</p>
+<ul class="simple">
+<li><p>Create a dialog which asks for a favorite pet - or something else, and store it in</p></li>
+<li><p>Wait for the user input.</p></li>
+<li><p>Use the pet within a Markdown cell.</p></li>
+</ul>
+</div>
+</section>
+<section id="conditional-dialogs">
+<h2>Conditional dialogs<a class="headerlink" href="#conditional-dialogs" title="Permalink to this headline">#</a></h2>
+<p>Creating endless or repeating (sub-)cycles within the story graph is a common pattern within Gencaster, but this can conflict with user information we want to ask only once.
+To ask for a name only once, it is possible to wrap the output of a dialog in an if condition, which checks if a stream variable for a certain key has already been set using the <code class="docutils literal notranslate"><span class="pre">vars</span></code> dictionary.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nb">vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">yield</span> <span class="n">Dialog</span><span class="p">(</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Who are you?&quot;</span><span class="p">,</span>
+        <span class="n">content</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">Text</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Can we ask for your name?&quot;</span><span class="p">),</span>
+            <span class="c1"># key will be used as the key for the stream variable name</span>
+            <span class="n">Input</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">buttons</span><span class="o">=</span><span class="p">[</span><span class="n">Button</span><span class="o">.</span><span class="n">cancel</span><span class="p">(),</span> <span class="n">Button</span><span class="o">.</span><span class="n">ok</span><span class="p">()],</span>
+    <span class="p">)</span>
+    <span class="k">await</span> <span class="n">wait_for_stream_variable</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="creating-streaming-variables">
+<h2>Creating streaming variables<a class="headerlink" href="#creating-streaming-variables" title="Permalink to this headline">#</a></h2>
+<p>We can also store the number of visits of a script cell, using the <a class="reference external" href="https://docs.python.org/3/whatsnew/3.8.html#assignment-expressions">*walrus operator*</a>.
+Assigning a stream variable is as easy as declaring a new key for the <code class="docutils literal notranslate"><span class="pre">vars</span></code> variable.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">counter</span><span class="o">:=</span><span class="nb">vars</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;counter&quot;</span><span class="p">):</span>
+    <span class="c1"># streaming variables are always strings</span>
+    <span class="c1"># therefore we need to cast them e.g. to strings</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">vars</span><span class="p">[</span><span class="s2">&quot;counter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The SuperCollider and the Python script cell don’t only serve different purposes, they also behave differently.
+A Python script cell always starts <em>from scratch</em>, so functions declared in another script cell that may have already been evaluated are not available for execution.</p>
+<p>On the other hand, SuperCollider script cells are executed in the context of the previous state of the SuperCollider interpreter - so variables and functions declared earlier are also available in the context of the script cell.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="05-speaking.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Speaking</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="07-node_doors.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Node doors</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stream-variable">Stream variable</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#triggering-dialogs">Triggering dialogs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#storing-user-input-in-stream-variables">Storing user input in stream variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#conditional-dialogs">Conditional dialogs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#creating-streaming-variables">Creating streaming variables</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Gencaster
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023 Vinzenz Aubry and Dennis Scheiba.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

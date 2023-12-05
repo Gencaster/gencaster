@@ -48,7 +48,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Caster Back" href="back/index.html" />
-    <link rel="prev" title="Story Graph" href="story_graph.html" />
+    <link rel="prev" title="Debugging" href="tutorial/08-debugging.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="None"/>
   </head>
@@ -133,26 +133,30 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="story_graph.html">Story Graph</a></li>
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Services</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="back/graphql.html">GraphQL</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="back/api/index.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l4"><a class="reference internal" href="back/api/story_graph.html">Story Graph</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/stream.html">Stream</a></li>
-<li class="toctree-l4"><a class="reference internal" href="back/api/gencaster.html">GenCaster Base</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tutorial.html">Tutorial</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/01-story_graph.html">The story graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/02-listening.html">Listening to a graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/03-connecting-nodes.html">Connecting nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/04-live-editing.html">Live editing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/05-speaking.html">Speaking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/06-interaction.html">Listener interaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/07-node_doors.html">Node doors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/08-debugging.html">Debugging</a></li>
 </ul>
 </li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Services</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="back/index.html">Caster Back</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="back/story_graph.html">Story Graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="back/stream.html">Stream</a></li>
+<li class="toctree-l3"><a class="reference internal" href="back/gencaster.html">GenCaster Base</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="editor.html">Caster Editor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front.html">Caster Front</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sound.html">Caster Sound</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
     </div>
@@ -350,8 +354,8 @@ document.write(`
                   
   <section id="services">
 <span id="id1"></span><h1>Services<a class="headerlink" href="#services" title="Permalink to this headline">#</a></h1>
-<p>Gencaster consists of multiple services which cover various tasks around the concept of a <a class="reference internal" href="story_graph.html#story-graph"><span class="std std-ref">Story Graph</span></a>.</p>
-<table class="colwidths-given table" id="id2">
+<p>Gencaster consists of multiple services which cover various tasks around the concept of a <a class="reference internal" href="tutorial/01-story_graph.html#story-graph"><span class="std std-ref">The story graph</span></a>.</p>
+<span id="caster-front"></span><span id="caster-sound"></span><table class="colwidths-given table" id="id2">
 <caption><span class="caption-text">Services</span><a class="headerlink" href="#id2" title="Permalink to this table">#</a></caption>
 <colgroup>
 <col style="width: 25%" />
@@ -363,8 +367,10 @@ document.write(`
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="front.html#caster-front"><span class="std std-ref">Frontend</span></a></p></td>
-<td><p>Interact and stream audio of a story graph</p></td>
+<tr class="row-even"><td><p>Frontend</p></td>
+<td><p>A Javascript frontend which is used to listen to a <a class="reference internal" href="glossary.html#term-Stream"><span class="xref std std-term">Stream</span></a>.
+The frontend receives the data from the backend via <a class="reference internal" href="glossary.html#term-GraphQL"><span class="xref std std-term">GraphQL</span></a> (see <a class="reference internal" href="back/gencaster.html#schema"><span class="std std-ref">Schema</span></a>).
+When the backend assigned a <a class="reference internal" href="glossary.html#term-Stream-Point"><span class="xref std std-term">Stream Point</span></a> to a listener, the frontend will take care of the connection procedure to the <a class="reference internal" href="glossary.html#term-Stream"><span class="xref std std-term">Stream</span></a>, such that the listener can listen to the stream.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="back/index.html#caster-back"><span class="std std-ref">Backend</span></a></p></td>
 <td><p>Stores information about streams and story graphs and manages their coordination</p></td>
@@ -372,45 +378,39 @@ document.write(`
 <tr class="row-even"><td><p><a class="reference internal" href="editor.html#caster-editor"><span class="std std-ref">Editor</span></a></p></td>
 <td><p>Create and edit story graphs within the browser</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="sound.html#caster-sound"><span class="std std-ref">Sound</span></a></p></td>
-<td><p>Creates an audio stream which gets distributed via WebRTC</p></td>
+<tr class="row-odd"><td><p>Sound</p></td>
+<td><p>Wraps the output of <a class="reference internal" href="glossary.html#term-scsynth"><span class="xref std std-term">scsynth</span></a> into a <a class="reference internal" href="glossary.html#term-WebRTC"><span class="xref std std-term">WebRTC</span></a> stream via <a class="reference internal" href="glossary.html#term-Janus"><span class="xref std std-term">Janus</span></a>.
+This is the streaming server of Gencaster.</p></td>
 </tr>
 </tbody>
 </table>
+<figure class="align-default" id="id3">
+<div class="graphviz"><object data="_images/graphviz-42b3df3c222ba2998dcb33a3c444e90f53fec662.svg" type="image/svg+xml" class="graphviz">
+<p class="warning">digraph Gencaster {
+      node [shape=box, fontname=&quot;Arial&quot;]
+      edge [fontname=&quot;Arial&quot;]
+
+      &quot;Caster sound&quot;
+      { rank = source; &quot;Backend&quot; }
+      &quot;Frontend&quot;
+      &quot;Editor&quot;
+      &quot;OSC server&quot;
+      { rank = sink; &quot;Listener&quot; [shape=&quot;signature&quot;, label=&quot;Listener&quot; style=&quot;filled&quot; color=&quot;#adff00&quot;] }
+      &quot;Database&quot; [shape=&quot;cylinder&quot;]
+
+      &quot;Backend&quot; -&gt; &quot;OSC server&quot; [dir=both, label=&quot;OSC&quot;]
+      &quot;OSC server&quot; -&gt; &quot;Caster sound&quot; [dir=both, label=&quot;OSC&quot;]
+      &quot;Backend&quot; -&gt; &quot;Frontend&quot; [dir=both, label=&quot;GraphQL&quot;]
+      &quot;Listener&quot; -&gt; &quot;Frontend&quot; [label=&quot;http&quot;]
+      &quot;Caster sound&quot; -&gt; &quot;Frontend&quot; [dir=both, label=&quot;WebRTC&quot;]
+      &quot;Editor&quot; -&gt; &quot;Backend&quot; [dir=both, label=&quot;GraphQL&quot;]
+      &quot;Backend&quot; -&gt; &quot;Database&quot; [dir=both]
+  }</p></object></div>
+<figcaption>
+<p><span class="caption-text">The services of Gencaster</span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
 <div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="back/index.html">Caster Back</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="back/index.html#global-model-graph">Global model graph</a></li>
-<li class="toctree-l2"><a class="reference internal" href="back/index.html#api">API</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="back/osc_server.html">OSC Server</a></li>
-<li class="toctree-l3"><a class="reference internal" href="back/graphql.html">GraphQL</a></li>
-<li class="toctree-l3"><a class="reference internal" href="back/api/index.html">API</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="editor.html">Caster Editor</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="editor.html#script-cells">Script cells</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="editor.html#markdown">Markdown</a></li>
-<li class="toctree-l3"><a class="reference internal" href="editor.html#audio">Audio</a></li>
-<li class="toctree-l3"><a class="reference internal" href="editor.html#python">Python</a></li>
-<li class="toctree-l3"><a class="reference internal" href="editor.html#supercollider">SuperCollider</a></li>
-<li class="toctree-l3"><a class="reference internal" href="editor.html#comment">Comment</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="editor.html#node-doors">Node doors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="editor.html#meta">Meta</a></li>
-<li class="toctree-l2"><a class="reference internal" href="editor.html#debug-streams">Debug Streams</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="front.html">Caster Front</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="front.html#connection-flow">Connection flow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front.html#templates">Templates</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="sound.html">Caster Sound</a></li>
-</ul>
 </div>
 </section>
 
@@ -427,12 +427,12 @@ document.write(`
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="story_graph.html"
+       href="tutorial/08-debugging.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Story Graph</p>
+        <p class="prev-next-title">Debugging</p>
       </div>
     </a>
     <a class="right-next"
