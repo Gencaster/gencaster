@@ -1,6 +1,6 @@
 django==4.2.4
 uvicorn[standard]==0.23.2
-psycopg2-binary==2.9.6
+psycopg2-binary==2.9.9
 python-osc==1.8.1
 google-cloud-texttospeech==2.14.1
 strawberry-graphql-django==0.17.2
