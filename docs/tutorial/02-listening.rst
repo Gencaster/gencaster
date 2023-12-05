@@ -2,9 +2,9 @@ Listening to a graph
 ====================
 
 Building a story graph is one thing, but just as important is listening to the graph.
-Gencaster provides a player for a story graph via a website, which makes it possible to distribute the content of the story graph via mobile devices to any place where there is mobile coverage.
+Gencaster provides a player for a story graph via a website, which makes it possible to distribute the content of the story graph to any internet-enabled device.
 
-Gencaster can also manage not only one stream, but multiple streams at the same time, so that each listener gets his or her own stream.
+Gencaster can also manage not only one stream, but multiple streams at the same time, so that each listener gets their own stream.
 This allows for example to create new ways of cheap and interactive spatial setups.
 
 The frontend handles all necessary communication and streaming connection setup with the SuperCollider server using a technology called `WebRTC <https://webrtc.org/>`_.
