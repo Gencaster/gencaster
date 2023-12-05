@@ -48,8 +48,20 @@ html[data-theme='light'] a {
     color: var(--blue) !important
 }
 
+html[data-theme='dark'] {
+    --blue: #fff !important;
+}
+
 /* {--background-color: #212a2e;--text-color: #F7F8F8;--link-color: #828fff;} */
 
 .sig-name.descname .pre {
     background-color: var(--green);
+}
+
+.py.method {
+    margin-top: 25px;
+}
+
+.py.class {
+    margin-top: 50px;
 }

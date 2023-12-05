@@ -10,7 +10,7 @@ Therefore a story is represented by a graph.
 Graph
 -----
 
-.. figure:: ../../graphs/story_graph.png
+.. figure:: ../graphs/story_graph.svg
 
     Model graph for the story graph app.
 

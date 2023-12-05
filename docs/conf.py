@@ -88,3 +88,5 @@ html_theme_options = {
 autodoc_default_options = {
     "exclude-members": "DoesNotExist,MultipleObjectsReturned",
 }
+
+graphviz_output_format = "svg"
