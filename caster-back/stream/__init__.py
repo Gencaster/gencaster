@@ -8,7 +8,7 @@ See also :ref:`OSC Server` for the communication from each SuperCollider instanc
 Graph
 -----
 
-.. figure:: ../../graphs/stream.png
+.. figure:: ../graphs/stream.svg
 
     Model graph for the stream app.
 

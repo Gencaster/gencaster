@@ -1,3 +1,5 @@
+.. _deployment:
+
 Deployment
 ==========
 
@@ -39,7 +41,7 @@ while a dev deployment can look like this
   SENTRY_DSN_CASTER_FRONT="https://changeMe.io"
 
 
-.. _services:
+.. _deployment-services:
 
 Services
 ^^^^^^^^

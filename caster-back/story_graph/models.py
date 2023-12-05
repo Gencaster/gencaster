@@ -35,6 +35,31 @@ class Graph(models.Model):
     """
 
     class StreamAssignmentPolicy(models.TextChoices):
+        """
+        Each graph can handle different "connection" mechanisms when a listener
+        accesses a graph.
+
+        The implementation of each policy is defined in :class:`~story_graph.engine.Engine`.
+
+        .. list-table::
+            :header-rows: 1
+
+            * - StreamAssignmentPolicy
+              - Comment
+            * - `ONE_GRAPH_ONE_STREAM`
+              - All users share the same stream.
+                When the first user visits a graph, a new stream will be set up.
+                Any following user visiting the same story graph stream will be
+                "redirected" to the same stream as long as there is still *any*
+                user listening to the graph.
+                All users still execute the story graph from the beginning.
+            * - `ONE_USER_ONE_STREAM`
+              - Upon connection, each user will obtain a new and exclusive stream
+                and the graph will be executed upon the stream.
+            * - `DEACTIVATE`
+              - Non functional, for administrative work.
+        """
+
         ONE_GRAPH_ONE_STREAM = "one_graph_one_stream", _(
             "Each graph has only one stream"
         )
