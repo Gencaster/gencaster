@@ -18,7 +18,7 @@ jobs:
     steps:
       - run: sudo apt-get install --yes graphviz
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           cache: "pip"
@@ -65,7 +65,7 @@ jobs:
     container: cypress/browsers:node16.16.0-chrome107-ff107
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
       - uses: actions/setup-node@v4
