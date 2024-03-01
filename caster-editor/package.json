@@ -45,7 +45,7 @@
     "@graphql-codegen/typescript-operations": "^3.0.3",
     "@graphql-codegen/typescript-vue-urql": "^2.3.6",
     "@pinia/testing": "^0.0.14",
-    "@playwright/test": "^1.28.1",
+    "@playwright/test": "^1.42.0",
     "@rushstack/eslint-patch": "^1.1.4",
     "@types/jsdom": "^20.0.1",
     "@types/node": "^20.5.9",
