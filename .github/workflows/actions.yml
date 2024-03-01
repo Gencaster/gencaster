@@ -28,7 +28,7 @@ jobs:
             ./requirements-docs.txt
             ./requirements-dev.txt
       - run: pip3 install -r requirements-dev.txt
-      - uses: pre-commit/action@v3.0.0
+      - uses: pre-commit/action@v3.0.1
         with:
           extra_args: --files caster-back/* --files *.* --files docs/* --files caster-sound/*
       - run: ./caster-back/run_tests.sh
@@ -76,7 +76,7 @@ jobs:
             caster-editor/package-lock.json
       - run: npm ci
         working-directory: caster-editor
-      - uses: pre-commit/action@v3.0.0
+      - uses: pre-commit/action@v3.0.1
         with:
           extra_args: --files caster-editor/*
       - run: npm run type-check
@@ -103,7 +103,7 @@ jobs:
             caster-front/package-lock.json
       - run: npm ci
         working-directory: caster-front
-      - uses: pre-commit/action@v3.0.0
+      - uses: pre-commit/action@v3.0.1
         with:
           extra_args: --files caster-front/*
       - run: npm run type-check
