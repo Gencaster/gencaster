@@ -60,7 +60,7 @@ flag | comment
 --- | ---
 `no-editor=1` | Starts without the editor
 `no-frontend=1` | Starts without the frontend
-`no-sound=1` | Starts without the frontend
+`no-sound=1` | Starts without the sound server
 
 **Example:** `make no-editor=1 no-frontend=1 docker-local` starts without editor and frontend.
 
