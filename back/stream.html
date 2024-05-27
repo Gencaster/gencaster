@@ -3,11 +3,11 @@
 <!DOCTYPE html>
 
 
-<html >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Stream &#8212; Gencaster  documentation</title>
   
@@ -19,15 +19,15 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -35,12 +35,14 @@
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'back/stream';</script>
@@ -50,7 +52,7 @@
     <link rel="next" title="GenCaster Base" href="gencaster.html" />
     <link rel="prev" title="Story Graph" href="story_graph.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="None"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
   
   
@@ -58,7 +60,15 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
   
   <input type="checkbox"
           class="sidebar-toggle"
@@ -93,11 +103,14 @@
 </form></div>
   </div>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
   
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -112,9 +125,11 @@
   
     <div class="sidebar-primary-items__start sidebar-primary__section">
         <div class="sidebar-primary-item">
+
   
 
 <a class="navbar-brand logo" href="../index.html">
+  
   
   
   
@@ -124,8 +139,8 @@
       
     
     
-    <img src="../_static/spiral.svg" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="../_static/spiral.svg" class="logo__image only-dark" alt="Logo image"/>`);</script>
+    <img src="../_static/spiral.svg" class="logo__image only-light" alt="Gencaster  documentation - Home"/>
+    <script>document.write(`<img src="../_static/spiral.svg" class="logo__image only-dark" alt="Gencaster  documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -310,20 +325,22 @@
 </button>
 
 
+
 <script>
 document.write(`
-  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
-    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
-    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
 `);
 </script>
 
+
 <script>
 document.write(`
   <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
 </script>
@@ -366,13 +383,13 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section id="module-stream">
-<span id="stream"></span><h1>Stream<a class="headerlink" href="#module-stream" title="Permalink to this headline">#</a></h1>
+<span id="stream"></span><h1>Stream<a class="headerlink" href="#module-stream" title="Permalink to this heading">#</a></h1>
 <p>Handles the management of the SuperCollider instances and their respective WebRTC streams.
 See also <a class="reference internal" href="osc_server.html#osc-server"><span class="std std-ref">OSC Server</span></a> for the communication from each SuperCollider instance to our backend.</p>
-<div class="contents local topic" id="contents">
+<nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#graph" id="id5">Graph</a></p></li>
 <li><p><a class="reference internal" href="#module-stream.models" id="id6">Models</a></p></li>
@@ -383,9 +400,9 @@ See also <a class="reference internal" href="osc_server.html#osc-server"><span c
 </ul>
 </li>
 </ul>
-</div>
+</nav>
 <section id="graph">
-<h2><a class="toc-backref" href="#id5">Graph</a><a class="headerlink" href="#graph" title="Permalink to this headline">#</a></h2>
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Graph</a><a class="headerlink" href="#graph" title="Permalink to this heading">#</a></h2>
 <figure class="align-default" id="id4">
 <img alt="../_images/stream.svg" src="../_images/stream.svg" /><figcaption>
 <p><span class="caption-text">Model graph for the stream app.</span><a class="headerlink" href="#id4" title="Permalink to this image">#</a></p>
@@ -393,7 +410,7 @@ See also <a class="reference internal" href="osc_server.html#osc-server"><span c
 </figure>
 </section>
 <section id="module-stream.models">
-<span id="models"></span><h2><a class="toc-backref" href="#id6">Models</a><a class="headerlink" href="#module-stream.models" title="Permalink to this headline">#</a></h2>
+<span id="models"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink">Models</a><a class="headerlink" href="#module-stream.models" title="Permalink to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="stream.models.AudioFile">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stream.models.</span></span><span class="sig-name descname"><span class="pre">AudioFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/stream/models.html#AudioFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.AudioFile" title="Permalink to this definition">#</a></dt>
@@ -402,7 +419,7 @@ As SuperCollider and Django are running on the same server we
 can pass these files to the SuperCollider instances as they
 are mounted within each service.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>uuid</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.UUIDField" title="(in Django v5.0)"><em>UUIDField</em></a>) – Primary key: Uuid</p></li>
 <li><p><strong>created_date</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><em>DateTimeField</em></a>) – Created date</p></li>
@@ -416,7 +433,7 @@ are mounted within each service.</p>
 </dl>
 <p>Reverse relationships:</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>audio_cells</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="story_graph.html#story_graph.models.AudioCell" title="story_graph.models.AudioCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioCell</span></code></a>) – All audio cells of this Audio file (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">audio_file</span></code>)</p></li>
 <li><p><strong>texttospeech</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#stream.models.TextToSpeech" title="stream.models.TextToSpeech"><code class="xref py py-class docutils literal notranslate"><span class="pre">TextToSpeech</span></code></a>) – All Text to speech jobs of this Audio file (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">audio_file</span></code>)</p></li>
@@ -433,7 +450,7 @@ This allows us to see which streams are currently in use
 and also by which user.
 It also allows us to trace past streams.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>uuid</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.UUIDField" title="(in Django v5.0)"><em>UUIDField</em></a>) – Primary key: Uuid</p></li>
 <li><p><strong>created_date</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><em>DateTimeField</em></a>) – Created date</p></li>
@@ -444,7 +461,7 @@ It also allows us to trace past streams.</p>
 </dl>
 <p>Relationship fields:</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stream_point</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>) – Associated instance (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">streams</span></code>)</p></li>
 <li><p><strong>graph</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="story_graph.html#story_graph.models.Graph" title="story_graph.models.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a>) – Graph (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">stream</span></code>)</p></li>
@@ -453,7 +470,7 @@ It also allows us to trace past streams.</p>
 </dl>
 <p>Reverse relationships:</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>variables</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#stream.models.StreamVariable" title="stream.models.StreamVariable"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamVariable</span></code></a>) – All variables of this Stream (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">stream</span></code>)</p></li>
 <li><p><strong>streamlog</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#stream.models.StreamLog" title="stream.models.StreamLog"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamLog</span></code></a>) – All Stream logs of this Stream (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">stream</span></code>)</p></li>
@@ -468,7 +485,7 @@ It also allows us to trace past streams.</p>
 <dd><p>Instruction for a <a class="reference internal" href="#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>, most likely to be
 created from a <a class="reference internal" href="story_graph.html#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>uuid</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.UUIDField" title="(in Django v5.0)"><em>UUIDField</em></a>) – Primary key: Uuid</p></li>
 <li><p><strong>created_date</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><em>DateTimeField</em></a>) – Created date</p></li>
@@ -481,7 +498,7 @@ created from a <a class="reference internal" href="story_graph.html#story_graph.
 </dl>
 <p>Relationship fields:</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>stream_point</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>) – Stream point (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">instructions</span></code>)</p>
 </dd>
 </dl>
@@ -511,7 +528,7 @@ created from a <a class="reference internal" href="story_graph.html#story_graph.
 <dt class="sig sig-object py" id="stream.models.StreamLog">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stream.models.</span></span><span class="sig-name descname"><span class="pre">StreamLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">created_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modified_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream_point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/stream/models.html#StreamLog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.StreamLog" title="Permalink to this definition">#</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>uuid</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.UUIDField" title="(in Django v5.0)"><em>UUIDField</em></a>) – Primary key: Uuid</p></li>
 <li><p><strong>created_date</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><em>DateTimeField</em></a>) – Created date</p></li>
@@ -525,7 +542,7 @@ created from a <a class="reference internal" href="story_graph.html#story_graph.
 </dl>
 <p>Relationship fields:</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stream_point</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#stream.models.StreamPoint" title="stream.models.StreamPoint"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamPoint</span></code></a>) – Stream point (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">streamlog</span></code>)</p></li>
 <li><p><strong>stream</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#stream.models.Stream" title="stream.models.Stream"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stream</span></code></a>) – Stream (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">streamlog</span></code>)</p></li>
@@ -556,7 +573,7 @@ via the <a class="reference internal" href="osc_server.html#osc-server"><span cl
 Consider <code class="docutils literal notranslate"><span class="pre">last_live</span></code> to filter out non-live from live
 instances.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>uuid</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.UUIDField" title="(in Django v5.0)"><em>UUIDField</em></a>) – Primary key: Uuid</p></li>
 <li><p><strong>created_date</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><em>DateTimeField</em></a>) – Created date</p></li>
@@ -576,7 +593,7 @@ instances.</p>
 </dl>
 <p>Reverse relationships:</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>streams</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#stream.models.Stream" title="stream.models.Stream"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stream</span></code></a>) – All streams of this Stream Endpoint (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">stream_point</span></code>)</p></li>
 <li><p><strong>instructions</strong> (Reverse <a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> from <a class="reference internal" href="#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>) – All instructions of this Stream Endpoint (related name of <code class="xref py py-attr docutils literal notranslate"><span class="pre">stream_point</span></code>)</p></li>
@@ -590,7 +607,7 @@ instances.</p>
 <dd><p>Sends an OSC message with an instruction to our SuperCollider server.
 Check the function <cite>instructionReceiver</cite> in <cite>GenCaster.sc</cite> which will accept the send message.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>instruction</strong> (<a class="reference internal" href="#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a>) – The given instruction on the Server.</p></li>
 <li><p><strong>manual_finish</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>) – If set to True, one has to take care self of sending the unlocking <cite>finished</cite> message.
@@ -598,7 +615,7 @@ This is helpful in cases of async function calls, e.g. on a playback of a sample
 Defaults to False.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
 </dd>
 </dl>
@@ -609,10 +626,10 @@ Defaults to False.</p></li>
 <span class="sig-name descname"><span class="pre">speak_on_stream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssml_text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/stream/models.html#StreamPoint.speak_on_stream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.models.StreamPoint.speak_on_stream" title="Permalink to this definition">#</a></dt>
 <dd><p>Speaks on the stream</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>ssml_text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – See <a class="reference external" href="https://cloud.google.com/text-to-speech/docs/ssml">https://cloud.google.com/text-to-speech/docs/ssml</a></p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a></p>
 </dd>
 </dl>
@@ -631,7 +648,7 @@ as a string, so parsing a float, int or boolean requires
 type conversion.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>uuid</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.UUIDField" title="(in Django v5.0)"><em>UUIDField</em></a>) – Primary key: Uuid</p></li>
 <li><p><strong>created_date</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><em>DateTimeField</em></a>) – Created date</p></li>
@@ -644,7 +661,7 @@ type conversion.</p>
 </dl>
 <p>Relationship fields:</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>stream</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#stream.models.Stream" title="stream.models.Stream"><code class="xref py py-class docutils literal notranslate"><span class="pre">Stream</span></code></a>) – Stream (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">variables</span></code>)</p>
 </dd>
 </dl>
@@ -666,7 +683,7 @@ The solution seems to be to use instead</p>
 <p>without the surrounding curly brackets for the value.</p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#stream.models.StreamInstruction" title="stream.models.StreamInstruction"><code class="xref py py-class docutils literal notranslate"><span class="pre">StreamInstruction</span></code></a></p>
 </dd>
 </dl>
@@ -680,7 +697,7 @@ The solution seems to be to use instead</p>
 <dd><p>Handles the conversion of text to speech
 by using external APIs.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>uuid</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.UUIDField" title="(in Django v5.0)"><em>UUIDField</em></a>) – Primary key: Uuid</p></li>
 <li><p><strong>created_date</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.DateTimeField" title="(in Django v5.0)"><em>DateTimeField</em></a>) – Created date</p></li>
@@ -692,7 +709,7 @@ by using external APIs.</p>
 </dl>
 <p>Relationship fields:</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>audio_file</strong> (<a class="reference external" href="https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey" title="(in Django v5.0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ForeignKey</span></code></a> to <a class="reference internal" href="#stream.models.AudioFile" title="stream.models.AudioFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">AudioFile</span></code></a>) – Audio file (related name: <code class="xref py py-attr docutils literal notranslate"><span class="pre">texttospeech</span></code>)</p>
 </dd>
 </dl>
@@ -716,7 +733,7 @@ This caching behavior can be controlled via <code class="docutils literal notran
 <a class="reference external" href="https://cloud.google.com/text-to-speech/docs/libraries#client-libraries-install-python">google examples</a></p>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ssml_text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – SSML text to convert to audio</p></li>
 <li><p><strong>voice_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – Voice name to use</p></li>
@@ -724,7 +741,7 @@ This caching behavior can be controlled via <code class="docutils literal notran
 with the same text.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="#stream.models.TextToSpeech" title="stream.models.TextToSpeech"><code class="xref py py-class docutils literal notranslate"><span class="pre">TextToSpeech</span></code></a></p>
 </dd>
 </dl>
@@ -734,7 +751,7 @@ with the same text.</p></li>
 
 </section>
 <section id="module-stream.frontend_types">
-<span id="id2"></span><span id="frontend-types"></span><h2><a class="toc-backref" href="#id7">Frontend Types</a><a class="headerlink" href="#module-stream.frontend_types" title="Permalink to this headline">#</a></h2>
+<span id="id2"></span><span id="frontend-types"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink">Frontend Types</a><a class="headerlink" href="#module-stream.frontend_types" title="Permalink to this heading">#</a></h2>
 <p>These types are not reflecting any database content but are for triggering
 functionality in the frontend from within a :class`~story_graph.models.Graph`.</p>
 <p>These types can be used within a Python <a class="reference internal" href="story_graph.html#story_graph.models.ScriptCell" title="story_graph.models.ScriptCell"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScriptCell</span></code></a>
@@ -837,9 +854,9 @@ under the <code class="docutils literal notranslate"><span class="pre">key</span
 
 </section>
 <section id="module-stream.exceptions">
-<span id="exceptions"></span><h2><a class="toc-backref" href="#id8">Exceptions</a><a class="headerlink" href="#module-stream.exceptions" title="Permalink to this headline">#</a></h2>
+<span id="exceptions"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink">Exceptions</a><a class="headerlink" href="#module-stream.exceptions" title="Permalink to this heading">#</a></h2>
 <section id="id3">
-<h3><a class="toc-backref" href="#id9">Exceptions</a><a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h3>
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Exceptions</a><a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
 <dl class="py exception">
 <dt class="sig sig-object py" id="stream.exceptions.InvalidAudioFileException">
 <em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">stream.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidAudioFileException</span></span><a class="reference internal" href="../_modules/stream/exceptions.html#InvalidAudioFileException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#stream.exceptions.InvalidAudioFileException" title="Permalink to this definition">#</a></dt>
@@ -865,11 +882,10 @@ by ourselves.</p>
 
               
               
-                <footer class="bd-footer-article">
+              
+              
+                <footer class="prev-next-footer">
                   
-<div class="footer-article-items footer-article__inner">
-  
-    <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
        href="story_graph.html"
@@ -889,10 +905,7 @@ by ourselves.</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
-</div></div>
-  
 </div>
-
                 </footer>
               
             </div>
@@ -900,6 +913,7 @@ by ourselves.</p>
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -935,6 +949,7 @@ By Gencaster
   
   <div class="footer-item">
     
+
   <p class="copyright">
     
       © Copyright 2023 Vinzenz Aubry and Dennis Scheiba.
@@ -961,8 +976,8 @@ By Gencaster
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
   <footer class="bd-footer">
   </footer>
