@@ -82,7 +82,7 @@ By doing this we can let nginx handle the SSL context and not need to embed this
 
 ## Copyright
 
-© 2023 Vinzenz Aubry and Dennis Scheiba
+© 2024 Vinzenz Aubry and Dennis Scheiba
 
 ## License
 
